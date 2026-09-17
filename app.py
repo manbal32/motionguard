@@ -38,8 +38,13 @@ if uploaded:
             if key.startswith('motion_') or key in ('analysis_data','analysis_report','report_signature'):
                 del st.session_state[key]
         st.session_state['source_digest']=digest
-    st.video(data)
-    analysis_clicked=st.button('🔍 분석 실행',type='primary')
+    preview_column, summary_column = st.columns([1, 2], gap='large')
+    with preview_column:
+        with st.container(key='upload_preview'):
+            st.markdown("<style>.st-key-upload_preview video{max-height:280px;object-fit:contain;background:#f3f5f7;border-radius:12px}</style>", unsafe_allow_html=True)
+            st.video(data)
+            analysis_clicked=st.button('🔍 분석 실행',type='primary')
+    summary_area = summary_column.container()
     if analysis_clicked:
         with st.spinner('전체 프레임 좌표·각도 추출 중...'):
             video_path=None
@@ -71,7 +76,7 @@ if uploaded:
         saved['poses']=recover_angles(frames,saved['raw_poses'],confidence_threshold)
         saved['recovery_threshold']=confidence_threshold
     poses=saved['poses']
-    research_data,key_frames,dynamics=render_inspector(frames,poses,saved['automatic'],confidence_threshold)
+    research_data,key_frames,dynamics=render_inspector(frames,poses,saved['automatic'],confidence_threshold,summary_area=summary_area)
     research_data['raw_series']=build_research_data(frames,saved['raw_poses'],saved['automatic'],confidence_threshold)['series']
     pose_data=research_data['event_angle_observations']
     signature=json.dumps({'anchors':[k.frame_idx for k in key_frames], 'threshold':confidence_threshold,
