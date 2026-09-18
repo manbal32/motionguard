@@ -30,7 +30,9 @@ class GeminiAnalysisResult:
 
 
 class GeminiAnalyzer:
-    def __init__(self, api_key=None, model='gemini-1.5-flash', mock=None):
+    def __init__(self, api_key=None, model='gemini-1.5-flash', mock=None, strict_errors=False, http_options=None):
+        self.strict_errors = strict_errors
+        self.http_options = http_options
         self.api_key=api_key or os.getenv('GEMINI_API_KEY')
         self.model=os.getenv('GEMINI_MODEL') or model
         self.mock=(os.getenv('MOTIONGUARD_MOCK_GEMINI','0')=='1') if mock is None else mock
@@ -53,6 +55,8 @@ class GeminiAnalyzer:
             result.risk_assessment=[assess_pose(r) for r in valid]
             return result.to_dict()
         except Exception as exc:
+            if self.strict_errors:
+                raise
             reason='gemini_quota_or_rate_limit' if any(s in str(exc).lower() for s in ('429','quota','rate','resource_exhausted')) else 'gemini_error'
             return self._mock_analysis(frames,rows,sport,user_context,reason).to_dict()
 
@@ -60,7 +64,8 @@ class GeminiAnalyzer:
         if not self.api_key:
             raise RuntimeError('GEMINI_API_KEY is not set.')
         from google import genai
-        with genai.Client(api_key=self.api_key) as client:
+        options = {'http_options': self.http_options} if self.http_options is not None else {}
+        with genai.Client(api_key=self.api_key, **options) as client:
             response=client.models.generate_content(model=self.model,
                 contents=self._build_prompt(sport,pose_data,user_context,len(frames)))
         raw=getattr(response,'text',None) or str(response)

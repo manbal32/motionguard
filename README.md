@@ -114,3 +114,29 @@ Mock 모드에서는 외부 Gemini 호출을 하지 않습니다.
 
 검증: 단위 테스트 33개 및 합성 영상의 자동 4국면/보간된 각도 표/전체 결측 표시/프레임 탐색 흐름 통과.
 실제 사용자 스윙 영상에서의 각도 정확도는 아직 검증하지 않았습니다.
+
+## Gemini API 순차 실연동 테스트 (2026-09-18)
+
+프로젝트의 `samples/`에 `golf1.MP4`부터 `golf5.MP4`까지 넣고,
+`.env.example`을 `.env`로 복사하여 `GEMINI_API_KEY`, `GEMINI_MODEL`을 설정합니다.
+키는 출력하지 않습니다. 계정에서 사용 가능한 모델명을 명시해야 합니다.
+
+프로젝트 폴더에서 실행:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/test_gemini_api.py
+```
+
+- 모든 영상과 환경 설정을 먼저 검사한 뒤 1~5번을 순서대로 처리합니다.
+- 전체 좌표 추출 → 기존 자동 4국면 감지 → 기존 각도 복구 → Gemini 호출 순서입니다.
+- 전송 범위는 4국면의 유효 각도 및 보간/인접 프레임 등 출처입니다. 영상·전체 좌표 시계열은 전송하지 않습니다.
+- 결과는 프로젝트 내 `outputs/gemini_results/golf{N}.json`에 입력 각도와 `result.raw_response`를 포함해 저장합니다.
+- API가 JSON 형식으로 답하지 않은 경우 `real_gemini_unparsed`로 원문을 보존합니다.
+- 유효 각도가 없으면 API를 호출하지 않고 `insufficient_data`로 저장합니다.
+- `.env`의 Mock 설정과 관계없이 실제 API를 사용합니다. 오류를 Mock으로 대체하지 않습니다.
+- SDK 재시도를 끄고 429/quota 오류 발생 시 즉시 중단합니다(종료 코드 2). 기타 오류도 중단합니다(종료 코드 1).
+- 완료·측정 부족·남은 영상과 실패 단계는 콘솔 및 `outputs/gemini_results/progress.json`에서 확인합니다.
+- 재개 예: `...python.exe scripts/test_gemini_api.py --start 3`. 지정 번호부터 5번까지 실행하며 같은 이름의 결과는 덮어씁니다. 진행 파일은 이번 실행 기준입니다.
+- 호출 제한 시간은 120초, 기본 각도 신뢰도는 0.5입니다(`--confidence`로 변경).
+
+스크립트의 순차 저장 및 quota 중단은 모의 API 테스트로 검증합니다. 실제 Gemini 호출 검증은 샘플 영상과 API 설정을 준비한 후 실행해야 합니다.

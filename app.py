@@ -9,8 +9,14 @@ from dotenv import load_dotenv
 from modules.video_loader import VideoLoader
 from modules.pose_analyzer import PoseAnalyzer
 from modules.frame_selector import FrameSelector
+from modules.still_overlay import body_still
 from modules.gemini_analyzer import GeminiAnalyzer
-from modules.motion_inspector import render_inspector
+import importlib
+from modules import motion_player, motion_inspector
+# Refresh display modules on rerun while preserving extracted pose data.
+importlib.reload(motion_player)
+importlib.reload(motion_inspector)
+render_inspector = motion_inspector.render_inspector
 from modules.angle_recovery import recover_angles
 from modules.research_data import build_research_data
 from modules.pose_compat import normalize_pose, prepare_session
@@ -38,10 +44,11 @@ if uploaded:
             if key.startswith('motion_') or key in ('analysis_data','analysis_report','report_signature'):
                 del st.session_state[key]
         st.session_state['source_digest']=digest
-    preview_column, summary_column = st.columns([1, 2], gap='large')
+    with st.container(width=850):
+        preview_column, summary_column = st.columns([160, 670], gap='small')
     with preview_column:
         with st.container(key='upload_preview'):
-            st.markdown("<style>.st-key-upload_preview video{max-height:280px;object-fit:contain;background:#f3f5f7;border-radius:12px}</style>", unsafe_allow_html=True)
+            st.markdown("<style>.st-key-upload_preview video{max-height:240px;width:auto!important;max-width:100%;object-fit:contain;border-radius:8px}</style>", unsafe_allow_html=True)
             st.video(data)
             analysis_clicked=st.button('🔍 분석 실행',type='primary')
     summary_area = summary_column.container()
@@ -124,12 +131,14 @@ if uploaded:
     for col, kf in zip(cols, show_frames):
         with col:
             if kf.image_bgr is not None:
-                img_rgb = cv2.cvtColor(kf.image_bgr, cv2.COLOR_BGR2RGB)
+                still = body_still(kf.frame_data.image_bgr, kf.pose_result.landmarks)
+                img_rgb = cv2.cvtColor(still, cv2.COLOR_BGR2RGB)
                 st.image(img_rgb, caption=kf.phase_label, use_container_width=True)
             st.markdown(f"**{kf.phase_label}**")
             st.write(f"Frame: {kf.debug.get('best_idx', '-')}")
             st.write(f"Time: {kf.timestamp:.2f}s")
-            st.write(f"Wrist Y: {kf.debug.get('wrist_y', '-')}")
+            st.write(f"국면 감지용 손목 Y: {(kf.debug or {}).get('wrist_y', '-')}")
+            st.caption("화면 위쪽 0 · 아래쪽 1. 결측 보완·평활화한 국면 감지용 값이며 관절각이 아닙니다.")
 
             shown_angles = 0
             observation=next(r for r in pose_data if r['phase']==kf.phase_label)

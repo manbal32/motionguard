@@ -18,27 +18,29 @@ def encode_frames(frames):
     return images
 
 
-def player_html(images, series, confidence, reference, label):
+def player_html(images, series, confidence, reference, label, aspect_ratio=16/9):
     payload = json.dumps(dict(images=images, series=series, confidence=confidence,
                               reference=reference, label=label), ensure_ascii=False, allow_nan=False).replace('<', '\\u003c')
-    return _HTML.replace('__PAYLOAD__', payload)
+    width = max(120, min(640, round(320 * aspect_ratio)))
+    return _HTML.replace('__PAYLOAD__', payload).replace('__VIDEO_WIDTH__', str(width)).replace('__PLAYER_WIDTH__', str(width+516)).replace('__ASPECT__', str(float(aspect_ratio)))
 
 
 _HTML = '''<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
-*{box-sizing:border-box}body{margin:0;font:14px system-ui,sans-serif;color:#263245}
-.layout{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:20px}
-.viewport{height:420px;display:flex;align-items:center;justify-content:center;background:#f3f5f7;border-radius:12px;overflow:hidden}
-canvas{max-width:100%;max-height:420px;object-fit:contain} .details{height:420px;display:flex;flex-direction:column;gap:8px}
-.meta{font-weight:600}.coords{overflow:auto;flex:1;border:1px solid #e2e8f0;border-radius:8px}
-table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}th,td{padding:5px 8px;text-align:right;white-space:nowrap;border-bottom:1px solid #edf0f3}th{position:sticky;top:0;background:#f1f5f9}td:nth-child(2){text-align:left}
+*{box-sizing:border-box}body{margin:0;width:100%;max-width:__PLAYER_WIDTH__px;font:14px system-ui,sans-serif;color:#263245}
+.layout{display:grid;grid-template-columns:minmax(0,__VIDEO_WIDTH__px) minmax(0,1fr);gap:16px}
+.viewport{width:100%;aspect-ratio:__ASPECT__;max-height:320px;display:flex;align-items:center;justify-content:center;background:transparent;border-radius:8px;overflow:hidden}
+canvas{display:block;width:100%;height:100%;max-height:320px;object-fit:contain} .details{min-width:0;height:auto;display:flex;flex-direction:column;gap:6px}
+.meta{font-weight:600}.coords{overflow:visible;flex:none;border:1px solid #e6e9ef;border-radius:6px}.coords.all-landmarks{max-height:340px;overflow:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;line-height:18px;font-variant-numeric:tabular-nums}th,td{padding:3px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid #edf0f3;border-right:1px solid #f0f2f6}th{position:sticky;top:0;background:#f8f9fb;color:#697586;font-weight:400}th:nth-child(2),td:nth-child(2){text-align:left}th:first-child,td:first-child{width:42px}tbody tr:last-child td{border-bottom:0}
 .controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 8px}button,select{border:1px solid #cbd5e1;border-radius:8px;padding:7px 12px;background:white;color:#263245;cursor:pointer}button{background:#146c55;color:white;border:0;min-width:100px}input[type=range]{width:100%;accent-color:#146c55}.caption{font-size:12px;color:#64748b;margin:5px 0}label{display:flex;gap:6px;align-items:center}
-@media(max-width:560px){.layout{gap:8px;grid-template-columns:1fr 1fr}th,td{padding:4px}.meta{font-size:12px}}
+@media(max-width:560px){.layout{gap:8px;grid-template-columns:minmax(0,2fr) minmax(0,3fr)}th,td{padding:2px 5px}.meta{font-size:12px}}
 </style></head><body>
 <div class="layout"><div class="viewport"><canvas id="video" aria-label="관절 좌표가 표시된 분석 영상"></canvas></div><div class="details"><div class="meta" id="reference"></div><div id="confidence"></div><div class="coords"><table><thead><tr><th>점</th><th>관절</th><th>x</th><th>y</th><th>z</th></tr></thead><tbody id="coordinates"></tbody></table></div><div class="caption">x·y: 정규화 좌표 / z: 상대 깊이</div></div></div>
 <div class="controls"><button id="play">▶ 재생</button><label>속도 <select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option></select></label><label><input id="points" type="checkbox" checked>골격 표시</label><label><input id="all-points" type="checkbox">전체 관절 보기</label><span id="status" aria-live="off"></span></div>
 <input id="seek" type="range" min="0" step="1" aria-label="재생 프레임"><div class="caption">선택한 국면부터 재생합니다. 탐색 막대로 전체 영상을 확인할 수 있습니다.</div>
 <script>
 const data=__PAYLOAD__;
+
 const byId=id=>document.getElementById(id), canvas=byId('video'), ctx=canvas.getContext('2d');
 let current=data.reference, playing=false, origin=0, startTime=0, animation=0, generation=0;
 const cache=new Map();
@@ -60,6 +62,7 @@ function render(i){
  edges.forEach(([a,b])=>{const p=landmarks[a],q=landmarks[b];if(valid(p)&&valid(q)){ctx.beginPath();ctx.moveTo(p.x*canvas.width,p.y*canvas.height);ctx.lineTo(q.x*canvas.width,q.y*canvas.height);ctx.stroke()}});
  ctx.fillStyle='#ffe342';coords.forEach(([name,p])=>{if(valid(p)){ctx.beginPath();ctx.arc(p.x*canvas.width,p.y*canvas.height,3.5,0,Math.PI*2);ctx.fill()}});
  }
+ document.querySelector('.coords').classList.toggle('all-landmarks',byId('all-points').checked);
  const body=byId('coordinates');body.replaceChildren();
  const format=v=>typeof v==='number'&&Number.isFinite(v)?v.toFixed(3):'—';
  coords.forEach(([name,p],j)=>{const tr=document.createElement('tr');[j+1,names[name]||name,format(p.x),format(p.y),format(p.z)].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});body.appendChild(tr)});
