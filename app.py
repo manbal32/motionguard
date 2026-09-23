@@ -12,9 +12,10 @@ from modules.frame_selector import FrameSelector
 from modules.still_overlay import body_still
 from modules.gemini_analyzer import GeminiAnalyzer
 import importlib
-from modules import motion_player, motion_inspector
+from modules import motion_player, motion_inspector, motion_findings
 # Refresh display modules on rerun while preserving extracted pose data.
 importlib.reload(motion_player)
+importlib.reload(motion_findings)
 importlib.reload(motion_inspector)
 render_inspector = motion_inspector.render_inspector
 from modules.angle_recovery import recover_angles

@@ -94,7 +94,8 @@ def render_inspector(frames,poses,automatic,confidence_threshold,summary_area=No
     findings=[{'비교할 관절':METRICS[metric],**row} for row in graph_findings(dynamics)]
     dynamics['graph_findings']=findings
     st.markdown(f"#### {METRICS[metric]} · 움직임과 해석")
-    st.caption(f"{labels[event]} · f{start}~f{end} · 유효 프레임 {dynamics['valid_count']}/{dynamics['total_count']} · 유효 비율은 측정 정확도가 아닙니다.")
+    st.caption(f"{labels[event]} · f{start}~f{end} · 전체 {dynamics['total_count']}개 프레임 중 {dynamics['valid_count']}개에서 각도 산출 가능")
+    st.caption('※ 각도가 모두 계산되어도 관절 좌표의 위치나 촬영 방향에 따라 실제 각도와 차이가 날 수 있습니다.')
     if len(samples) and samples['angle'].notna().any():
         base=alt.Chart(samples).encode(x=alt.X('frame_idx:Q',title='프레임',axis=alt.Axis(format='d',tickMinStep=1),scale=alt.Scale(domain=[start,end],nice=False)))
         charts={
@@ -119,7 +120,7 @@ def render_inspector(frames,poses,automatic,confidence_threshold,summary_area=No
                 with interpretation_area:
                     st.caption('관측 결과')
                     st.markdown(row['관측 결과'])
-                    st.caption('읽는 방법 · 확인할 사항')
+                    st.caption('이 수치의 의미')
                     st.markdown(row['읽는 방법·확인할 사항'])
     else:
         st.info(findings[0]['관측 결과']+' — '+findings[0]['읽는 방법·확인할 사항'])
