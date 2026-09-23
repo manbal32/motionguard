@@ -7,8 +7,17 @@
 - Gemini 무료 등급 확인, .env 설정 (gemini-2.5-flash-lite, MOCK=0)
   실제 호출 직전 Codex 한도 소진 → 미검증
 
+## 2026-09-24 (맥)
+- 회사에서 push한 main을 맥 `~/motionguard-new`에 fast-forward로 동기화 (40f80b1).
+- `.env`는 Git 제외 대상이므로 맥에서 별도로 설정. 실제 키는 커밋하지 않음.
+- `gemini-2.5-flash-lite` 직접 요청은 404: 신규 사용자에게 제공되지 않는다는 서버 응답 확인.
+- `.env` 모델을 `gemini-3.5-flash-lite`로 변경하고 짧은 직접 API 요청 1회 성공 (`OK.` 응답).
+- API 연결만 검증 완료. 실제 골프 영상 분석, 앱에서의 실연동 보고서, golf1~5 배치는 아직 미검증.
+- 비용 관리 의도에 따라 `MOTIONGUARD_MOCK_GEMINI=1` 및 앱 Mock 기본값 유지. 직접 연결 테스트만 Mock을 거치지 않고 실행.
+- 공유 `.env.example`에 새 모델명 반영. 회사 PC의 기존 `.env`는 pull로 바뀌지 않으므로 모델명을 직접 변경해야 함.
+
 ## 다음 할 일
 - 맥에서 golf1~5 배치 실행 (STEP 5 예비)
-- Gemini 실연동 첫 응답 확인
+- 앱 재시작 후 필요할 때만 Mock을 끄고 실제 영상 보고서 확인
 - STEP 7 등급 산출 여부 결정 (A: 가정명시 / B: 계획서수정)
 - RULA 원논문 검토

@@ -1,6 +1,6 @@
 # 다음 작업과 다른 PC에서 이어가기
 
-갱신: 2026-09-18
+갱신: 2026-09-24
 
 ## 읽는 순서
 
@@ -13,7 +13,9 @@ README.md → RESEARCH_CONTEXT.md → NEXT_STEPS.md → RESEARCH_ALIGNMENT.md.
 - 얼굴 스틸컷 표시 제거, 손목 Y 표시 연결 복원, 좌표 표/CSV의 눈·귀·코·손가락 필터.
 - Gemini 순차 테스트 스크립트와 quota 중단, 테스트 44개 통과 기록.
 - 코드 5658a7b, 이전 README 040e749: 사용자 push 로그로 GitHub main 업로드 확인.
-- 이번 인수인계 문서는 위 커밋 이후 추가. 별도 커밋/push가 필요하다.
+- 맥에서 40f80b1까지 동기화. 최신 실행 기록은 PROGRESS.md 참고.
+- 2026-09-24 `gemini-3.5-flash-lite` 짧은 직접 API 요청 성공. 영상 분석 실연동은 미검증. Mock 기본값 유지.
+- 다른 PC의 `.env`는 동기화되지 않으므로 `GEMINI_MODEL=gemini-3.5-flash-lite`를 개별 설정.
 
 ## 다음 대화의 시작점
 
