@@ -44,7 +44,7 @@ class ResearchTests(unittest.TestCase):
     def test_prompt_includes_last_frame_and_coordinates(self):
         data=build_research_data(*self.fixtures())
         prompt=GeminiAnalyzer(mock=True)._build_prompt('golf',[],{'research_data':data},2)
-        self.assertIn('"frame_idx": 4',prompt)
+        self.assertIn('"frame_idx":4',prompt)
         self.assertIn('"landmarks"',prompt)
         self.assertIn('"phase_statistics"',prompt)
 

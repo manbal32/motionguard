@@ -11,6 +11,9 @@ from modules.pose_analyzer import PoseAnalyzer
 from modules.frame_selector import FrameSelector
 from modules.still_overlay import body_still
 from modules.gemini_analyzer import GeminiAnalyzer
+from modules.motion_report_ui import render_motion_report
+from modules.motion_payload import SCHEMA_VERSION
+import os
 import importlib
 from modules import motion_player, motion_inspector, motion_findings
 # Refresh display modules on rerun while preserving extracted pose data.
@@ -87,16 +90,16 @@ if uploaded:
     research_data,key_frames,dynamics=render_inspector(frames,poses,saved['automatic'],confidence_threshold,summary_area=summary_area)
     research_data['raw_series']=build_research_data(frames,saved['raw_poses'],saved['automatic'],confidence_threshold)['series']
     pose_data=research_data['event_angle_observations']
-    signature=json.dumps({'anchors':[k.frame_idx for k in key_frames], 'threshold':confidence_threshold,
+    signature=json.dumps({'payload_schema':SCHEMA_VERSION, 'model':os.getenv('GEMINI_MODEL', 'gemini-3.5-flash-lite'), 'anchors':[k.frame_idx for k in key_frames], 'threshold':confidence_threshold,
                           'mock':mock_mode,'metric':dynamics['metric'],'range':[dynamics['start_frame'],dynamics['end_frame']],
                           'reference':dynamics['reference_frame']},sort_keys=True)
-    run_report=mock_mode or (analysis_clicked and research_data['segmentation_valid'])
+    run_report=mock_mode
     if not mock_mode:
-        st.caption('국면 탐색은 API를 자동 재호출하지 않습니다. 필요하면 자동 분석 결과로 AI 보고서를 갱신하세요.')
+        st.caption('Gemini에는 기준·변화 구간 최대 40프레임의 좌표·각도·각속도를 전송합니다. 입력 50,000토큰 이하에서만 생성하며, 아래 버튼으로 실행합니다.')
         run_report=st.button('자동 분석 결과로 AI 보고서 갱신',disabled=not research_data['segmentation_valid']) or run_report
     if run_report:
         result=GeminiAnalyzer(mock=mock_mode).analyze(key_frames,pose_data,sport,
-                 user_context={'research_data':research_data})
+                 user_context={'research_data':research_data, 'reference_frame':dynamics['reference_frame']})
         st.session_state['analysis_report']=result
         st.session_state['report_signature']=signature
     if st.session_state.get('report_signature')==signature:
@@ -160,6 +163,20 @@ if uploaded:
 
     mode_label = gemini_result.get('mode', 'unknown')
     st.info(f"분석 모드: {mode_label}")
+    diagnostics = gemini_result.get('api_diagnostics') or {}
+    api_failed = diagnostics.get('outcome') in ('failed', 'blocked')
+    if api_failed:
+        st.error('Gemini 생성을 중단했거나 요청에 실패했습니다. 아래 표는 로컬 측정 결과이며 AI 해석이 아닙니다.')
+        st.caption('연속 재시도 대신 아래 요청 진단에서 제한 항목과 재시도 대기시간을 확인하세요.')
+    if diagnostics:
+        with st.expander('Gemini 요청 진단 · 입력 토큰과 제한 사유', expanded=api_failed):
+            st.caption('영상·이미지는 보내지 않습니다. 좌표·각도 텍스트만 전송하며 키와 좌표 원문은 진단 로그에 저장하지 않습니다.')
+            st.json(diagnostics)
+            st.caption('로컬 기록: outputs/gemini_requests.jsonl. input_tokens는 사전 토큰 계산값, usage는 성공 응답의 사용량입니다. 계산 실패 시 토큰 수는 알 수 없습니다.')
+    elif mode_label.startswith('mock_fallback:') and mode_label != 'mock_fallback:mock_mode_enabled':
+        st.warning('이전 실패 결과에는 진단 기록이 없습니다. 앱 재시작 후 AI 보고서를 한 번 갱신하면 원인을 기록합니다.')
+
+    render_motion_report(gemini_result)
 
     if gemini_result.get("risk_assessment"):
         st.caption("RULA·REBA 부위별 기본 구간 참고값입니다. 2D 운동면 가정과 보정 전 값이며 최종 위험 등급이 아닙니다.")
@@ -169,7 +186,7 @@ if uploaded:
     st.markdown(f"**요약:** {gemini_result.get('summary', '')}")
 
     if gemini_result.get("phase_feedback"):
-        st.subheader("단계별 피드백")
+        st.subheader("로컬 측정 기반 단계별 피드백")
         st.dataframe([
             {"국면": fb.get("phase", ""), "항목": fb.get("joint", ""),
              "발견": fb.get("finding", ""), "근거": fb.get("evidence", ""),
@@ -186,21 +203,6 @@ if uploaded:
             for row in gemini_result["measurement_quality"]
         ], hide_index=True, use_container_width=True)
 
-    st.subheader("질환 서술의 코드 라벨")
-    st.caption("모델이 언급한 용어의 연구용 분류입니다. 해당 피험자의 진단이나 부상 발생 확률이 아닙니다.")
-    if gemini_result.get("disease_labels"):
-        st.dataframe([
-            {"국면": row["phase"], "원문": row["original_statement"], "질환 용어": row["original_term"],
-             "모델이 제시한 근거": row["evidence_claim"], "분류 체계": row["code_system"],
-             "코드 후보": row["code"] or "미부여", "상태": row["status"]}
-            for row in gemini_result["disease_labels"]
-        ], hide_index=True, use_container_width=True)
-    else:
-        st.info("이번 결과에 부여된 질환 코드는 없습니다. Mock은 질환을 생성하지 않습니다.")
-    with st.expander("질환 코드 사전 예시 · 분석 결과 아님"):
-        from modules.disease_labels import CATALOG, SYSTEM
-        st.caption(f"{SYSTEM} 기준의 제한된 용어 사전입니다. '허리 부담'·'팔꿈치 부상'만으로 특정 코드를 정하지 않습니다.")
-        st.dataframe([{"용어":e["term"], "코드":e["code"], "출처":e["source"]} for e in CATALOG], hide_index=True)
     if gemini_result.get("raw_response"):
         with st.expander("모델 원문 · 검증 전 연구 기록"):
             st.text(gemini_result["raw_response"])
