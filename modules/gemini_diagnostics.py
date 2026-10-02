@@ -11,6 +11,20 @@ def error_metadata(exc, api_key=None):
         text = str(value)
         return (text.replace(api_key, '[REDACTED]') if api_key else text)[:300]
     result = {'type': type(exc).__name__}
+    causes = []
+    cause = exc.__cause__ or exc.__context__
+    seen = {id(exc)}
+    while cause is not None and id(cause) not in seen and len(causes) < 8:
+        seen.add(id(cause))
+        entry = {'type': type(cause).__name__}
+        for key in ('errno', 'winerror'):
+            value = getattr(cause, key, None)
+            if isinstance(value, int):
+                entry[key] = value
+        causes.append(entry)
+        cause = cause.__cause__ or cause.__context__
+    if causes:
+        result['causes'] = causes
     code = getattr(exc, 'code', None)
     if isinstance(code, int):
         result['code'] = code

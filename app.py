@@ -2,6 +2,7 @@
 import tempfile
 import hashlib
 import json
+from datetime import datetime, timezone
 import cv2
 from pathlib import Path
 import streamlit as st
@@ -37,6 +38,8 @@ PHASES_TO_SHOW=['어드레스','백스윙 탑','다운스윙','임팩트']
 with st.sidebar:
     st.header('⚙️ 설정')
     mock_mode=st.toggle('Mock 모드 (API 없이 테스트)',value=True)
+    mock_turned_off = st.session_state.get('previous_mock_mode', True) and not mock_mode
+    st.session_state['previous_mock_mode'] = mock_mode
     sport=st.selectbox('종목',['golf'])
     confidence_threshold=st.slider('통계·기준 대조 최소 신뢰도',0.,1.,.5,.05)
     st.caption('신뢰도 기준은 연구 검증 전 설정값입니다.')
@@ -97,19 +100,33 @@ if uploaded:
                           'reference':dynamics['reference_frame']},sort_keys=True)
     run_report=mock_mode
     if not mock_mode:
-        st.caption('Gemini에는 기준·변화 구간 최대 40프레임의 좌표·각도·각속도를 전송합니다. 입력 50,000토큰 이하에서만 생성하며, 아래 버튼으로 실행합니다.')
-        run_report=st.button('자동 분석 결과로 AI 보고서 갱신',disabled=not research_data['segmentation_valid']) or run_report
+        st.caption('Mock을 끄거나 새로 분석하면 Gemini 해석을 한 번 자동 실행합니다. 최대 40프레임을 보내며 실패 시 자동 반복하지 않습니다.')
+        automatic_request = mock_turned_off or analysis_clicked or st.session_state.get('ai_attempted_digest') != digest
+        retry_requested = st.button('AI 보고서 다시 요청', disabled=not research_data['segmentation_valid'])
+        run_report = research_data['segmentation_valid'] and (automatic_request or retry_requested)
     if run_report:
-        result=GeminiAnalyzer(mock=mock_mode).analyze(key_frames,pose_data,sport,
+        if not mock_mode:
+            st.session_state['ai_attempted_digest'] = digest
+        with st.spinner('Gemini 좌표·각도 해석 중...' if not mock_mode else '측정 결과 정리 중...'):
+            result=GeminiAnalyzer(mock=mock_mode).analyze(key_frames,pose_data,sport,
                  user_context={'research_data':research_data, 'reference_frame':dynamics['reference_frame']})
         st.session_state['analysis_report']=result
+        if result.get('mode', '').startswith('real_gemini'):
+            # Keep successful research outputs locally; outputs/ is Git-ignored.
+            result_path = Path(__file__).parent / 'outputs' / 'gemini_results' / (datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ') + '.json')
+            try:
+                result_path.parent.mkdir(parents=True, exist_ok=True)
+                result_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
+                st.session_state['analysis_report_path'] = str(result_path)
+            except OSError:
+                st.warning('응답은 받았지만 로컬 파일 저장에 실패했습니다. 아래 다운로드로 보관하세요.')
         st.session_state['report_signature']=signature
     if st.session_state.get('report_signature')==signature:
         gemini_result=st.session_state['analysis_report']
     else:
         # Keep current measurement tables available without displaying stale model output.
         gemini_result=GeminiAnalyzer(mock=True).analyze(key_frames,pose_data,sport)
-        gemini_result['summary']='선택한 자동 국면의 현재 측정표입니다. AI 보고서는 갱신 버튼으로 다시 생성할 수 있습니다.'
+        gemini_result['summary']='선택한 자동 국면의 현재 측정표입니다. 선택을 바꾼 뒤에는 AI 보고서 다시 요청으로 갱신할 수 있습니다.'
 
     st.subheader("국면별 관절각 통계")
     if not research_data["segmentation_valid"]:
@@ -165,7 +182,10 @@ if uploaded:
 
     mode_label = gemini_result.get('mode', 'unknown')
     st.info(f"분석 모드: {mode_label}")
-    diagnostics = gemini_result.get('api_diagnostics') or {}
+    if mode_label.startswith('real_gemini'):
+        st.download_button('Gemini 실제 응답 JSON 저장', json.dumps(gemini_result, ensure_ascii=False, indent=2),
+                           'gemini_response.json', 'application/json', on_click='ignore')
+    diagnostics = (gemini_result.get('api_diagnostics') or {}) if not mock_mode else {}
     api_failed = diagnostics.get('outcome') in ('failed', 'blocked')
     if api_failed:
         st.error('Gemini 생성을 중단했거나 요청에 실패했습니다. 아래 표는 로컬 측정 결과이며 AI 해석이 아닙니다.')
