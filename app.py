@@ -10,11 +10,13 @@ from modules.video_loader import VideoLoader
 from modules.pose_analyzer import PoseAnalyzer
 from modules.frame_selector import FrameSelector
 from modules.still_overlay import body_still
-from modules.gemini_analyzer import GeminiAnalyzer
+from modules import gemini_analyzer
 from modules.motion_report_ui import render_motion_report
 from modules.motion_payload import SCHEMA_VERSION
 import os
 import importlib
+importlib.reload(gemini_analyzer)
+GeminiAnalyzer = gemini_analyzer.GeminiAnalyzer
 from modules import motion_player, motion_inspector, motion_findings
 # Refresh display modules on rerun while preserving extracted pose data.
 importlib.reload(motion_player)
