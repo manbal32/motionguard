@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+local-data/
+.venv/
+venv/
+__pycache__/
+*.mp4
+*.mov
+outputs/
+tracks/*
+!tracks/.gitkeep

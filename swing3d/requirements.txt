@@ -1,0 +1,2 @@
+# 서버와 트랙 변환기는 Python 표준 라이브러리를 사용합니다.
+# 영상에서 좌표를 추출할 때만 별도로 설치: pip install mediapipe
