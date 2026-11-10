@@ -3,3 +3,4 @@ main { max-width: 920px; margin: auto; padding: 24px; }
 canvas { display: block; width: 100%; aspect-ratio: 16 / 10; }
 .controls { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; }
 .controls input[type=range] { flex: 1; min-width: 120px; }
+.model-option { color: #ffd193; }

@@ -10,4 +10,39 @@
   <p role="status"></p>
   <div id="viewer"></div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+<script src="swing3d.js"></script>
+<script>
+  const input = document.querySelector("input[type=file]");
+  const status = document.querySelector("[role=status]");
+  const viewer = document.querySelector("#viewer");
+
+  input.addEventListener("change", async () => {
+    const file = input.files[0];
+    if (!file) return;
+    input.disabled = true;
+    Swing3D.dispose();
+    status.textContent = "트랙을 만드는 중입니다.";
+    try {
+      const response = await fetch("/api/track", {
+        method: "POST",
+        headers: { "Content-Type": "text/csv" },
+        body: file,
+      });
+      const data = await response.json();
+      if (data.ok === false) {
+        status.textContent = "이 영상은 3D 재현이 어렵다. " + data.reason;
+        return;
+      }
+      if (!response.ok) throw new Error("트랙 요청에 실패했습니다.");
+      if (!window.THREE) throw new Error("Three.js를 불러올 수 없습니다.");
+      Swing3D.mount(viewer, data);
+      status.textContent = file.name + " · 표본 " + data.meta.samples + "개";
+    } catch (error) {
+      status.textContent = error.message;
+    } finally {
+      input.disabled = false;
+    }
+  });
+</script>
 </html>
