@@ -235,8 +235,11 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     for i in range(start, end + 1):
         s = (sw[i] - base_sw) * back            # 백스윙이 + 가 되도록 방향 정규화
         sign = 1.0 if s >= 0 else -1.0
-        turn = math.acos(max(-1.0, min(1.0, shw[i] / shw_max))) - base_turn
-        hip = math.acos(max(-1.0, min(1.0, hpw[i] / hpw_max))) - base_hip
+        # 폭 단축률에서 역산한 회전량은 어드레스 기준값보다 작아질 수 있다.
+        # 그대로 두면 sign 과 곱해져 몸통과 반대 방향으로 도는 값이 나오고,
+        # 백스윙 탑에서 골반이 몸통을 상쇄해 몸이 안 도는 것처럼 보였다.
+        turn = max(0.0, math.acos(max(-1.0, min(1.0, shw[i] / shw_max))) - base_turn)
+        hip = max(0.0, math.acos(max(-1.0, min(1.0, hpw[i] / hpw_max))) - base_hip)
         lean = 0.40 * (1 - tln[i] / tln_max) - base_lean + 0.26
         wrist = -(fa[i] - sw[i]) - base_wrist
         track.append([
