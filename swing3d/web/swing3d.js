@@ -9,16 +9,16 @@ window.Swing3D = (() => {
     { name: "웨지", length: 0.70, plane: -0.42, vx: -7.4, vy: 11.5, carry: 58 },
   ];
   const courses = [
-    { name: "제주 해안", sky: 0x98cedf, fog: 0.024, grass: 0x315a3a, stripe: 0x3a6542,
+    { name: "제주 해안", sky: 0x98cedf, fog: 0.008, grass: 0x315a3a, stripe: 0x3a6542,
       sun: 0xffedcd, intensity: 1.35, ambient: 0.8 },
-    { name: "가평 산악", sky: 0xb7c8ad, fog: 0.043, grass: 0x32533d, stripe: 0x42694b,
+    { name: "가평 산악", sky: 0xb7c8ad, fog: 0.011, grass: 0x32533d, stripe: 0x42694b,
       sun: 0xffd391, intensity: 1.4, ambient: 1.35 },
-    { name: "야간 레인지", sky: 0x131e35, fog: 0.031, grass: 0x263f37, stripe: 0x365449,
+    { name: "야간 레인지", sky: 0x131e35, fog: 0.013, grass: 0x263f37, stripe: 0x365449,
       sun: 0xa5c9ff, intensity: 0, ambient: 0.42 },
   ];
   const cameras = [
-    ["정면", [0, 0.65, 4.8], [0, 1, 0]],
-    ["다운 더 라인", [4.8, 0.65, 0.2], [0, 1, 0]],
+    ["정면", [0, 0.60, 5.4], [0, 1, 0]],
+    ["다운 더 라인", [5.4, 0.60, 0.2], [0, 1, 0]],
     ["하이 앵글", [2.5, 3.6, 3.6], [0, 1, 0]],
     ["손목 클로즈업", [0.3, 0.35, 2.3], [0, 1.25, 0.2]],
   ];
@@ -74,7 +74,7 @@ window.Swing3D = (() => {
     const referencePose = modelReference(opts.reference ?? opts.findings?.reference ?? "model", data.events);
     const scene = new T.Scene();
     scene.background = new T.Color(0x182830);
-    const camera = new T.PerspectiveCamera(38, 1, 0.1, 240);
+    const camera = new T.PerspectiveCamera(30, 1, 0.1, 240);
     camera.position.set(2.7, 1.8, 5.3);
     camera.lookAt(0, 1, 0);
     const renderer = new T.WebGLRenderer({ antialias: true });
@@ -108,30 +108,57 @@ window.Swing3D = (() => {
 
     const figure = group(scene);
     const hips = group(figure, 0, 0.88);
-    const pelvisMesh = box(hips, 0.34, 0.20, 0.21, 0x405c72);
+    const pelvisMesh = box(hips, 0.32, 0.19, 0.20, 0x424b54);
     const torso = group(hips);
     const chest = group(torso, 0, 0.40);
-    const torsoMesh = mesh(torso, new T.SphereGeometry(1, 20, 12), 0x53a798, 0, 0.26);
-    torsoMesh.scale.set(0.235, 0.29, 0.128);
-    const head = group(chest, 0, 0.25);
-    mesh(head, new T.SphereGeometry(0.105, 20, 12), 0xd9ac8c).scale.y = 1.2;
-    box(head, 0.18, 0.027, 0.15, 0xe6e8dd, 0, 0.063, 0.072);
+    const shirt = 0x56736a;
+    const trousers = 0x424b54;
+    const skin = 0xb78e74;
+    const cap = 0x454c4d;
+    const shoe = 0x373d43;
+    const torsoMesh = mesh(torso, new T.LatheGeometry([
+      new T.Vector2(0.13, 0.02), new T.Vector2(0.145, 0.11), new T.Vector2(0.17, 0.23),
+      new T.Vector2(0.23, 0.37), new T.Vector2(0.195, 0.43), new T.Vector2(0.075, 0.48),
+    ], 24), shirt);
+    torsoMesh.scale.z = 0.57;
+    torsoMesh.material.roughness = 0.8;
+    mesh(chest, new T.CylinderGeometry(0.052, 0.064, 0.13, 16), skin, 0, 0.105)
+      .material.roughness = 0.7;
+    const head = group(chest, 0, 0.23);
+    const face = mesh(head, new T.SphereGeometry(0.102, 24, 16), skin);
+    face.scale.set(0.88, 1.19, 0.93);
+    face.material.roughness = 0.7;
+    mesh(head, new T.SphereGeometry(0.025, 12, 8), skin, 0, -0.008, 0.091).scale.y = 1.35;
+    for (const side of [-1, 1]) {
+      mesh(head, new T.SphereGeometry(0.016, 10, 8), skin, side * 0.085, -0.008);
+      mesh(head, new T.SphereGeometry(0.006, 8, 6), shoe, side * 0.032, 0.020, 0.086);
+    }
+    mesh(head, new T.SphereGeometry(0.098, 22, 12, 0, Math.PI * 2, 0, Math.PI / 2), cap, 0, 0.065)
+      .scale.set(1, 0.68, 1);
+    mesh(head, new T.CylinderGeometry(0.098, 0.098, 0.013, 24), cap, 0, 0.063, 0.046)
+      .scale.set(0.95, 1, 1.02);
 
     const arms = [-1, 1].map(side => {
       const leg = group(hips, side * 0.15);
       const knee = group(leg, 0, -0.40);
       const ankle = group(knee, 0, -0.39);
-      limb(leg, 0.40, 0.075, 0x405c72).position.y = -0.20;
-      limb(knee, 0.39, 0.058, 0x405c72).position.y = -0.195;
-      box(ankle, 0.13, 0.095, 0.24, 0xd9e4e3, 0, -0.045, 0.06);
+      limb(leg, 0.40, 0.075, trousers).position.y = -0.20;
+      limb(knee, 0.39, 0.058, trousers).position.y = -0.195;
+      const shoeUpper = mesh(ankle, new T.SphereGeometry(1, 16, 10), shoe, 0, -0.042, 0.052);
+      shoeUpper.scale.set(0.066, 0.044, 0.125);
+      box(ankle, 0.126, 0.019, 0.23, 0x797a73, 0, -0.078, 0.051);
+      box(ankle, 0.113, 0.028, 0.076, shoe, 0, -0.083, -0.024);
       const shoulder = new T.Vector3(side * 0.26, 0.02, 0);
-      mesh(chest, new T.SphereGeometry(0.067, 16, 12), 0x53a798).position.copy(shoulder);
+      mesh(chest, new T.SphereGeometry(0.067, 16, 12), shirt).position.copy(shoulder);
+      const handJoint = mesh(chest, new T.SphereGeometry(0.032, 16, 12), skin);
+      handJoint.scale.set(1, 1.3, 0.78);
+      handJoint.material.roughness = 0.7;
       return {
         side, knee, ankle, shoulder,
-        elbowJoint: mesh(chest, new T.SphereGeometry(0.039, 16, 12), 0xd9ac8c),
-        handJoint: mesh(chest, new T.SphereGeometry(0.032, 16, 12), 0xd9ac8c),
-        upperMesh: limb(chest, upper, 0.052, 0x53a798),
-        lowerMesh: limb(chest, lower, 0.039, 0xd9ac8c),
+        elbowJoint: mesh(chest, new T.SphereGeometry(0.039, 16, 12), skin),
+        handJoint,
+        upperMesh: limb(chest, upper, 0.052, shirt),
+        lowerMesh: limb(chest, lower, 0.039, skin),
       };
     });
 
@@ -141,13 +168,25 @@ window.Swing3D = (() => {
     const shaft = mesh(wrist, new T.CylinderGeometry(0.013, 0.009, 1, 10), 0xd8e0e6);
     const tip = group(wrist);
     box(tip, 0.12, 0.058, 0.08, 0x7597ae, 0.036);
+    const planeMeshes = new Set();
+    plane.traverse(node => planeMeshes.add(node));
     const segments = [];
     const modelFigure = figure.clone(true);
+    let avatars;
+    let disposed = false;
+    const mappedNodes = new Map();
+    const actualDriver = { hips, torso, head, wrist, arms };
+    let ghostDriver;
     const modelSegments = [];
     const sourceColors = new Map();
     figure.traverse(node => {
       segments.push(node);
-      if (node.isMesh) sourceColors.set(node, node.material.color.clone());
+      if (node.isMesh) {
+        const color = node.material.color;
+        if (color.getHex() === skin) node.material.roughness = 0.7;
+        if ([shirt, trousers, cap].includes(color.getHex())) node.material.roughness = 0.8;
+        sourceColors.set(node, color.clone());
+      }
     });
     const ghostMaterial = new T.MeshStandardMaterial({
       color: 0x9ac9f2, transparent: true, opacity: 0.38, depthWrite: false,
@@ -160,22 +199,160 @@ window.Swing3D = (() => {
         node.receiveShadow = false;
       }
     });
+    segments.forEach((node, i) => mappedNodes.set(node, modelSegments[i]));
+    ghostDriver = {
+      hips: mappedNodes.get(hips), torso: mappedNodes.get(torso), head: mappedNodes.get(head), wrist: mappedNodes.get(wrist),
+      arms: arms.map(arm => Object.fromEntries(
+        ["knee", "ankle", "upperMesh", "elbowJoint", "handJoint"].map(key => [key, mappedNodes.get(arm[key])]),
+      )),
+    };
     modelFigure.visible = false;
     scene.add(modelFigure);
     const ball = mesh(scene, new T.SphereGeometry(0.026, 16, 12), 0xffffff);
+    const shadeCanvas = document.createElement("canvas");
+    shadeCanvas.width = shadeCanvas.height = 64;
+    const shadeContext = shadeCanvas.getContext("2d");
+    const shadeGradient = shadeContext.createRadialGradient(32, 32, 3, 32, 32, 32);
+    shadeGradient.addColorStop(0, "rgba(0,0,0,.60)");
+    shadeGradient.addColorStop(1, "rgba(0,0,0,0)");
+    shadeContext.fillStyle = shadeGradient;
+    shadeContext.fillRect(0, 0, 64, 64);
+    const shadeTexture = new T.CanvasTexture(shadeCanvas);
+    const contacts = arms.map(() => {
+      const shade = new T.Mesh(new T.PlaneGeometry(0.39, 0.51), new T.MeshBasicMaterial({
+        map: shadeTexture, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2,
+      }));
+      shade.rotation.x = -Math.PI / 2;
+      scene.add(shade);
+      return shade;
+    });
+    const contactPosition = new T.Vector3();
     const terrain = group(scene);
-    const ground = box(terrain, 210, 0.08, 84, 0xffffff, -82, -0.055);
-    const stripes = Array.from({ length: 9 }, (_, i) =>
-      box(terrain, 200, 0.009, 1.4, 0xffffff, -80, -0.012, (i - 4) * 2.8));
-    const coastline = box(terrain, 210, 0.09, 36, 0x47849c, -82, -0.06, -50);
+    // A repeatable turf tile, with variation in the course mesh kept below tee level.
+    let seed = 611;
+    function random() {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      return seed / 4294967296;
+    }
+    const turfCanvas = document.createElement("canvas");
+    turfCanvas.width = turfCanvas.height = 128;
+    const turfContext = turfCanvas.getContext("2d");
+    turfContext.fillStyle = "#d6d8ce";
+    turfContext.fillRect(0, 0, 128, 128);
+    for (let i = 0; i < 5000; i++) {
+      const brightness = 120 + Math.floor(random() * 135);
+      turfContext.fillStyle = "rgb(" + brightness + "," + brightness + "," + brightness + ")";
+      turfContext.fillRect(random() * 128, random() * 128, 1, 1 + random() * 3);
+    }
+    const turfTexture = new T.CanvasTexture(turfCanvas);
+    turfTexture.wrapS = turfTexture.wrapT = T.RepeatWrapping;
+    turfTexture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+    const fairway = new T.MeshStandardMaterial({ map: turfTexture, roughness: 1, vertexColors: true });
+    const rough = new T.MeshStandardMaterial({ map: turfTexture, roughness: 1 });
+    const roughGround = new T.Mesh(new T.PlaneGeometry(174, 100), rough);
+    roughGround.rotation.x = -Math.PI / 2;
+    roughGround.position.set(-74, -0.115, 0);
+    roughGround.receiveShadow = true;
+    terrain.add(roughGround);
+
+    const positions = [];
+    const uv = [];
+    const indicesTerrain = [];
+    const turfColors = [];
+    const bands = [];
+    const laneCenter = distance => 3 * Math.sin(Math.max(0, distance - 6) * 0.034);
+    for (let row = 0; row <= 122; row++) {
+      const distance = row - 8;
+      const halfWidth = T.MathUtils.lerp(10.5, 4.0, T.MathUtils.clamp(distance / 112, 0, 1));
+      for (let col = 0; col <= 12; col++) {
+        const z = laneCenter(distance) + (col / 6 - 1) * halfWidth;
+        const height = distance < 5 ? 0 : -0.044 + 0.038 * Math.sin(distance * 0.22 + z * 0.52);
+        positions.push(-distance, height, z);
+        uv.push(distance * 0.72, z * 0.72);
+        turfColors.push(0, 0, 0);
+        bands.push(Math.floor(Math.max(0, distance) / 4) % 2);
+        if (row < 122 && col < 12) {
+          const at = row * 13 + col;
+          indicesTerrain.push(at, at + 13, at + 1, at + 1, at + 13, at + 14);
+        }
+      }
+    }
+    const laneGeometry = new T.BufferGeometry();
+    laneGeometry.setAttribute("position", new T.Float32BufferAttribute(positions, 3));
+    laneGeometry.setAttribute("uv", new T.Float32BufferAttribute(uv, 2));
+    laneGeometry.setAttribute("color", new T.Float32BufferAttribute(turfColors, 3));
+    laneGeometry.setIndex(indicesTerrain);
+    laneGeometry.computeVertexNormals();
+    const lane = new T.Mesh(laneGeometry, fairway);
+    lane.receiveShadow = true;
+    terrain.add(lane);
+
+    box(terrain, 3.8, 0.015, 4.6, 0x71815c, 0.8, -0.007, 0);
+    const tee = box(terrain, 3.64, 0.018, 4.42, 0x486747, 0.8, -0.006, 0);
+    const teeTexture = turfTexture.clone();
+    teeTexture.repeat.set(3, 3);
+    teeTexture.needsUpdate = true;
+    tee.material.map = teeTexture;
+    for (const side of [-1, 1]) {
+      mesh(terrain, new T.SphereGeometry(0.115, 12, 8), side < 0 ? 0xd8cdb2 : 0x6d4637,
+        -1.1, 0.12, side * 1.95);
+    }
+    for (let i = 0; i < 13; i++) {
+      const divot = mesh(terrain, new T.CircleGeometry(0.05 + random() * 0.10, 7), 0x666048,
+        -1.3 - random() * 3.1, 0.015, (random() - 0.5) * 3.5);
+      divot.rotation.x = -Math.PI / 2;
+      divot.scale.x = 1.7;
+    }
+    const grassGeometry = new T.ConeGeometry(0.035, 0.23, 3);
+    const grass = new T.InstancedMesh(grassGeometry, new T.MeshStandardMaterial({ color: 0x4d5938 }), 210);
+    const detail = new T.Object3D();
+    for (let i = 0; i < grass.count; i++) {
+      const side = i % 2 ? 1 : -1;
+      detail.position.set(-5 + random() * 8, 0.065, side * (2.45 + random() * 2.7));
+      detail.rotation.set((random() - 0.5) * 0.7, random() * Math.PI, (random() - 0.5) * 0.6);
+      detail.scale.setScalar(0.45 + random() * 0.7);
+      detail.updateMatrix();
+      grass.setMatrixAt(i, detail.matrix);
+    }
+    terrain.add(grass);
+    const trunks = new T.InstancedMesh(new T.CylinderGeometry(0.12, 0.2, 2.7, 6),
+      new T.MeshStandardMaterial({ color: 0x575044 }), 58);
+    const crowns = new T.InstancedMesh(new T.IcosahedronGeometry(1, 1),
+      new T.MeshStandardMaterial({ color: 0xffffff, roughness: 1 }), 58);
+    for (let i = 0; i < trunks.count; i++) {
+      const distance = i < 42 ? 30 + random() * 31 : 84 + random() * 59;
+      const z = (i % 2 ? 1 : -1) * (9 + random() * 10) + laneCenter(distance);
+      const size = 0.75 + random() * 1.1;
+      detail.position.set(-distance, 1.25 * size, z);
+      detail.rotation.set(0, random() * Math.PI, 0);
+      detail.scale.setScalar(size);
+      detail.updateMatrix();
+      trunks.setMatrixAt(i, detail.matrix);
+      detail.position.y += 2.3 * size;
+      detail.scale.set(1.55 * size, 2.3 * size, 1.55 * size);
+      detail.updateMatrix();
+      crowns.setMatrixAt(i, detail.matrix);
+      crowns.setColorAt(i, new T.Color().setHSL(0.28 + random() * 0.06, 0.22, 0.24 + random() * 0.13));
+    }
+    terrain.add(trunks, crowns);
+
+    const greenZ = laneCenter(109);
+    mesh(terrain, new T.CylinderGeometry(1, 1, 0.06, 48), 0x779369, -109, 0.01, greenZ)
+      .scale.set(7, 1, 5);
+    mesh(terrain, new T.CylinderGeometry(0.04, 0.04, 3.4, 8), 0xe6e1cc, -109, 1.72, greenZ);
+    const flag = box(terrain, 0.055, 0.65, 1.05, 0xa85944, -109, 3.09, greenZ + 0.51);
+    flag.rotation.y = 0.2;
+
+    const coastline = box(terrain, 145, 0.09, 28, 0x47849c, -67, -0.135, -35);
     const hills = group(terrain);
-    for (let i = 0; i < 9; i++) {
-      const hill = mesh(hills, new T.IcosahedronGeometry(1, 1), 0x526d56, -i * 19 + 12, 0, -28 - i % 2 * 8);
-      hill.scale.set(16, 7 + i % 3 * 4, 12);
+    for (let i = 0; i < 8; i++) {
+      const hill = mesh(hills, new T.IcosahedronGeometry(1, 1), 0x526b59,
+        -122 - i * 3.7, 0, (i - 3.5) * 8);
+      hill.scale.set(10, 7 + i % 3 * 4, 10);
     }
     const rangeMarkers = group(terrain);
-    for (const distance of [12, 24, 36, 48]) {
-      box(rangeMarkers, 0.18, 0.025, 11, 0x7c9c80, -distance, -0.003);
+    for (const distance of [18, 33, 48]) {
+      box(rangeMarkers, 0.045, 0.54, 1.5, 0xc2cbb4, -distance, 0.24, 6);
     }
     terrain.traverse(node => { node.castShadow = false; });
     const ambient = new T.HemisphereLight(0xf4f9ff, 0x536457);
@@ -196,8 +373,12 @@ window.Swing3D = (() => {
       const course = courses[index];
       scene.background.set(course.sky);
       scene.fog = new T.FogExp2(course.sky, course.fog);
-      ground.material.color.set(course.grass);
-      stripes.forEach(stripe => stripe.material.color.set(course.stripe));
+      rough.color.set(course.grass).multiplyScalar(0.68);
+      const tones = [new T.Color(course.grass), new T.Color(course.stripe)];
+      const colors = laneGeometry.getAttribute("color");
+      bands.forEach((band, i) => colors.setXYZ(i, tones[band].r, tones[band].g, tones[band].b));
+      colors.needsUpdate = true;
+      crowns.material.color.set(index === 2 ? 0x8799b0 : 0xffffff);
       coastline.visible = index === 0;
       hills.visible = index === 1;
       rangeMarkers.visible = index === 2;
@@ -332,6 +513,7 @@ window.Swing3D = (() => {
         node.material.color.copy(color).lerp(neutral, 0.62);
         if (regions[item.channel]?.includes(node)) node.material.color.copy(highlight);
       }
+      avatars?.[0].colorize(item.channel);
       focusFinding();
     }
 
@@ -365,7 +547,7 @@ window.Swing3D = (() => {
       // Keep both hands on the same club when the nominal arc exceeds arm reach.
       chest.worldToLocal(wrist.getWorldPosition(gripCenter));
       for (const arm of arms) {
-        chest.worldToLocal(wrist.localToWorld(arm.grip.set(0, arm.side * 0.038, 0)));
+        chest.worldToLocal(wrist.localToWorld(arm.grip.set(0, arm.side * 0.049, 0)));
         arm.grip.sub(gripCenter);
       }
       for (let pass = 0; pass < 12; pass++) {
@@ -644,6 +826,18 @@ window.Swing3D = (() => {
         modelOffset.y = 0;
         modelFigure.position.copy(modelOffset.normalize().multiplyScalar(cameraSelect.value === "3" ? 0.72 : 1.18));
       }
+      figure.updateMatrixWorld(true);
+      if (modelFigure.visible) modelFigure.updateMatrixWorld(true);
+      for (const [i, arm] of arms.entries()) {
+        arm.ankle.getWorldPosition(contactPosition);
+        contacts[i].position.set(contactPosition.x, 0.005, contactPosition.z + 0.04);
+        contacts[i].material.opacity = T.MathUtils.clamp(1.3 - 3 * contactPosition.y, 0.22, 1);
+      }
+      if (avatars) {
+        avatars[0].update(actualDriver);
+        avatars[1].root.visible = modelFigure.visible;
+        if (modelFigure.visible) avatars[1].update(ghostDriver);
+      }
       renderer.render(scene, camera);
       frame = requestAnimationFrame(draw);
     }
@@ -672,7 +866,24 @@ window.Swing3D = (() => {
     const firstFinding = findings.find(item => item.channel && item.range);
     if (firstFinding) selectFinding(firstFinding);
     frame = requestAnimationFrame(draw);
+    import("./avatar.js").then(module => module.loadAvatars("assets/golfer-rig.json")).then(loaded => {
+      if (disposed) {
+        loaded.forEach(avatar => avatar.dispose());
+        return;
+      }
+      avatars = loaded;
+      for (const [i, avatar] of avatars.entries()) {
+        scene.add(avatar.root);
+        const nodes = i === 0 ? segments : modelSegments;
+        nodes.forEach((node, index) => {
+          if (node.isMesh && !planeMeshes.has(segments[index])) node.visible = false;
+        });
+      }
+      avatars[0].colorize(finding?.channel);
+    }).catch(error => console.warn("기본 아바타로 재생합니다.", error));
     active = () => {
+      disposed = true;
+      avatars?.forEach(avatar => avatar.dispose());
       cancelAnimationFrame(frame);
       observer.disconnect();
       const geometries = new Set();
@@ -683,6 +894,9 @@ window.Swing3D = (() => {
       });
       geometries.forEach(geometry => geometry.dispose());
       materials.forEach(material => material.dispose());
+      shadeTexture.dispose();
+      turfTexture.dispose();
+      teeTexture.dispose();
       renderer.dispose();
       renderer.domElement.remove();
       controls.remove();

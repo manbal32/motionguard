@@ -1,0 +1,66 @@
+{
+  "asset": "golfer.glb",
+  "scale": 0.98,
+  "yaw": 0,
+  "bones": {
+    "hips": "pelvis",
+    "spine": "spine_01",
+    "head": "Head",
+    "left": {
+      "upperArm": "upperarm_r",
+      "forearm": "lowerarm_r",
+      "hand": "hand_r",
+      "thigh": "thigh_r",
+      "knee": "calf_r",
+      "foot": "foot_r",
+      "fingers": [
+        "index_01_r",
+        "index_02_r",
+        "index_03_r",
+        "middle_01_r",
+        "middle_02_r",
+        "middle_03_r",
+        "ring_01_r",
+        "ring_02_r",
+        "ring_03_r",
+        "pinky_01_r",
+        "pinky_02_r",
+        "pinky_03_r"
+      ],
+      "curlAxis": [
+        1,
+        0,
+        0
+      ],
+      "palmDepth": 0.075
+    },
+    "right": {
+      "upperArm": "upperarm_l",
+      "forearm": "lowerarm_l",
+      "hand": "hand_l",
+      "thigh": "thigh_l",
+      "knee": "calf_l",
+      "foot": "foot_l",
+      "fingers": [
+        "index_01_l",
+        "index_02_l",
+        "index_03_l",
+        "middle_01_l",
+        "middle_02_l",
+        "middle_03_l",
+        "ring_01_l",
+        "ring_02_l",
+        "ring_03_l",
+        "pinky_01_l",
+        "pinky_02_l",
+        "pinky_03_l"
+      ],
+      "curlAxis": [
+        1,
+        0,
+        0
+      ],
+      "palmDepth": 0.075
+    }
+  }
+}
