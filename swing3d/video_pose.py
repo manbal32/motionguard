@@ -130,7 +130,44 @@ def extract(video_path: str, *, evidence=False, progress=None):
     return (frames, source_fps, timeline) if evidence else (frames, source_fps)
 
 
-def phase_jpegs(video_path, indices):
+def person_box(points):
+    """Return the visible body's bounds in normalized image coordinates."""
+    if not points:
+        return None
+    body = [(x, y) for x, y, visibility in points if visibility >= 0.45 and 0 <= x <= 1 and 0 <= y <= 1]
+    if len(body) < 8:
+        return None
+    xs, ys = zip(*body)
+    return min(xs), min(ys), max(xs), max(ys)
+
+
+def person_crops(timeline, phases):
+    boxes = {i: box for i, points in enumerate(timeline) if (box := person_box(points))}
+    if not boxes:
+        return {phase: (0, 0, 1) for phase in phases}, (0, 0, 1)
+
+    def crop(box, size):
+        x0, y0, x1, y1 = box
+        return (max(0, min(1 - size, (x0 + x1 - size) / 2)),
+                max(0, min(1 - size, (y0 + y1 - size) / 2)), size)
+
+    def size_for(box):
+        x0, y0, x1, y1 = box
+        return min(1, max(0.04, max(x1 - x0, y1 - y0) * 1.6))
+
+    phase_boxes = {phase: boxes[min(boxes, key=lambda i: abs(i - frame))] for phase, frame in phases.items()}
+    size = max(map(size_for, phase_boxes.values()))
+    stills = {phase: crop(box, size) for phase, box in phase_boxes.items()}
+
+    # A fixed crop across the swing keeps playback from panning and zooming on tracking noise.
+    start, end = phases["address"], phases["finish"]
+    swing = [box for index, box in boxes.items() if start <= index <= end] or list(phase_boxes.values())
+    envelope = (min(box[0] for box in swing), min(box[1] for box in swing),
+                max(box[2] for box in swing), max(box[3] for box in swing))
+    return stills, crop(envelope, size_for(envelope))
+
+
+def phase_jpegs(video_path, indices, crops):
     """Decode in order so every JPEG is from the exact original frame."""
     import cv2
 
@@ -145,12 +182,22 @@ def phase_jpegs(video_path, indices):
                 ok, frame = capture.retrieve()
                 if not ok:
                     break
-                ok, encoded = cv2.imencode(".jpg", frame)
-                if not ok:
-                    break
-                images[index] = encoded.tobytes()
+                images[index] = frame
         if pending != images.keys():
             raise ExtractionError("국면 프레임을 읽을 수 없습니다. 영상을 MP4로 다시 저장해 주세요.")
-        return {phase: images[index] for phase, index in indices.items()}
+        output = {}
+        for phase, index in indices.items():
+            frame = images[index]
+            height, width = frame.shape[:2]
+            x, y, size = crops[phase]
+            crop_width, crop_height = max(1, round(size * width)), max(1, round(size * height))
+            left = min(width - crop_width, round(x * width))
+            top = min(height - crop_height, round(y * height))
+            cropped = frame[top:top + crop_height, left:left + crop_width]
+            ok, encoded = cv2.imencode(".jpg", cropped)
+            if not ok:
+                raise ExtractionError("국면 JPEG를 만들 수 없습니다. 영상을 다시 분석해 주세요.")
+            output[phase] = encoded.tobytes()
+        return output
     finally:
         capture.release()

@@ -1,4 +1,4 @@
-/* global SwingReference */
+/* global SwingReference, Swing3D, SwingFindings */
 (() => {
   "use strict";
   const byId = id => document.getElementById(id);
@@ -21,6 +21,7 @@
   let duration;
   let request;
   let evidence;
+  let viewer;
 
   function node(tag, text, className) {
     const el = document.createElement(tag);
@@ -52,6 +53,9 @@
     selected = undefined;
     duration = undefined;
     byId("overlay").hidden = byId("phases").hidden = true;
+    for (const id of ["findings", "swing-view", "export"]) byId(id).hidden = true;
+    Swing3D.dispose();
+    viewer = undefined;
     byId("start").disabled = true;
     report("대기 중", 0);
     byId("file-info").replaceChildren(node("span", file.name), " · ",
@@ -137,6 +141,8 @@
       if (evidence) setupVideo();
       setupStills(track);
       report("계측 완료", 100);
+      await setupFindings(track);
+
     } catch (error) {
       report(controller.signal.aborted ? "분석을 취소했습니다." : (error.message || "분석에 실패했습니다.")
         + " 전신이 보이는 MP4를 선택하거나 좌표 CSV로 다시 시도해 주세요.", 0);
@@ -172,7 +178,10 @@
     const points = evidence.frames[frame];
     if (!points || byId("toggle-joints").getAttribute("aria-pressed") !== "true") return;
     ctx.strokeStyle = ctx.fillStyle = "#e9e7e0";
-    ctx.lineWidth = Math.max(1.4, width / 360);
+    const visible = points.filter(point => point[2] >= 0.45);
+    const ys = visible.map(point => point[1]);
+    const personHeight = ys.length > 1 ? (Math.max(...ys) - Math.min(...ys)) * height : 0;
+    ctx.lineWidth = Math.max(0.5, personHeight * 0.022);
     for (const [a, b] of links) {
       if (!points[a] || !points[b]) continue;
       ctx.globalAlpha = Math.min(points[a][2], points[b][2]);
@@ -184,13 +193,20 @@
     for (const [x, y, confidence] of points) {
       ctx.globalAlpha = Math.max(0, Math.min(1, confidence));
       ctx.beginPath();
-      ctx.arc(x * width, y * height, Math.max(2, width / 220), 0, Math.PI * 2);
+      ctx.arc(x * width, y * height, Math.max(0.75, personHeight * 0.034), 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.globalAlpha = 1;
   }
 
+  function updateZoom() {
+    const zoom = byId("zoom-person").getAttribute("aria-pressed") === "true";
+    const [x, y, size] = zoom && evidence?.overlay_crop ? evidence.overlay_crop : [0, 0, 1];
+    byId("video-layer").style.transform = `translate(${-100 * x / size}%, ${-100 * y / size}%) scale(${1 / size})`;
+  }
+
   function setupVideo() {
+    updateZoom();
     const ticks = byId("ticks");
     ticks.replaceChildren();
     byId("seek").max = String(duration);
@@ -260,6 +276,51 @@
     byId("phases").hidden = false;
   }
 
+  async function setupFindings(track) {
+    const doc = await SwingFindings.load(track);
+    byId("findings").hidden = false;
+    byId("swing-view").hidden = false;
+    SwingFindings.render(byId("finding-body"), track, doc, id => {
+      viewer?.select(id);
+      byId("swing-view").scrollIntoView({ block: "start" });
+    });
+    try {
+      viewer = Swing3D.mount(byId("viewer"), track, { findings: doc, autoplay: false, externalFindings: true });
+    } catch (error) {
+      byId("viewer").textContent = "3D를 열 수 없습니다. WebGL을 지원하는 브라우저에서 다시 열어 주세요.";
+    }
+    byId("export").hidden = false;
+    byId("record").disabled = !viewer;
+    byId("record-progress").textContent = "";
+    byId("open-report").href = "/report/" + encodeURIComponent(track.track_id);
+  }
+
+  byId("record").addEventListener("click", async () => {
+    if (!viewer) return;
+    const button = byId("record");
+    const status = byId("record-progress");
+    button.disabled = byId("start").disabled = byId("video").disabled = byId("csv").disabled = true;
+    const upload = byId("upload");
+    upload.inert = true;
+    try {
+      const { blob, filename } = await viewer.record(percent => {
+        status.replaceChildren("녹화 중 · ", quantity(String(percent), "%"));
+      });
+      const url = URL.createObjectURL(blob);
+      const link = node("a");
+      link.href = url;
+      link.download = filename;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
+      status.textContent = "WebM 저장 완료";
+    } catch (error) {
+      status.textContent = error.message;
+    } finally {
+      upload.inert = false;
+      button.disabled = byId("start").disabled = byId("video").disabled = byId("csv").disabled = false;
+    }
+  });
+
   byId("video").addEventListener("change", event => select(event.target.files[0]));
   byId("csv").addEventListener("change", event => select(event.target.files[0], true));
   const drop = byId("drop");
@@ -295,6 +356,11 @@
   byId("speed").addEventListener("click", event => {
     video.playbackRate = video.playbackRate === 1 ? 0.5 : 1;
     event.currentTarget.setAttribute("aria-pressed", String(video.playbackRate === 0.5));
+  });
+  byId("zoom-person").addEventListener("click", event => {
+    const toggle = event.currentTarget;
+    toggle.setAttribute("aria-pressed", String(toggle.getAttribute("aria-pressed") !== "true"));
+    updateZoom();
   });
   byId("toggle-joints").addEventListener("click", event => {
     const toggle = event.currentTarget;

@@ -41,6 +41,9 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         path = urlsplit(self.path).path
         finding = re.fullmatch(r"/api/findings/([a-zA-Z0-9_-]+)", path)
+        if re.fullmatch(r"/report/[a-f0-9]{64}", path):
+            self.path = "/report.html"
+            return super().do_GET()
         if finding:
             file = self.findings / (finding[1] + ".json")
             if not file.is_file():
@@ -169,7 +172,7 @@ class Handler(SimpleHTTPRequestHandler):
     def get_or_build_video(self, payload, progress):
         import video_pose
 
-        key = hashlib.sha256(b"video-evidence-2\0" + f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}".encode()
+        key = hashlib.sha256(b"video-evidence-4\0" + f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}".encode()
                              + b"\0" + payload).hexdigest()
         target = self.tracks / (key + ".json")
         if target.exists() and all((self.tracks / f"{key}.{phase}.jpg").is_file()
@@ -183,10 +186,15 @@ class Handler(SimpleHTTPRequestHandler):
             result = swing_track.build_track(frames, fps)
             phases = result["meta"]["phase_frames"]
             progress("국면 스틸컷 준비", 95)
-            images = video_pose.phase_jpegs(source, {phase: frame for phase, frame in phases.items() if phase != "finish"})
+            crops, overlay_crop = video_pose.person_crops(timeline, phases)
+            images = video_pose.phase_jpegs(source, {phase: frame for phase, frame in phases.items() if phase != "finish"}, crops)
+        result["track_id"] = key
+        sample = ROOT / "samples/golf_swing.mp4"
+        if sample.is_file() and payload == sample.read_bytes():
+            result["findings_id"] = "sample"
         result["evidence"] = {
             "id": key, "fps": fps, "landmark_names": video_pose.LANDMARK_NAMES, "frames": timeline,
-            "phase_frames": phases,
+            "phase_frames": phases, "still_crops": crops, "overlay_crop": overlay_crop,
         }
         self.tracks.mkdir(parents=True, exist_ok=True)
         for phase, jpeg in images.items():
@@ -208,7 +216,7 @@ class Handler(SimpleHTTPRequestHandler):
                 temporary.unlink(missing_ok=True)
 
     def get_or_build(self, payload):
-        key = hashlib.sha256(f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}".encode() + b"\0" + payload).hexdigest()
+        key = hashlib.sha256(f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}:report-1".encode() + b"\0" + payload).hexdigest()
         target = self.tracks / (key + ".json")
         if target.exists():
             return json.loads(target.read_text(encoding="utf-8"))
@@ -228,6 +236,10 @@ class Handler(SimpleHTTPRequestHandler):
         if not math.isfinite(fps) or fps <= 0:
             raise ValueError("유효하지 않은 프레임 속도입니다.")
         result = swing_track.build_track(frames, fps)
+        result["track_id"] = key
+        sample = ROOT / "samples/golf1_export.csv"
+        if sample.is_file() and payload == sample.read_bytes():
+            result["findings_id"] = "golf1"
         encoded = json.dumps(result, ensure_ascii=False, allow_nan=False)
         self.tracks.mkdir(parents=True, exist_ok=True)
         with NamedTemporaryFile(dir=self.tracks, delete=False) as temp:

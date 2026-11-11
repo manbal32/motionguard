@@ -453,6 +453,7 @@ window.Swing3D = (() => {
         }
       }
     }
+    if (opts.externalFindings) findingList.hidden = true;
     const comparison = addElement(coaching, "div", "");
     comparison.hidden = true;
     const modeButtons = new Map();
@@ -467,14 +468,14 @@ window.Swing3D = (() => {
     }
     const scaleLabel = addElement(comparison, "label", "과장 배율 ");
     const multiplier = addElement(scaleLabel, "input", "");
-    Object.assign(multiplier, { type: "range", min: "1", max: "4", step: "0.1", value: "2.5" });
+    Object.assign(multiplier, { type: "range", min: "1", max: "3", step: "0.1", value: "2.5" });
     const scaleValue = addElement(scaleLabel, "output", "2.5×");
     multiplier.oninput = () => { scaleValue.textContent = Number(multiplier.value).toFixed(1) + "×"; };
     const warning = addElement(comparison, "p", "교육용 과장이며 측정값이 아닙니다.");
     warning.className = "model-option";
     const reading = addElement(comparison, "p", "");
     const compareLabel = addElement(comparison, "p", "불투명 아바타는 실제 스윙, 반투명 아바타는 교본형 기준입니다.");
-    const highlight = new T.Color(0xffa942);
+    const highlight = new T.Color(0xd98a2b);
     const neutral = new T.Color(0x85939a);
     const modelOffset = new T.Vector3();
 
@@ -489,21 +490,26 @@ window.Swing3D = (() => {
 
     function selectFinding(item) {
       finding = item;
+      multiplier.value = {low: 1.5, medium: 2, high: 2.5}[item.severity] ?? 2;
+      multiplier.oninput();
+      findingBand.hidden = Math.abs(item.measured - item.reference) < 8;
+      updateRuler();
       comparison.hidden = false;
       cameraSelect.value = cameraIds.indexOf(item.camera);
       setCamera();
       for (const [id, button] of findingButtons) button.setAttribute("aria-pressed", String(id === item.id));
       const regions = {
         swing: arms.flatMap(arm => [arm.upperMesh, arm.lowerMesh, arm.elbowJoint, arm.handJoint]),
+        wrist: arms.map(arm => arm.handJoint),
         torso: [torsoMesh], lean: [torsoMesh], hips: [pelvisMesh], shiftX: [pelvisMesh],
         kneeL: [arms[0].knee.children[1]], kneeR: [arms[1].knee.children[1]],
         heelR: arms[1].ankle.children,
       };
       for (const [node, color] of sourceColors) {
         node.material.color.copy(color).lerp(neutral, 0.62);
-        if (regions[item.channel]?.includes(node)) node.material.color.copy(highlight);
+        if (Math.abs(item.measured - item.reference) >= 8 && regions[item.channel]?.includes(node)) node.material.color.copy(highlight);
       }
-      avatars?.[0].colorize(item.channel);
+      avatars?.[0].colorize(Math.abs(item.measured - item.reference) >= 8 ? item.channel : undefined);
       focusFinding();
     }
 
@@ -622,7 +628,7 @@ window.Swing3D = (() => {
       fragmentShader: `
         varying float reliability;
         void main() {
-          gl_FragColor = vec4(0.22, 0.91, 0.95, mix(0.20, 0.94, smoothstep(0.45, 0.75, reliability)));
+          gl_FragColor = vec4(0.91, 0.91, 0.88, mix(0.20, 0.94, smoothstep(0.45, 0.75, reliability)));
         }
       `,
     }));
@@ -671,7 +677,7 @@ window.Swing3D = (() => {
       geometry.setIndex(triangles);
       return geometry;
     }
-    const flightLine = new T.Line(new T.BufferGeometry(), new T.LineBasicMaterial({ color: 0xffcf86 }));
+    const flightLine = new T.Line(new T.BufferGeometry(), new T.LineBasicMaterial({ color: 0xa0a09a }));
     const launch = new T.Vector3();
     const target = new T.Vector3();
     const view = new T.Spherical();
@@ -692,6 +698,7 @@ window.Swing3D = (() => {
       plane.rotation.set(club.plane, -0.22, 0);
       carry.textContent = "캐리 프리셋 " + club.carry + " m";
       updateTrace();
+      updateRuler();
     }
 
     function updateTrace() {
@@ -749,6 +756,53 @@ window.Swing3D = (() => {
       baseDistance = T.MathUtils.clamp(baseDistance * Math.exp(event.deltaY * 0.001), 1.25, 12);
     }, { passive: false });
 
+    const jointNodes = arms.flatMap(arm => [arm.upperMesh, arm.elbowJoint, arm.handJoint, arm.knee, arm.ankle]);
+    const jointGeometry = new T.BufferGeometry().setAttribute("position",
+      new T.Float32BufferAttribute(new Float32Array(jointNodes.length * 3), 3));
+    const jointDots = new T.Points(jointGeometry, new T.PointsMaterial({color:0xe9e7e0, size:0.035}));
+    jointDots.frustumCulled = false;
+    jointDots.visible = false;
+    scene.add(jointDots);
+    const planeGuide = new T.Mesh(new T.RingGeometry(1.17, 1.18, 64),
+      new T.MeshBasicMaterial({color:0xa9ada7, transparent:true, opacity:0.45, side:T.DoubleSide, depthWrite:false}));
+    planeGuide.visible = false;
+    plane.add(planeGuide);
+    const phaseGhosts = new T.LineSegments(new T.BufferGeometry(),
+      new T.LineBasicMaterial({color:0xe9e7e0, transparent:true, opacity:0.24, depthWrite:false}));
+    phaseGhosts.visible = false;
+    scene.add(phaseGhosts);
+    const jointWorld = new T.Vector3();
+
+    function displaySwitch(label, checked, change) {
+      const wrapper = document.createElement("label");
+      const field = document.createElement("input");
+      field.type = "checkbox";
+      field.checked = checked;
+      field.onchange = () => change(field.checked);
+      wrapper.append(field, " " + label);
+      controls.append(wrapper);
+    }
+    displaySwitch("클럽 궤도", true, checked => { trace.visible = checked; });
+    displaySwitch("관절점", false, checked => { jointDots.visible = checked; });
+    displaySwitch("스윙 플레인", false, checked => { planeGuide.visible = checked; });
+    displaySwitch("국면 잔상", false, checked => {
+      phaseGhosts.visible = checked;
+      if (!checked) return;
+      const segments = [];
+      for (const phase of ["top", "down", "impact"]) {
+        applyPose(events[phase]);
+        figure.updateMatrixWorld(true);
+        for (const arm of arms) {
+          for (const [a, b] of [[arm.upperMesh, arm.elbowJoint], [arm.elbowJoint, arm.handJoint],
+            [arm.knee.parent, arm.knee], [arm.knee, arm.ankle], [hips, head]]) {
+            segments.push(a.getWorldPosition(new T.Vector3()), b.getWorldPosition(new T.Vector3()));
+          }
+        }
+      }
+      phaseGhosts.geometry.dispose();
+      phaseGhosts.geometry = new T.BufferGeometry().setFromPoints(segments);
+    });
+
     function playbackDuration() {
       return Math.max(meta.dur, events.impact * meta.dur + flightDuration) + 0.35;
     }
@@ -792,10 +846,110 @@ window.Swing3D = (() => {
       if (reading.textContent !== text) reading.textContent = text;
     }
 
+    const ruler = document.createElement("div");
+    ruler.className = "viewer-ruler";
+    const findingBand = document.createElement("span");
+    findingBand.className = "finding-band";
+    findingBand.hidden = true;
+    ruler.append(findingBand);
+    const phaseMarks = [];
+    for (const [key, title] of Object.entries({address:"어드레스", top:"탑", down:"다운", impact:"임팩트", finish:"피니시"})) {
+      const mark = document.createElement("button");
+      mark.type = "button";
+      mark.textContent = title;
+      phaseMarks.push([mark, events[key]]);
+      mark.onclick = () => { time = events[key] * meta.dur; playing = false; play.textContent = "재생"; };
+      ruler.append(mark);
+    }
+    const timeline = document.createElement("div");
+    timeline.className = "viewer-timeline";
+    seek.replaceWith(timeline);
+    timeline.append(seek, ruler);
+
+    function updateRuler() {
+      const scale = 100 * meta.dur / playbackDuration();
+      for (const [mark, time] of phaseMarks) mark.style.left = time * scale + "%";
+      if (finding) {
+        findingBand.style.left = finding.range[0] * scale + "%";
+        findingBand.style.width = (finding.range[1] - finding.range[0]) * scale + "%";
+      }
+    }
+
+    let recording;
+
+    function record(onProgress) {
+      if (disposed || recording) return Promise.reject(new Error("녹화를 시작할 수 없습니다."));
+      const source = renderer.domElement;
+      const capture = document.createElement("canvas");
+      capture.width = source.width;
+      capture.height = source.height;
+      if (!window.MediaRecorder || !capture.captureStream) return Promise.reject(new Error("WebM 저장을 지원하는 Chrome 또는 Edge에서 다시 시도해 주세요."));
+      const mimeType = ["video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm"]
+        .find(type => MediaRecorder.isTypeSupported(type));
+      if (!mimeType) return Promise.reject(new Error("이 브라우저는 WebM 녹화를 지원하지 않습니다."));
+      const stream = capture.captureStream(30);
+      let recorder;
+      try { recorder = new MediaRecorder(stream, { mimeType }); }
+      catch (error) { stream.getTracks().forEach(track => track.stop()); return Promise.reject(error); }
+      const state = {
+        recorder, stream, capture, context: capture.getContext("2d"), onProgress,
+        start: undefined, previousTime: time, previousPlaying: playing,
+        label: mode === "exaggerated" ? "교육용 과장" : "",
+        filename: "swing3d_" + (finding?.id ?? "swing") + "_" + (mode === "exaggerated" ? Number(multiplier.value).toFixed(1) : "1.0") + "x.webm",
+      };
+      const chunks = [];
+      return new Promise((resolve, reject) => {
+        function done(error) {
+          if (recording !== state) return;
+          recording = undefined;
+          stream.getTracks().forEach(track => track.stop());
+          el.inert = false;
+          time = state.previousTime;
+          playing = state.previousPlaying;
+          previous = undefined;
+          if (error) reject(error);
+          else if (!chunks.length) reject(new Error("녹화된 프레임이 없습니다."));
+          else resolve({ blob: new Blob(chunks, {type:"video/webm"}), filename: state.filename });
+        }
+        state.cancel = () => {
+          if (recorder.state !== "inactive") recorder.stop();
+          done(new Error("녹화가 취소됐습니다."));
+        };
+        recorder.ondataavailable = event => { if (event.data.size) chunks.push(event.data); };
+        recorder.onstop = () => done();
+        recorder.onerror = () => done(new Error("WebM 녹화에 실패했습니다."));
+        el.inert = true;
+        playing = false;
+        time = 0;
+        recording = state;
+        try { recorder.start(); } catch (error) { done(error); }
+      });
+    }
+
+    function captureFrame(now, fullDuration) {
+      if (!recording || recording.recorder.state !== "recording") return;
+      const { context, capture, label, recorder, onProgress } = recording;
+      context.drawImage(renderer.domElement, 0, 0, capture.width, capture.height);
+      if (label) {
+        const px = Math.max(22, Math.round(capture.height * 0.048));
+        context.font = "600 " + px + 'px "IBM Plex Sans KR", sans-serif';
+        context.textBaseline = "top";
+        context.fillStyle = "#0b0e0d";
+        context.fillRect(14, 14, context.measureText(label).width + 24, px + 20);
+        context.fillStyle = "#e9e7e0";
+        context.fillText(label, 26, 24);
+      }
+      onProgress?.(Math.min(100, Math.round(100 * time / fullDuration)));
+      if (now - recording.start >= fullDuration * 1000) recorder.stop();
+    }
+
     function draw(now) {
       const fullDuration = playbackDuration();
       time = Math.min(time, fullDuration);
-      if (playing && previous !== undefined) time = (time + (now - previous) / 1000) % fullDuration;
+      if (recording) {
+        recording.start ??= now;
+        time = Math.min(fullDuration, (now - recording.start) / 1000);
+      } else if (playing && previous !== undefined) time = (time + (now - previous) / 1000) % fullDuration;
       previous = now;
       seek.value = time / fullDuration;
       reviewPose(Math.min(1, time / meta.dur));
@@ -828,7 +982,16 @@ window.Swing3D = (() => {
         avatars[1].root.visible = modelFigure.visible;
         if (modelFigure.visible) avatars[1].update(ghostDriver);
       }
+      if (jointDots.visible) {
+        const points = jointGeometry.getAttribute("position");
+        jointNodes.forEach((node, index) => {
+          node.getWorldPosition(jointWorld);
+          points.setXYZ(index, jointWorld.x, jointWorld.y, jointWorld.z);
+        });
+        points.needsUpdate = true;
+      }
       renderer.render(scene, camera);
+      captureFrame(now, fullDuration);
       frame = requestAnimationFrame(draw);
     }
 
@@ -869,9 +1032,10 @@ window.Swing3D = (() => {
           if (node.isMesh && !planeMeshes.has(segments[index])) node.visible = false;
         });
       }
-      avatars[0].colorize(finding?.channel);
+      avatars[0].colorize(finding && Math.abs(finding.measured - finding.reference) >= 8 ? finding.channel : undefined);
     }).catch(error => console.warn("기본 아바타로 재생합니다.", error));
     active = () => {
+      recording?.cancel();
       disposed = true;
       avatars?.forEach(avatar => avatar.dispose());
       cancelAnimationFrame(frame);
@@ -891,6 +1055,13 @@ window.Swing3D = (() => {
       renderer.domElement.remove();
       controls.remove();
       coaching.remove();
+    };
+    return {
+      record,
+      select(id) {
+        const item = findings.find(item => item.id === id && item.channel && item.range);
+        if (item) { selectFinding(item); setMode("exaggerated"); }
+      },
     };
   }
 

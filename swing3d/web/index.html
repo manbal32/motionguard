@@ -15,7 +15,7 @@
   </header>
   <nav class="stepper" aria-label="분석 단계">
     <a href="#upload">01 업로드</a><a href="#progress">02 분석</a><a href="#overlay">03 관절 오버레이</a>
-    <a href="#phases">04 국면 기록</a>
+    <a href="#phases">04 국면 기록</a><a href="#findings">05 판정</a><a href="#swing-view">06 3D 과장</a><a href="#export">07 내려받기</a>
   </nav>
   <div class="setup">
     <section id="upload">
@@ -43,8 +43,10 @@
   <section id="overlay" hidden>
     <header><span class="index">03</span><h2>관절 오버레이</h2><span class="caption">MediaPipe Pose · <b class="num">33</b><small>관절</small></span></header>
     <div class="video-stage">
+      <div id="video-layer">
       <video id="original" playsinline preload="metadata" aria-label="원본 스윙 영상"></video>
       <canvas id="joints" aria-label="관절 오버레이"></canvas>
+      </div>
       <span id="phase-label" class="phase-label"></span>
     </div>
     <div class="transport">
@@ -54,6 +56,7 @@
       <button id="speed" aria-pressed="false">0.5<small>×</small></button>
       <div class="scrubber"><input id="seek" type="range" min="0" step="any" aria-label="영상 재생 위치"><div id="ticks"></div></div>
       <output id="timecode" class="num"></output>
+      <button id="zoom-person" aria-pressed="true">인물 확대</button>
       <button id="toggle-joints" aria-pressed="true">관절 표시</button>
     </div>
   </section>
@@ -65,8 +68,28 @@
       <div class="legend"><span>측정값</span><span class="reference">교본 기준</span><span><i></i> 교본과 <b class="num">8</b><small>°</small> 이상 차이</span></div>
     </div>
   </section>
+  <section id="findings" hidden>
+    <header><span class="index">05</span><h2>판정 결과</h2></header>
+    <div id="finding-body" class="section-body finding-layout"></div>
+  </section>
+  <section id="swing-view" hidden>
+    <header><span class="index">06</span><h2>3D 스윙</h2></header>
+    <div id="viewer" class="section-body"></div>
+  </section>
+  <section id="export" hidden>
+    <header><span class="index">07</span><h2>내려받기</h2></header>
+    <div class="section-body row">
+      <button id="record">3D 영상 저장</button>
+      <a class="button" id="open-report" target="_blank" rel="noopener">스윙 리포트 열기</a>
+      <output id="record-progress" role="status"></output>
+    </div>
+  </section>
 </main>
+<script src="/vendor/three/three.min.js"></script>
+<script type="importmap">{"imports":{"three":"/vendor/three/three.module.js","three/addons/":"/vendor/three/addons/"}}</script>
 <script src="/reference.js"></script>
+<script src="/swing3d.js"></script>
+<script src="/findings-ui.js"></script>
 <script src="/instrument.js" defer></script>
 </body>
 </html>

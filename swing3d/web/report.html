@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MotionGuard 스윙 리포트</title>
+<link rel="stylesheet" href="/report.css">
+<main class="sheet">
+  <header class="report-head">
+    <p class="eyebrow">MotionGuard / 스윙 리포트</p>
+    <h1 id="title">스윙 리포트</h1>
+    <p id="facts"></p>
+    <div class="row" role="group" aria-label="리포트 테마"><button data-theme="light">라이트</button><button data-theme="dark">다크</button></div>
+  </header>
+  <p id="report-status" role="status">스윙 기록을 읽는 중입니다.</p>
+  <div id="report-body" hidden>
+    <section><h2>한눈에</h2><p id="summary"></p></section>
+    <section><h2>국면별 기록</h2><div id="report-stills"></div><div class="scroller"><table id="report-angles" aria-label="국면별 각도"></table></div><p class="legend">측정값 · 회색은 교본 기준 · 호박색은 교본과 <span class="num">8<small>°</small></span> 이상 차이</p></section>
+    <section><h2>판정과 다음 연습</h2><div id="report-findings"></div></section>
+    <section><h2>재지 못한 것</h2>
+      <dl><dt>깊이 방향 회전</dt><dd>몸통과 골반 각도는 단일 영상에서 관찰한 폭 변화로 추정합니다.</dd>
+      <dt>클럽 페이스와 그립</dt><dd>클럽을 직접 검출하지 않아 페이스 방향과 손가락 배치는 측정하지 않습니다.</dd>
+      <dt>손목 코킹</dt><dd id="wrist-limit"></dd></dl>
+    </section>
+  </div>
+</main>
+<script src="/reference.js"></script><script src="/findings-ui.js"></script><script src="/report.js" defer></script>
+</html>

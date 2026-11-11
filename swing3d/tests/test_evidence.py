@@ -20,7 +20,7 @@ class EvidenceTests(TestCase):
             progress("좌표 추출", 17)
             return frames, fps, timeline
 
-        def stills(path, indices):
+        def stills(path, indices, crops):
             self.assertEqual(indices, {"address": 98, "top": 152, "down": 161, "impact": 164})
             return {phase: b"\xff\xd8" + str(frame).encode() + b"\xff\xd9" for phase, frame in indices.items()}
 
@@ -45,3 +45,23 @@ class EvidenceTests(TestCase):
         response = self.connection.getresponse()
         self.assertEqual(response.status, 404)
         self.assertIn("스틸컷", json.load(response)["reason"])
+
+
+    def test_crops_use_one_scale_and_preserve_bounds(self):
+        points = [[0.45, 0.4, 0.99]] * 15 + [[0.55, 0.55, 0.99]] * 18
+        shifted = [[x + 0.1, y, confidence] for x, y, confidence in points]
+        frames = [points, shifted, None, points, points]
+        phases = dict(zip(("address", "top", "down", "impact", "finish"), range(5)))
+        crops, zoom = video_pose.person_crops(frames, phases)
+        self.assertEqual(len({crop[2] for crop in crops.values()}), 1)
+        self.assertAlmostEqual(crops["top"][2], 0.24)
+        self.assertGreater(crops["top"][0], crops["address"][0])
+        self.assertGreater(zoom[2], crops["top"][2])
+        self.assertEqual(video_pose.person_crops([None] * 5, phases)[1], (0, 0, 1))
+
+
+    def test_report_route_serves_track_report(self):
+        self.connection.request("GET", f"/report/{'a' * 64}")
+        response = self.connection.getresponse()
+        self.assertEqual(response.status, 200)
+        self.assertIn("재지 못한 것", response.read().decode("utf-8"))

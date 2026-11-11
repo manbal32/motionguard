@@ -43,6 +43,8 @@ progress::-webkit-progress-value { background: var(--ink); }
 progress::-moz-progress-bar { background: var(--ink); }
 #percent { margin-left: auto; }
 .video-stage { position: relative; width: min(100%, 900px); margin: 0 auto; background: var(--ground-2); }
+.video-stage { overflow: hidden; }
+#video-layer { position: relative; transform-origin: 0 0; }
 .video-stage video { display: block; width: 100%; }
 .video-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .phase-label { position: absolute; left: 12px; top: 12px; background: var(--ground); padding: 4px 8px; font-size: 12px; }
@@ -76,3 +78,23 @@ td { text-align: right; white-space: nowrap; }
 @media (max-width: 880px) { .stills { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 490px) { .stills { grid-template-columns: 1fr; } .instrument { width: calc(100% - 24px); margin-top: 24px; } }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+.finding-layout { display:grid; gap:16px; }
+.result-block { border-top:1px solid var(--rule); padding-top:12px; min-width:0; }
+.result-block h3 { margin:0 0 4px; font-size:15px; }
+.result-block a, a.button { color:var(--ink); text-underline-offset:2px; }
+.finding-line p { margin:4px 0; }
+#viewer canvas { display:block; width:100%; }
+#viewer .controls { display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 0; }
+#viewer .viewer-timeline { flex:1 0 100%; order:1; }
+#viewer .viewer-timeline input { display:block; width:100%; accent-color:var(--ink); margin:0; }
+#viewer select { background:var(--ground); color:var(--ink); border:1px solid var(--rule-hi); padding:4px; font:inherit; }
+#viewer .coaching { margin:0; padding:12px; }
+#viewer .coaching button { margin:0 8px 8px 0; }
+#viewer .coaching input[type="range"] { accent-color:var(--ink); }
+#viewer .coaching output { font-family:var(--mono); }
+.viewer-ruler { position:relative; width:100%; height:36px; border-top:1px solid var(--rule-hi); }
+.viewer-ruler button { position:absolute; font-size:10px; padding:4px 3px; border:0; border-left:1px solid var(--rule-hi); }
+.viewer-ruler button:nth-child(even) { top:12px; }
+.viewer-ruler button:last-child { transform:translateX(-100%); }
+.finding-band { position:absolute; top:0; height:2px; background:var(--signal); }
+@media(min-width:1280px) { .finding-layout { grid-template-columns:1fr 1fr; } }
