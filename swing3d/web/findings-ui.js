@@ -24,6 +24,26 @@ window.SwingFindings = (() => {
     return response.json();
   }
 
+  function choices(parent, doc, track, onSelect) {
+    parent.replaceChildren();
+    const options = doc.findings.filter(item => item.channel && item.range &&
+      (item.channel !== "wrist" || track.meta.wrist_source === "index"));
+    for (const item of options) {
+      const button = node("button");
+      button.type = "button";
+      button.dataset.finding = item.id;
+      button.setAttribute("aria-pressed", "false");
+      const unit = ["shiftX", "heelR"].includes(item.channel) ? "정규화" : "°";
+      const values = node("span", undefined, "num");
+      values.append("측정 ", number(item.measured, unit), " · 교본 ", number(item.reference, unit));
+      button.append(node("strong", item.label), values);
+      button.onclick = () => onSelect(item.id);
+      parent.append(button);
+    }
+    if (!options.length) parent.append(node("p", "비교할 결함 판정이 없습니다."));
+    return options;
+  }
+
   function render(parent, track, doc, onSelect) {
     parent.replaceChildren();
     const items = [...doc.findings].sort((a,b) => (severity[b.severity] ?? 0) - (severity[a.severity] ?? 0));
@@ -87,5 +107,5 @@ window.SwingFindings = (() => {
     return items;
   }
 
-  return { load, render, phases, channels, node, number };
+  return { load, render, choices, phases, channels, node, number };
 })();

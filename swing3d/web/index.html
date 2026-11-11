@@ -41,24 +41,41 @@
     </section>
   </div>
   <section id="overlay" hidden>
-    <header><span class="index">03</span><h2>관절 오버레이</h2><span class="caption">MediaPipe Pose · <b class="num">33</b><small>관절</small></span></header>
-    <div class="video-stage">
+    <header><span class="index">03</span><h2>스윙 나란히 비교</h2><span id="compare-caption" class="caption"></span></header>
+    <div id="comparison-controls" class="section-body">
+      <div id="finding-options" class="finding-options" aria-label="비교할 결함"></div>
+    </div>
+    <div id="comparison-panes" class="comparison-panes">
+    <div><p class="pane-label">원본 영상 · 측정 좌표</p><div class="video-stage">
       <div id="video-layer">
       <video id="original" playsinline preload="metadata" aria-label="원본 스윙 영상"></video>
       <canvas id="joints" aria-label="관절 오버레이"></canvas>
       </div>
       <span id="phase-label" class="phase-label"></span>
     </div>
-    <div class="transport">
+    </div>
+    <div><p class="pane-label">같은 프레임 · 교육용 과장</p><div id="compare-stage" class="video-stage compare-grid">
+      <canvas id="exaggerated" aria-label="교육용 과장 관절"></canvas>
+    </div></div>
+    </div>
+    <p id="comparison-unavailable" class="section-body" hidden>영상이 포함된 트랙을 열면 같은 프레임의 뼈대를 비교할 수 있습니다.</p>
+    <div class="transport" id="video-transport">
       <button id="play">재생</button>
       <button id="previous" aria-label="이전 프레임">−1 <small>프레임</small></button>
       <button id="next" aria-label="다음 프레임">+1 <small>프레임</small></button>
       <button id="speed" aria-pressed="false">0.5<small>×</small></button>
-      <div class="scrubber"><input id="seek" type="range" min="0" step="any" aria-label="영상 재생 위치"><div id="ticks"></div></div>
+      <div class="scrubber"><div class="compare-band"><i id="compare-range" hidden></i></div><input id="seek" type="range" min="0" step="any" aria-label="영상 재생 위치"><div id="ticks"></div></div>
       <output id="timecode" class="num"></output>
       <button id="zoom-person" aria-pressed="true">인물 확대</button>
       <button id="toggle-joints" aria-pressed="true">관절 표시</button>
     </div>
+    <div class="transport">
+      <label>과장 배율 <input id="compare-factor" type="range" min="1" max="3" step="0.1" value="1"></label>
+      <output id="compare-factor-value" class="num"></output>
+      <button id="compare-reference" aria-pressed="true">교본 겹치기</button>
+    </div>
+    <div id="compare-values" class="compare-values num"></div>
+    <p class="compare-warning">오른쪽은 교육용 과장이며 측정값이 아닙니다 · 왼쪽 수치가 실제 측정입니다</p>
   </section>
   <section id="phases" hidden>
     <header><span class="index">04</span><h2>국면 스틸컷</h2><span class="caption">스틸컷을 선택하면 원본 영상이 해당 프레임으로 이동합니다.</span></header>
@@ -88,6 +105,7 @@
 <script src="/vendor/three/three.min.js"></script>
 <script type="importmap">{"imports":{"three":"/vendor/three/three.module.js","three/addons/":"/vendor/three/addons/"}}</script>
 <script src="/reference.js"></script>
+<script src="/exaggerate.js"></script>
 <script src="/swing3d.js"></script>
 <script src="/findings-ui.js"></script>
 <script src="/instrument.js" defer></script>

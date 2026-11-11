@@ -5,6 +5,15 @@
   const video = byId("original");
   const canvas = byId("joints");
   const ctx = canvas.getContext("2d");
+  const alternate = byId("exaggerated");
+  const alternateContext = alternate.getContext("2d");
+  const factor = byId("compare-factor");
+  const bones = {
+    torso: [[11,12]], hips: [[23,24]], wrist: [[13,15],[14,16]], swing: [[13,15],[14,16]],
+    lean: [[33,34]], shiftX: [[35,36]], kneeL: [[23,25]], kneeR: [[24,26]], heelR: [[28,30]],
+  };
+  let comparison;
+  let activeFinding;
   const phases = [
     ["address", "어드레스"], ["top", "백스윙 탑"], ["down", "다운스윙"],
     ["impact", "임팩트"], ["finish", "피니시"],
@@ -54,6 +63,7 @@
     if (mediaUrl) URL.revokeObjectURL(mediaUrl);
     mediaUrl = undefined;
     evidence = undefined;
+    comparison = activeFinding = undefined;
     selected = undefined;
     duration = undefined;
     byId("overlay").hidden = byId("phases").hidden = true;
@@ -142,6 +152,7 @@
       const track = await readResponse(response);
       if (controller.signal.aborted) return;
       evidence = track.evidence;
+      comparison = { track, reference: SwingReference.expand(track), displayed: track.track, options: [] };
       if (evidence) setupVideo();
       setupStills(track);
       report("계측 완료", 100);
@@ -166,10 +177,11 @@
 
   function updateOverlay(mediaTime = video.currentTime) {
     if (!evidence || !video.videoWidth) return;
-    if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+    if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight || alternate.width !== video.videoWidth) {
+      canvas.width = alternate.width = video.videoWidth;
+      canvas.height = alternate.height = video.videoHeight;
     }
+    byId("compare-stage").style.aspectRatio = video.videoWidth + " / " + video.videoHeight;
     const frame = Math.max(0, Math.min(evidence.frames.length - 1, Math.floor(mediaTime * evidence.fps + 0.001)));
     const { width, height } = canvas;
     const time = byId("timecode");
@@ -179,40 +191,157 @@
       ?? phases.findLast(([key]) => evidence.phase_frames[key] <= frame);
     byId("phase-label").textContent = phase?.[1] ?? "어드레스 전";
     ctx.clearRect(0, 0, width, height);
+    alternateContext.clearRect(0, 0, width, height);
     const points = evidence.frames[frame];
-    if (!points || byId("toggle-joints").getAttribute("aria-pressed") !== "true") return;
-    ctx.strokeStyle = ctx.fillStyle = "#e9e7e0";
-    const isBody = index => !FACE_LANDMARKS.has(evidence.landmark_names[index]);
-    const visible = points.filter((point, index) => isBody(index) && point[2] >= 0.45);
-    const ys = visible.map(point => point[1]);
-    const personHeight = ys.length > 1 ? (Math.max(...ys) - Math.min(...ys)) * height : 0;
+    const sample = sampleIndex(frame);
+    updateValues(sample);
+    if (!points) return;
     const zoom = byId("zoom-person").getAttribute("aria-pressed") === "true" ? evidence.overlay_crop?.[2] ?? 1 : 1;
-    const screenScale = video.clientWidth / width / zoom;
-    const lineWidth = Math.min(1.4, Math.max(0.35, personHeight * screenScale * 0.009));
-    const diameter = Math.min(3, Math.max(0.8, personHeight * screenScale * 0.019));
-    ctx.lineWidth = lineWidth / screenScale;
-    for (const [a, b] of links) {
-      if (!isBody(a) || !isBody(b) || !points[a] || !points[b]) continue;
-      ctx.globalAlpha = Math.min(points[a][2], points[b][2]);
-      ctx.beginPath();
-      ctx.moveTo(points[a][0] * width, points[a][1] * height);
-      ctx.lineTo(points[b][0] * width, points[b][1] * height);
-      ctx.stroke();
+    const scale = video.clientWidth / width / zoom;
+    if (!(scale > 0)) return;
+    const measured = points.map(([x,y,visibility]) => [x * width, y * height, visibility]);
+    const baseline = comparison.track.track[sample];
+    const desired = comparison.displayed[sample];
+    const displayed = project(measured, baseline, channel => desired[comparison.track.channels.indexOf(channel)]);
+    const skeleton = project(measured, baseline, channel => baseline[comparison.track.channels.indexOf(channel)]);
+    const overlayReference = byId("compare-reference").getAttribute("aria-pressed") === "true";
+    const heightPoints = measured.filter((point, i) => !FACE_LANDMARKS.has(evidence.landmark_names[i]) && point[2] >= 0.45);
+    const ys = heightPoints.map(point => point[1]);
+    const personHeight = ys.length > 1 ? (Math.max(...ys) - Math.min(...ys)) * scale : 0;
+    const line = Math.min(1.4, Math.max(0.35, personHeight * 0.009));
+    const diameter = Math.min(3, Math.max(0.8, personHeight * 0.019));
+    const reference = overlayReference ? project(measured, baseline,
+      channel => comparison.reference[sample][SwingReference.channels.indexOf(channel)]) : null;
+    const show = byId("toggle-joints").getAttribute("aria-pressed") === "true";
+    if (show) paint(ctx, skeleton, reference, scale, line, diameter);
+    paint(alternateContext, displayed, reference, scale, line, diameter);
+  }
+
+  function sampleIndex(frame) {
+    const start = comparison.track.meta.source_frames?.[0] ?? 0;
+    return Math.max(0, Math.min(comparison.track.track.length - 1, frame - start));
+  }
+
+  function midpoint(a, b) {
+    return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, Math.min(a[2], b[2])];
+  }
+
+  // Apply display deltas in image pixels, keeping the measured pelvis as the common origin.
+  function project(points, baseline, value) {
+    const pose = points.map(point => point.slice());
+    const delta = channel => value(channel) - baseline[comparison.track.channels.indexOf(channel)];
+    const pelvis = midpoint(pose[23], pose[24]);
+    const shoulders = midpoint(pose[11], pose[12]);
+    function rotate(indices, pivot, angle) {
+      if (!angle) return;
+      const cos = Math.cos(angle), sin = Math.sin(angle);
+      for (const index of indices) {
+        const point = pose[index];
+        const x = point[0] - pivot[0], y = point[1] - pivot[1];
+        point[0] = pivot[0] + x * cos - y * sin;
+        point[1] = pivot[1] + x * sin + y * cos;
+      }
     }
-    for (const [index, [x, y, confidence]] of points.entries()) {
-      if (!isBody(index)) continue;
-      ctx.globalAlpha = Math.max(0, Math.min(1, confidence));
-      ctx.beginPath();
-      ctx.arc(x * width, y * height, diameter / (2 * screenScale), 0, Math.PI * 2);
-      ctx.fill();
+    rotate([11,12,13,14,15,16,17,18,19,20,21,22], shoulders, delta("torso"));
+    rotate([11,12,13,14,15,16,17,18,19,20,21,22], pelvis, delta("lean"));
+    rotate([23,24,25,26,27,28,29,30,31,32], pelvis, delta("hips"));
+    rotate([13,15,17,19,21], pose[11], delta("swing"));
+    rotate([14,16,18,20,22], pose[12], delta("swing"));
+    rotate([17,19,21], pose[15], delta("wrist"));
+    rotate([18,20,22], pose[16], delta("wrist"));
+    rotate([25,27,29,31], pose[23], delta("kneeL"));
+    rotate([26,28,30,32], pose[24], delta("kneeR"));
+    rotate([28,30], pose[32], -0.9 * delta("heelR"));
+    pose.push(midpoint(pose[11], pose[12]), pelvis,
+      [pelvis[0] + delta("shiftX") * canvas.width, pelvis[1] - canvas.height * 0.12, pelvis[2]],
+      [pelvis[0] + delta("shiftX") * canvas.width, pelvis[1] + canvas.height * 0.12, pelvis[2]]);
+    return pose;
+  }
+
+  function paint(context, pose, reference, scale, line, diameter) {
+    function segment(points, [a,b], color, width, opacity) {
+      context.strokeStyle = color;
+      context.lineWidth = width / scale;
+      context.globalAlpha = opacity * Math.min(points[a][2], points[b][2]);
+      context.beginPath();
+      context.moveTo(points[a][0], points[a][1]);
+      context.lineTo(points[b][0], points[b][1]);
+      context.stroke();
     }
-    ctx.globalAlpha = 1;
+    const highlighted = bones[activeFinding?.channel] ?? [];
+    if (reference) for (const link of links) segment(reference, link, "rgba(127,138,133,.75)", 1.6, 1);
+    for (const link of links) segment(pose, link, "#e9e7e0", line, 1);
+    const signal = getComputedStyle(document.documentElement).getPropertyValue("--signal").trim();
+    for (const link of highlighted) segment(pose, link, signal, line * 3.2, 1);
+    context.fillStyle = "#e9e7e0";
+    for (const [index, [x, y, confidence]] of pose.slice(0, evidence.landmark_names.length).entries()) {
+      if (FACE_LANDMARKS.has(evidence.landmark_names[index])) continue;
+      context.globalAlpha = Math.max(0, Math.min(1, confidence));
+      context.beginPath();
+      context.arc(x, y, diameter / (2 * scale), 0, Math.PI * 2);
+      context.fill();
+    }
+    context.globalAlpha = 1;
+  }
+
+  function updateValues(sample) {
+    const output = byId("compare-values");
+    if (!activeFinding) { output.textContent = ""; return; }
+    const channel = activeFinding.channel;
+    const index = comparison.track.channels.indexOf(channel);
+    const measured = comparison.track.track[sample][index];
+    const reference = comparison.reference[sample][SwingReference.channels.indexOf(channel)];
+    const displayed = comparison.displayed[sample][index];
+    const normalized = channel === "shiftX" || channel === "heelR";
+    const show = value => quantity((value * (normalized ? 1 : 180 / Math.PI)).toFixed(normalized ? 3 : 1), normalized ? "정규화" : "°");
+    const entry = (label, value, style) => {
+      const item = node("span", label + " ", style);
+      item.append(show(value));
+      return item;
+    };
+    output.replaceChildren(node("strong", SwingFindings.channels[channel] ?? channel),
+      entry("측정", measured), entry("교본", reference, "reference"),
+      entry("차이", measured - reference), entry("과장 표시", displayed, "delta"));
+  }
+
+  function changeFactor() {
+    if (!comparison) return;
+    comparison.displayed = SwingExaggeration.apply(comparison.track, comparison.reference, activeFinding, Number(factor.value));
+    const value = Number(factor.value).toFixed(1);
+    byId("compare-caption").replaceChildren("과장 ", quantity(value, "×"));
+    byId("compare-factor-value").replaceChildren(quantity(value, "×"));
+    if (evidence) updateOverlay();
+    else updateValues(comparison.sample ?? 0);
+  }
+
+  function chooseFinding(id, seek = true) {
+    activeFinding = comparison.options.find(item => item.id === id);
+    if (!activeFinding) return;
+    for (const button of byId("finding-options").querySelectorAll("button")) {
+      button.setAttribute("aria-pressed", String(button.dataset.finding === id));
+    }
+    const { meta } = comparison.track;
+    const start = meta.source_frames?.[0] ?? 0;
+    const frameAt = time => start + Math.max(0, Math.min(comparison.track.track.length - 1,
+      (time * meta.dur - meta.hold) * (comparison.track.track.length - 1) / (meta.dur - meta.hold)));
+    const [left, right] = activeFinding.range.map(frameAt);
+    const band = byId("compare-range");
+    if (evidence) {
+      const timeline = evidence.fps * duration;
+      band.style.left = 100 * left / timeline + "%";
+      band.style.width = 100 * (right - left) / timeline + "%";
+    }
+    band.hidden = !evidence;
+    comparison.sample = sampleIndex(Math.round((left + right) / 2));
+    factor.value = SwingExaggeration.levels[activeFinding.severity] ?? 2;
+    changeFactor();
+    if (evidence && seek) jump(Math.round(frameAt((activeFinding.range[0] + activeFinding.range[1]) / 2)));
   }
 
   function updateZoom() {
     const zoom = byId("zoom-person").getAttribute("aria-pressed") === "true";
     const [x, y, size] = zoom && evidence?.overlay_crop ? evidence.overlay_crop : [0, 0, 1];
-    byId("video-layer").style.transform = `translate(${-100 * x / size}%, ${-100 * y / size}%) scale(${1 / size})`;
+    byId("video-layer").style.transform = alternate.style.transform = `translate(${-100 * x / size}%, ${-100 * y / size}%) scale(${1 / size})`;
   }
 
   function setupVideo() {
@@ -239,7 +368,7 @@
     byId("confidence").textContent = low.length
       ? "추적 신뢰도 낮음 · " + low.map(([, label]) => label).join(" · ")
       : "각도는 영상의 관절 좌표에서 추정한 값입니다.";
-    for (const [index, [phase, label]] of phases.slice(0, 4).entries()) {
+    for (const [phase, label] of phases.slice(0, 4)) {
       const record = node("article", undefined, "phase-record");
       const position = (track.events[phase] * track.meta.dur - track.meta.hold) / (track.meta.dur - track.meta.hold);
       const start = track.meta.source_frames?.[0] ?? 0;
@@ -268,7 +397,7 @@
       for (const [channel, channelLabel] of channels) {
         const row = body.insertRow();
         const measured = track.track[sample][track.channels.indexOf(channel)] * 180 / Math.PI;
-        const reference = SwingReference[channel][index];
+        const reference = comparison.reference[sample][SwingReference.channels.indexOf(channel)] * 180 / Math.PI;
         const isMeasured = channel !== "wrist" || track.meta.wrist_source === "index";
         const heading = node("th", channelLabel);
         heading.scope = "row";
@@ -290,9 +419,19 @@
     const doc = await SwingFindings.load(track);
     byId("findings").hidden = false;
     byId("swing-view").hidden = false;
+    byId("overlay").hidden = false;
+    byId("comparison-panes").hidden = byId("video-transport").hidden = !evidence;
+    byId("comparison-unavailable").hidden = !!evidence;
+    byId("compare-range").hidden = true;
+    byId("compare-values").replaceChildren();
+    factor.value = 1;
+    comparison.options = SwingFindings.choices(byId("finding-options"), doc, track, chooseFinding);
+    factor.disabled = comparison.options.length === 0;
+    if (comparison.options.length) chooseFinding(comparison.options[0].id, false);
+    else changeFactor();
     SwingFindings.render(byId("finding-body"), track, doc, id => {
-      viewer?.select(id);
-      byId("swing-view").scrollIntoView({ block: "start" });
+      chooseFinding(id);
+      byId("overlay").scrollIntoView({ block: "start" });
     });
     try {
       viewer = Swing3D.mount(byId("viewer"), track, { findings: doc, autoplay: false, externalFindings: true });
@@ -331,6 +470,12 @@
     }
   });
 
+  factor.addEventListener("input", changeFactor);
+  byId("compare-reference").addEventListener("click", event => {
+    const button = event.currentTarget;
+    button.setAttribute("aria-pressed", String(button.getAttribute("aria-pressed") !== "true"));
+    updateOverlay();
+  });
   byId("video").addEventListener("change", event => select(event.target.files[0]));
   byId("csv").addEventListener("change", event => select(event.target.files[0], true));
   const drop = byId("drop");
