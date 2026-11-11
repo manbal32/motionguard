@@ -156,7 +156,18 @@ window.Swing3D = (() => {
     const wrist = group(swing, 0, -0.52);
     const shaft = mesh(wrist, new T.CylinderGeometry(0.013, 0.009, 1, 10), 0xd8e0e6);
     const tip = group(wrist);
-    box(tip, 0.12, 0.058, 0.08, 0x7597ae, 0.036);
+    const headProfile = new T.Shape();
+    headProfile.moveTo(-0.028, -0.018);
+    headProfile.quadraticCurveTo(-0.034, 0.006, -0.012, 0.018);
+    headProfile.quadraticCurveTo(0.029, 0.026, 0.068, 0.019);
+    headProfile.quadraticCurveTo(0.083, 0.012, 0.077, -0.007);
+    headProfile.quadraticCurveTo(0.072, -0.021, 0.055, -0.022);
+    headProfile.lineTo(-0.028, -0.018);
+    const clubHead = mesh(tip, new T.ExtrudeGeometry(headProfile, {
+      depth: 0.047, bevelEnabled: true, bevelSize: 0.006, bevelThickness: 0.004, bevelSegments: 2,
+    }), 0xb9babc, 0, 0, -0.024);
+    clubHead.material.metalness = 0.64;
+    clubHead.material.roughness = 0.32;
     const planeMeshes = new Set();
     plane.traverse(node => planeMeshes.add(node));
     const segments = [];
@@ -197,18 +208,22 @@ window.Swing3D = (() => {
     };
     modelFigure.visible = false;
     scene.add(modelFigure);
-    const ball = mesh(scene, new T.SphereGeometry(0.026, 16, 12), 0xffffff);
+    // The scene uses metres. A 4.3 cm ball is about 2.46% of a 1.75 m golfer's height.
+    const ballRadius = 0.0215;
+    const ball = mesh(scene, new T.SphereGeometry(ballRadius, 16, 12), 0xffffff);
+    ball.material.roughness = 0.55;
     const shadeCanvas = document.createElement("canvas");
     shadeCanvas.width = shadeCanvas.height = 64;
     const shadeContext = shadeCanvas.getContext("2d");
     const shadeGradient = shadeContext.createRadialGradient(32, 32, 3, 32, 32, 32);
-    shadeGradient.addColorStop(0, "rgba(0,0,0,.60)");
+    shadeGradient.addColorStop(0, "rgba(0,0,0,.82)");
+    shadeGradient.addColorStop(0.35, "rgba(0,0,0,.55)");
     shadeGradient.addColorStop(1, "rgba(0,0,0,0)");
     shadeContext.fillStyle = shadeGradient;
     shadeContext.fillRect(0, 0, 64, 64);
     const shadeTexture = new T.CanvasTexture(shadeCanvas);
     const contacts = arms.map(() => {
-      const shade = new T.Mesh(new T.PlaneGeometry(0.39, 0.51), new T.MeshBasicMaterial({
+      const shade = new T.Mesh(new T.PlaneGeometry(0.29, 0.42), new T.MeshBasicMaterial({
         map: shadeTexture, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2,
       }));
       shade.rotation.x = -Math.PI / 2;
@@ -283,8 +298,8 @@ window.Swing3D = (() => {
     teeTexture.needsUpdate = true;
     tee.material.map = teeTexture;
     for (const side of [-1, 1]) {
-      mesh(terrain, new T.SphereGeometry(0.115, 12, 8), side < 0 ? 0xd8cdb2 : 0x6d4637,
-        -1.1, 0.12, side * 1.95);
+      mesh(terrain, new T.CylinderGeometry(0.035, 0.051, 0.043, 10), side < 0 ? 0xc5bca7 : 0x604b42,
+        -1.1, 0.025, side * 1.95);
     }
     for (let i = 0; i < 13; i++) {
       const divot = mesh(terrain, new T.CircleGeometry(0.05 + random() * 0.10, 7), 0x666048,
@@ -292,18 +307,7 @@ window.Swing3D = (() => {
       divot.rotation.x = -Math.PI / 2;
       divot.scale.x = 1.7;
     }
-    const grassGeometry = new T.ConeGeometry(0.035, 0.23, 3);
-    const grass = new T.InstancedMesh(grassGeometry, new T.MeshStandardMaterial({ color: 0x4d5938 }), 210);
     const detail = new T.Object3D();
-    for (let i = 0; i < grass.count; i++) {
-      const side = i % 2 ? 1 : -1;
-      detail.position.set(-5 + random() * 8, 0.065, side * (2.45 + random() * 2.7));
-      detail.rotation.set((random() - 0.5) * 0.7, random() * Math.PI, (random() - 0.5) * 0.6);
-      detail.scale.setScalar(0.45 + random() * 0.7);
-      detail.updateMatrix();
-      grass.setMatrixAt(i, detail.matrix);
-    }
-    terrain.add(grass);
     const trunks = new T.InstancedMesh(new T.CylinderGeometry(0.12, 0.2, 2.7, 6),
       new T.MeshStandardMaterial({ color: 0x575044 }), 58);
     const crowns = new T.InstancedMesh(new T.IcosahedronGeometry(1, 1),
@@ -332,7 +336,10 @@ window.Swing3D = (() => {
     const flag = box(terrain, 0.055, 0.65, 1.05, 0xa85944, -109, 3.09, greenZ + 0.51);
     flag.rotation.y = 0.2;
 
-    const coastline = box(terrain, 145, 0.09, 28, 0x47849c, -67, -0.135, -35);
+    // Meet the rough at z=-50; the water must not cover the land or hover above it.
+    const coastline = mesh(terrain, new T.PlaneGeometry(174, 100), 0x557d88, -74, -0.116, -100);
+    coastline.rotation.x = -Math.PI / 2;
+    coastline.material.roughness = 0.5;
     const hills = group(terrain);
     for (let i = 0; i < 8; i++) {
       const hill = mesh(hills, new T.IcosahedronGeometry(1, 1), 0x526b59,
@@ -411,7 +418,7 @@ window.Swing3D = (() => {
     if (data.channels.includes("confidence")) {
       const legend = document.createElement("span");
       legend.className = "trace-legend";
-      legend.textContent = "반투명 궤도 · 낮은 추적 신뢰도";
+      legend.textContent = "클럽 궤도는 추적 신뢰도가 낮은 구간을 생략합니다.";
       controls.append(legend);
     }
     toggle.checked = data.meta.wrist_source !== "index" && (opts.wristCorrection ?? true);
@@ -608,72 +615,76 @@ window.Swing3D = (() => {
 
     const trace = new T.Mesh(new T.BufferGeometry(), new T.ShaderMaterial({
       transparent: true,
+      depthTest: true,
       depthWrite: false,
       side: T.DoubleSide,
       vertexShader: `
         attribute vec3 tangent;
         attribute float width;
         attribute float edge;
-        attribute float confidence;
-        varying float reliability;
         void main() {
           vec4 center = modelViewMatrix * vec4(position, 1.0);
           vec3 direction = (modelViewMatrix * vec4(tangent, 0.0)).xyz;
           vec3 sideways = cross(direction, -center.xyz);
           center.xyz += sideways * (width * edge / max(length(sideways), 0.00001));
           gl_Position = projectionMatrix * center;
-          reliability = confidence;
         }
       `,
       fragmentShader: `
-        varying float reliability;
         void main() {
-          gl_FragColor = vec4(0.91, 0.91, 0.88, mix(0.20, 0.94, smoothstep(0.45, 0.75, reliability)));
+          gl_FragColor = vec4(0.91, 0.91, 0.88, 0.28);
         }
       `,
     }));
     trace.frustumCulled = false;
+    trace.visible = false;
 
     function ribbonGeometry(points) {
-      const curve = new T.CatmullRomCurve3(points, false, "centripetal");
-      const stepsPerSample = 5;
-      const divisions = (points.length - 1) * stepsPerSample;
       const positions = [];
       const tangents = [];
       const widths = [];
       const edges = [];
-      const confidence = [];
       const triangles = [];
-      const centers = curve.getPoints(divisions);
-      for (let i = 0; i <= divisions; i++) {
-        const before = Math.max(0, i - 1);
-        const after = Math.min(divisions, i + 1);
-        const tangent = centers[after].clone().sub(centers[before]);
-        const speed = tangent.length() * divisions / ((after - before) * (meta.dur - meta.hold));
-        const halfWidth = 0.007 + 0.017 * T.MathUtils.smoothstep(speed, 0, 15);
-        const sample = i / stepsPerSample;
-        const left = Math.floor(sample);
-        const right = Math.min(left + 1, points.length - 1);
-        const reliability = indices.confidence === undefined ? 1
-          : T.MathUtils.lerp(track[left][indices.confidence], track[right][indices.confidence], sample - left);
-        for (const edge of [-1, 1]) {
-          positions.push(...centers[i].toArray());
-          tangents.push(...tangent.toArray());
-          widths.push(halfWidth);
-          edges.push(edge);
-          confidence.push(reliability);
-        }
-        if (i > 0) {
-          const j = 2 * i;
-          triangles.push(j - 2, j - 1, j, j, j - 1, j + 1);
+      const sampleTime = (meta.dur - meta.hold) / (points.length - 1);
+      const steps = 5;
+
+      // Build separate splines so rejected points cannot bend or bridge visible segments.
+      function addRun(run) {
+        if (run.length < 2) return;
+        const divisions = (run.length - 1) * steps;
+        const centers = new T.CatmullRomCurve3(run, false, "centripetal").getPoints(divisions);
+        for (let i = 0; i <= divisions; i++) {
+          const before = Math.max(0, i - 1);
+          const after = Math.min(divisions, i + 1);
+          const tangent = centers[after].clone().sub(centers[before]);
+          const speed = tangent.length() * steps / ((after - before) * sampleTime);
+          const halfWidth = Math.min(0.005, 0.0012 + speed * 0.00022);
+          const j = positions.length / 3;
+          for (const edge of [-1, 1]) {
+            positions.push(...centers[i].toArray());
+            tangents.push(...tangent.toArray());
+            widths.push(halfWidth);
+            edges.push(edge);
+          }
+          if (i > 0) triangles.push(j - 2, j - 1, j, j, j - 1, j + 1);
         }
       }
+
+      let run = [];
+      points.forEach((point, index) => {
+        const confidence = indices.confidence === undefined ? 0 : track[index][indices.confidence];
+        if (confidence >= 0.45) run.push(point);
+        else {
+          addRun(run);
+          run = [];
+        }
+      });
+      addRun(run);
       const geometry = new T.BufferGeometry();
       geometry.setAttribute("position", new T.Float32BufferAttribute(positions, 3));
       geometry.setAttribute("tangent", new T.Float32BufferAttribute(tangents, 3));
       geometry.setAttribute("width", new T.Float32BufferAttribute(widths, 1));
       geometry.setAttribute("edge", new T.Float32BufferAttribute(edges, 1));
-      geometry.setAttribute("confidence", new T.Float32BufferAttribute(confidence, 1));
       geometry.setIndex(triangles);
       return geometry;
     }
@@ -711,7 +722,7 @@ window.Swing3D = (() => {
       applyPose(events.impact);
       tip.getWorldPosition(launch);
       ball.position.copy(launch);
-      flightDuration = (club.vy + Math.sqrt(Math.max(0, club.vy ** 2 + 18 * (launch.y - 0.026)))) / 9;
+      flightDuration = (club.vy + Math.sqrt(Math.max(0, club.vy ** 2 + 18 * (launch.y - ballRadius)))) / 9;
       const pointsInFlight = Array.from({ length: 65 }, (_, i) =>
         flightPosition(i / 64 * flightDuration, new T.Vector3()));
       flightLine.geometry.dispose();
@@ -782,7 +793,7 @@ window.Swing3D = (() => {
       wrapper.append(field, " " + label);
       controls.append(wrapper);
     }
-    displaySwitch("클럽 궤도", true, checked => { trace.visible = checked; });
+    displaySwitch("클럽 궤도", false, checked => { trace.visible = checked; });
     displaySwitch("관절점", false, checked => { jointDots.visible = checked; });
     displaySwitch("스윙 플레인", false, checked => { planeGuide.visible = checked; });
     displaySwitch("국면 잔상", false, checked => {
@@ -972,15 +983,19 @@ window.Swing3D = (() => {
       }
       figure.updateMatrixWorld(true);
       if (modelFigure.visible) modelFigure.updateMatrixWorld(true);
-      for (const [i, arm] of arms.entries()) {
-        arm.ankle.getWorldPosition(contactPosition);
-        contacts[i].position.set(contactPosition.x, 0.005, contactPosition.z + 0.04);
-        contacts[i].material.opacity = T.MathUtils.clamp(1.3 - 3 * contactPosition.y, 0.22, 1);
-      }
       if (avatars) {
         avatars[0].update(actualDriver);
         avatars[1].root.visible = modelFigure.visible;
         if (modelFigure.visible) avatars[1].update(ghostDriver);
+      }
+      for (const [i, arm] of arms.entries()) {
+        if (avatars) avatars[0].footContact(i, contactPosition);
+        else arm.ankle.localToWorld(contactPosition.set(0, -0.085, 0.045));
+        const groundHeight = 0.005;
+        const height = Math.max(0, contactPosition.y - groundHeight);
+        contacts[i].position.set(contactPosition.x, groundHeight, contactPosition.z);
+        contacts[i].material.opacity = T.MathUtils.clamp(0.95 - 2.8 * height, 0.10, 0.95);
+        contacts[i].scale.setScalar(1 + Math.min(height, 0.35));
       }
       if (jointDots.visible) {
         const points = jointGeometry.getAttribute("position");

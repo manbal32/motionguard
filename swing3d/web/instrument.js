@@ -11,7 +11,11 @@
   ];
   const channels = [["swing", "스윙각"], ["torso", "몸통 회전"], ["hips", "골반 회전"],
     ["lean", "기울기"], ["wrist", "손목"]];
-  const links = [[0,1],[1,2],[2,3],[3,7],[0,4],[4,5],[5,6],[6,8],[9,10],
+  const FACE_LANDMARKS = new Set([
+    "NOSE", "LEFT_EYE_INNER", "RIGHT_EYE_INNER", "LEFT_EYE", "RIGHT_EYE",
+    "LEFT_EYE_OUTER", "RIGHT_EYE_OUTER", "LEFT_EAR", "RIGHT_EAR", "MOUTH_LEFT", "MOUTH_RIGHT",
+  ]);
+  const links = [
     [11,12],[11,13],[13,15],[15,17],[15,19],[15,21],[17,19],
     [12,14],[14,16],[16,18],[16,20],[16,22],[18,20],
     [11,23],[12,24],[23,24],[23,25],[25,27],[27,29],[29,31],[27,31],
@@ -178,22 +182,28 @@
     const points = evidence.frames[frame];
     if (!points || byId("toggle-joints").getAttribute("aria-pressed") !== "true") return;
     ctx.strokeStyle = ctx.fillStyle = "#e9e7e0";
-    const visible = points.filter(point => point[2] >= 0.45);
+    const isBody = index => !FACE_LANDMARKS.has(evidence.landmark_names[index]);
+    const visible = points.filter((point, index) => isBody(index) && point[2] >= 0.45);
     const ys = visible.map(point => point[1]);
     const personHeight = ys.length > 1 ? (Math.max(...ys) - Math.min(...ys)) * height : 0;
-    ctx.lineWidth = Math.max(0.5, personHeight * 0.022);
+    const zoom = byId("zoom-person").getAttribute("aria-pressed") === "true" ? evidence.overlay_crop?.[2] ?? 1 : 1;
+    const screenScale = video.clientWidth / width / zoom;
+    const lineWidth = Math.min(1.4, Math.max(0.35, personHeight * screenScale * 0.009));
+    const diameter = Math.min(3, Math.max(0.8, personHeight * screenScale * 0.019));
+    ctx.lineWidth = lineWidth / screenScale;
     for (const [a, b] of links) {
-      if (!points[a] || !points[b]) continue;
+      if (!isBody(a) || !isBody(b) || !points[a] || !points[b]) continue;
       ctx.globalAlpha = Math.min(points[a][2], points[b][2]);
       ctx.beginPath();
       ctx.moveTo(points[a][0] * width, points[a][1] * height);
       ctx.lineTo(points[b][0] * width, points[b][1] * height);
       ctx.stroke();
     }
-    for (const [x, y, confidence] of points) {
+    for (const [index, [x, y, confidence]] of points.entries()) {
+      if (!isBody(index)) continue;
       ctx.globalAlpha = Math.max(0, Math.min(1, confidence));
       ctx.beginPath();
-      ctx.arc(x * width, y * height, Math.max(0.75, personHeight * 0.034), 0, Math.PI * 2);
+      ctx.arc(x * width, y * height, diameter / (2 * screenScale), 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.globalAlpha = 1;
@@ -361,7 +371,9 @@
     const toggle = event.currentTarget;
     toggle.setAttribute("aria-pressed", String(toggle.getAttribute("aria-pressed") !== "true"));
     updateZoom();
+    updateOverlay();
   });
+  new ResizeObserver(() => updateOverlay()).observe(video);
   byId("toggle-joints").addEventListener("click", event => {
     const toggle = event.currentTarget;
     toggle.setAttribute("aria-pressed", String(toggle.getAttribute("aria-pressed") !== "true"));

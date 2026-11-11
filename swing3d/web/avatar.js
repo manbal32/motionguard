@@ -3,11 +3,10 @@ import { clone } from "three/addons/utils/SkeletonUtils.js";
 
 const T = window.THREE;
 const skin = new T.Color(0xb28b73);
-const shirt = new T.Color(0x547269);
-const trousers = new T.Color(0x394651);
-const shoes = new T.Color(0x30363c);
+const shirt = new T.Color(0x586f66);
+const trousers = new T.Color(0x283849);
+const shoes = new T.Color(0x5b5a53);
 const highlight = new T.Color(0xd19142);
-const neutral = new T.Color(0x68737a);
 const iris = new T.Color(0x484543);
 
 export async function loadAvatars(url) {
@@ -68,8 +67,8 @@ function bind(source, config, ghost) {
   const limbs = ["left", "right"].map((side, index) => {
     const map = config.bones[side];
     return {
-      upper: bone(map.upperArm, "swing"),
-      lower: bone(map.forearm, "swing"),
+      upper: bone(map.upperArm, "sleeve"),
+      lower: bone(map.forearm, "forearm"),
       hand: bone(map.hand, "hand"),
       thigh: bone(map.thigh, "leg"),
       knee: bone(map.knee, index === 0 ? "kneeL" : "kneeR"),
@@ -86,9 +85,22 @@ function bind(source, config, ghost) {
   }
 
   const material = new T.MeshStandardMaterial(ghost
-    ? { color: 0x9ac9f2, transparent: true, opacity: 0.38, depthWrite: false, roughness: 0.8 }
+    ? { color: 0xb1b4ad, transparent: true, opacity: 0.38, depthWrite: false, roughness: 0.8 }
     : { vertexColors: true, roughness: 0.8, metalness: 0 });
+  if (!ghost) {
+    material.onBeforeCompile = shader => {
+      shader.vertexShader = "attribute float garmentRoughness; varying float vGarmentRoughness;\n"
+        + shader.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\nvGarmentRoughness = garmentRoughness;");
+      shader.fragmentShader = "varying float vGarmentRoughness;\n"
+        + shader.fragmentShader.replace("#include <roughnessmap_fragment>",
+          "#include <roughnessmap_fragment>\nroughnessFactor = vGarmentRoughness;");
+    };
+  }
   const surfaces = [];
+  const headBounds = new T.Box3();
+  const footBounds = limbs.map(() => new T.Box3());
+  const point = new T.Vector3();
+  const skinRegions = new Set(["head", "hand", "forearm"]);
   root.traverse(node => {
     if (!node.isSkinnedMesh) return;
     node.geometry = node.geometry.clone();
@@ -108,6 +120,18 @@ function bind(source, config, ghost) {
       while (joint && !roles.has(joint)) joint = joint.parent;
       return roles.get(joint) ?? "torso";
     });
+    const positions = node.geometry.getAttribute("position");
+    const roughness = regions.map((region, i) => {
+      if (region === "head" && !/eye/i.test(node.name)) {
+        headBounds.expandByPoint(node.localToWorld(point.fromBufferAttribute(positions, i)));
+      }
+      if (region === "shoe" || region === "heelR") {
+        footBounds[region === "shoe" ? 0 : 1].expandByPoint(node.localToWorld(point.fromBufferAttribute(positions, i)));
+        return 0.65;
+      }
+      return skinRegions.has(region) ? 0.7 : 0.8;
+    });
+    node.geometry.setAttribute("garmentRoughness", new T.Float32BufferAttribute(roughness, 1));
     node.geometry.setAttribute("color", colors);
     surfaces.push({ colors, regions, name: node.name, geometry: node.geometry });
   });
@@ -117,18 +141,23 @@ function bind(source, config, ghost) {
     if (ghost) return;
     const selected = { lean: "torso", shiftX: "hips" }[channel] ?? channel;
     const color = new T.Color();
+    const gray = new T.Color();
     for (const { colors, regions, name } of surfaces) {
       for (const [index, region] of regions.entries()) {
         let base = trousers;
-        if (region === "head" || region === "hand") base = skin;
-        if (region === "swing" || region === "torso") base = shirt;
+        if (skinRegions.has(region)) base = skin;
+        if (region === "sleeve" || region === "torso") base = shirt;
         if (region === "shoe" || region === "heelR") base = shoes;
         if (name.toLowerCase().includes("eyebrow")) base = shoes;
         if (name.toLowerCase() === "eyes") base = iris;
         color.copy(base);
         if (selected) {
-          if (selected === region || (selected === "swing" && region === "hand")) color.copy(highlight);
-          else color.lerp(neutral, 0.63);
+          const arm = ["sleeve", "forearm", "hand"].includes(region);
+          if (selected === region || (selected === "swing" && arm) || (selected === "wrist" && region === "hand")) color.copy(highlight);
+          else {
+            const lightness = (Math.max(color.r, color.g, color.b) + Math.min(color.r, color.g, color.b)) / 2;
+            color.lerp(gray.setScalar(lightness), 0.35);
+          }
         }
         colors.setXYZ(index, color.r, color.g, color.b);
       }
@@ -136,6 +165,31 @@ function bind(source, config, ghost) {
     }
   }
   colorize();
+
+  const contactAnchors = limbs.map((limb, index) => {
+    const bounds = footBounds[index];
+    if (bounds.isEmpty()) return new T.Vector3();
+    const anchor = bounds.getCenter(new T.Vector3());
+    anchor.y = bounds.min.y;
+    return limb.foot.node.worldToLocal(anchor);
+  });
+  let hair;
+  if (!headBounds.isEmpty()) {
+    const size = headBounds.getSize(new T.Vector3());
+    const center = headBounds.getCenter(new T.Vector3());
+    // Follow the existing head bone. The shell is only a visual accessory.
+    const geometry = new T.SphereGeometry(1, 24, 12, 0, Math.PI * 2, 0, Math.PI * 0.53);
+    const hairMaterial = new T.MeshStandardMaterial(ghost
+      ? {color: 0xa6aaa4, transparent: true, opacity: 0.38, depthWrite: false, roughness: 0.95}
+      : {color: 0x332b26, roughness: 0.95});
+    hair = new T.Mesh(geometry, hairMaterial);
+    hair.name = "Golfer hair";
+    hair.position.copy(root.worldToLocal(point.set(center.x, headBounds.max.y - size.y * 0.25, center.z - size.z * 0.075)));
+    hair.scale.set(size.x * 0.49, size.y * 0.29, size.z * 0.49);
+    hair.castShadow = !ghost;
+    root.add(hair);
+    head.node.attach(hair);
+  }
 
   function orient(binding, rotation) {
     const { node } = binding;
@@ -205,9 +259,14 @@ function bind(source, config, ghost) {
 
   return {
     root, update, colorize,
+    footContact(index, out) {
+      return limbs[index].foot.node.localToWorld(out.copy(contactAnchors[index]));
+    },
     dispose() {
       surfaces.forEach(surface => surface.geometry.dispose());
       material.dispose();
+      hair?.geometry.dispose();
+      hair?.material.dispose();
       root.removeFromParent();
     },
   };
