@@ -4,7 +4,7 @@
 
 - Windows에서는 `powershell -File start.ps1` 또는 `py -3 server.py`를 실행합니다.
 - macOS에서는 `./start.command` 또는 `python3 server.py`를 실행합니다.
-- 뷰어 주소는 http://127.0.0.1:8765 입니다.
+- 실행하면 브라우저가 자동으로 열립니다. 안 열리면 http://127.0.0.1:8765 를 직접 여세요. `--no-browser` 를 붙이면 열지 않습니다.
 - 테스트는 이 디렉터리에서 `python -m unittest discover -s tests`로 실행합니다.
 
 `POST /api/video`는 mp4/mov 원문을 받아 MediaPipe로 좌표를 뽑고 트랙 JSON을 반환합니다. 30초 150MB 이하입니다. 이 경로에만 `mediapipe` 설치가 필요하며, 없으면 설치 안내를 사유로 돌려줍니다. 첫 실행 때 자세 인식 모델(.task)을 `models/`로 내려받습니다. 사내망에서 `storage.googleapis.com`이 막히면 다른 망에서 받아 `models/`에 넣으면 되고, 그 안내가 화면 오류에 나옵니다. 원본 영상은 저장하지 않고 처리 후 버립니다.

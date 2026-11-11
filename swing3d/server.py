@@ -189,6 +189,18 @@ class Handler(SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    import sys
+    import threading
+    import webbrowser
+
+    address = "http://127.0.0.1:8765"
     with ThreadingHTTPServer(("127.0.0.1", 8765), Handler) as server:
-        print("Swing3D http://127.0.0.1:8765", flush=True)
-        server.serve_forever()
+        print(f"Swing3D {address}", flush=True)
+        print("끄려면 Ctrl+C 를 누르세요.", flush=True)
+        if "--no-browser" not in sys.argv:
+            # 서버가 요청을 받기 시작한 뒤에 연다.
+            threading.Timer(0.5, lambda: webbrowser.open(address)).start()
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt:
+            print("\n종료했습니다.", flush=True)
