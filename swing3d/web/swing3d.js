@@ -176,6 +176,12 @@ window.Swing3D = (() => {
     const carry = document.createElement("output");
     carry.className = "model-option";
     controls.append(followLabel, carry);
+    if (data.channels.includes("confidence")) {
+      const legend = document.createElement("span");
+      legend.className = "trace-legend";
+      legend.textContent = "반투명 궤도 · 낮은 추적 신뢰도";
+      controls.append(legend);
+    }
     toggle.checked = opts.wristCorrection ?? true;
     const axis = new T.Vector3(0, 1, 0);
     const hand = new T.Vector3();
@@ -259,7 +265,77 @@ window.Swing3D = (() => {
       for (const arm of arms) solveArm(arm);
     }
 
-    const trace = new T.Line(new T.BufferGeometry(), new T.LineBasicMaterial({ color: 0x60dbe6 }));
+    const trace = new T.Mesh(new T.BufferGeometry(), new T.ShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      side: T.DoubleSide,
+      vertexShader: `
+        attribute vec3 tangent;
+        attribute float width;
+        attribute float edge;
+        attribute float confidence;
+        varying float reliability;
+        void main() {
+          vec4 center = modelViewMatrix * vec4(position, 1.0);
+          vec3 direction = (modelViewMatrix * vec4(tangent, 0.0)).xyz;
+          vec3 sideways = cross(direction, -center.xyz);
+          center.xyz += sideways * (width * edge / max(length(sideways), 0.00001));
+          gl_Position = projectionMatrix * center;
+          reliability = confidence;
+        }
+      `,
+      fragmentShader: `
+        varying float reliability;
+        void main() {
+          gl_FragColor = vec4(0.22, 0.91, 0.95, mix(0.20, 0.94, smoothstep(0.45, 0.75, reliability)));
+        }
+      `,
+    }));
+    trace.frustumCulled = false;
+
+    function ribbonGeometry(points) {
+      const curve = new T.CatmullRomCurve3(points, false, "centripetal");
+      const stepsPerSample = 5;
+      const divisions = (points.length - 1) * stepsPerSample;
+      const positions = [];
+      const tangents = [];
+      const widths = [];
+      const edges = [];
+      const confidence = [];
+      const triangles = [];
+      const centers = curve.getPoints(divisions);
+      for (let i = 0; i <= divisions; i++) {
+        const before = Math.max(0, i - 1);
+        const after = Math.min(divisions, i + 1);
+        const tangent = centers[after].clone().sub(centers[before]);
+        const speed = tangent.length() * divisions / ((after - before) * (meta.dur - meta.hold));
+        const halfWidth = 0.007 + 0.017 * T.MathUtils.smoothstep(speed, 0, 15);
+        const sample = i / stepsPerSample;
+        const left = Math.floor(sample);
+        const right = Math.min(left + 1, points.length - 1);
+        const reliability = indices.confidence === undefined ? 1
+          : T.MathUtils.lerp(track[left][indices.confidence], track[right][indices.confidence], sample - left);
+        for (const edge of [-1, 1]) {
+          positions.push(...centers[i].toArray());
+          tangents.push(...tangent.toArray());
+          widths.push(halfWidth);
+          edges.push(edge);
+          confidence.push(reliability);
+        }
+        if (i > 0) {
+          const j = 2 * i;
+          triangles.push(j - 2, j - 1, j, j, j - 1, j + 1);
+        }
+      }
+      const geometry = new T.BufferGeometry();
+      geometry.setAttribute("position", new T.Float32BufferAttribute(positions, 3));
+      geometry.setAttribute("tangent", new T.Float32BufferAttribute(tangents, 3));
+      geometry.setAttribute("width", new T.Float32BufferAttribute(widths, 1));
+      geometry.setAttribute("edge", new T.Float32BufferAttribute(edges, 1));
+      geometry.setAttribute("confidence", new T.Float32BufferAttribute(confidence, 1));
+      geometry.setIndex(triangles);
+      return geometry;
+    }
     const flightLine = new T.Line(new T.BufferGeometry(), new T.LineBasicMaterial({ color: 0xffcf86 }));
     const launch = new T.Vector3();
     const target = new T.Vector3();
@@ -289,7 +365,7 @@ window.Swing3D = (() => {
         return tip.getWorldPosition(new T.Vector3());
       });
       trace.geometry.dispose();
-      trace.geometry = new T.BufferGeometry().setFromPoints(points);
+      trace.geometry = ribbonGeometry(points);
       applyPose(events.impact);
       tip.getWorldPosition(launch);
       ball.position.copy(launch);

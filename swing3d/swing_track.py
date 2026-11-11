@@ -1,5 +1,5 @@
 """
-swing_track.py — MediaPipe 좌표에서 3D 아바타 구동용 9채널 트랙을 산출한다.
+swing_track.py — MediaPipe 좌표에서 3D 아바타 구동용 트랙과 표본별 신뢰도를 산출한다.
 
 MotionGuard Studio 의 cpu_pose.py 가 뽑은 랜드마크를 입력으로 받아,
 웹 뷰어(web/swing3d.js)가 그대로 재생할 수 있는 JSON 을 만든다.
@@ -46,7 +46,10 @@ CHANNELS = [
     "kneeL",    # 왼무릎 굴곡(rad)
     "kneeR",    # 오른무릎 굴곡(rad)
     "heelR",    # 오른 뒤꿈치 들림 0~1
+    "confidence",  # 원본 표본의 추적 신뢰도 0~1 (보간으로 높이지 않음)
 ]
+
+SCHEMA = "motionguard.swingtrack/2"
 
 REQUIRED = [
     "LEFT_SHOULDER", "RIGHT_SHOULDER", "LEFT_HIP", "RIGHT_HIP",
@@ -92,13 +95,68 @@ def _unwrap(values: Sequence[float]) -> List[float]:
     return out
 
 
-def _smooth(values: Sequence[float], w: int) -> List[float]:
-    """±w 프레임 이동평균. 트래킹 지터를 눌러준다."""
-    n = len(values)
-    return [
-        sum(values[max(0, i - w):min(n, i + w + 1)]) / len(values[max(0, i - w):min(n, i + w + 1)])
-        for i in range(n)
-    ]
+def _clean_landmarks(frames: List[Dict], fps: float):
+    """Reject invalid observations before computing any angles."""
+    # golf1 (64.31 fps): pooled displacement p95 is about 0.03, while wrist
+    # glitches reach 0.13–0.31. Leave margin for the fast downswing, and scale
+    # the 0.12/frame cutoff by frame interval for other recordings.
+    step_limit = 0.12 * 64.31 / fps
+    cleaned = [frame.copy() for frame in frames]
+    confidence = [1.0] * len(frames)
+    confidence_landmarks = set(REQUIRED[:8])
+    shoulder_width = [abs(frame["LEFT_SHOULDER"][0] - frame["RIGHT_SHOULDER"][0])
+                      for frame in frames]
+    typical_width = sorted(shoulder_width)[len(frames) // 2]
+
+    for name in REQUIRED:
+        observations = [frame[name] for frame in frames]
+        valid = [obs[3] >= 0.5 for obs in observations]
+        for i in range(1, len(observations) - 1):
+            before, current, after = (obs[:2] for obs in observations[i - 1:i + 2])
+            if (math.dist(before, current) > step_limit
+                    and math.dist(current, after) > step_limit
+                    and math.dist(before, after) <= 2 * step_limit):
+                valid[i] = False
+        rejected = set()
+        for i in range(1, len(observations)):
+            if valid[i - 1] and valid[i] and math.dist(observations[i - 1][:2], observations[i][:2]) > step_limit:
+                # The offending side of a single jump is ambiguous. Reject both ends.
+                rejected.update((i - 1, i))
+        anchors = [i for i, accepted in enumerate(valid) if accepted and i not in rejected]
+        if not anchors:
+            raise ValueError(f"랜드마크 신뢰도 부족 ({name})")
+        anchor_set = set(anchors)
+        for i, observation in enumerate(observations):
+            if i not in anchor_set:
+                confidence[i] = 0.0
+            elif name in confidence_landmarks:
+                confidence[i] = min(confidence[i], observation[3])
+        bounds = [(-1, anchors[0]), *zip(anchors, anchors[1:]), (anchors[-1], len(frames))]
+        for left, right in bounds:
+            a = observations[max(left, anchors[0])]
+            b = observations[min(right, anchors[-1])]
+            for i in range(left + 1, right):
+                t = (i - left) / (right - left)
+                cleaned[i][name] = tuple(x + (y - x) * t for x, y in zip(a, b))
+
+    # Width can collapse even when MediaPipe reports high shoulder visibility.
+    if typical_width > 0:
+        for i, width in enumerate(shoulder_width):
+            confidence[i] = min(confidence[i], width / (0.25 * typical_width))
+    return cleaned, confidence
+
+
+def _smooth(values: Sequence[float]) -> List[float]:
+    """Quadratic Savitzky–Golay, seven samples, with one-sided edge fits."""
+    result = []
+    for i in range(len(values)):
+        start = max(0, min(i - 3, len(values) - 7))
+        t = i - start - 3
+        result.append(sum(
+            values[start + x + 3] * (1 / 7 + t * x / 28 + (t * t - 4) * (x * x - 4) / 84)
+            for x in range(-3, 4)
+        ))
+    return result
 
 
 # ── 본체 ──────────────────────────────────────────────────────────────
@@ -111,10 +169,13 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     """
     if len(frames) < 10:
         raise ValueError("프레임이 너무 적다: %d" % len(frames))
-    missing = [k for k in REQUIRED if k not in frames[0]]
-    if missing:
-        raise ValueError("필수 랜드마크 누락: %s" % ", ".join(missing))
-
+    if not math.isfinite(fps) or fps <= 0:
+        raise ValueError("유효하지 않은 프레임 속도입니다.")
+    for i, frame in enumerate(frames):
+        missing = [name for name in REQUIRED if name not in frame]
+        if missing:
+            raise ValueError(f"프레임 {i} 필수 랜드마크 누락: {', '.join(missing)}")
+    frames, confidence = _clean_landmarks(frames, fps)
     raw = []
     for d in frames:
         sh = _mid(d, "LEFT_SHOULDER", "RIGHT_SHOULDER")
@@ -133,17 +194,19 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
             "heelR": d["RIGHT_HEEL"][1] - d["RIGHT_FOOT_INDEX"][1],
         })
 
-    sw = _smooth(_unwrap([r["sw"] for r in raw]), 3)
-    fa = _smooth(_unwrap([r["faL"] for r in raw]), 5)
-    shw = _smooth([r["shw"] for r in raw], 3)
-    hpw = _smooth([r["hpw"] for r in raw], 3)
-    tln = _smooth([r["tlen"] for r in raw], 3)
-    hx = _smooth([r["hx"] for r in raw], 3)
-    kl = _smooth([r["kneeL"] for r in raw], 4)
-    kr = _smooth([r["kneeR"] for r in raw], 4)
-    hr = _smooth([r["heelR"] for r in raw], 4)
+    sw = _smooth(_unwrap([r["sw"] for r in raw]))
+    fa = _smooth(_unwrap([r["faL"] for r in raw]))
+    shw = _smooth([r["shw"] for r in raw])
+    hpw = _smooth([r["hpw"] for r in raw])
+    tln = _smooth([r["tlen"] for r in raw])
+    hx = _smooth([r["hx"] for r in raw])
+    kl = _smooth([r["kneeL"] for r in raw])
+    kr = _smooth([r["kneeR"] for r in raw])
+    hr = _smooth([r["heelR"] for r in raw])
 
     shw_max, hpw_max, tln_max = max(shw), max(hpw), max(tln)
+    if min(shw_max, hpw_max, tln_max) <= 0:
+        raise ValueError("랜드마크 폭이나 길이가 유효하지 않습니다.")
 
     # 이벤트 검출: 백스윙 탑 = 스윙각 절대값 최대, 임팩트 = 그 뒤 어드레스값 복귀
     top = max(range(len(sw)), key=lambda i: abs(sw[i] - sw[0]))
@@ -186,6 +249,7 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
             round(max(0.02, min(0.50, kl[i])), 3),
             round(max(0.02, min(0.50, kr[i])), 3),
             round(max(0.0, min(1.0, (base_heel - hr[i]) * 9)), 3),
+            round(confidence[i], 3),
         ])
 
     n = len(track) - 1
@@ -202,7 +266,7 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     events = {k: (hold + v * dur) / total for k, v in events.items()}
 
     return {
-        "schema": "motionguard.swingtrack/1",
+        "schema": SCHEMA,
         "channels": CHANNELS,
         "meta": {
             "fps": round(fps, 2),
@@ -211,7 +275,7 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
             "samples": len(track),
             "source_frames": [start, end],
             "backswing_sign": back,
-            "measured": [c for c in CHANNELS if c != "wrist"],
+            "measured": [c for c in CHANNELS if c not in {"wrist", "confidence"}],
             "modeled": ["wrist"],
         },
         "events": {k: round(v, 4) for k, v in events.items()},

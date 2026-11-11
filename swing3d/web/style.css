@@ -5,3 +5,4 @@ canvas { display: block; width: 100%; aspect-ratio: 16 / 10; }
 .controls input[type=range] { flex: 1; min-width: 120px; }
 .model-option { color: #ffd193; }
 canvas { touch-action: none; }
+.trace-legend { color: #9adbe1; }
