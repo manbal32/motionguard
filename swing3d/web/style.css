@@ -6,3 +6,12 @@ canvas { display: block; width: 100%; aspect-ratio: 16 / 10; }
 .model-option { color: #ffd193; }
 canvas { touch-action: none; }
 .trace-legend { color: #9adbe1; }
+
+.coaching { margin-top: 20px; padding: 16px; background: #192a33; }
+.coaching h2 { margin: 0 0 12px; font-size: 1.1rem; }
+.coaching button { margin: 0 8px 6px 0; }
+.coaching button[aria-pressed="true"] { background: #f6bc68; color: #14222a; }
+.coaching ul { padding-left: 1.25rem; }
+.coaching p { margin: 8px 0 0; }
+.practice-links { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 4px 0 12px; }
+.practice-links a { color: #9adbe1; }

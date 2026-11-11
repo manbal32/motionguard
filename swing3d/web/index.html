@@ -36,7 +36,16 @@
       }
       if (!response.ok) throw new Error("트랙 요청에 실패했습니다.");
       if (!window.THREE) throw new Error("Three.js를 불러올 수 없습니다.");
-      Swing3D.mount(viewer, data);
+      let findings;
+      if (file.name === "golf1_export.csv") {
+        const result = await fetch("/api/findings/golf1");
+        const findingFile = await result.json();
+        if (!result.ok) throw new Error("결함 파일 거부: " + findingFile.reason);
+        const digest = await crypto.subtle.digest("SHA-256", await file.arrayBuffer());
+        const hash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+        if (hash === result.headers.get("X-Swing3D-Source-SHA256")) findings = findingFile;
+      }
+      Swing3D.mount(viewer, data, { findings, reference: findings?.reference });
       status.textContent = file.name + " · 표본 " + data.meta.samples + "개";
     } catch (error) {
       status.textContent = error.message;

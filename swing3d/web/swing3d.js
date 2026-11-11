@@ -23,6 +23,34 @@ window.Swing3D = (() => {
     ["손목 클로즈업", [0.3, 0.35, 2.3], [0, 1.25, 0.2]],
   ];
 
+  const cameraIds = ["front", "dtl", "high", "wrist"];
+  const modelPoses = {
+    // Address, top, delivery, impact, finish. Angles are authored in degrees.
+    swing: [0, 120, 40, 0, -135],
+    torso: [0, 44, 18, -28, -65],
+    hips: [0, 24, -8, -22, -55],
+    lean: [15, 15, 19, 15, 5],
+    wrist: [0, 35, 20, 0, 5],
+    shiftX: [0, 0.055, 0.025, -0.055, -0.10],
+    kneeL: [14, 21, 21, 10, 5],
+    kneeR: [14, 12, 19, 19, 9],
+    heelR: [0, 0, 0.12, 0.35, 0.85],
+  };
+  const unitless = new Set(["shiftX", "heelR"]);
+
+  function modelReference(reference, events) {
+    if (reference !== "model") throw new Error("지원하지 않는 기준 스윙입니다: " + reference);
+    const times = [events.address, events.top, events.down, events.impact, events.finish];
+    return (key, time) => {
+      const values = modelPoses[key];
+      const right = times.findIndex(boundary => time < boundary);
+      const value = right <= 0 ? values[right === 0 ? 0 : 4]
+        : THREE.MathUtils.lerp(values[right - 1], values[right],
+          THREE.MathUtils.smoothstep(time, times[right - 1], times[right]));
+      return unitless.has(key) ? value : THREE.MathUtils.degToRad(value);
+    };
+  }
+
   function dispose() {
     active?.();
     active = undefined;
@@ -31,6 +59,19 @@ window.Swing3D = (() => {
   function mount(el, data, opts = {}) {
     dispose();
     const T = THREE;
+    const findings = opts.findings?.findings ?? [];
+    for (const item of findings) {
+      if ("channel" in item && (item.channel === "wrist"
+          || !Object.hasOwn(modelPoses, item.channel) || !data.channels.includes(item.channel))) {
+        throw new Error("3D 결함에 사용할 수 없는 채널입니다: " + item.channel);
+      }
+      if ("range" in item && (!Array.isArray(item.range) || item.range.length !== 2
+          || !item.range.every(Number.isFinite)
+          || !(0 <= item.range[0] && item.range[0] < item.range[1] && item.range[1] <= 1))) {
+        throw new Error("3D 결함 구간은 0~1 사이의 오름차순이어야 합니다.");
+      }
+    }
+    const referencePose = modelReference(opts.reference ?? opts.findings?.reference ?? "model", data.events);
     const scene = new T.Scene();
     scene.background = new T.Color(0x182830);
     const camera = new T.PerspectiveCamera(38, 1, 0.1, 240);
@@ -67,11 +108,11 @@ window.Swing3D = (() => {
 
     const figure = group(scene);
     const hips = group(figure, 0, 0.88);
-    box(hips, 0.34, 0.20, 0.21, 0x405c72);
+    const pelvisMesh = box(hips, 0.34, 0.20, 0.21, 0x405c72);
     const torso = group(hips);
     const chest = group(torso, 0, 0.40);
-    mesh(torso, new T.SphereGeometry(1, 20, 12), 0x53a798, 0, 0.26)
-      .scale.set(0.235, 0.29, 0.128);
+    const torsoMesh = mesh(torso, new T.SphereGeometry(1, 20, 12), 0x53a798, 0, 0.26);
+    torsoMesh.scale.set(0.235, 0.29, 0.128);
     const head = group(chest, 0, 0.25);
     mesh(head, new T.SphereGeometry(0.105, 20, 12), 0xd9ac8c).scale.y = 1.2;
     box(head, 0.18, 0.027, 0.15, 0xe6e8dd, 0, 0.063, 0.072);
@@ -100,6 +141,27 @@ window.Swing3D = (() => {
     const shaft = mesh(wrist, new T.CylinderGeometry(0.013, 0.009, 1, 10), 0xd8e0e6);
     const tip = group(wrist);
     box(tip, 0.12, 0.058, 0.08, 0x7597ae, 0.036);
+    const segments = [];
+    const modelFigure = figure.clone(true);
+    const modelSegments = [];
+    const sourceColors = new Map();
+    figure.traverse(node => {
+      segments.push(node);
+      if (node.isMesh) sourceColors.set(node, node.material.color.clone());
+    });
+    const ghostMaterial = new T.MeshStandardMaterial({
+      color: 0x9ac9f2, transparent: true, opacity: 0.38, depthWrite: false,
+    });
+    modelFigure.traverse(node => {
+      modelSegments.push(node);
+      if (node.isMesh) {
+        node.material = ghostMaterial;
+        node.castShadow = false;
+        node.receiveShadow = false;
+      }
+    });
+    modelFigure.visible = false;
+    scene.add(modelFigure);
     const ball = mesh(scene, new T.SphereGeometry(0.026, 16, 12), 0xffffff);
     const terrain = group(scene);
     const ground = box(terrain, 210, 0.08, 84, 0xffffff, -82, -0.055);
@@ -183,6 +245,104 @@ window.Swing3D = (() => {
       controls.append(legend);
     }
     toggle.checked = opts.wristCorrection ?? true;
+    let finding;
+    let mode = "actual";
+    const coaching = document.createElement("section");
+    coaching.className = "coaching";
+    coaching.hidden = findings.length === 0;
+
+    function addElement(parent, tag, text) {
+      const node = document.createElement(tag);
+      node.textContent = text;
+      parent.append(node);
+      return node;
+    }
+
+    if (findings.length) addElement(coaching, "h2", "스윙 분석");
+    const findingList = addElement(coaching, "ul", "");
+    const findingButtons = new Map();
+    for (const item of findings) {
+      const row = addElement(findingList, "li", "");
+      if (item.channel && item.range) {
+        const button = addElement(row, "button", item.label);
+        button.type = "button";
+        button.onclick = () => selectFinding(item);
+        findingButtons.set(item.id, button);
+      } else {
+        addElement(row, "span", item.label);
+      }
+      if (item.youtube?.length) {
+        const links = addElement(row, "div", "");
+        links.className = "practice-links";
+        for (const query of item.youtube) {
+          const link = addElement(links, "a", query);
+          link.href = "https://www.youtube.com/results?" + new URLSearchParams({ search_query: query });
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+        }
+      }
+    }
+    const comparison = addElement(coaching, "div", "");
+    comparison.hidden = true;
+    const modeButtons = new Map();
+    for (const [value, label] of [["actual", "실제"], ["exaggerated", "과장"], ["compare", "나란히"]]) {
+      const button = addElement(comparison, "button", label);
+      button.type = "button";
+      button.onclick = () => {
+        setMode(value);
+        if (value !== "actual") focusFinding();
+      };
+      modeButtons.set(value, button);
+    }
+    const scaleLabel = addElement(comparison, "label", "과장 배율 ");
+    const multiplier = addElement(scaleLabel, "input", "");
+    Object.assign(multiplier, { type: "range", min: "1", max: "4", step: "0.1", value: "2.5" });
+    const scaleValue = addElement(scaleLabel, "output", "2.5×");
+    multiplier.oninput = () => { scaleValue.textContent = Number(multiplier.value).toFixed(1) + "×"; };
+    const warning = addElement(comparison, "p", "교육용 과장이며 측정값이 아닙니다.");
+    warning.className = "model-option";
+    const reading = addElement(comparison, "p", "");
+    const compareLabel = addElement(comparison, "p", "불투명 아바타는 실제 스윙, 반투명 아바타는 교본형 기준입니다.");
+    const highlight = new T.Color(0xffa942);
+    const neutral = new T.Color(0x85939a);
+    const modelOffset = new T.Vector3();
+
+    function setMode(value) {
+      mode = value;
+      modelFigure.visible = mode === "compare";
+      warning.hidden = mode !== "exaggerated";
+      compareLabel.hidden = mode !== "compare";
+      scaleLabel.hidden = mode !== "exaggerated";
+      for (const [name, button] of modeButtons) button.setAttribute("aria-pressed", String(name === mode));
+    }
+
+    function selectFinding(item) {
+      finding = item;
+      comparison.hidden = false;
+      cameraSelect.value = cameraIds.indexOf(item.camera);
+      setCamera();
+      for (const [id, button] of findingButtons) button.setAttribute("aria-pressed", String(id === item.id));
+      const regions = {
+        swing: arms.flatMap(arm => [arm.upperMesh, arm.lowerMesh, arm.elbowJoint, arm.handJoint]),
+        torso: [torsoMesh], lean: [torsoMesh], hips: [pelvisMesh], shiftX: [pelvisMesh],
+        kneeL: [arms[0].knee.children[1]], kneeR: [arms[1].knee.children[1]],
+        heelR: arms[1].ankle.children,
+      };
+      for (const [node, color] of sourceColors) {
+        node.material.color.copy(color).lerp(neutral, 0.62);
+        if (regions[item.channel]?.includes(node)) node.material.color.copy(highlight);
+      }
+      focusFinding();
+    }
+
+    function focusFinding() {
+      if (!finding) return;
+      const [start, end] = finding.range;
+      time = (start + end) / 2 * data.meta.dur;
+      playing = false;
+      play.textContent = "재생";
+    }
+
     const axis = new T.Vector3(0, 1, 0);
     const hand = new T.Vector3();
     const direction = new T.Vector3();
@@ -242,23 +402,26 @@ window.Swing3D = (() => {
 
     const { channels, events, meta, track } = data;
     const indices = Object.fromEntries(channels.map((channel, i) => [channel, i]));
-    function applyPose(time) {
+    function measuredAt(time) {
       const fraction = T.MathUtils.clamp((time * meta.dur - meta.hold) / (meta.dur - meta.hold), 0, 1);
       const sample = fraction * (track.length - 1);
       const index = Math.floor(sample);
       const a = track[index];
       const b = track[Math.min(index + 1, track.length - 1)];
-      const read = key => T.MathUtils.lerp(a[indices[key]], b[indices[key]], sample - index);
+      return key => T.MathUtils.lerp(a[indices[key]], b[indices[key]], sample - index);
+    }
+
+    function applyPose(time, read = measuredAt(time), original = read) {
       hips.rotation.y = read("hips");
       hips.position.x = read("shiftX");
       torso.rotation.set(read("lean"), read("torso"), 0);
       const headRelease = T.MathUtils.smoothstep(time, events.impact, events.finish);
-      head.rotation.y = -read("torso") * 0.78 * (1 - headRelease);
+      head.rotation.y = -original("torso") * 0.78 * (1 - headRelease);
       arms[0].knee.rotation.x = read("kneeL");
       arms[1].knee.rotation.x = read("kneeR");
       arms[1].ankle.rotation.x = -read("heelR") * 0.9;
       swing.rotation.z = read("swing");
-      wrist.rotation.z = read("wrist") + (toggle.checked ? 0.32 * read("swing") : 0);
+      wrist.rotation.z = read("wrist") + (toggle.checked ? 0.32 * original("swing") : 0);
       wrist.position.set(0, -0.52, 0);
       figure.updateMatrixWorld(true);
       fitGrip();
@@ -418,13 +581,52 @@ window.Swing3D = (() => {
       return Math.max(meta.dur, events.impact * meta.dur + flightDuration) + 0.35;
     }
 
+    function reviewPose(normalizedTime) {
+      const measured = measuredAt(normalizedTime);
+      if (!finding) {
+        applyPose(normalizedTime, measured);
+        return;
+      }
+      const channel = finding.channel;
+      const reference = key => referencePose(key, normalizedTime);
+      const actual = measured(channel);
+      let shown = actual;
+      if (mode === "exaggerated") {
+        const [start, end] = finding.range;
+        const ramp = Math.min(0.02, (end - start) / 3);
+        const blend = T.MathUtils.smoothstep(normalizedTime, start, start + ramp)
+          * (1 - T.MathUtils.smoothstep(normalizedTime, end - ramp, end));
+        const scale = 1 + blend * (Number(multiplier.value) - 1);
+        const baseline = reference(channel);
+        shown = blend > 0 ? baseline + (actual - baseline) * scale : actual;
+      }
+      if (mode === "compare") {
+        applyPose(normalizedTime, reference);
+        for (let i = 1; i < segments.length; i++) {
+          modelSegments[i].position.copy(segments[i].position);
+          modelSegments[i].quaternion.copy(segments[i].quaternion);
+          modelSegments[i].scale.copy(segments[i].scale);
+        }
+      }
+      applyPose(normalizedTime, key => key === channel ? shown : measured(key), measured);
+      const format = value => {
+        const degrees = T.MathUtils.radToDeg(value).toFixed(1);
+        return degrees + (unitless.has(channel) ? "° 환산" : "°");
+      };
+      let text = "실제 측정값 " + format(actual);
+      if (mode === "exaggerated") text += " · 과장 표시 " + format(shown);
+      if (mode !== "actual") text += " · 교본 기준 " + format(reference(channel));
+      if (indices.confidence !== undefined && measured("confidence") < 0.45) text += " · 추적 신뢰도 낮음";
+      if (reading.textContent !== text) reading.textContent = text;
+    }
+
     function draw(now) {
       const fullDuration = playbackDuration();
       time = Math.min(time, fullDuration);
       if (playing && previous !== undefined) time = (time + (now - previous) / 1000) % fullDuration;
       previous = now;
       seek.value = time / fullDuration;
-      applyPose(Math.min(1, time / meta.dur));
+      reviewPose(Math.min(1, time / meta.dur));
       const flightTime = T.MathUtils.clamp(time - events.impact * meta.dur, 0, flightDuration);
       const u = flightTime / flightDuration;
       flightPosition(flightTime, ball.position);
@@ -437,6 +639,11 @@ window.Swing3D = (() => {
       offset.add(target);
       offset.y = Math.max(target.y, offset.y);
       camera.lookAt(offset);
+      if (modelFigure.visible) {
+        modelOffset.set(1, 0, 0).applyQuaternion(camera.quaternion);
+        modelOffset.y = 0;
+        modelFigure.position.copy(modelOffset.normalize().multiplyScalar(cameraSelect.value === "3" ? 0.72 : 1.18));
+      }
       renderer.render(scene, camera);
       frame = requestAnimationFrame(draw);
     }
@@ -454,24 +661,32 @@ window.Swing3D = (() => {
     courseSelect.onchange = () => setCourse(Number(courseSelect.value));
     cameraSelect.onchange = setCamera;
 
-    el.replaceChildren(renderer.domElement, controls);
+    el.replaceChildren(renderer.domElement, controls, coaching);
     resize();
     const observer = new ResizeObserver(resize);
     observer.observe(el);
     setClub();
     setCourse(0);
     setCamera();
+    setMode("actual");
+    const firstFinding = findings.find(item => item.channel && item.range);
+    if (firstFinding) selectFinding(firstFinding);
     frame = requestAnimationFrame(draw);
     active = () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
+      const geometries = new Set();
+      const materials = new Set();
       scene.traverse(object => {
-        object.geometry?.dispose();
-        object.material?.dispose();
+        if (object.geometry) geometries.add(object.geometry);
+        if (object.material) materials.add(object.material);
       });
+      geometries.forEach(geometry => geometry.dispose());
+      materials.forEach(material => material.dispose());
       renderer.dispose();
       renderer.domElement.remove();
       controls.remove();
+      coaching.remove();
     };
   }
 
