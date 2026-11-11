@@ -17,6 +17,21 @@ const track = {
 };
 const model = reference.expand(track);
 
+test("deficits approach zero continuously without reversing either direction", () => {
+  const radians = Math.PI / 180;
+  for (const sign of [-1, 1]) {
+    const measured = {channels: ["torso"], meta: {dur: 1, hold: 0}, track: [[0], [sign * 14.2 * radians], [0]]};
+    const baseline = measured.track.map(() => reference.channels.map(() => sign * 44 * radians));
+    const at = factor => exaggeration.apply(measured, baseline, {channel: "torso", range: [0, 1]}, factor)[1][0];
+    assert.equal(Math.abs(at(2) / radians).toFixed(1), "1.7");
+    for (let step = 101; step <= 300; step++) {
+      const value = at(step / 100);
+      assert.equal(Math.sign(value), sign);
+      assert.ok(Math.abs(value) < Math.abs(at((step - 1) / 100)));
+    }
+  }
+});
+
 test("address offsets and actual phase indices anchor all nine channels", () => {
   assert.equal(model.length, 11);
   assert.equal(model[0].length, 9);
