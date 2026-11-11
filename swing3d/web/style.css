@@ -15,3 +15,10 @@ canvas { touch-action: none; }
 .coaching p { margin: 8px 0 0; }
 .practice-links { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 4px 0 12px; }
 .practice-links a { color: #9adbe1; }
+
+.lead { color: #9fb3bd; margin: 4px 0 14px; }
+.primary-input { display: inline-block; padding: 12px 16px; background: #1d3038;
+  border: 1px solid #335060; border-radius: 10px; font-weight: 600; }
+details { margin-top: 10px; color: #9fb3bd; }
+details summary { cursor: pointer; }
+details label { display: inline-block; margin-top: 8px; }

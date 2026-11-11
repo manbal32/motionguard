@@ -6,7 +6,12 @@
 <link rel="stylesheet" href="style.css">
 <main>
   <h1>MotionGuard Swing3D</h1>
-  <label>좌표 CSV <input type="file" accept=".csv,text/csv"></label>
+  <p class="lead">골프 스윙 영상을 올리면 좌표를 뽑아 3D로 재생합니다. 30초 150MB 이하.</p>
+  <label class="primary-input">스윙 영상 <input id="video" type="file" accept="video/mp4,video/quicktime,.mp4,.mov"></label>
+  <details>
+    <summary>이미 뽑아둔 좌표 CSV로 열기</summary>
+    <label>좌표 CSV <input id="csv" type="file" accept=".csv,text/csv"></label>
+  </details>
   <p role="status"></p>
   <div id="viewer"></div>
 </main>
@@ -16,25 +21,26 @@
 </script>
 <script src="swing3d.js"></script>
 <script>
-  const input = document.querySelector("input[type=file]");
+  const videoInput = document.querySelector("#video");
+  const csvInput = document.querySelector("#csv");
   const status = document.querySelector("[role=status]");
   const viewer = document.querySelector("#viewer");
 
-  input.addEventListener("change", async () => {
+  async function load(input, endpoint, type, busy) {
     const file = input.files[0];
     if (!file) return;
-    input.disabled = true;
+    videoInput.disabled = csvInput.disabled = true;
     Swing3D.dispose();
-    status.textContent = "트랙을 만드는 중입니다.";
+    status.textContent = busy;
     try {
-      const response = await fetch("/api/track", {
+      const response = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "text/csv" },
+        headers: { "Content-Type": type },
         body: file,
       });
       const data = await response.json();
       if (data.ok === false) {
-        status.textContent = "이 영상은 3D 재현이 어렵다. " + data.reason;
+        status.textContent = "3D 재현이 어렵습니다 — " + data.reason;
         return;
       }
       if (!response.ok) throw new Error("트랙 요청에 실패했습니다.");
@@ -53,8 +59,14 @@
     } catch (error) {
       status.textContent = error.message;
     } finally {
-      input.disabled = false;
+      videoInput.disabled = csvInput.disabled = false;
     }
-  });
+  }
+
+  videoInput.addEventListener("change", () =>
+    load(videoInput, "/api/video", "video/mp4",
+      "영상에서 자세를 추출하는 중입니다. 길이에 따라 10초에서 1분쯤 걸립니다."));
+  csvInput.addEventListener("change", () =>
+    load(csvInput, "/api/track", "text/csv", "트랙을 만드는 중입니다."));
 </script>
 </html>

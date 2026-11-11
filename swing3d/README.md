@@ -7,6 +7,8 @@
 - 뷰어 주소는 http://127.0.0.1:8765 입니다.
 - 테스트는 이 디렉터리에서 `python -m unittest discover -s tests`로 실행합니다.
 
+`POST /api/video`는 mp4/mov 원문을 받아 MediaPipe로 좌표를 뽑고 트랙 JSON을 반환합니다. 30초 150MB 이하입니다. 이 경로에만 `mediapipe` 설치가 필요하며, 없으면 설치 안내를 사유로 돌려줍니다. 첫 실행 때 자세 인식 모델(.task)을 `models/`로 내려받습니다. 사내망에서 `storage.googleapis.com`이 막히면 다른 망에서 받아 `models/`에 넣으면 되고, 그 안내가 화면 오류에 나옵니다. 원본 영상은 저장하지 않고 처리 후 버립니다.
+
 `POST /api/track`은 CSV 원문을 받아 트랙 JSON을 반환합니다. `GET /api/tracks`의 목록에서 ID를 찾고 `GET /api/track/<id>`로 저장된 트랙을 읽을 수 있습니다.
 
 몸통·골반 회전은 단일 카메라의 폭 단축률로 추정합니다. 클럽과 손목 코킹은 영상에서 직접 측정하지 않습니다.

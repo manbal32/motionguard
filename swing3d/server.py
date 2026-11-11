@@ -14,6 +14,7 @@ from findings_contract import validate_findings
 
 ROOT = Path(__file__).resolve().parent
 MAX_CSV_BYTES = 16 * 1024 * 1024
+MAX_VIDEO_BYTES = 150 * 1024 * 1024
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -74,7 +75,11 @@ class Handler(SimpleHTTPRequestHandler):
             super().do_GET()
 
     def do_POST(self):
-        if urlsplit(self.path).path != "/api/track":
+        path = urlsplit(self.path).path
+        if path == "/api/video":
+            self.post_video()
+            return
+        if path != "/api/track":
             self.failure("경로를 찾을 수 없습니다.", 404)
             return
         try:
@@ -95,6 +100,58 @@ class Handler(SimpleHTTPRequestHandler):
             self.failure(f"좌표 CSV에서 트랙을 생성할 수 없습니다. {error}", 422)
             return
         self.respond(result)
+
+    def post_video(self):
+        try:
+            size = int(self.headers.get("Content-Length", "0"))
+        except ValueError:
+            size = 0
+        if not 0 < size <= MAX_VIDEO_BYTES:
+            self.failure("1바이트 이상 150MiB 이하의 영상 파일이 필요합니다.",
+                         413 if size > MAX_VIDEO_BYTES else 400)
+            return
+        payload = self.rfile.read(size)
+        if len(payload) != size:
+            self.failure("영상 전송이 완료되지 않았습니다.", 400)
+            return
+        try:
+            with self.cache_lock:
+                result = self.get_or_build_video(payload)
+        except Exception as error:   # 추출 실패 사유를 그대로 전달한다
+            import video_pose
+            if isinstance(error, video_pose.ExtractionError):
+                self.failure(str(error), 422)
+            else:
+                self.failure(f"영상에서 트랙을 생성할 수 없습니다. {error}", 422)
+            return
+        self.respond(result)
+
+    def get_or_build_video(self, payload):
+        import video_pose
+        key = hashlib.sha256(b"video\0" + swing_track.SCHEMA.encode() + b"\0" + payload).hexdigest()
+        target = self.tracks / (key + ".json")
+        if target.exists():
+            return json.loads(target.read_text(encoding="utf-8"))
+        with TemporaryDirectory() as temp:
+            source = Path(temp) / "upload.mp4"
+            source.write_bytes(payload)
+            frames, fps = video_pose.extract(str(source))
+        result = swing_track.build_track(frames, fps)
+        self.store(target, result)
+        return result
+
+    def store(self, target, result):
+        encoded = json.dumps(result, ensure_ascii=False, allow_nan=False)
+        self.tracks.mkdir(parents=True, exist_ok=True)
+        with NamedTemporaryFile(dir=self.tracks, delete=False) as temp:
+            temporary = Path(temp.name)
+            try:
+                temp.write(encoded.encode())
+                temp.close()
+                temporary.replace(target)
+            finally:
+                temp.close()
+                temporary.unlink(missing_ok=True)
 
     def get_or_build(self, payload):
         key = hashlib.sha256(swing_track.SCHEMA.encode() + b"\0" + payload).hexdigest()

@@ -1,2 +1,12 @@
-# 서버와 트랙 변환기는 Python 표준 라이브러리를 사용합니다.
-# 영상에서 좌표를 추출할 때만 별도로 설치: pip install mediapipe
+# 서버와 트랙 변환기는 Python 표준 라이브러리만 쓴다. 설치 없이 실행된다.
+#
+# 영상 업로드(POST /api/video)를 쓸 때만 아래가 필요하다.
+# 좌표 CSV 업로드는 설치 없이 그대로 동작한다.
+#
+#   py -3 -m pip install mediapipe      (Windows)
+#   python3 -m pip install mediapipe    (macOS)
+#
+# mediapipe 는 opencv 를 함께 설치한다.
+# 첫 실행 때 자세 인식 모델(.task)을 내려받는다. 사내망에서 막히면
+# 다른 망에서 받아 models/ 에 넣으면 된다. 안내는 화면 오류 메시지에 나온다.
+mediapipe>=0.10.9 ; extra == "video"
