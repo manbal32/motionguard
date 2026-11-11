@@ -48,6 +48,12 @@ def ensure_model() -> Path:
     path = MODEL_DIR / MODEL_NAME
     if path.is_file():
         return path
+    # 사내망에서 내려받기가 막히면 사용자가 직접 넣는다.
+    # 파일명이 달라도(full/heavy 모델 등) models/ 안의 .task 하나면 받아들인다.
+    if MODEL_DIR.is_dir():
+        for candidate in sorted(MODEL_DIR.glob("*.task")):
+            if candidate.stat().st_size > 1024:
+                return candidate
     MODEL_DIR.mkdir(parents=True, exist_ok=True)
     import urllib.error
     import urllib.request
@@ -56,8 +62,11 @@ def ensure_model() -> Path:
             data = source.read()
     except (urllib.error.URLError, TimeoutError, OSError) as error:
         raise ExtractionError(
-            "자세 인식 모델을 내려받지 못했습니다. 사내망에서 차단된 경우가 많습니다. "
-            f"다른 망에서 {MODEL_URL} 을 받아 {path} 로 넣어주세요. 원인: {error}"
+            "자세 인식 모델을 내려받지 못했습니다. 회사망 프록시가 인증서를 교체하면 "
+            "파이썬이 거부하지만 브라우저는 받을 수 있습니다. "
+            f"브라우저 주소창에 {MODEL_URL} 을 붙여넣어 받은 뒤 "
+            f"{MODEL_DIR} 폴더에 넣고 다시 시도해 주세요. 파일명은 그대로 두면 됩니다. "
+            f"원인: {error}"
         ) from error
     temporary = path.with_suffix(".part")
     temporary.write_bytes(data)
