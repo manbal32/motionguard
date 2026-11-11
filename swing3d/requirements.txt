@@ -7,6 +7,5 @@
 #   python3 -m pip install mediapipe    (macOS)
 #
 # mediapipe 는 opencv 를 함께 설치한다.
-# 첫 실행 때 자세 인식 모델(.task)을 내려받는다. 사내망에서 막히면
-# 다른 망에서 받아 models/ 에 넣으면 된다. 안내는 화면 오류 메시지에 나온다.
+# 자세 인식 모델(.task)은 저장소의 models/ 에 포함된다.
 mediapipe>=0.10.9 ; extra == "video"

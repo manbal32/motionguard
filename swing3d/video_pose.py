@@ -4,26 +4,17 @@ video_pose.py — 영상에서 MediaPipe 랜드마크를 뽑아 swing_track 입�
 swing_track.build_track() 이 기대하는 형식과 동일하다.
     frames[i] = {landmark_name: (x, y, z, visibility), ...}
 
-모델 파일
---------
-MediaPipe Pose Landmarker 모델(.task)이 필요하다. 기본 경로는 models/ 아래다.
-없으면 한 번 내려받는다. 사내망에서 storage.googleapis.com 이 막히면 내려받기가
-실패하므로, 그때는 다른 망에서 받은 파일을 models/ 에 직접 넣으면 된다.
-실패 사유에 그 안내를 담아 올린다.
+모델은 저장소의 models/pose_landmarker_lite.task 에서 읽는다.
 """
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 from typing import Dict, List, Tuple
 
 ROOT = Path(__file__).resolve().parent
 MODEL_DIR = ROOT / "models"
 MODEL_NAME = "pose_landmarker_lite.task"
-MODEL_URL = ("https://storage.googleapis.com/mediapipe-models/pose_landmarker/"
-             "pose_landmarker_lite/float16/1/pose_landmarker_lite.task")
-
 MAX_SECONDS = 30.0
 TARGET_SAMPLES = 400          # 긴 영상도 이 수준으로 균일 샘플링한다
 
@@ -48,30 +39,9 @@ def ensure_model() -> Path:
     path = MODEL_DIR / MODEL_NAME
     if path.is_file():
         return path
-    # 사내망에서 내려받기가 막히면 사용자가 직접 넣는다.
-    # 파일명이 달라도(full/heavy 모델 등) models/ 안의 .task 하나면 받아들인다.
-    if MODEL_DIR.is_dir():
-        for candidate in sorted(MODEL_DIR.glob("*.task")):
-            if candidate.stat().st_size > 1024:
-                return candidate
-    MODEL_DIR.mkdir(parents=True, exist_ok=True)
-    import urllib.error
-    import urllib.request
-    try:
-        with urllib.request.urlopen(MODEL_URL, timeout=60) as source:
-            data = source.read()
-    except (urllib.error.URLError, TimeoutError, OSError) as error:
-        raise ExtractionError(
-            "자세 인식 모델을 내려받지 못했습니다. 회사망 프록시가 인증서를 교체하면 "
-            "파이썬이 거부하지만 브라우저는 받을 수 있습니다. "
-            f"브라우저 주소창에 {MODEL_URL} 을 붙여넣어 받은 뒤 "
-            f"{MODEL_DIR} 폴더에 넣고 다시 시도해 주세요. 파일명은 그대로 두면 됩니다. "
-            f"원인: {error}"
-        ) from error
-    temporary = path.with_suffix(".part")
-    temporary.write_bytes(data)
-    temporary.replace(path)
-    return path
+    raise ExtractionError(
+        f"자세 모델이 없습니다. 저장소의 models/{MODEL_NAME} 파일을 복원하세요."
+    )
 
 
 def extract(video_path: str) -> Tuple[List[Dict], float]:
@@ -109,7 +79,7 @@ def extract(video_path: str) -> Tuple[List[Dict], float]:
         fps = source_fps / stride
 
         options = mp_vision.PoseLandmarkerOptions(
-            base_options=mp_python.BaseOptions(model_asset_path=str(model)),
+            base_options=mp_python.BaseOptions(model_asset_buffer=model.read_bytes()),
             running_mode=mp_vision.RunningMode.VIDEO,
             num_poses=1,
             min_pose_detection_confidence=0.5,

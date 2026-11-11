@@ -7,7 +7,7 @@
 - 실행하면 브라우저가 자동으로 열립니다. 안 열리면 http://127.0.0.1:8765 를 직접 여세요. `--no-browser` 를 붙이면 열지 않습니다.
 - 테스트는 이 디렉터리에서 `python -m unittest discover -s tests`로 실행합니다.
 
-`POST /api/video`는 mp4/mov 원문을 받아 MediaPipe로 좌표를 뽑고 트랙 JSON을 반환합니다. 30초 150MB 이하입니다. 이 경로에만 `mediapipe` 설치가 필요하며, 없으면 설치 안내를 사유로 돌려줍니다. 첫 실행 때 자세 인식 모델(.task)을 `models/`로 내려받습니다. 사내망에서 `storage.googleapis.com`이 막히면 다른 망에서 받아 `models/`에 넣으면 되고, 그 안내가 화면 오류에 나옵니다. 원본 영상은 저장하지 않고 처리 후 버립니다.
+`POST /api/video`는 mp4/mov 원문을 받아 MediaPipe로 좌표를 뽑고 트랙 JSON을 반환합니다. 30초 150MB 이하입니다. 이 경로에만 `mediapipe` 설치가 필요하며, 없으면 설치 안내를 사유로 돌려줍니다. 자세 모델은 저장소의 models/ 에 포함됩니다. 원본 영상은 저장하지 않고 처리 후 버립니다.
 
 `POST /api/track`은 CSV 원문을 받아 트랙 JSON을 반환합니다. `GET /api/tracks`의 목록에서 ID를 찾고 `GET /api/track/<id>`로 저장된 트랙을 읽을 수 있습니다.
 
@@ -46,3 +46,5 @@ golf1의 64.31 fps에서 인접 프레임 XY 이동량을 합산한 분포의 95
 Quaternius Universal Base Characters의 CC0 GLB를 기본으로 사용합니다. 출처와 상업적 사용 조건은 `web/assets/LICENSES.md`에 기록했습니다. 로더, GLB 또는 필수 본 매핑을 읽을 수 없으면 기본 리그로 계속 재생합니다.
 
 캐릭터 교체는 `web/assets/golfer-rig.json`의 GLB 경로, 스케일, Y축 방향, 본 이름 및 손 보정 값을 수정해 적용합니다. 이름은 GLB에서 내보낸 실제 이름과 일치해야 합니다. 팔의 어깨와 팔꿈치, 그립 기준점은 기존 2본 IK 결과를 따릅니다. 홀의 잔디 타일과 지형은 실행 시 생성됩니다.
+
+영상 의존성을 설치한 뒤 Windows에서 `py -3 check.py`로 설치와 포트를 확인하세요. `py -3 server.py`를 실행한 뒤 `samples/golf_swing.mp4`를 업로드하면 네트워크 없이 샘플을 분석할 수 있습니다.

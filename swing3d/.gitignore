@@ -6,8 +6,8 @@ local-data/
 venv/
 __pycache__/
 *.mp4
+!samples/golf_swing.mp4
 *.mov
 outputs/
 tracks/*
 !tracks/.gitkeep
-models/
