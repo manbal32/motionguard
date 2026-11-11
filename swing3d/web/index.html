@@ -1,83 +1,72 @@
 <!doctype html>
 <html lang="ko">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MotionGuard Swing3D</title>
-<link rel="stylesheet" href="style.css">
-<main>
-  <h1>MotionGuard Swing3D</h1>
-  <p class="lead">골프 스윙 영상을 올리면 좌표를 뽑아 3D로 재생합니다. 30초 150MB 이하.</p>
-  <label class="primary-input">스윙 영상 <input id="video" type="file" accept="video/mp4,video/quicktime,.mp4,.mov"></label>
-  <details>
-    <summary>이미 뽑아둔 좌표 CSV로 열기</summary>
-    <label>좌표 CSV <input id="csv" type="file" accept=".csv,text/csv"></label>
-  </details>
-  <p role="status"></p>
-  <p id="phase-confidence" hidden></p>
-  <div id="viewer"></div>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MotionGuard Swing3D</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main class="instrument">
+  <header class="masthead">
+    <p class="eyebrow">MotionGuard / Swing3D</p>
+    <h1>스윙 계측</h1>
+    <p>원본 영상의 관절 궤적과 네 국면의 각도를 확인하세요.</p>
+  </header>
+  <nav class="stepper" aria-label="분석 단계">
+    <a href="#upload">01 업로드</a><a href="#progress">02 분석</a><a href="#overlay">03 관절 오버레이</a>
+    <a href="#phases">04 국면 기록</a>
+  </nav>
+  <div class="setup">
+    <section id="upload">
+      <header><span class="index">01</span><h2>영상 업로드</h2><span class="caption">최대 <b class="num">30</b><small>초</small> · <b class="num">150</b><small>MB</small></span></header>
+      <div class="section-body">
+        <div id="drop">
+          <strong>스윙 영상을 끌어다 놓으세요</strong>
+          <p>MP4 또는 MOV · 골퍼의 전신이 보이는 영상</p>
+          <label class="button" for="video">파일 선택</label>
+          <input id="video" class="visually-hidden" type="file" accept="video/mp4,video/quicktime,.mp4,.mov">
+        </div>
+        <details><summary>좌표 CSV로 열기</summary><input id="csv" type="file" accept=".csv,text/csv" aria-label="좌표 CSV"></details>
+        <div class="row"><button id="start" disabled>분석 시작</button><span id="file-info" aria-live="polite">영상을 먼저 선택하세요.</span></div>
+      </div>
+    </section>
+    <section id="progress">
+      <header><span class="index">02</span><h2>분석 진행</h2></header>
+      <div class="section-body">
+        <ol class="sequence"><li>좌표 추출</li><li>국면 검출</li><li>스틸컷 준비</li></ol>
+        <progress id="progress-bar" max="100" value="0" aria-label="분석 진행률"></progress>
+        <div class="row"><button id="cancel" disabled>취소</button><p id="status" role="status">대기 중</p><output id="percent" class="num">0<small>%</small></output></div>
+      </div>
+    </section>
+  </div>
+  <section id="overlay" hidden>
+    <header><span class="index">03</span><h2>관절 오버레이</h2><span class="caption">MediaPipe Pose · <b class="num">33</b><small>관절</small></span></header>
+    <div class="video-stage">
+      <video id="original" playsinline preload="metadata" aria-label="원본 스윙 영상"></video>
+      <canvas id="joints" aria-label="관절 오버레이"></canvas>
+      <span id="phase-label" class="phase-label"></span>
+    </div>
+    <div class="transport">
+      <button id="play">재생</button>
+      <button id="previous" aria-label="이전 프레임">−1 <small>프레임</small></button>
+      <button id="next" aria-label="다음 프레임">+1 <small>프레임</small></button>
+      <button id="speed" aria-pressed="false">0.5<small>×</small></button>
+      <div class="scrubber"><input id="seek" type="range" min="0" step="any" aria-label="영상 재생 위치"><div id="ticks"></div></div>
+      <output id="timecode" class="num"></output>
+      <button id="toggle-joints" aria-pressed="true">관절 표시</button>
+    </div>
+  </section>
+  <section id="phases" hidden>
+    <header><span class="index">04</span><h2>국면 스틸컷</h2><span class="caption">스틸컷을 선택하면 원본 영상이 해당 프레임으로 이동합니다.</span></header>
+    <div class="section-body">
+      <p id="confidence"></p>
+      <div id="stills" class="stills"></div>
+      <div class="legend"><span>측정값</span><span class="reference">교본 기준</span><span><i></i> 교본과 <b class="num">8</b><small>°</small> 이상 차이</span></div>
+    </div>
+  </section>
 </main>
-<script src="./vendor/three/three.min.js"></script>
-<script type="importmap">
-{"imports":{"three":"./vendor/three/three.module.js","three/addons/":"./vendor/three/addons/"}}
-</script>
-<script src="swing3d.js"></script>
-<script>
-  const videoInput = document.querySelector("#video");
-  const csvInput = document.querySelector("#csv");
-  const status = document.querySelector("[role=status]");
-  const viewer = document.querySelector("#viewer");
-
-  async function load(input, endpoint, type, busy) {
-    const file = input.files[0];
-    if (!file) return;
-    videoInput.disabled = csvInput.disabled = true;
-    Swing3D.dispose();
-    document.querySelector("#phase-confidence").hidden = true;
-    status.textContent = busy;
-    try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": type },
-        body: file,
-      });
-      const data = await response.json();
-      if (data.ok === false) {
-        status.textContent = "3D 재현이 어렵습니다 — " + data.reason;
-        return;
-      }
-      if (!response.ok) throw new Error("트랙 요청에 실패했습니다.");
-      if (!window.THREE) throw new Error("Three.js를 불러올 수 없습니다.");
-      let findings;
-      if (file.name === "golf1_export.csv") {
-        const result = await fetch("/api/findings/golf1");
-        const findingFile = await result.json();
-        if (!result.ok) throw new Error("결함 파일 거부: " + findingFile.reason);
-        const digest = await crypto.subtle.digest("SHA-256", await file.arrayBuffer());
-        const hash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
-        if (hash === result.headers.get("X-Swing3D-Source-SHA256")) findings = findingFile;
-      }
-      const confidence = document.querySelector("#phase-confidence");
-      if (data.meta.phase_confidence) {
-        const labels = { address: "어드레스", top: "백스윙 탑", down: "다운스윙", impact: "임팩트", finish: "피니시" };
-        const low = Object.keys(labels).filter(key => data.meta.phase_confidence[key] < 0.45);
-        confidence.textContent = low.length
-          ? "추적 신뢰도 낮음: " + low.map(key => labels[key]).join(", ") + ". 해당 국면은 수치를 주의해서 해석하세요."
-          : "다섯 국면의 추적 신뢰도가 0.45 이상입니다.";
-        confidence.hidden = false;
-      }
-      Swing3D.mount(viewer, data, { findings, reference: findings?.reference });
-      status.textContent = file.name + " · 표본 " + data.meta.samples + "개";
-    } catch (error) {
-      status.textContent = error.message;
-    } finally {
-      videoInput.disabled = csvInput.disabled = false;
-    }
-  }
-
-  videoInput.addEventListener("change", () =>
-    load(videoInput, "/api/video", "video/mp4",
-      "영상에서 자세를 추출하는 중입니다. 길이에 따라 10초에서 1분쯤 걸립니다."));
-  csvInput.addEventListener("change", () =>
-    load(csvInput, "/api/track", "text/csv", "트랙을 만드는 중입니다."));
-</script>
+<script src="/reference.js"></script>
+<script src="/instrument.js" defer></script>
+</body>
 </html>

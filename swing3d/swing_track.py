@@ -318,6 +318,11 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
             "wrist_source": "index" if index_wrist is not None else "forearm",
             "measured": [c for c in CHANNELS if c != "confidence" and (c != "wrist" or index_wrist is not None)],
             "modeled": [] if index_wrist is not None else ["wrist"],
+            "phase_frames": {
+                "address": start, "top": top,
+                "down": max(start, impact - int(0.06 * fps)),
+                "impact": impact, "finish": end,
+            },
             "phase_confidence": {
                 phase: round(track[index][-1], 3)
                 for phase, index in {

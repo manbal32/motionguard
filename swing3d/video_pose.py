@@ -10,13 +10,12 @@ swing_track.build_track() 이 기대하는 형식과 동일하다.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 ROOT = Path(__file__).resolve().parent
 MODEL_DIR = ROOT / "models"
 MODEL_NAME = "pose_landmarker_lite.task"
 MAX_SECONDS = 30.0
-TARGET_SAMPLES = 400          # 긴 영상도 이 수준으로 균일 샘플링한다
 
 LANDMARK_NAMES = [
     "NOSE", "LEFT_EYE_INNER", "LEFT_EYE", "LEFT_EYE_OUTER",
@@ -44,7 +43,7 @@ def ensure_model() -> Path:
     )
 
 
-def extract(video_path: str) -> Tuple[List[Dict], float]:
+def extract(video_path: str, *, evidence=False, progress=None):
     """영상 → (frames, fps). 실패하면 ExtractionError 를 올린다."""
     try:
         import cv2
@@ -74,10 +73,6 @@ def extract(video_path: str) -> Tuple[List[Dict], float]:
                 f"영상이 {duration:.0f}초입니다. {MAX_SECONDS:.0f}초 이하로 잘라서 올려주세요."
             )
 
-        # 균일 간격 샘플링. 원본이 느려도 빨라도 트랙 길이를 비슷하게 유지한다.
-        stride = max(1, round(total / TARGET_SAMPLES))
-        fps = source_fps / stride
-
         options = mp_vision.PoseLandmarkerOptions(
             base_options=mp_python.BaseOptions(model_asset_buffer=model.read_bytes()),
             running_mode=mp_vision.RunningMode.VIDEO,
@@ -96,14 +91,14 @@ def extract(video_path: str) -> Tuple[List[Dict], float]:
                 ok, image = capture.read()
                 if not ok:
                     break
-                if index % stride:
-                    index += 1
-                    continue
+                if progress and index % 5 == 0:
+                    progress("좌표 추출", min(85, round(85 * index / total)))
                 rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
                 result = landmarker.detect_for_video(mp_image, int(index / source_fps * 1000))
                 if not result.pose_landmarks:
                     misses += 1
+                    frames.append(None)
                     index += 1
                     continue
                 landmarks = result.pose_landmarks[0]
@@ -115,9 +110,47 @@ def extract(video_path: str) -> Tuple[List[Dict], float]:
     finally:
         capture.release()
 
-    if len(frames) < 20:
+    if len(frames) - misses < 20:
         raise ExtractionError(
-            f"사람을 안정적으로 찾지 못했습니다. 인식된 표본 {len(frames)}개, 놓친 프레임 {misses}개. "
+            f"사람을 안정적으로 찾지 못했습니다. 인식된 표본 {len(frames) - misses}개, 놓친 프레임 {misses}개. "
             "전신이 화면에 들어오고 밝은 영상으로 다시 시도해 주세요."
         )
-    return frames, fps
+    # Preserve original frame indices even when MediaPipe misses a person.
+    timeline = [
+        [[round(frame[name][0], 5), round(frame[name][1], 5), round(frame[name][3], 3)]
+         for name in LANDMARK_NAMES] if frame else None
+        for frame in frames
+    ] if evidence else None
+    previous = next(frame for frame in frames if frame)
+    for index, frame in enumerate(frames):
+        if frame is None:
+            frames[index] = {name: (*point[:3], 0) for name, point in previous.items()}
+        else:
+            previous = frame
+    return (frames, source_fps, timeline) if evidence else (frames, source_fps)
+
+
+def phase_jpegs(video_path, indices):
+    """Decode in order so every JPEG is from the exact original frame."""
+    import cv2
+
+    capture = cv2.VideoCapture(str(video_path))
+    images = {}
+    try:
+        pending = set(indices.values())
+        for index in range(max(pending) + 1):
+            if not capture.grab():
+                break
+            if index in pending:
+                ok, frame = capture.retrieve()
+                if not ok:
+                    break
+                ok, encoded = cv2.imencode(".jpg", frame)
+                if not ok:
+                    break
+                images[index] = encoded.tobytes()
+        if pending != images.keys():
+            raise ExtractionError("국면 프레임을 읽을 수 없습니다. 영상을 MP4로 다시 저장해 주세요.")
+        return {phase: images[index] for phase, index in indices.items()}
+    finally:
+        capture.release()

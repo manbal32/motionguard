@@ -56,6 +56,18 @@ class Handler(SimpleHTTPRequestHandler):
             if sample.is_file():
                 headers["X-Swing3D-Source-SHA256"] = hashlib.sha256(sample.read_bytes()).hexdigest()
             self.respond(data, headers=headers)
+        elif match := re.fullmatch(r"/api/still/([a-f0-9]{64})/(address|top|down|impact)", path):
+            track_id, phase = match.groups()
+            image = self.tracks / f"{track_id}.{phase}.jpg"
+            if not (self.tracks / f"{track_id}.json").is_file() or not image.is_file():
+                self.failure("스틸컷이 없습니다. 영상을 다시 분석해 주세요.", 404)
+                return
+            payload = image.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", "image/jpeg")
+            self.send_header("Content-Length", str(len(payload)))
+            self.end_headers()
+            self.wfile.write(payload)
         elif path == "/api/tracks":
             items = []
             for file in sorted(self.tracks.glob("*.json")):
@@ -77,7 +89,10 @@ class Handler(SimpleHTTPRequestHandler):
     def do_POST(self):
         path = urlsplit(self.path).path
         if path == "/api/video":
-            self.post_video()
+            try:
+                self.post_video()
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+                pass
             return
         if path != "/api/track":
             self.failure("경로를 찾을 수 없습니다.", 404)
@@ -114,29 +129,68 @@ class Handler(SimpleHTTPRequestHandler):
         if len(payload) != size:
             self.failure("영상 전송이 완료되지 않았습니다.", 400)
             return
+        streaming = self.headers.get("Accept") == "application/x-ndjson"
+        if streaming:
+            self.send_response(200)
+            self.send_header("Content-Type", "application/x-ndjson; charset=utf-8")
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+
+        def emit(event):
+            self.wfile.write((json.dumps(event, ensure_ascii=False, allow_nan=False) + "\n").encode())
+            self.wfile.flush()
+
+        def progress(stage, percent):
+            if streaming:
+                emit({"type": "progress", "stage": stage, "percent": percent})
+
         try:
             with self.cache_lock:
-                result = self.get_or_build_video(payload)
-        except Exception as error:   # 추출 실패 사유를 그대로 전달한다
-            import video_pose
-            if isinstance(error, video_pose.ExtractionError):
-                self.failure(str(error), 422)
+                result = self.get_or_build_video(payload, progress)
+            if streaming:
+                emit({"type": "result", "data": result})
             else:
-                self.failure(f"영상에서 트랙을 생성할 수 없습니다. {error}", 422)
+                self.respond(result)
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
             return
-        self.respond(result)
+        except Exception as error:
+            import video_pose
+            reason = str(error) if isinstance(error, video_pose.ExtractionError) else (
+                f"영상에서 트랙을 생성할 수 없습니다. {error} 전신이 보이는 MP4로 다시 시도해 주세요."
+            )
+            if streaming:
+                try:
+                    emit({"type": "error", "reason": reason})
+                except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+                    pass
+            else:
+                self.failure(reason, 422)
 
-    def get_or_build_video(self, payload):
+    def get_or_build_video(self, payload, progress):
         import video_pose
-        key = hashlib.sha256(b"video\0" + f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}".encode() + b"\0" + payload).hexdigest()
+
+        key = hashlib.sha256(b"video-evidence-2\0" + f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}".encode()
+                             + b"\0" + payload).hexdigest()
         target = self.tracks / (key + ".json")
-        if target.exists():
+        if target.exists() and all((self.tracks / f"{key}.{phase}.jpg").is_file()
+                                   for phase in ("address", "top", "down", "impact")):
             return json.loads(target.read_text(encoding="utf-8"))
         with TemporaryDirectory() as temp:
             source = Path(temp) / "upload.mp4"
             source.write_bytes(payload)
-            frames, fps = video_pose.extract(str(source))
-        result = swing_track.build_track(frames, fps)
+            frames, fps, timeline = video_pose.extract(str(source), evidence=True, progress=progress)
+            progress("국면 검출", 88)
+            result = swing_track.build_track(frames, fps)
+            phases = result["meta"]["phase_frames"]
+            progress("국면 스틸컷 준비", 95)
+            images = video_pose.phase_jpegs(source, {phase: frame for phase, frame in phases.items() if phase != "finish"})
+        result["evidence"] = {
+            "id": key, "fps": fps, "landmark_names": video_pose.LANDMARK_NAMES, "frames": timeline,
+            "phase_frames": phases,
+        }
+        self.tracks.mkdir(parents=True, exist_ok=True)
+        for phase, jpeg in images.items():
+            (self.tracks / f"{key}.{phase}.jpg").write_bytes(jpeg)
         self.store(target, result)
         return result
 

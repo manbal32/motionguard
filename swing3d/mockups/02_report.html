@@ -1,42 +1,29 @@
 <title>스윙 리포트 시안</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=Noto+Serif+KR:wght@500;600;700&family=Outfit:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../web/typography.css">
 <style>
 /* 레이아웃: 좁은 본문 한 단. 각 발견은 근거 → 그림 → 연습 순서로 내려간다. */
-:root{
-  --paper:#f7f5f1;
-  --ink:#1b2328;
-  --ink-2:#4a5a63;
-  --ink-3:#7d8d96;
-  --rule:#dcd7cf;
-  --rule-soft:#e8e4dd;
-  --panel:#ffffff;
-  --measured:#0f7d84;
-  --reference:#6b5bc4;
-  --exag:#c4552a;
-  --warn:#9a6f12;
-  --warn-bg:#fdf5e3;
-  --serif:"Noto Serif KR",Georgia,serif;
-  --sans:"IBM Plex Sans KR",system-ui,-apple-system,sans-serif;
-  --num:"Outfit","IBM Plex Sans KR",system-ui,sans-serif;
+:root {
+  color-scheme: light;
+  --paper:#f6f4ef; --ink:#1b2024; --ink-2:#575a58; --ink-3:#666a66;
+  --rule:#c8c9c1; --rule-soft:#d8d8d1; --panel:var(--paper);
+  --measured:var(--ink); --reference:var(--ink-2); --exag:#9c530c;
+  --warn:var(--exag); --warn-bg:transparent;
+  --serif:var(--sans); --num:var(--mono);
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --paper:#0f1416; --ink:#e7edef; --ink-2:#a9bac2; --ink-3:#74878f;
-    --rule:#263238; --rule-soft:#1d272c; --panel:#161e22;
-    --measured:#53c7cd; --reference:#a394f5; --exag:#f0865a;
-    --warn:#e0b547; --warn-bg:#241e0d;
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper:#0b0e0d; --ink:#e9e7e0; --ink-2:#99a09b; --ink-3:#838c87;
+  --rule:#2d3634; --rule-soft:#1e2523; --exag:#d98a2b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
     color-scheme: dark;
+    --paper:#0b0e0d; --ink:#e9e7e0; --ink-2:#99a09b; --ink-3:#838c87;
+    --rule:#2d3634; --rule-soft:#1e2523; --exag:#d98a2b;
   }
 }
-:root[data-theme="dark"]{
-  --paper:#0f1416; --ink:#e7edef; --ink-2:#a9bac2; --ink-3:#74878f;
-  --rule:#263238; --rule-soft:#1d272c; --panel:#161e22;
-  --measured:#53c7cd; --reference:#a394f5; --exag:#f0865a;
-  --warn:#e0b547; --warn-bg:#241e0d;
-  color-scheme: dark;
-}
-*{box-sizing:border-box}
+* { box-sizing: border-box; }
 body{
   margin:0;background:var(--paper);color:var(--ink);
   font-family:var(--sans);font-size:15px;line-height:1.75;
@@ -52,7 +39,7 @@ body{
 /* ── 표제 ── */
 .masthead{border-bottom:2px solid var(--ink);padding-bottom:16px;margin-bottom:8px}
 .kicker{font-family:var(--num);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin:0}
-h1{font-family:var(--serif);font-weight:700;font-size:clamp(26px,5vw,36px);line-height:1.25;
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(26px,5vw,36px);line-height:1.25;
   margin:6px 0 10px;letter-spacing:-.01em;text-wrap:balance}
 .facts{display:flex;flex-wrap:wrap;gap:4px 22px;font-family:var(--num);font-size:12.5px;color:var(--ink-3)}
 .facts b{color:var(--ink-2);font-weight:500}
@@ -60,22 +47,22 @@ h1{font-family:var(--serif);font-weight:700;font-size:clamp(26px,5vw,36px);line-
 /* ── 섹션 ── */
 section{margin-top:40px}
 h2{font-family:var(--serif);font-weight:600;font-size:21px;margin:0 0 4px;letter-spacing:-.01em}
-h2 .no{font-family:var(--num);font-size:12px;color:var(--exag);display:block;letter-spacing:.14em;
+h2 .no{font-family:var(--num);font-size:12px;color:var(--ink-3);display:block;letter-spacing:.14em;
   margin-bottom:5px;font-weight:600}
 .lede{color:var(--ink-2);font-size:14px;margin:0 0 18px}
 p{margin:0 0 13px}
 p:last-child{margin-bottom:0}
 
 /* ── 측정 범위 고지 ── */
-.scope{background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--measured);
-  border-radius:3px;padding:13px 16px;font-size:13.5px;color:var(--ink-2)}
+.scope{background:var(--panel);border:1px solid var(--rule);
+  border-radius:0;padding:13px 16px;font-size:13.5px;color:var(--ink-2)}
 .scope b{color:var(--ink);font-weight:600}
 
 /* ── 스틸컷 ── */
 .stills{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 @media (max-width:620px){.stills{grid-template-columns:repeat(2,1fr)}}
 figure{margin:0;min-width:0}
-figure canvas{display:block;width:100%;height:auto;border:1px solid var(--rule);border-radius:4px;background:#0d1417}
+figure canvas{display:block;width:100%;height:auto;border:1px solid var(--rule);border-radius:0;background:#0d1417}
 figcaption{font-size:12.5px;color:var(--ink-2);margin-top:6px;display:flex;gap:6px;align-items:baseline}
 figcaption b{font-weight:600;color:var(--ink)}
 figcaption em{font-style:normal;font-family:var(--num);font-size:11px;color:var(--ink-3);margin-left:auto}
@@ -86,13 +73,13 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 th,td{padding:8px 9px;text-align:right;font-family:var(--num);font-size:13px;white-space:nowrap}
 th:first-child,td:first-child{text-align:left;font-family:var(--sans)}
 thead th{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);
-  font-weight:500;border-bottom:1.5px solid var(--ink)}
+  font-weight:500;border-bottom:1px solid var(--ink)}
 tbody tr+tr td{border-top:1px solid var(--rule-soft)}
 td .m{color:var(--measured);font-weight:600}
 td .r{color:var(--reference);font-size:11.5px;display:block;margin-top:-3px}
-tr.flag td{background:color-mix(in srgb,var(--exag) 9%,transparent)}
+td.delta .m, .val .delta{color:var(--exag)}
 .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--ink-3);margin-top:10px}
-.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:0;margin-right:6px;vertical-align:middle}
 
 /* ── 발견 ── */
 .finding{border-top:1px solid var(--rule);padding-top:24px;margin-top:28px}
@@ -100,18 +87,18 @@ tr.flag td{background:color-mix(in srgb,var(--exag) 9%,transparent)}
 .ftitle{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:6px}
 .ftitle h3{font-family:var(--serif);font-size:18px;font-weight:600;margin:0}
 .sev{font-family:var(--num);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
-  border-radius:4px;padding:3px 7px;border:1px solid;white-space:nowrap}
+  border-radius:0;padding:3px 7px;border:1px solid;white-space:nowrap}
 .sev.high{color:var(--exag);border-color:color-mix(in srgb,var(--exag) 45%,transparent);
   background:color-mix(in srgb,var(--exag) 11%,transparent)}
 .sev.mid{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,transparent);background:var(--warn-bg)}
 
 /* 근거 막대 */
-.evidence{background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:14px 16px;margin:14px 0}
+.evidence{background:var(--panel);border:1px solid var(--rule);border-radius:0;padding:14px 16px;margin:14px 0}
 .gauge{display:grid;grid-template-columns:72px 1fr 92px;gap:10px;align-items:center;font-size:12.5px}
 .gauge+.gauge{margin-top:9px}
 .gauge .lab{color:var(--ink-3);font-family:var(--num);font-size:11.5px}
-.track{position:relative;height:9px;background:var(--rule-soft);border-radius:5px}
-.track i{position:absolute;top:0;height:9px;border-radius:5px}
+.track{position:relative;height:9px;background:var(--rule-soft);border-radius:0}
+.track i{position:absolute;top:0;height:9px;border-radius:0}
 .track i.mm{background:var(--measured)}
 .track i.rr{background:repeating-linear-gradient(90deg,var(--reference),var(--reference) 3px,transparent 3px,transparent 6px);
   opacity:.9;height:9px}
@@ -130,7 +117,7 @@ tr.flag td{background:color-mix(in srgb,var(--exag) 9%,transparent)}
 .drills li{margin-bottom:6px;font-size:14px}
 .links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .links a{font-size:13px;color:var(--measured);text-decoration:none;border:1px solid var(--rule);
-  border-radius:999px;padding:5px 13px;background:var(--panel)}
+  border-radius:0;padding:5px 13px;background:var(--panel)}
 .links a:hover{border-color:var(--measured)}
 
 /* ── 못 잰 것 ── */
@@ -142,7 +129,7 @@ tr.flag td{background:color-mix(in srgb,var(--exag) 9%,transparent)}
 .limits span{color:var(--ink-2)}
 
 /* ── 다음 ── */
-.next{background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:16px 18px}
+.next{background:var(--panel);border:1px solid var(--rule);border-radius:0;padding:16px 18px}
 .next ol{margin:0;padding-left:19px}
 .next li{margin-bottom:7px;font-size:14px}
 .next li:last-child{margin-bottom:0}
@@ -150,19 +137,25 @@ tr.flag td{background:color-mix(in srgb,var(--exag) 9%,transparent)}
 .colophon{margin-top:44px;padding-top:16px;border-top:1px solid var(--rule);
   font-size:12px;color:var(--ink-3);line-height:1.7}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.theme-picker { display:flex; gap:8px; margin:12px 0; }
+.theme-picker button { color:var(--ink); background:transparent; border:1px solid var(--rule); padding:4px 12px; font:inherit; cursor:pointer; }
+.theme-picker button[aria-pressed="true"] { border-color:var(--ink); }
+.sev.high,.sev.mid { color:var(--ink-2); border-color:var(--rule); background:transparent; }
+figure canvas { background:#171917; }
 </style>
 
 <div class="sheet">
 
   <div class="masthead">
-    <p class="kicker">MotionGuard · 스윙 리포트</p>
+    <div class="theme-picker" role="group" aria-label="리포트 테마"><button type="button" data-mode="light">라이트</button><button type="button" data-mode="dark">다크</button></div>
+    <p class="kicker">MotionGuard · 스윙 리포트 시안</p>
     <h1>백스윙이 덜 돈 채로 손목이 먼저 풀립니다</h1>
     <div class="facts">
       <span>2026-11-11</span>
       <span><b>golf_swing.mp4</b></span>
-      <span>9.0초 · 30 fps</span>
+      <span><span class="num">9.0<small>초</small></span> · <span class="num">30<small>fps</small></span></span>
       <span>측정 표본 <b>108</b></span>
-      <span>발견 <b>3건</b></span>
+      <span>발견 <b class="num">3<small>건</small></b></span>
     </div>
   </div>
 
@@ -233,6 +226,13 @@ tr.flag td{background:color-mix(in srgb,var(--exag) 9%,transparent)}
 <script>
 (function(){
   "use strict";
+  const themes = document.querySelectorAll(".theme-picker button");
+  function theme(mode) {
+    document.documentElement.dataset.theme = mode;
+    themes.forEach(button => button.setAttribute("aria-pressed", String(button.dataset.mode === mode)));
+  }
+  theme(matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  themes.forEach(button => button.addEventListener("click", () => theme(button.dataset.mode)));
   var D = Math.PI/180;
 
   var PH = [
@@ -300,19 +300,17 @@ tr.flag td{background:color-mix(in srgb,var(--exag) 9%,transparent)}
   }
   function paint(c, pose, o){
     o=o||{}; var g=c.getContext("2d"), w=c.width, h=c.height;
-    var sky=g.createLinearGradient(0,0,0,h*0.56);
-    sky.addColorStop(0,"#2c3b43"); sky.addColorStop(1,"#48584f");
-    g.fillStyle=sky; g.fillRect(0,0,w,h*0.56);
-    g.fillStyle="#3b5140"; g.fillRect(0,h*0.56,w,h*0.44);
+    g.fillStyle="#252825"; g.fillRect(0,0,w,h*0.56);
+    g.fillStyle="#343734"; g.fillRect(0,h*0.56,w,h*0.44);
     g.fillStyle="rgba(255,255,255,.035)";
     for(var i=0;i<6;i++) g.fillRect(0,h*0.56+i*h*0.075,w,h*0.037);
     var pts=skeleton(pose), sc=h*0.44, ox=w*0.5, oy=h*0.86;
     function P(a){ return [ox+a[0]*sc, oy-a[1]*sc]; }
     function L(a,b,wd,col){
       var p1=P(a),p2=P(b); g.beginPath(); g.moveTo(p1[0],p1[1]); g.lineTo(p2[0],p2[1]);
-      g.strokeStyle=col||o.color||"#dde9ee"; g.lineWidth=wd; g.lineCap="round"; g.stroke();
+      g.strokeStyle=col||o.color||"#e9e7e0"; g.lineWidth=wd; g.lineCap="round"; g.stroke();
     }
-    var base=o.dim?"#6e8089":"#dde9ee", hot=o.hot||"#f0865a";
+    var base=o.dim?"#989c98":"#e9e7e0", hot=o.hot||"#d98a2b";
     var isBody=(o.ch===1||o.ch===2||o.ch===3), isArm=(o.ch===0||o.ch===4);
     L(pts.hipL,pts.kneeL,8,base); L(pts.kneeL,pts.ankL,7,base);
     L(pts.hipR,pts.kneeR,8,base); L(pts.kneeR,pts.ankR,7,base);
@@ -322,7 +320,7 @@ tr.flag td{background:color-mix(in srgb,var(--exag) 9%,transparent)}
     var ac = o.mark&&isArm?hot:base;
     L(pts.shL,pts.elL,6,ac); L(pts.elL,pts.hand,5,ac);
     L(pts.shR,pts.elR,6,ac); L(pts.elR,pts.hand,5,ac);
-    L(pts.hand,pts.club,3, o.mark&&o.ch===4?hot:"#9fb3bd");
+    L(pts.hand,pts.club,3, o.mark&&o.ch===4?hot:"#aaa9a4");
     var hd=P(pts.head);
     g.beginPath(); g.arc(hd[0],hd[1],0.08*sc,0,7); g.fillStyle=base; g.fill();
   }
@@ -343,10 +341,9 @@ tr.flag td{background:color-mix(in srgb,var(--exag) 9%,transparent)}
     COLS.forEach(function(c){ h+="<th>"+c+"</th>"; });
     h+="</tr></thead><tbody>";
     PH.forEach(function(p){
-      var flag=p.m.some(function(v,i){ return Math.abs(v-p.r[i])>=8; });
-      h+='<tr class="'+(flag?"flag":"")+'"><td>'+p.n+"</td>";
+      h+="<tr><td>"+p.n+"</td>";
       for(var i=0;i<5;i++){
-        h+='<td><span class="m">'+p.m[i].toFixed(1)+'°</span><span class="r">'+p.r[i].toFixed(0)+'°</span></td>';
+        h+='<td class="'+(Math.abs(p.m[i]-p.r[i])>=8 ? "delta" : "")+'"><span class="m num">'+p.m[i].toFixed(1)+'<small>°</small></span><span class="r num">'+p.r[i].toFixed(0)+'<small>°</small></span></td>';
       }
       h+="</tr>";
     });
@@ -366,7 +363,7 @@ tr.flag td{background:color-mix(in srgb,var(--exag) 9%,transparent)}
       return '<div class="gauge"><span class="lab">'+lab+'</span>'+
         '<span class="track"><i class="mm" style="left:0;width:'+pm.toFixed(1)+'%"></i>'+
         '<u style="left:'+pr.toFixed(1)+'%"></u></span>'+
-        '<span class="val"><b>'+m.toFixed(1)+'°</b> / <s>'+r.toFixed(0)+'°</s></span></div>';
+        '<span class="val num"><b class="'+(Math.abs(m-r)>=8 ? "delta" : "")+'">'+m.toFixed(1)+'<small>°</small></b> / <s>'+r.toFixed(0)+'<small>°</small></s></span></div>';
     }).join("");
 
     var el=document.createElement("div");
@@ -388,7 +385,7 @@ tr.flag td{background:color-mix(in srgb,var(--exag) 9%,transparent)}
     fv.appendChild(el);
     var cs=el.querySelectorAll("canvas");
     paint(cs[0], base, {});
-    paint(cs[1], ex, {dim:true, mark:true, ch:f.ch});
+    paint(cs[1], ex, {dim:true, mark:Math.abs(base[f.ch]-ref[f.ch])>=8, ch:f.ch});
   });
 })();
 </script>

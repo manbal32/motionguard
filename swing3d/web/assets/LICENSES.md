@@ -6,4 +6,6 @@
 - `../vendor/three/` is three.js r149 (`three.module.js`, `three.min.js`, GLTFLoader, SkeletonUtils, BufferGeometryUtils) under the MIT License. The full license text is at `../vendor/three/LICENSE`. Vendored so the viewer runs offline and behind restricted networks; no CDN is used. [three.js](https://github.com/mrdoob/three.js)
 
 - MediaPipe Pose Landmarker Lite float16 v1. Apache 2.0으로 재배포 가능. SHA-256 `59929e1d1ee95287735ddd833b19cf4ac46d29bc7afddbbf6753c459690d574a`. [공식 모델](https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task) · [Apache 2.0](../../models/APACHE-2.0.txt)
-- `samples/golf_swing.mp4`는 Nesnad의 골프 스윙 영상 앞 9.009초를 잘라 640×360 MP4로 변환한 샘플입니다. CC BY 4.0으로 재배포 가능. [원본 및 저자](https://commons.wikimedia.org/wiki/File:Golf_swing_practice_-_Kanagawa_-_slow_motion_-_2023_June_13.webm) · [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- `samples/golf_swing.mp4`는 Nesnad의 골프 스윙 영상 앞 9.009초를 잘라 640×360 H.264 MP4로 변환한 샘플입니다. CC BY 4.0으로 재배포 가능. [원본 및 저자](https://commons.wikimedia.org/wiki/File:Golf_swing_practice_-_Kanagawa_-_slow_motion_-_2023_June_13.webm) · [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+
+- IBM Plex Sans KR and IBM Plex Mono are bundled for offline use under the SIL Open Font License 1.1. [Plex Sans KR notice](../vendor/plex-OFL.txt) · [Plex Mono notice](../vendor/plex-mono-OFL.txt)
