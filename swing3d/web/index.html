@@ -13,6 +13,7 @@
     <label>좌표 CSV <input id="csv" type="file" accept=".csv,text/csv"></label>
   </details>
   <p role="status"></p>
+  <p id="phase-confidence" hidden></p>
   <div id="viewer"></div>
 </main>
 <script src="./vendor/three/three.min.js"></script>
@@ -31,6 +32,7 @@
     if (!file) return;
     videoInput.disabled = csvInput.disabled = true;
     Swing3D.dispose();
+    document.querySelector("#phase-confidence").hidden = true;
     status.textContent = busy;
     try {
       const response = await fetch(endpoint, {
@@ -53,6 +55,15 @@
         const digest = await crypto.subtle.digest("SHA-256", await file.arrayBuffer());
         const hash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
         if (hash === result.headers.get("X-Swing3D-Source-SHA256")) findings = findingFile;
+      }
+      const confidence = document.querySelector("#phase-confidence");
+      if (data.meta.phase_confidence) {
+        const labels = { address: "어드레스", top: "백스윙 탑", down: "다운스윙", impact: "임팩트", finish: "피니시" };
+        const low = Object.keys(labels).filter(key => data.meta.phase_confidence[key] < 0.45);
+        confidence.textContent = low.length
+          ? "추적 신뢰도 낮음: " + low.map(key => labels[key]).join(", ") + ". 해당 국면은 수치를 주의해서 해석하세요."
+          : "다섯 국면의 추적 신뢰도가 0.45 이상입니다.";
+        confidence.hidden = false;
       }
       Swing3D.mount(viewer, data, { findings, reference: findings?.reference });
       status.textContent = file.name + " · 표본 " + data.meta.samples + "개";

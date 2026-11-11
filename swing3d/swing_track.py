@@ -50,6 +50,8 @@ CHANNELS = [
 ]
 
 SCHEMA = "motionguard.swingtrack/2"
+TRACK_REVISION = 2
+OPTIONAL = ("LEFT_INDEX", "RIGHT_INDEX")
 
 REQUIRED = [
     "LEFT_SHOULDER", "RIGHT_SHOULDER", "LEFT_HIP", "RIGHT_HIP",
@@ -159,6 +161,36 @@ def _smooth(values: Sequence[float]) -> List[float]:
     return result
 
 
+def _index_wrist(frames):
+    """Estimate flexion from the best tracked forearm and index finger."""
+    sides = []
+    for finger in OPTIONAL:
+        side = finger.split("_")[0]
+        observations = {}
+        for i, frame in enumerate(frames):
+            points = [frame.get(name) for name in (side + "_ELBOW", side + "_WRIST", finger)]
+            if any(point is None or point[3] < 0.5 or not all(map(math.isfinite, point)) for point in points):
+                continue
+            elbow, wrist, index = points
+            forearm = [wrist[j] - elbow[j] for j in range(3)]
+            hand = [index[j] - wrist[j] for j in range(3)]
+            length = math.hypot(*forearm) * math.hypot(*hand)
+            if length > 1e-8:
+                cosine = sum(a * b for a, b in zip(forearm, hand)) / length
+                observations[i] = math.acos(max(-1, min(1, cosine)))
+        sides.append(observations)
+    observations = max(sides, key=len)
+    if len(observations) < 7:
+        return None, set()
+    anchors = sorted(observations)
+    values = [observations[anchors[0]]] * len(frames)
+    for left, right in zip(anchors, anchors[1:]):
+        for i in range(left, right):
+            values[i] = observations[left] + (observations[right] - observations[left]) * (i - left) / (right - left)
+    values[anchors[-1]:] = [observations[anchors[-1]]] * (len(frames) - anchors[-1])
+    return _smooth(values), observations.keys()
+
+
 # ── 본체 ──────────────────────────────────────────────────────────────
 
 def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
@@ -175,6 +207,7 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
         missing = [name for name in REQUIRED if name not in frame]
         if missing:
             raise ValueError(f"프레임 {i} 필수 랜드마크 누락: {', '.join(missing)}")
+    index_wrist, wrist_anchors = _index_wrist(frames)
     frames, confidence = _clean_landmarks(frames, fps)
     raw = []
     for d in frames:
@@ -242,12 +275,16 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
         hip = max(0.0, math.acos(max(-1.0, min(1.0, hpw[i] / hpw_max))) - base_hip)
         lean = 0.40 * (1 - tln[i] / tln_max) - base_lean + 0.26
         wrist = -(fa[i] - sw[i]) - base_wrist
+        if index_wrist is not None:
+            wrist = max(0, min(math.pi, index_wrist[i]))
+            if i not in wrist_anchors:
+                confidence[i] = 0
         track.append([
             round(s, 3),
             round(turn * sign, 3),
             round(hip * sign * 0.85, 3),
             round(max(0.05, min(0.42, lean)), 3),
-            round(max(-0.35, min(1.70, wrist)), 3),
+            round(wrist if index_wrist is not None else max(-0.35, min(1.70, wrist)), 3),
             round((hx[i] - base_hx) * -1.1 * back, 3),
             round(max(0.02, min(0.50, kl[i])), 3),
             round(max(0.02, min(0.50, kr[i])), 3),
@@ -278,8 +315,17 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
             "samples": len(track),
             "source_frames": [start, end],
             "backswing_sign": back,
-            "measured": [c for c in CHANNELS if c not in {"wrist", "confidence"}],
-            "modeled": ["wrist"],
+            "wrist_source": "index" if index_wrist is not None else "forearm",
+            "measured": [c for c in CHANNELS if c != "confidence" and (c != "wrist" or index_wrist is not None)],
+            "modeled": [] if index_wrist is not None else ["wrist"],
+            "phase_confidence": {
+                phase: round(track[index][-1], 3)
+                for phase, index in {
+                    "address": 0, "top": top - start,
+                    "down": max(0, impact - start - int(0.06 * fps)),
+                    "impact": impact - start, "finish": len(track) - 1,
+                }.items()
+            },
         },
         "events": {k: round(v, 4) for k, v in events.items()},
         "track": track,

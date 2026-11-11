@@ -61,7 +61,7 @@ window.Swing3D = (() => {
     const T = THREE;
     const findings = opts.findings?.findings ?? [];
     for (const item of findings) {
-      if ("channel" in item && (item.channel === "wrist"
+      if ("channel" in item && ((item.channel === "wrist" && data.meta.wrist_source !== "index")
           || !Object.hasOwn(modelPoses, item.channel) || !data.channels.includes(item.channel))) {
         throw new Error("3D 결함에 사용할 수 없는 채널입니다: " + item.channel);
       }
@@ -425,7 +425,8 @@ window.Swing3D = (() => {
       legend.textContent = "반투명 궤도 · 낮은 추적 신뢰도";
       controls.append(legend);
     }
-    toggle.checked = opts.wristCorrection ?? true;
+    toggle.checked = data.meta.wrist_source !== "index" && (opts.wristCorrection ?? true);
+    toggle.disabled = data.meta.wrist_source === "index";
     let finding;
     let mode = "actual";
     const coaching = document.createElement("section");

@@ -128,7 +128,7 @@ class Handler(SimpleHTTPRequestHandler):
 
     def get_or_build_video(self, payload):
         import video_pose
-        key = hashlib.sha256(b"video\0" + swing_track.SCHEMA.encode() + b"\0" + payload).hexdigest()
+        key = hashlib.sha256(b"video\0" + f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}".encode() + b"\0" + payload).hexdigest()
         target = self.tracks / (key + ".json")
         if target.exists():
             return json.loads(target.read_text(encoding="utf-8"))
@@ -154,7 +154,7 @@ class Handler(SimpleHTTPRequestHandler):
                 temporary.unlink(missing_ok=True)
 
     def get_or_build(self, payload):
-        key = hashlib.sha256(swing_track.SCHEMA.encode() + b"\0" + payload).hexdigest()
+        key = hashlib.sha256(f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}".encode() + b"\0" + payload).hexdigest()
         target = self.tracks / (key + ".json")
         if target.exists():
             return json.loads(target.read_text(encoding="utf-8"))
