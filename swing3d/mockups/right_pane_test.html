@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MotionGuard · 2D 오른쪽 화면 테스트</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0e0d;--panel:#101413;--rule:#2d3634;--ink:#e9e7e0;--sub:#99a09b;--orange:#d98a2b}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 system-ui,"Malgun Gothic",sans-serif}main{max-width:1100px;margin:auto;padding:24px 16px}h1{font-size:21px;margin:0}h2{font-size:16px;margin:0 0 10px}p{color:var(--sub)}header{border-bottom:1px solid var(--rule);padding-bottom:15px}section{border:1px solid var(--rule);margin-top:15px;padding:15px}.buttons,.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}button{border:1px solid var(--rule);background:var(--panel);color:var(--ink);padding:9px 12px;cursor:pointer;font:inherit}button[aria-pressed=true]{border-color:var(--orange);color:var(--orange)}input[type=range]{accent-color:var(--orange);flex:1;min-width:130px}label{font-size:12px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}.paneltitle{display:flex;justify-content:space-between;color:var(--sub);font-size:12px;padding-bottom:5px}.stage{height:540px;position:relative;border:1px solid var(--rule);overflow:hidden;background:#090d0c}.stage svg{width:100%;height:100%;display:block}.stage img{display:none;width:100%;height:100%;object-fit:contain}.placeholder{height:100%;display:grid;place-items:center;text-align:center;color:var(--sub);padding:22px}.grid{background-image:linear-gradient(#ffffff09 1px,transparent 1px),linear-gradient(90deg,#ffffff09 1px,transparent 1px);background-size:28px 28px}.note{margin-top:13px;padding:9px 11px;background:var(--panel);border-left:3px solid var(--orange);font-size:12px}.stats{display:flex;gap:22px;flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--rule)}.stats b{font:16px monospace}.stats span{color:var(--sub);font-size:12px}.tiny{font-size:11px;color:var(--sub)}@media(max-width:720px){.pair{grid-template-columns:1fr}.stage{height:430px}}
+</style></head>
+<body><main>
+<header><h1>MotionGuard / 스윙 나란히 비교</h1><p class="tiny">집에서 열 수 있는 2D 표현 실험 · 실측 AI 판정 아님 · 원본 사진은 파일에 포함되지 않음</p></header>
+<section><h2>동작 선택</h2><div class="buttons">
+<button data-mode="good" aria-pressed="false">잘한 점 · 스탠스 유지</button>
+<button data-mode="arm" aria-pressed="true">개선점 예시 · 팔-몸 간격</button>
+<button data-mode="torso" aria-pressed="false">개선점 예시 · 상체 기울기</button>
+</div><p id="explainer">선택한 동작만 교육용으로 과장합니다. 모든 좌표는 테스트용입니다.</p></section>
+<section><div class="pair">
+<div><div class="paneltitle"><span>왼쪽 · 실제 스윙 사진</span><span>로컬에서만 열기</span></div><div class="stage"><div id="placeholder" class="placeholder">실제 사진은 공개 GitHub에 올리지 않았습니다.<br>아래에서 사진을 선택하면 이 화면에만 표시됩니다.</div><img id="photo" alt="내 컴퓨터에서 선택한 골프 스윙 사진"></div><div class="controls"><label>사진 선택 <input id="upload" type="file" accept="image/*"></label></div></div>
+<div><div class="paneltitle"><span>오른쪽 · 2D 인체 윤곽 테스트</span><span id="phaseText">피니시</span></div><div class="stage grid"><svg viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg" aria-label="원본 스탠스를 유지한 2D 사람형 교육용 테스트"><g id="ghost"></g><g id="person"></g><g id="guide"></g></svg></div></div>
+</div>
+<div class="controls"><label for="factor">과장 배율</label><input id="factor" type="range" min="1" max="3" step=".1" value="2.5"><b id="factorText">2.5×</b><button id="reset">1.0×</button></div>
+<div class="controls"><button id="play">시연 재생</button><label for="position">예시 동작 프레임</label><input id="position" type="range" min="0" max="100" value="100"><span id="posText">100%</span><label><input type="checkbox" id="showGhost" checked> 원본 자세 잔상</label><label><input type="checkbox" id="showAnchors" checked> 고정점 표시</label></div>
+<div class="stats"><span>발·골반 앵커 이동 <b id="drift">0.0 px</b></span><span>선택 부위 최대 이동 <b id="change">0.0 px</b></span></div>
+<div class="note">데모의 좌표는 실제 영상 추출 결과가 아닙니다. 사용자 사진은 브라우저 안에서만 열리고 서버나 GitHub로 전송하지 않습니다. 실제 앱은 MediaPipe 좌표를 이용한 프레임 동기화 검증이 따로 필요합니다.</div>
+</section></main>
+<script>
+"use strict";
+const ns="http://www.w3.org/2000/svg",$=id=>document.getElementById(id);
+const base={head:[222,117],neck:[214,153],shoulder1:[205,176],shoulder2:[181,182],elbow1:[232,261],elbow2:[205,260],wrist1:[258,326],wrist2:[230,318],hip1:[204,303],hip2:[179,305],knee1:[214,411],knee2:[137,392],ankle1:[222,511],ankle2:[66,503],toe1:[267,526],toe2:[41,520]};
+let mode="arm",factor=2.5,position=100,playing=false,last=0,fileURL;
+function dist(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1]);}
+function pts(k=1){const p=Object.fromEntries(Object.entries(base).map(([x,v])=>[x,[...v]]));const t=position/100;const swing=20*Math.sin(Math.PI*t);for(const key of ["elbow1","elbow2","wrist1","wrist2"]){p[key][0]-=(1-t)*40;p[key][1]-=swing;}
+if(mode==="arm"){const d=(k-1)*23*(0.6+0.4*t);for(const key of ["elbow1","wrist1"]){p[key][0]+=d;p[key][1]-=d*.18;}for(const key of ["elbow2","wrist2"])p[key][0]+=d*.5;}
+if(mode==="torso"){const d=(k-1)*24*(0.6+0.4*t);for(const key of ["head","neck","shoulder1","shoulder2"]){p[key][0]+=d;p[key][1]-=d*.12;}}return p;}
+function el(g,tag,attrs){const e=document.createElementNS(ns,tag);for(const key in attrs)e.setAttribute(key,attrs[key]);g.appendChild(e);}
+function line(g,a,b,c,w){el(g,"line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:c,"stroke-width":w,"stroke-linecap":"round"});}
+function draw(g,p,faint=false){const ink=faint?"#747c75":"#c6baa5",cloth=faint?"#6c766f":"#303932",skin=faint?"#788178":"#c2ae96";
+el(g,"polygon",{points:[p.shoulder1,p.shoulder2,p.hip2,p.hip1].map(x=>x.join(",")).join(" "),fill:faint?"none":"#232d27",stroke:ink,"stroke-width":2});
+line(g,p.hip2,p.knee2,cloth,faint?7:22);line(g,p.knee2,p.ankle2,cloth,faint?7:18);line(g,p.hip1,p.knee1,cloth,faint?7:24);line(g,p.knee1,p.ankle1,faint?ink:"#d6d5cf",faint?6:18);
+line(g,p.ankle2,p.toe2,ink,10);line(g,p.ankle1,p.toe1,ink,12);
+line(g,p.shoulder2,p.elbow2,skin,faint?6:16);line(g,p.elbow2,p.wrist2,skin,faint?6:12);line(g,p.shoulder1,p.elbow1,cloth,faint?6:18);line(g,p.elbow1,p.wrist1,skin,faint?6:12);line(g,p.neck,p.shoulder1,skin,7);
+el(g,"ellipse",{cx:p.head[0],cy:p.head[1],rx:25,ry:31,fill:faint?"none":"#b6a48e",stroke:ink,"stroke-width":2});
+if(!faint){el(g,"path",{d:"M"+(p.head[0]-26)+" "+(p.head[1]-6)+" Q"+(p.head[0]-25)+" "+(p.head[1]-40)+" "+(p.head[0]+15)+" "+(p.head[1]-29)+" L"+(p.head[0]+25)+" "+(p.head[1]-10)+" Z",fill:"#1c2720"});el(g,"circle",{cx:p.head[0]+17,cy:p.head[1]+2,r:2.5,fill:"#25302b"});}}
+function render(){const ref=pts(1),p=pts(mode==="good"?1:factor),keys=["hip1","hip2","ankle1","ankle2","toe1","toe2"];for(const id of ["ghost","person","guide"])$(id).replaceChildren();
+if($("showGhost").checked&&mode!=="good"&&factor>1)draw($("ghost"),ref,true);draw($("person"),p);
+const affected=mode==="arm"?["elbow1","wrist1","elbow2","wrist2"]:mode==="torso"?["head","neck","shoulder1","shoulder2"]:[];
+if(mode!=="good"&&factor>1){for(const key of affected){line($("guide"),ref[key],p[key],"#d98a2b",2);el($("guide"),"circle",{cx:p[key][0],cy:p[key][1],r:4,fill:"#d98a2b"});}}
+if($("showAnchors").checked)for(const key of keys)el($("guide"),"circle",{cx:p[key][0],cy:p[key][1],r:6,fill:"none",stroke:"#d98a2b","stroke-width":1.4,"stroke-dasharray":"3 3"});
+$("drift").textContent=Math.max(...keys.map(k=>dist(p[k],ref[k]))).toFixed(1)+" px";$("change").textContent=(affected.length?Math.max(...affected.map(k=>dist(p[k],ref[k]))):0).toFixed(1)+" px";
+$("factorText").textContent=mode==="good"?"유지":factor.toFixed(1)+"×";$("posText").textContent=Math.round(position)+"%";$("phaseText").textContent=position>75?"피니시":position>40?"다운스윙":position>20?"백스윙":"어드레스";$("factor").disabled=mode==="good";
+$("explainer").textContent=mode==="good"?"잘한 점 시연: 양발·골반·자세를 과장하지 않고 유지합니다.":mode==="arm"?"개선점 시연: 발·골반 위치는 유지하고 팔꿈치·손 위치만 변화시킵니다.":"개선점 시연: 발·골반 위치는 유지하고 상체 기울기만 강조합니다.";
+}
+document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll("[data-mode]").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));render();});
+$("factor").oninput=e=>{factor=+e.target.value;render();};$("position").oninput=e=>{position=+e.target.value;render();};$("reset").onclick=()=>{factor=1;$("factor").value=1;render();};
+for(const id of ["showGhost","showAnchors"])$(id).onchange=render;
+$("upload").onchange=e=>{const f=e.target.files[0];if(!f)return;if(fileURL)URL.revokeObjectURL(fileURL);fileURL=URL.createObjectURL(f);$("photo").src=fileURL;$("photo").style.display="block";$("placeholder").style.display="none";};
+function tick(ts){if(!playing)return;if(last){position=(position+(ts-last)/80)%101;$("position").value=position;render();}last=ts;requestAnimationFrame(tick);}
+$("play").onclick=()=>{playing=!playing;$("play").textContent=playing?"시연 정지":"시연 재생";last=0;if(playing)requestAnimationFrame(tick);};
+window.motionguardDemo={snapshot:()=>({mode,factor,position,drift:$("drift").textContent,change:$("change").textContent})};
+render();
+</script></body></html>
