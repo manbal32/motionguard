@@ -9,13 +9,15 @@
     <p class="eyebrow">MotionGuard / 스윙 리포트</p>
     <h1 id="title">스윙 리포트</h1>
     <p id="facts"></p>
-    <div class="row" role="group" aria-label="리포트 테마"><button data-theme="light">라이트</button><button data-theme="dark">다크</button></div>
+    <div class="row" role="group" aria-label="리포트 조작"><button data-theme="light">라이트</button><button data-theme="dark">다크</button><button id="print-report" disabled>인쇄 / PDF 저장</button></div>
+    <p class="print-help">인쇄 창에서 대상을 PDF로 저장으로 선택하세요.</p>
   </header>
   <p id="report-status" role="status">스윙 기록을 읽는 중입니다.</p>
   <div id="report-body" hidden>
     <section><h2>한눈에</h2><p id="summary"></p></section>
     <section><h2>국면별 기록</h2><div id="report-stills"></div><div class="scroller"><table id="report-angles" aria-label="국면별 각도"></table></div><p class="legend">측정값 · 회색은 교본 기준 · 호박색은 교본과 <span class="num">8<small>°</small></span> 이상 차이</p></section>
     <section><h2>판정과 다음 연습</h2><div id="report-findings"></div></section>
+    <section id="report-comparison" hidden><h2>2D 자세 비교</h2><p>왼쪽은 원본과 측정 관절입니다. 오른쪽은 교육용 과장이며 측정값이 아닙니다.</p><div id="report-image"></div></section>
     <section><h2>재지 못한 것</h2>
       <dl><dt>깊이 방향 회전</dt><dd>몸통과 골반 각도는 단일 영상에서 관찰한 폭 변화로 추정합니다.</dd>
       <dt>클럽 페이스와 그립</dt><dd>클럽을 직접 검출하지 않아 페이스 방향과 손가락 배치는 측정하지 않습니다.</dd>

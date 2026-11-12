@@ -10,8 +10,8 @@
 <main class="instrument">
   <header class="masthead">
     <p class="eyebrow">MotionGuard / Swing3D</p>
-    <h1>스윙 계측</h1>
-    <p>원본 영상의 관절 궤적과 네 국면의 각도를 확인하세요.</p>
+    <h1>스윙 코칭</h1>
+    <p>고민을 이야기하고 영상으로 계측한 자세를 교본과 비교하세요.</p>
   </header>
   <nav class="stepper" aria-label="분석 단계">
     <a href="#upload">01 업로드</a><a href="#progress">02 분석</a><a href="#overlay">03 관절 오버레이</a>
@@ -28,13 +28,25 @@
           <input id="video" class="visually-hidden" type="file" accept="video/mp4,video/quicktime,.mp4,.mov">
         </div>
         <details><summary>좌표 CSV로 열기</summary><input id="csv" type="file" accept=".csv,text/csv" aria-label="좌표 CSV"></details>
-        <div class="row"><button id="start" disabled>분석 시작</button><span id="file-info" aria-live="polite">영상을 먼저 선택하세요.</span></div>
+        <div id="coach-panel" hidden>
+          <h3>골프 코치 상담 <span id="coach-mode" class="caption" role="status"></span></h3>
+          <p class="caption">영상을 먼저 선택하세요. 상담 없이 분석할 수도 있습니다.</p>
+          <p>영상은 이 컴퓨터에서 처리합니다. 동의하면 상담 텍스트와 영상 계측 수치가 Gemini로 전송됩니다. 로컬 리포트에는 상담 요약이 저장됩니다.</p>
+          <label><input id="coach-consent" type="checkbox"> Gemini에 상담 텍스트와 계측 수치 전송 동의</label>
+          <ol id="coach-log" aria-label="상담 기록" aria-live="polite"></ol>
+          <form id="coach-form">
+            <label for="coach-message">스윙 고민이나 연습 목표</label>
+            <div class="row"><textarea id="coach-message" maxlength="500" rows="2" required></textarea><button id="coach-send">보내기</button></div>
+          </form>
+          <p id="coach-status" role="status"></p>
+        </div>
+        <div class="row"><button id="start" disabled>분석하기</button><span id="file-info" aria-live="polite">영상을 먼저 선택하세요.</span></div>
       </div>
     </section>
     <section id="progress">
       <header><span class="index">02</span><h2>분석 진행</h2></header>
       <div class="section-body">
-        <ol class="sequence"><li>좌표 추출</li><li>국면 검출</li><li>스틸컷 준비</li></ol>
+        <ol class="sequence"><li>좌표 추출</li><li>국면 검출</li><li>스틸컷 준비</li><li>종합 피드백</li></ol>
         <progress id="progress-bar" max="100" value="0" aria-label="분석 진행률"></progress>
         <div class="row"><button id="cancel" disabled>취소</button><p id="status" role="status">대기 중</p><output id="percent" class="num">0<small>%</small></output></div>
       </div>
@@ -97,7 +109,7 @@
     <header><span class="index">07</span><h2>내려받기</h2></header>
     <div class="section-body row">
       <button id="record">3D 영상 저장</button>
-      <a class="button" id="open-report" target="_blank" rel="noopener">스윙 리포트 열기</a>
+      <a class="button" id="open-report">스윙 리포트 열기</a>
       <output id="record-progress" role="status"></output>
     </div>
   </section>

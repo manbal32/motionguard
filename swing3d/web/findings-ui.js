@@ -51,7 +51,16 @@ window.SwingFindings = (() => {
 
   function render(parent, track, doc, onSelect) {
     parent.replaceChildren();
-    const items = [...doc.findings].sort((a,b) => (severity[b.severity] ?? 0) - (severity[a.severity] ?? 0));
+    const items = doc.mode ? doc.findings : [...doc.findings].sort((a,b) => (severity[b.severity] ?? 0) - (severity[a.severity] ?? 0));
+    const valuesFor = item => {
+      const line = node("p");
+      const distance = ["shiftX", "heelR"].includes(item.channel);
+      const format = value => number(value, distance ? "정규화" : "°", distance ? 3 : 1);
+      if (item.frame !== undefined) line.append(number(item.frame, "프레임", 0), " · ");
+      line.append(doc.mode ? "측정 " : "파일 기록 ", format(item.measured), " · 교본 ", format(item.reference));
+      if (doc.mode) line.append(" · 차이 ", format(item.difference));
+      return line;
+    };
     function section(title) {
       const block = node("div", undefined, "result-block");
       block.append(node("h3", title));
@@ -59,47 +68,75 @@ window.SwingFindings = (() => {
       return block;
     }
     const summary = section("전체 요약");
-    summary.append(node("p", items[0]?.label ?? "스윙 네 국면의 각도를 기록했습니다."));
-    if (items.length) summary.append(node("p", "제공된 파일의 예시 판정입니다. 추적 신뢰도가 낮은 구간의 수치는 주의해서 해석하세요."));
+    summary.append(node("p", doc.summary ?? items[0]?.label ?? "스윙 국면의 각도를 기록했습니다."));
+    if (doc.mode) {
+      summary.prepend(node("strong", doc.mode === "demo" ? "데모 피드백 · 실제 영상 계측" : "Gemini 종합 피드백"));
+      if (doc.reason) summary.append(node("p", doc.reason));
+      const totals = Object.values(doc.usage ?? {});
+      if (totals.length) {
+        const tokens = node("p", "Gemini 사용량 · 입력 ");
+        tokens.append(number(totals.reduce((sum, usage) => sum + (usage.input ?? 0), 0), "토큰", 0),
+          " · 출력 ", number(totals.reduce((sum, usage) => sum + (usage.output ?? 0), 0), "토큰", 0));
+        summary.append(tokens);
+      }
+      const consultation = section("상담 요약 · 자기보고");
+      for (const [key, label] of [["concern", "고민"], ["goal", "목표"], ["hypothesis", "사용자 추정"]]) {
+        consultation.append(node("p", label + " · " + doc.conversation_summary[key]));
+      }
+      section("자기보고와 영상 근거").append(node("p", doc.comparison));
+      const positives = section("잘한 점");
+      for (const item of doc.positives) {
+        const phase = phases.find(([key]) => key === item.phase)?.[1];
+        positives.append(node("strong", phase + " · " + channels[item.channel] + "이 교본 참고 범위에 가까움"), valuesFor(item));
+      }
+      if (!doc.positives.length) positives.append(node("p", "확인 가능한 강점을 제시할 영상 근거가 부족합니다."));
+    } else if (items.length) summary.append(node("p", "제공된 파일의 예시 판정입니다. 추적 신뢰도가 낮은 구간의 수치는 주의해서 해석하세요."));
     else summary.append(node("p", "이 영상에 연결된 판정이 없습니다. 아래 국면별 기록을 확인하세요."));
 
     const feedback = section("구간별 피드백");
+    const referenceTrack = SwingReference.expand(track);
     for (const [index, [key, title]] of phases.entries()) {
       const phase = track.events[key];
       const frame = track.meta.phase_frames?.[key];
       const fraction = (phase * track.meta.dur - track.meta.hold) / (track.meta.dur - track.meta.hold);
-      const row = track.track[frame === undefined
+      const sample = frame === undefined
         ? Math.max(0, Math.min(track.track.length - 1, Math.round(fraction * (track.track.length - 1))))
-        : frame - track.meta.source_frames[0]];
+        : Math.max(0, Math.min(track.track.length - 1, frame - track.meta.source_frames[0]));
+      const row = track.track[sample];
       const torso = row[track.channels.indexOf("torso")] * 180 / Math.PI;
       const line = node("p");
-      line.append(node("strong", title), " · 몸통 ", number(torso), " / 교본 ", number(SwingReference.torso[index]));
+      line.append(node("strong", title), " · 몸통 ", number(torso), " / 교본 ",
+        number(referenceTrack[sample][SwingReference.channels.indexOf("torso")] * 180 / Math.PI));
       if (track.meta.phase_confidence?.[key] < 0.45) line.append(" · 추적 신뢰도 낮음");
       feedback.append(line);
     }
 
-    const improvements = section("개선 포인트");
+    const improvements = section(items.some(item => item.example_only) ? "비교 예시 · 추적 신뢰도 부족" : "개선 포인트");
     const drills = section("추천 드릴");
     const caution = section("부상 주의 신호");
     const videos = section("연습 영상");
-    caution.append(node("p", "해당 없음 · 제공된 판정 파일 기준"));
+    caution.append(node("p", doc.mode ? "이 영상 분석으로 부상 위험을 판단하지 않습니다." : "해당 없음 · 제공된 판정 파일 기준"));
     if (!items.length) {
       for (const area of [improvements, drills, videos]) area.append(node("p", "연결된 판정이 없습니다."));
     }
-    for (const item of items) {
+    for (const [index, item] of items.entries()) {
       const entry = node("div", undefined, "finding-line");
       const button = onSelect && item.channel && item.range ? node("button", item.label) : node("strong", item.label);
       if (button.tagName === "BUTTON") button.onclick = () => onSelect(item.id);
+      if (doc.mode && !item.example_only) entry.append(number(index + 1, "순위", 0), " ");
       entry.append(button);
       if (item.channel) {
-        const values = node("p");
-        values.append((channels[item.channel] ?? item.channel) + " · 파일 기록 ", number(item.measured),
-          " / 교본 ", number(item.reference));
-        if (Math.abs(item.measured - item.reference) >= 8) values.className = "delta";
+        const values = valuesFor(item);
+        if (item.deviation || Math.abs(item.measured - item.reference) >= 8) values.className = "delta";
+        if (doc.mode && item.range) {
+          const position = bound => track.meta.source_frames[0] + Math.max(0, Math.min(track.track.length - 1,
+            (bound * track.meta.dur - track.meta.hold) / (track.meta.dur - track.meta.hold) * (track.track.length - 1)));
+          values.append(" · 구간 ", number(position(item.range[0]), "프레임", 0), "–", number(position(item.range[1]), "프레임", 0));
+        }
         entry.append(values);
       }
       improvements.append(entry);
-      if (item.drill) drills.append(node("p", item.drill));
+      if (item.drill) drills.append(node("p", item.label + " · " + item.drill));
       for (const query of item.youtube ?? []) {
         const link = node("a", query);
         link.href = "https://www.youtube.com/results?" + new URLSearchParams({search_query: query});
@@ -109,6 +146,11 @@ window.SwingFindings = (() => {
       }
     }
     if (items.length && !drills.querySelector("p")) drills.append(node("p", "제공된 드릴이 없습니다."));
+    if (doc.mode) {
+      section("다음 연습 목표").append(node("p", doc.next_goal));
+      const limits = section("분석 한계");
+      for (const limit of doc.limitations) limits.append(node("p", limit));
+    }
     return items;
   }
 

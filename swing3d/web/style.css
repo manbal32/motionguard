@@ -115,3 +115,11 @@ td { text-align: right; white-space: nowrap; }
 .finding-options .finding-numbers { display:grid; font-size:12px; }
 .finding-options .finding-numbers > span { white-space:nowrap; }
 @media(max-width:720px) { .comparison-panes { grid-template-columns:1fr; } }
+#coach-panel { border-block:1px solid var(--rule); padding:12px 0; margin:12px 0; }
+#coach-panel h3 { margin:0; font-size:16px; }
+#coach-panel p, #coach-panel label { display:block; margin:4px 0; }
+#coach-panel p { color:var(--ink-2); font-size:13px; }
+#coach-log { margin:8px 0; padding:0; list-style:none; max-height:240px; overflow:auto; }
+#coach-log li { padding:6px 0; border-top:1px solid var(--rule); overflow-wrap:anywhere; }
+#coach-log strong { display:block; color:var(--ink-2); font-size:12px; }
+#coach-message { flex:1 1 160px; min-width:0; color:var(--ink); background:var(--ground-2); border:1px solid var(--rule-hi); padding:8px; font:inherit; }

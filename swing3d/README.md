@@ -13,6 +13,38 @@
 
 몸통·골반 회전은 단일 카메라의 폭 단축률로 추정합니다. 클럽과 손목 코킹은 영상에서 직접 측정하지 않습니다.
 
+## 과제 MVP 시연
+
+Windows PowerShell에서 저장소의 `swing3d` 디렉터리로 이동해 실행합니다.
+
+```powershell
+py -3 -m pip install -r requirements.txt mediapipe
+py -3 server.py
+```
+
+macOS에서는 `python3 -m pip install -r requirements.txt mediapipe` 및 `python3 server.py`를 사용합니다.
+Gemini를 사용하려면 서버를 시작하는 환경의 `GEMINI_API_KEY`에 키를 설정합니다. Windows에서는 PowerShell의
+`Read-Host -AsSecureString`으로 입력받아 현재 프로세스 환경에 설정할 수 있습니다.
+
+```powershell
+$env:GEMINI_API_KEY = [System.Net.NetworkCredential]::new('', (Read-Host -AsSecureString 'Gemini API key')).Password
+py -3 server.py
+```
+
+macOS 기본 셸 zsh에서는 `read -rs 'GEMINI_API_KEY?Gemini API key: '; export GEMINI_API_KEY` 뒤에
+서버를 실행합니다. 모델은 `GEMINI_MODEL`로 선택할 수 있습니다. 키 없이 실행하거나 화면의 외부 전송 동의를 끄면 데모 모드입니다.
+
+1. `samples/golf_swing.mp4`를 선택하고 고민과 목표를 두 번에 나눠 보냅니다.
+2. **분석하기**를 눌러 상담의 자기보고와 영상 근거를 비교합니다. 번들 영상에서 추적 신뢰도가 부족하면 데모는 판정 대신 예시 비교를 표시합니다.
+3. 개선 항목 또는 비교 예시를 선택하고 과장 배율을 조절합니다. 연습 영상은 YouTube 검색 링크로 열립니다.
+4. 원하는 비교 프레임에서 **스윙 리포트 열기 → 인쇄 / PDF 저장**을 선택합니다. 비교 이미지는 열린 탭에만 보관됩니다.
+
+원본은 로컬에서 처리합니다. 외부 전송에 동의하면 상담 텍스트와 계측 수치 요약을 Gemini에 보냅니다.
+서버는 리포트별 상담 요약과 결과를 Git에서 제외된 `tracks/coaching/`에 저장합니다.
+
+회귀 검증은 `python -m unittest discover -s tests` 및 `node --test tests/test_comparison.cjs`로 실행합니다.
+Chrome과 Python Playwright를 설치하면 `python tests/shots.py`와 `python tests/mvp_browser.py`로 화면 검증 및 캡처를 재실행할 수 있습니다.
+
 ## 트랙 정제와 신뢰도
 
 golf1의 64.31 fps에서 인접 프레임 XY 이동량을 합산한 분포의 95백분위는 0.028이고, 손목의 큰 점프는 약 0.13~0.31입니다. 이 분포를 기준으로 0.12/프레임을 점프 한계로 사용하고 다른 FPS에서는 프레임 간격에 비례해 조정합니다. 이 한계는 golf1에서 고른 휴리스틱입니다. 가시성이 0.5 미만이거나 점프로 판정된 관측은 랜드마크별로 제거합니다. 내부 공백은 양쪽 유효 관측으로 선형 보간하고, 양끝 공백은 가장 가까운 유효 관측을 유지합니다.

@@ -87,7 +87,7 @@ def capture(page, url, tracks):
     first = sample["findings"][0]
     sample["findings"].append(dict(first, id="shot_fixture_hips", channel="hips",
                                    label="검증용 · 골반 회전", severity="high"))
-    page.route("**/api/findings/sample", lambda route: route.fulfill(json=sample))
+    page.route("**/api/coaching/analyze", lambda route: route.fulfill(json=sample))
     page.locator("#video").set_input_files(ROOT / "samples/golf_swing.mp4")
     with page.expect_response("**/api/video"):
         start.click()

@@ -8,7 +8,9 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile, TemporaryDirectory
 from threading import Lock
 from urllib.parse import urlsplit
+from uuid import uuid4
 
+import coach
 import swing_track
 from findings_contract import validate_findings
 
@@ -21,6 +23,7 @@ class Handler(SimpleHTTPRequestHandler):
     tracks = ROOT / "tracks"
     findings = ROOT / "findings"
     cache_lock = Lock()
+    coaching_provider = coach.Gemini
 
     def __init__(self, *args):
         super().__init__(*args, directory=str(ROOT / "web"))
@@ -44,6 +47,17 @@ class Handler(SimpleHTTPRequestHandler):
         if re.fullmatch(r"/report/[a-f0-9]{64}", path):
             self.path = "/report.html"
             return super().do_GET()
+        if path == "/api/coaching/status":
+            self.respond({"mode": "gemini" if self.coaching_provider().key else "demo"},
+                         headers={"Cache-Control": "no-store"})
+            return
+        if match := re.fullmatch(r"/api/coaching/report/([a-f0-9]{32})", path):
+            file = self.tracks / "coaching" / (match[1] + ".json")
+            if file.is_file():
+                self.respond(json.loads(file.read_text(encoding="utf-8")), headers={"Cache-Control": "no-store"})
+            else:
+                self.failure("상담 리포트를 찾을 수 없습니다.", 404)
+            return
         if finding:
             file = self.findings / (finding[1] + ".json")
             if not file.is_file():
@@ -91,6 +105,12 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
         path = urlsplit(self.path).path
+        if path in {"/api/coaching/chat", "/api/coaching/analyze"}:
+            try:
+                self.post_coaching(path)
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+                pass
+            return
         if path == "/api/video":
             try:
                 self.post_video()
@@ -118,6 +138,47 @@ class Handler(SimpleHTTPRequestHandler):
             self.failure(f"좌표 CSV에서 트랙을 생성할 수 없습니다. {error}", 422)
             return
         self.respond(result)
+
+    def post_coaching(self, path):
+        if self.headers.get_content_type() != "application/json":
+            self.failure("JSON 요청이 필요합니다.", 415)
+            return
+        try:
+            size = int(self.headers.get("Content-Length", "0"))
+            if not 0 < size <= 64 * 1024:
+                self.failure("상담 요청 크기가 허용 범위를 벗어났습니다.", 413)
+                return
+            data = json.loads(self.rfile.read(size))
+            if not isinstance(data, dict) or type(data.get("allow_external")) is not bool:
+                raise ValueError("상담 요청 형식이 올바르지 않습니다.")
+            messages = coach.history(data.get("messages"))
+            provider = self.coaching_provider() if data["allow_external"] else coach.Gemini()
+            if not data["allow_external"]:
+                provider.key = ""
+                provider.offline_reason = "외부 전송 없이 데모로 진행했습니다."
+            headers = {"Cache-Control": "no-store"}
+            if path.endswith("/chat"):
+                self.respond(coach.chat(messages, provider), headers=headers)
+                return
+            track_id = data.get("track_id")
+            if not isinstance(track_id, str) or not re.fullmatch(r"[a-f0-9]{64}", track_id):
+                raise ValueError("트랙 ID가 올바르지 않습니다.")
+            file = self.tracks / (track_id + ".json")
+            if not file.is_file():
+                self.failure("분석할 영상 트랙이 없습니다.", 404)
+                return
+            track = json.loads(file.read_text(encoding="utf-8"))
+            if not track.get("evidence"):
+                raise ValueError("영상으로 계측한 트랙이 필요합니다.")
+            result = coach.analyze(track, messages, provider)
+            report_id = uuid4().hex
+            result.update(report_id=report_id, track_id=track_id)
+            reports = self.tracks / "coaching"
+            reports.mkdir(parents=True, exist_ok=True)
+            (reports / (report_id + ".json")).write_text(json.dumps(result, ensure_ascii=False), encoding="utf-8")
+            self.respond(result, headers=headers)
+        except ValueError as error:
+            self.failure(str(error) if not isinstance(error, json.JSONDecodeError) else "JSON 형식이 올바르지 않습니다.", 422)
 
     def post_video(self):
         try:

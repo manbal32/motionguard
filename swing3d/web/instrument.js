@@ -36,6 +36,72 @@
   let request;
   let evidence;
   let viewer;
+  let messages = [];
+  let chatRequest;
+  let providerMode = "demo";
+  const consent = byId("coach-consent");
+  const message = byId("coach-message");
+  const coachStatus = byId("coach-status");
+
+  function showMode() {
+    byId("coach-mode").textContent = consent.checked && providerMode === "gemini" ? "Gemini 연결 설정됨" : "데모 모드";
+  }
+
+  fetch("/api/coaching/status").then(response => response.json()).then(data => {
+    providerMode = data.mode;
+    showMode();
+  }).catch(showMode);
+  consent.addEventListener("change", showMode);
+
+  async function coachPost(path, data, signal) {
+    const response = await fetch("/api/coaching/" + path, {
+      method: "POST", headers: {"Content-Type": "application/json"}, signal,
+      body: JSON.stringify({ ...data, messages, allow_external: consent.checked }),
+    });
+    return readResponse(response);
+  }
+
+  function chatLine(label, value) {
+    const line = node("li");
+    line.append(node("strong", label), node("span", value));
+    byId("coach-log").append(line);
+    line.scrollIntoView({block: "nearest"});
+    return line;
+  }
+
+  byId("coach-form").addEventListener("submit", async event => {
+    event.preventDefault();
+    const value = message.value.trim();
+    if (!selected || selected.csv || request || chatRequest || !value) return;
+    if (messages.length >= 20) {
+      coachStatus.textContent = "상담 10턴을 기록했습니다. 분석하기를 눌러 주세요.";
+      return;
+    }
+    const controller = new AbortController();
+    chatRequest = controller;
+    byId("coach-send").disabled = byId("start").disabled = consent.disabled = true;
+    messages.push({role: "user", text: value});
+    const line = chatLine("나", value);
+    coachStatus.textContent = "답변을 기다리는 중입니다.";
+    try {
+      const reply = await coachPost("chat", {}, controller.signal);
+      if (controller.signal.aborted) return;
+      messages.push({role: "assistant", text: reply.text});
+      chatLine(reply.mode === "gemini" ? "Gemini 코치" : "데모 응답", reply.text);
+      message.value = "";
+      coachStatus.textContent = reply.reason ? (consent.checked ? reply.reason : "외부 전송 없이 데모로 진행합니다.") : "";
+    } catch (error) {
+      if (controller.signal.aborted) return;
+      messages.pop();
+      line.remove();
+      coachStatus.textContent = error.message;
+    } finally {
+      if (chatRequest === controller) {
+        chatRequest = undefined;
+        byId("coach-send").disabled = byId("start").disabled = consent.disabled = false;
+      }
+    }
+  });
 
   function node(tag, text, className) {
     const el = document.createElement(tag);
@@ -58,6 +124,13 @@
 
   function select(file, csv = false) {
     if (request || !file) return;
+    chatRequest?.abort();
+    chatRequest = undefined;
+    messages = [];
+    message.value = coachStatus.textContent = "";
+    byId("coach-log").replaceChildren();
+    byId("coach-panel").hidden = true;
+    byId("coach-send").disabled = consent.disabled = false;
     video.pause();
     video.removeAttribute("src");
     video.load();
@@ -102,6 +175,8 @@
       }
       selected = { file, csv };
       byId("start").disabled = false;
+      byId("coach-panel").hidden = false;
+      showMode();
     };
     video.onerror = () => {
       if (candidate === mediaUrl) report("이 영상은 브라우저에서 읽을 수 없습니다. H.264 MP4로 저장해 다시 선택해 주세요.", 0);
@@ -139,12 +214,13 @@
   }
 
   async function analyze() {
-    if (!selected || request) return;
+    if (!selected || request || chatRequest) return;
     const { file, csv } = selected;
     const controller = new AbortController();
     request = controller;
     byId("start").disabled = byId("video").disabled = byId("csv").disabled = true;
     byId("cancel").disabled = false;
+    byId("coach-send").disabled = consent.disabled = true;
     report(csv ? "좌표 읽기" : "좌표 추출 준비", 0);
     try {
       const response = await fetch(csv ? "/api/track" : "/api/video", {
@@ -157,8 +233,18 @@
       comparison = { track, reference: SwingReference.expand(track), displayed: track.track, options: [] };
       if (evidence) setupVideo();
       setupStills(track);
+      let coaching;
+      if (!csv) {
+        report("상담과 영상 계측 종합 중", 97);
+        try {
+          coaching = await coachPost("analyze", {track_id: track.track_id}, controller.signal);
+        } catch (error) {
+          if (controller.signal.aborted) throw error;
+          coachStatus.textContent = "종합 피드백을 읽지 못했습니다. 분석하기로 다시 시도해 주세요. " + error.message;
+        }
+      }
       report("계측 완료", 100);
-      await setupFindings(track);
+      await setupFindings(track, coaching);
 
     } catch (error) {
       report(controller.signal.aborted ? "분석을 취소했습니다." : (error.message || "분석에 실패했습니다.")
@@ -167,6 +253,7 @@
       request = undefined;
       byId("start").disabled = byId("video").disabled = byId("csv").disabled = false;
       byId("cancel").disabled = true;
+      byId("coach-send").disabled = consent.disabled = false;
     }
   }
 
@@ -382,7 +469,7 @@
     comparison.sample = sampleIndex(Math.round((left + right) / 2));
     factor.value = SwingExaggeration.levels[activeFinding.severity] ?? 2;
     changeFactor();
-    if (evidence && seek) jump(Math.round(frameAt((activeFinding.range[0] + activeFinding.range[1]) / 2)));
+    if (evidence && seek) jump(activeFinding.frame ?? Math.round(frameAt((activeFinding.range[0] + activeFinding.range[1]) / 2)));
   }
 
   function updateZoom() {
@@ -481,8 +568,8 @@
     byId("phases").hidden = false;
   }
 
-  async function setupFindings(track) {
-    const doc = await SwingFindings.load(track);
+  async function setupFindings(track, coaching) {
+    const doc = coaching ?? await SwingFindings.load(track);
     byId("findings").hidden = false;
     byId("swing-view").hidden = false;
     byId("overlay").hidden = false;
@@ -507,7 +594,37 @@
     byId("export").hidden = false;
     byId("record").disabled = !viewer;
     byId("record-progress").textContent = "";
-    byId("open-report").href = "/report/" + encodeURIComponent(track.track_id);
+    const reportLink = byId("open-report");
+    reportLink.href = "/report/" + encodeURIComponent(track.track_id)
+      + (coaching?.report_id ? "?coaching=" + coaching.report_id : "");
+    reportLink.onclick = async event => {
+      if (!coaching?.report_id || !evidence || video.readyState < 2) return;
+      event.preventDefault();
+      video.pause();
+      if (video.seeking) await new Promise(resolve => video.addEventListener("seeked", resolve, {once: true}));
+      updateOverlay();
+      const snapshot = document.createElement("canvas");
+      snapshot.width = 960;
+      const height = snapshot.height = Math.round(480 * video.videoHeight / video.videoWidth);
+      const draw = snapshot.getContext("2d");
+      const [x, y, size] = byId("zoom-person").getAttribute("aria-pressed") === "true" ? evidence.overlay_crop : [0, 0, 1];
+      const crop = [x * video.videoWidth, y * video.videoHeight, size * video.videoWidth, size * video.videoHeight];
+      draw.fillStyle = styles.getPropertyValue("--ground").trim();
+      draw.fillRect(0, 0, 960, height);
+      draw.drawImage(video, ...crop, 0, 0, 480, height);
+      draw.drawImage(canvas, ...crop, 0, 0, 480, height);
+      draw.drawImage(alternate, ...crop, 480, 0, 480, height);
+      try {
+        sessionStorage.setItem("motionguard:" + coaching.report_id, JSON.stringify({
+          image: snapshot.toDataURL("image/jpeg", 0.88), factor: Number(factor.value),
+          frame: Math.floor(video.currentTime * evidence.fps + 0.001), label: activeFinding?.label,
+          values: [...byId("compare-values").children].map(item => item.textContent).join(" · "),
+        }));
+      } catch {
+        // The report still has the measured phase stills if session storage is unavailable.
+      }
+      location.assign(reportLink.href);
+    };
   }
 
   byId("record").addEventListener("click", async () => {
