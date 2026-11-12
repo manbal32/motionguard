@@ -56,8 +56,7 @@ progress::-moz-progress-bar { background: var(--ink); }
 #seek::-moz-range-thumb { width: 3px; height: 13px; background: var(--ink); border: 0; border-radius: 0; }
 #ticks { position: relative; height: 23px; }
 #ticks button { position: absolute; padding: 1px 0 0 4px; border: 0; border-left: 1px solid var(--rule-hi); font: 10px var(--sans); color: var(--ink-2); }
-#ticks button:nth-child(even) { top: 12px; }
-#ticks button:last-child { transform: translateX(-100%); }
+#ticks button { white-space: nowrap; }
 .stills { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
 .phase-record { min-width: 0; border: 1px solid var(--rule); }
 .phase-record button, .phase-record img { display: block; width: 100%; }
@@ -113,5 +112,6 @@ td { text-align: right; white-space: nowrap; }
 .compare-warning { padding:0 16px 12px; color:var(--signal); font:10.5px var(--mono),var(--sans); }
 .finding-options { display:flex; flex-wrap:wrap; gap:8px; }
 .finding-options button { text-align:left; }
-.finding-options button .num { display:block; font-size:12px; color:var(--ink-2); }
+.finding-options .finding-numbers { display:grid; font-size:12px; }
+.finding-options .finding-numbers > span { white-space:nowrap; }
 @media(max-width:720px) { .comparison-panes { grid-template-columns:1fr; } }

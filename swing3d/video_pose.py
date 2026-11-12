@@ -151,9 +151,9 @@ def person_crops(timeline, phases):
         return (max(0, min(1 - size, (x0 + x1 - size) / 2)),
                 max(0, min(1 - size, (y0 + y1 - size) / 2)), size)
 
-    def size_for(box):
+    def size_for(box, padding=1.6):
         x0, y0, x1, y1 = box
-        return min(1, max(0.04, max(x1 - x0, y1 - y0) * 1.6))
+        return min(1, max(0.04, max(x1 - x0, y1 - y0) * padding))
 
     phase_boxes = {phase: boxes[min(boxes, key=lambda i: abs(i - frame))] for phase, frame in phases.items()}
     size = max(map(size_for, phase_boxes.values()))
@@ -164,7 +164,7 @@ def person_crops(timeline, phases):
     swing = [box for index, box in boxes.items() if start <= index <= end] or list(phase_boxes.values())
     envelope = (min(box[0] for box in swing), min(box[1] for box in swing),
                 max(box[2] for box in swing), max(box[3] for box in swing))
-    return stills, crop(envelope, size_for(envelope))
+    return stills, crop(envelope, size_for(envelope, padding=1.25))
 
 
 def phase_jpegs(video_path, indices, crops):

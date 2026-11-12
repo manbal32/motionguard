@@ -34,8 +34,13 @@ window.SwingFindings = (() => {
       button.dataset.finding = item.id;
       button.setAttribute("aria-pressed", "false");
       const unit = ["shiftX", "heelR"].includes(item.channel) ? "정규화" : "°";
-      const values = node("span", undefined, "num");
-      values.append("측정 ", number(item.measured, unit), " · 교본 ", number(item.reference, unit));
+      const values = node("span", undefined, "finding-numbers");
+      const measured = node("span", "판정 기준 프레임 측정 ");
+      const reference = node("span", "교본 ", "reference");
+      const precision = unit === "°" ? 1 : 3;
+      measured.append(number(item.measured, unit, precision));
+      reference.append(number(item.reference, unit, precision));
+      values.append(measured, reference);
       button.append(node("strong", item.label), values);
       button.onclick = () => onSelect(item.id);
       parent.append(button);

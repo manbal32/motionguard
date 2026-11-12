@@ -42,6 +42,26 @@ test("address offsets and actual phase indices anchor all nine channels", () => 
   }
 });
 
+test("zero stays zero and the sign and slope are continuous at the start of exaggeration", () => {
+  for (const channel of reference.channels) {
+    const finding = {channel, range: [0, 1]};
+    for (const actual of [0, 1e-12, -1e-12, 0.04, -0.04]) {
+      const measured = {channels: [channel], meta: {dur: 1, hold: 0}, track: [[0], [actual], [0]]};
+      const baseline = measured.track.map(() => reference.channels.map(() => Math.sign(actual || 1) * 0.6));
+      const at = factor => exaggeration.apply(measured, baseline, finding, factor)[1][0];
+      assert.equal(at(1), actual);
+      assert.ok(Math.abs(at(1 + 1e-8) - actual) < 1e-8);
+      for (let step = 100; step <= 300; step++) assert.equal(Math.sign(at(step / 100)), Math.sign(actual));
+      if (Math.abs(actual) <= 1e-12) {
+        const opposite = baseline.map(row => row.map(value => -value));
+        const away = exaggeration.apply(measured, opposite, finding, 3)[1][0];
+        assert.equal(Math.sign(away), Math.sign(actual));
+        assert.ok(Math.abs(away) < 1e-10);
+      }
+    }
+  }
+});
+
 test("exaggeration is exact at 1×, eases at the range and alters only its channel", () => {
   const finding = {channel:"torso",range:[0.1,0.9]};
   const channel = channels.indexOf(finding.channel);
@@ -50,7 +70,8 @@ test("exaggeration is exact at 1×, eases at the range and alters only its chann
   assert.equal(shown[1], track.track[1]);
   assert.equal(shown[9], track.track[9]);
   const delta = track.track[5][channel]-model[5][channel];
-  assert.ok(Math.abs(shown[5][channel]-(model[5][channel]+3*delta))<1e-12);
+  const limit = 18 * Math.PI / 180;
+  assert.ok(Math.abs(shown[5][channel] - (track.track[5][channel] - limit * Math.expm1(-2 * delta / limit))) < 1e-12);
   assert.ok(Math.abs(shown[2][channel]-track.track[2][channel]) <
     2*Math.abs(track.track[2][channel]-model[2][channel]));
   for (const [i,row] of shown.entries()) {

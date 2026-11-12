@@ -8,9 +8,10 @@
   const alternate = byId("exaggerated");
   const alternateContext = alternate.getContext("2d");
   const factor = byId("compare-factor");
+  const styles = getComputedStyle(document.documentElement);
   const bones = {
     torso: [[11,12]], hips: [[23,24]], wrist: [[13,15],[14,16]], swing: [[13,15],[14,16]],
-    lean: [[33,34]], shiftX: [[35,36]], kneeL: [[23,25]], kneeR: [[24,26]], heelR: [[28,30]],
+    lean: [[33,34]], shiftX: [[35,36]], kneeL: [[23,25],[25,27]], kneeR: [[24,26],[26,28]], heelR: [[28,30]],
   };
   let comparison;
   let activeFinding;
@@ -25,10 +26,10 @@
     "LEFT_EYE_OUTER", "RIGHT_EYE_OUTER", "LEFT_EAR", "RIGHT_EAR", "MOUTH_LEFT", "MOUTH_RIGHT",
   ]);
   const links = [
-    [11,12],[11,13],[13,15],[15,17],[15,19],[15,21],[17,19],
-    [12,14],[14,16],[16,18],[16,20],[16,22],[18,20],
-    [11,23],[12,24],[23,24],[23,25],[25,27],[27,29],[29,31],[27,31],
-    [24,26],[26,28],[28,30],[30,32],[28,32]];
+    [11,12],[11,13],[13,15],[15,19],[12,14],[14,16],[16,20],
+    [11,23],[12,24],[23,24],[23,25],[25,27],[27,29],[29,31],
+    [24,26],[26,28],[28,30],[30,32]];
+  const drawnJoints = new Set(links.flat());
   let selected;
   let mediaUrl;
   let duration;
@@ -66,6 +67,7 @@
     comparison = activeFinding = undefined;
     selected = undefined;
     duration = undefined;
+    for (const id of ["zoom-person", "toggle-joints", "compare-reference"]) byId(id).setAttribute("aria-pressed", "true");
     byId("overlay").hidden = byId("phases").hidden = true;
     for (const id of ["findings", "swing-view", "export"]) byId(id).hidden = true;
     Swing3D.dispose();
@@ -210,8 +212,9 @@
     const personHeight = ys.length > 1 ? (Math.max(...ys) - Math.min(...ys)) * scale : 0;
     const line = Math.min(1.4, Math.max(0.35, personHeight * 0.009));
     const diameter = Math.min(3, Math.max(0.8, personHeight * 0.019));
-    const reference = overlayReference ? project(measured, baseline,
-      channel => comparison.reference[sample][SwingReference.channels.indexOf(channel)]) : null;
+    const reference = overlayReference && activeFinding ? project(measured, baseline, channel =>
+      channel === activeFinding.channel ? comparison.reference[sample][SwingReference.channels.indexOf(channel)]
+        : baseline[comparison.track.channels.indexOf(channel)]) : null;
     const show = byId("toggle-joints").getAttribute("aria-pressed") === "true";
     if (show) paint(ctx, skeleton, reference, scale, line, diameter);
     paint(alternateContext, displayed, reference, scale, line, diameter);
@@ -229,7 +232,10 @@
   // Apply display deltas in image pixels, keeping the measured pelvis as the common origin.
   function project(points, baseline, value) {
     const pose = points.map(point => point.slice());
-    const delta = channel => value(channel) - baseline[comparison.track.channels.indexOf(channel)];
+    const delta = channel => {
+      const difference = value(channel) - baseline[comparison.track.channels.indexOf(channel)];
+      return Math.max(-Math.PI / 6, Math.min(Math.PI / 6, difference));
+    };
     const pelvis = midpoint(pose[23], pose[24]);
     const shoulders = midpoint(pose[11], pose[12]);
     function rotate(indices, pivot, angle) {
@@ -242,16 +248,32 @@
         point[1] = pivot[1] + x * sin + y * cos;
       }
     }
-    rotate([11,12,13,14,15,16,17,18,19,20,21,22], shoulders, delta("torso"));
-    rotate([11,12,13,14,15,16,17,18,19,20,21,22], pelvis, delta("lean"));
-    rotate([23,24,25,26,27,28,29,30,31,32], pelvis, delta("hips"));
+    const distance = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+    // Limit the displacement of the two torso attachments to 15% of their measured lengths.
+    function turnTorso(indices, pivot, angle, attachments) {
+      const bound = Math.min(...attachments.map(([moving, fixed]) =>
+        2 * Math.asin(Math.min(1, 0.075 * distance(pose[moving], pose[fixed]) /
+          Math.max(1e-9, distance(pose[moving], pivot))))));
+      rotate(indices, pivot, Math.sign(angle) * Math.min(Math.abs(angle), bound));
+    }
+    const upper = [11,12,13,14,15,16,17,18,19,20,21,22];
+    turnTorso(upper, shoulders, delta("torso"), [[11,23],[12,24]]);
+    turnTorso(upper, pelvis, delta("lean"), [[11,23],[12,24]]);
+    turnTorso([23,24,25,26,27,28,29,30,31,32], pelvis, delta("hips"), [[23,11],[24,12]]);
     rotate([13,15,17,19,21], pose[11], delta("swing"));
     rotate([14,16,18,20,22], pose[12], delta("swing"));
-    rotate([17,19,21], pose[15], delta("wrist"));
-    rotate([18,20,22], pose[16], delta("wrist"));
-    rotate([25,27,29,31], pose[23], delta("kneeL"));
-    rotate([26,28,30,32], pose[24], delta("kneeR"));
-    rotate([28,30], pose[32], -0.9 * delta("heelR"));
+    rotate([15,17,19,21], pose[13], delta("wrist"));
+    rotate([16,18,20,22], pose[14], delta("wrist"));
+    function bendKnee(hip, knee, ankle, foot, angle) {
+      const upper = Math.atan2(pose[knee][1] - pose[hip][1], pose[knee][0] - pose[hip][0]);
+      const lower = Math.atan2(pose[ankle][1] - pose[knee][1], pose[ankle][0] - pose[knee][0]);
+      const bend = Math.atan2(Math.sin(lower - upper), Math.cos(lower - upper));
+      const limit = bend * angle < 0 ? Math.abs(bend) : Math.max(0, 5 * Math.PI / 6 - Math.abs(bend));
+      rotate([ankle, ...foot], pose[knee], Math.sign(angle) * Math.min(Math.abs(angle), limit));
+    }
+    bendKnee(23,25,27,[29,31],delta("kneeL"));
+    bendKnee(24,26,28,[30,32],delta("kneeR"));
+    rotate([30,32], pose[28], -0.9 * delta("heelR"));
     pose.push(midpoint(pose[11], pose[12]), pelvis,
       [pelvis[0] + delta("shiftX") * canvas.width, pelvis[1] - canvas.height * 0.12, pelvis[2]],
       [pelvis[0] + delta("shiftX") * canvas.width, pelvis[1] + canvas.height * 0.12, pelvis[2]]);
@@ -269,13 +291,24 @@
       context.stroke();
     }
     const highlighted = bones[activeFinding?.channel] ?? [];
-    if (reference) for (const link of links) segment(reference, link, "rgba(127,138,133,.75)", 1.6, 1);
-    for (const link of links) segment(pose, link, "#e9e7e0", line, 1);
+    if (reference) {
+      context.setLineDash([4 / scale, 3 / scale]);
+      for (const link of highlighted) segment(reference, link, styles.getPropertyValue("--ink-2").trim(), 1.6, 1);
+      context.setLineDash([]);
+    }
+    const ink = styles.getPropertyValue("--ink").trim();
+    if (context === ctx) {
+      const contrast = styles.getPropertyValue("--ground").trim();
+      for (const link of links) segment(pose, link, contrast, line + 1.2, 1);
+    }
+    for (const link of links) segment(pose, link, ink, line, 1);
     const signal = getComputedStyle(document.documentElement).getPropertyValue("--signal").trim();
-    for (const link of highlighted) segment(pose, link, signal, line * 3.2, 1);
-    context.fillStyle = "#e9e7e0";
+    if (hasDeviation(comparison.sample)) {
+      for (const link of highlighted) segment(pose, link, signal, line * 3.2, 1);
+    }
+    context.fillStyle = ink;
     for (const [index, [x, y, confidence]] of pose.slice(0, evidence.landmark_names.length).entries()) {
-      if (FACE_LANDMARKS.has(evidence.landmark_names[index])) continue;
+      if (!drawnJoints.has(index) || FACE_LANDMARKS.has(evidence.landmark_names[index])) continue;
       context.globalAlpha = Math.max(0, Math.min(1, confidence));
       context.beginPath();
       context.arc(x, y, diameter / (2 * scale), 0, Math.PI * 2);
@@ -284,7 +317,16 @@
     context.globalAlpha = 1;
   }
 
+  function hasDeviation(sample) {
+    if (!activeFinding) return false;
+    const { channel } = activeFinding;
+    const measured = comparison.track.track[sample][comparison.track.channels.indexOf(channel)];
+    const reference = comparison.reference[sample][SwingReference.channels.indexOf(channel)];
+    return Math.abs(measured - reference) >= (["shiftX", "heelR"].includes(channel) ? 0.02 : 8 * Math.PI / 180);
+  }
+
   function updateValues(sample) {
+    comparison.sample = sample;
     const output = byId("compare-values");
     if (!activeFinding) { output.textContent = ""; return; }
     const channel = activeFinding.channel;
@@ -301,7 +343,9 @@
     };
     output.replaceChildren(node("strong", SwingFindings.channels[channel] ?? channel),
       entry("측정", measured), entry("교본", reference, "reference"),
-      entry("차이", measured - reference), entry("과장 표시", displayed, "delta"));
+      entry("차이", measured - reference), entry("과장 표시", displayed, hasDeviation(sample) ? "delta" : ""));
+    const card = [...byId("finding-options").querySelectorAll("button")].find(button => button.dataset.finding === activeFinding.id);
+    if (card) card.querySelector(".finding-numbers").replaceChildren(entry("측정", measured), entry("교본", reference, "reference"));
   }
 
   function changeFactor() {
@@ -318,6 +362,9 @@
     activeFinding = comparison.options.find(item => item.id === id);
     if (!activeFinding) return;
     for (const button of byId("finding-options").querySelectorAll("button")) {
+      const numbers = button.querySelector(".finding-numbers");
+      if (!button.findingNumbers) button.findingNumbers = numbers.cloneNode(true);
+      if (button.dataset.finding !== id) numbers.replaceWith(button.findingNumbers.cloneNode(true));
       button.setAttribute("aria-pressed", String(button.dataset.finding === id));
     }
     const { meta } = comparison.track;
@@ -352,14 +399,33 @@
     for (const [key, label] of phases) {
       const frame = evidence.phase_frames[key];
       const tick = node("button", label);
-      tick.style.left = Math.min(100, frame / evidence.fps / duration * 100) + "%";
+      tick.dataset.position = Math.min(100, frame / evidence.fps / duration * 100);
       tick.addEventListener("click", () => jump(frame));
       ticks.append(tick);
     }
     byId("overlay").hidden = false;
+    layoutTicks();
     jump(evidence.phase_frames.address);
     updateOverlay();
   }
+
+  function layoutTicks() {
+    const ticks = byId("ticks");
+    const width = ticks.clientWidth;
+    const rows = [[], []];
+    for (const button of [...ticks.children].reverse()) {
+      button.style.visibility = "";
+      const start = Math.min(Math.max(0, width - button.offsetWidth), width * parseFloat(button.dataset.position) / 100);
+      const end = start + button.offsetWidth;
+      button.style.left = start + "px";
+      const row = rows.findIndex(items => items.every(([a, b]) => end + 2 <= a || start >= b + 2));
+      button.style.visibility = row < 0 ? "hidden" : "";
+      button.style.top = row === 1 ? "12px" : "0";
+      if (row >= 0) rows[row].push([start, end]);
+    }
+  }
+
+  new ResizeObserver(layoutTicks).observe(byId("ticks"));
 
   function setupStills(track) {
     const stills = byId("stills");

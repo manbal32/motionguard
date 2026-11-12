@@ -172,7 +172,7 @@ class Handler(SimpleHTTPRequestHandler):
     def get_or_build_video(self, payload, progress):
         import video_pose
 
-        key = hashlib.sha256(b"video-evidence-4\0" + f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}".encode()
+        key = hashlib.sha256(b"video-evidence-5\0" + f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}".encode()
                              + b"\0" + payload).hexdigest()
         target = self.tracks / (key + ".json")
         if target.exists() and all((self.tracks / f"{key}.{phase}.jpg").is_file()
