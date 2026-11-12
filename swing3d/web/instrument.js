@@ -8,6 +8,7 @@
   const alternate = byId("exaggerated");
   const alternateContext = alternate.getContext("2d");
   const factor = byId("compare-factor");
+  const paneLabel = byId("compare-pane-label");
   const styles = getComputedStyle(document.documentElement);
   const bones = {
     torso: [[11,12]], hips: [[23,24]], wrist: [[13,15],[14,16]], swing: [[13,15],[14,16]],
@@ -385,7 +386,7 @@
     const personHeight = ys.length > 1 ? (Math.max(...ys) - Math.min(...ys)) * scale : 0;
     const line = Math.min(1.4, Math.max(0.35, personHeight * 0.009));
     const diameter = Math.min(3, Math.max(0.8, personHeight * 0.019));
-    const reference = overlayReference && activeFinding ? project(measured, baseline, channel =>
+    const reference = overlayReference && activeFinding && !activeFinding.positive ? project(measured, baseline, channel =>
       channel === activeFinding.channel ? comparison.reference[sample][SwingReference.channels.indexOf(channel)]
         : baseline[comparison.track.channels.indexOf(channel)]) : null;
     const show = byId("toggle-joints").getAttribute("aria-pressed") === "true";
@@ -439,21 +440,42 @@
     const upper = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
     turnTorso(upper, shoulders, delta("torso"), [[11,23],[12,24]]);
     turnTorso(upper, pelvis, delta("lean"), [[11,23],[12,24]]);
-    turnTorso([23,24,25,26,27,28,29,30,31,32], pelvis, delta("hips"), [[23,11],[24,12]]);
+    // Keep each ankle and shoe at its measured position. Resolve knees against those fixed endpoints.
+    if (delta("hips")) {
+      const solve = fraction => {
+        [pose[23], pose[24]] = [points[23].slice(), points[24].slice()];
+        turnTorso([23,24], pelvis, delta("hips") * fraction, [[23,11],[24,12]]);
+        return [0, 1].map(side => {
+          const [hip, knee, ankle] = [23,25,27].map(i => points[i + side]);
+          const moved = pose[23 + side];
+          const a = distance(hip, knee), b = distance(knee, ankle), d = distance(moved, ankle);
+          if (d < 1e-6 || d > a + b || d < Math.abs(a - b)) return null;
+          const x = (ankle[0] - moved[0]) / d, y = (ankle[1] - moved[1]) / d;
+          const along = (a * a - b * b + d * d) / (2 * d);
+          const turn = Math.sign((ankle[0] - hip[0]) * (knee[1] - hip[1]) - (ankle[1] - hip[1]) * (knee[0] - hip[0])) || 1;
+          const off = turn * Math.sqrt(Math.max(0, a * a - along * along));
+          return [moved[0] + x * along - y * off, moved[1] + y * along + x * off, knee[2]];
+        });
+      };
+      let knees = solve(1);
+      if (!knees.every(Boolean)) {
+        let low = 0, high = 1;
+        for (let i = 0; i < 18; i++) {
+          const mid = (low + high) / 2;
+          if (solve(mid).every(Boolean)) low = mid;
+          else high = mid;
+        }
+        knees = solve(low);
+      }
+      if (knees.every(Boolean)) [pose[25], pose[26]] = knees;
+      else [pose[23], pose[24]] = [points[23].slice(), points[24].slice()];
+    }
     rotate([13,15,17,19,21], pose[11], delta("swing"));
     rotate([14,16,18,20,22], pose[12], delta("swing"));
     rotate([15,17,19,21], pose[13], delta("wrist"));
     rotate([16,18,20,22], pose[14], delta("wrist"));
-    function bendKnee(hip, knee, ankle, foot, angle) {
-      const upper = Math.atan2(pose[knee][1] - pose[hip][1], pose[knee][0] - pose[hip][0]);
-      const lower = Math.atan2(pose[ankle][1] - pose[knee][1], pose[ankle][0] - pose[knee][0]);
-      const bend = Math.atan2(Math.sin(lower - upper), Math.cos(lower - upper));
-      const limit = bend * angle < 0 ? Math.abs(bend) : Math.max(0, 5 * Math.PI / 6 - Math.abs(bend));
-      rotate([ankle, ...foot], pose[knee], Math.sign(angle) * Math.min(Math.abs(angle), limit));
-    }
-    bendKnee(23,25,27,[29,31],delta("kneeL"));
-    bendKnee(24,26,28,[30,32],delta("kneeR"));
-    rotate([30,32], pose[28], -0.9 * delta("heelR"));
+    // A single 2D view cannot alter knee flex or heel lift with fixed contact and limb lengths.
+    // paintCue shows the difference without moving those anchors.
     pose.push(midpoint(pose[11], pose[12]), pelvis,
       [pelvis[0] + delta("shiftX") * canvas.width, pelvis[1] - canvas.height * 0.12, pelvis[2]],
       [pelvis[0] + delta("shiftX") * canvas.width, pelvis[1] + canvas.height * 0.12, pelvis[2]]);
@@ -490,6 +512,8 @@
     const signal = getComputedStyle(document.documentElement).getPropertyValue("--signal").trim();
     if (hasDeviation(comparison.sample)) {
       for (const link of highlighted) segment(pose, link, signal, line * 3.2, 1);
+    } else if (activeFinding?.positive && inFindingRange(comparison.sample)) {
+      for (const link of highlighted) segment(pose, link, ink, line * 2.2, 1);
     }
     context.fillStyle = ink;
     for (const [index, [x, y, confidence]] of pose.slice(0, evidence.landmark_names.length).entries()) {
@@ -502,11 +526,15 @@
     context.globalAlpha = 1;
   }
 
-  function hasDeviation(sample) {
+  function inFindingRange(sample) {
     if (!activeFinding) return false;
     const { meta, track } = comparison.track;
     const time = (meta.hold + (meta.dur - meta.hold) * sample / Math.max(1, track.length - 1)) / meta.dur;
-    if (time < activeFinding.range[0] || time > activeFinding.range[1]) return false;
+    return time >= activeFinding.range[0] && time <= activeFinding.range[1];
+  }
+
+  function hasDeviation(sample) {
+    if (activeFinding?.positive || !inFindingRange(sample)) return false;
     const { channel } = activeFinding;
     const measured = comparison.track.track[sample][comparison.track.channels.indexOf(channel)];
     const reference = comparison.reference[sample][SwingReference.channels.indexOf(channel)];
@@ -516,6 +544,10 @@
   function paintCue(measured, shown, scale) {
     const output = byId("compare-cue");
     output.textContent = "";
+    if (activeFinding?.positive && inFindingRange(comparison.sample)) {
+      output.textContent = "유지할 동작 · " + activeFinding.label;
+      return;
+    }
     if (!hasDeviation(comparison.sample)) return;
     const channel = activeFinding.channel;
     const index = comparison.track.channels.indexOf(channel);
@@ -534,7 +566,7 @@
     const size = 19 / scale;
     const visible = movement(joint) * scale >= 3;
     const turn = Math.sign(difference) * Math.min(1.3, Math.max(.38, Math.abs(actual - target) * (normalized ? 8 : 1)));
-    if (!visible) output.append(" · 관절 이동이 작아 호와 화살표로 차이 방향을 표시합니다.");
+    if (!visible) output.append(" · 발과 관절 연결을 유지하며 호와 화살표로 차이를 표시합니다.");
     c.save();
     c.strokeStyle = styles.getPropertyValue("--signal").trim();
     c.lineWidth = 1.6 / scale;
@@ -577,16 +609,18 @@
     };
     output.replaceChildren(node("strong", SwingFindings.channels[channel] ?? channel),
       entry("측정", measured), entry("교본", reference, "reference"),
-      entry("차이", measured - reference), entry("과장 표시", displayed, hasDeviation(sample) ? "delta" : ""));
+      entry("차이", measured - reference), entry(activeFinding.positive ? "유지 표시" : "과장 표시", displayed,
+        hasDeviation(sample) ? "delta" : ""));
     const card = [...byId("finding-options").querySelectorAll("button")].find(button => button.dataset.finding === activeFinding.id);
     if (card) card.querySelector(".finding-numbers").replaceChildren(entry("측정", measured), entry("교본", reference, "reference"));
   }
 
   function changeFactor() {
     if (!comparison) return;
-    comparison.displayed = SwingExaggeration.apply(comparison.track, comparison.reference, activeFinding, Number(factor.value));
-    const value = Number(factor.value).toFixed(1);
-    byId("compare-caption").replaceChildren("과장 ", quantity(value, "×"));
+    comparison.displayed = SwingExaggeration.apply(comparison.track, comparison.reference,
+      activeFinding?.positive ? null : activeFinding, Number(factor.value));
+    const value = (activeFinding?.positive ? 1 : Number(factor.value)).toFixed(1);
+    byId("compare-caption").replaceChildren(activeFinding?.positive ? "유지 " : "과장 ", quantity(value, "×"));
     byId("compare-factor-value").replaceChildren(quantity(value, "×"));
     if (evidence) updateOverlay();
     else updateValues(comparison.sample ?? 0);
@@ -607,6 +641,7 @@
       (time * meta.dur - meta.hold) * (comparison.track.track.length - 1) / (meta.dur - meta.hold)));
     const [left, right] = activeFinding.range.map(frameAt);
     const band = byId("compare-range");
+    band.classList.toggle("positive-range", !!activeFinding.positive);
     if (evidence) {
       const timeline = evidence.fps * duration;
       loopBounds = [left / evidence.fps, Math.min(duration, (right + 1) / evidence.fps)];
@@ -616,7 +651,13 @@
     }
     band.hidden = !evidence;
     comparison.sample = sampleIndex(Math.round((left + right) / 2));
-    factor.value = SwingExaggeration.levels[activeFinding.severity] ?? 2;
+    factor.disabled = !!activeFinding.positive;
+    factor.value = activeFinding.positive ? 1 : SwingExaggeration.levels[activeFinding.severity] ?? 2;
+    paneLabel.textContent = activeFinding.positive ? "같은 프레임 · 유지할 동작" : "같은 프레임 · 교육용 과장";
+    const warning = byId("compare-warning");
+    warning.classList.toggle("positive-note", !!activeFinding.positive);
+    warning.textContent = activeFinding.positive ? "오른쪽은 같은 프레임의 실측 관절로 재구성한 유지 동작입니다."
+      : "오른쪽은 교육용 과장이며 측정값이 아닙니다 · 왼쪽 수치가 실제 측정입니다";
     changeFactor();
     if (evidence && seek) jump(activeFinding.frame ?? Math.round(frameAt((activeFinding.range[0] + activeFinding.range[1]) / 2)));
   }
@@ -731,6 +772,9 @@
     loop.disabled = true;
     loop.setAttribute("aria-pressed", "false");
     factor.value = 1;
+    paneLabel.textContent = "같은 프레임 · 교육용 과장";
+    byId("compare-warning").classList.remove("positive-note");
+    byId("compare-warning").textContent = "오른쪽은 교육용 과장이며 측정값이 아닙니다 · 왼쪽 수치가 실제 측정입니다";
     comparison.options = SwingFindings.choices(byId("finding-options"), doc, track, chooseFinding);
     factor.disabled = comparison.options.length === 0;
     if (comparison.options.length) chooseFinding(comparison.options[0].id);
@@ -770,6 +814,7 @@
         sessionStorage.setItem("motionguard:" + coaching.report_id, JSON.stringify({
           image: snapshot.toDataURL("image/jpeg", 0.88), factor: Number(factor.value),
           frame: Math.floor(video.currentTime * evidence.fps + 0.001), label: activeFinding?.label,
+          positive: !!activeFinding?.positive,
           values: [...byId("compare-values").children].map(item => item.textContent).join(" · "),
         }));
       } catch {

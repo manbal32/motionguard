@@ -111,6 +111,10 @@ td { text-align: right; white-space: nowrap; }
 .compare-values .reference { color:var(--ref,var(--ink-2)); }
 .compare-warning { padding:0 16px 12px; color:var(--signal); font:10.5px var(--mono),var(--sans); }
 .finding-options { display:flex; flex-wrap:wrap; gap:8px; }
+.finding-group { flex:1 1 250px; display:flex; align-items:flex-start; flex-wrap:wrap; gap:8px; min-width:0; }
+.finding-group h3 { flex-basis:100%; font-size:13px; color:var(--ink-2); margin:0; }
+.compare-band i.positive-range { background:var(--ink-2); }
+.compare-warning.positive-note { color:var(--ink-2); }
 .finding-options button { text-align:left; }
 .finding-options .finding-numbers { display:grid; font-size:12px; }
 .finding-options .finding-numbers > span { white-space:nowrap; }

@@ -24,29 +24,43 @@ window.SwingFindings = (() => {
     return response.json();
   }
 
+  const positiveLabel = item => (item.example_only ? "검증 예시 · " : "") + (phases.find(([key]) => key === item.phase)?.[1] ?? "") +
+    " · " + channels[item.channel] + "이 교본 참고 범위에 가까움";
+  const selectablePositive = item => item.reliable === true && !item.deviation && !!channels[item.channel] &&
+    Number.isInteger(item.frame) && Array.isArray(item.range);
+
   function choices(parent, doc, track, onSelect) {
     parent.replaceChildren();
-    const options = doc.findings.filter(item => item.channel && item.range &&
+    const improvements = doc.findings.filter(item => item.channel && item.range &&
       (item.channel !== "wrist" || track.meta.wrist_source === "index"));
-    for (const item of options) {
-      const button = node("button");
-      button.type = "button";
-      button.dataset.finding = item.id;
-      button.setAttribute("aria-pressed", "false");
-      const unit = ["shiftX", "heelR"].includes(item.channel) ? "정규화" : "°";
-      const values = node("span", undefined, "finding-numbers");
-      const measured = node("span", "판정 기준 프레임 측정 ");
-      const reference = node("span", "교본 ", "reference");
-      const precision = unit === "°" ? 1 : 3;
-      measured.append(number(item.measured, unit, precision));
-      reference.append(number(item.reference, unit, precision));
-      values.append(measured, reference);
-      button.append(node("strong", item.label), values);
-      button.onclick = () => onSelect(item.id);
-      parent.append(button);
+    const positives = (doc.positives ?? []).filter(selectablePositive)
+      .map(item => ({...item, positive: true, label: positiveLabel(item)}));
+    for (const [items, title] of [[positives, "잘한 점 · 유지"], [improvements, "개선점 · 교정"]]) {
+      const group = node("div", undefined, "finding-group");
+      group.setAttribute("role", "group");
+      group.setAttribute("aria-label", title);
+      group.append(node("h3", title));
+      if (!items.length) group.append(node("p", "선택할 계측 항목이 없습니다."));
+      for (const item of items) {
+        const button = node("button");
+        button.type = "button";
+        button.dataset.finding = item.id;
+        button.setAttribute("aria-pressed", "false");
+        const unit = ["shiftX", "heelR"].includes(item.channel) ? "정규화" : "°";
+        const values = node("span", undefined, "finding-numbers");
+        const measured = node("span", "판정 기준 프레임 측정 ");
+        const reference = node("span", "교본 ", "reference");
+        const precision = unit === "°" ? 1 : 3;
+        measured.append(number(item.measured, unit, precision));
+        reference.append(number(item.reference, unit, precision));
+        values.append(measured, reference);
+        button.append(node("strong", item.label), values);
+        button.onclick = () => onSelect(item.id);
+        group.append(button);
+      }
+      parent.append(group);
     }
-    if (!options.length) parent.append(node("p", "비교할 결함 판정이 없습니다."));
-    return options;
+    return [...improvements, ...positives];
   }
 
   function render(parent, track, doc, onSelect) {
@@ -59,8 +73,20 @@ window.SwingFindings = (() => {
       if (item.frame !== undefined) line.append(number(item.frame, "프레임", 0), " · ");
       line.append(doc.mode ? "측정 " : "파일 기록 ", format(item.measured), " · 교본 ", format(item.reference));
       if (doc.mode) line.append(" · 차이 ", format(item.difference));
+      if (Number.isFinite(item.confidence)) line.append(" · 추적 신뢰도 ", number(item.confidence * 100, "%", 0));
       return line;
     };
+    function still(item) {
+      if (onSelect || !track.evidence || !phases.some(([key]) => key === item.phase) ||
+          track.evidence.phase_frames[item.phase] !== item.frame ||
+          (item.phase === "finish" && !track.evidence.has_finish_still)) return null;
+      const figure = node("figure", undefined, "finding-still");
+      const image = node("img");
+      image.src = "/api/still/" + track.evidence.id + "/" + item.phase;
+      image.alt = "선택 국면의 원본 계측 프레임";
+      figure.append(image, node("figcaption", item.example_only ? "예시 항목의 원본 프레임" : "판정 기준 원본 프레임"));
+      return figure;
+    }
     function section(title) {
       const block = node("div", undefined, "result-block");
       block.append(node("h3", title));
@@ -86,8 +112,11 @@ window.SwingFindings = (() => {
       section("자기보고와 영상 근거").append(node("p", doc.comparison));
       const positives = section("잘한 점");
       for (const item of doc.positives) {
-        const phase = phases.find(([key]) => key === item.phase)?.[1];
-        positives.append(node("strong", phase + " · " + channels[item.channel] + "이 교본 참고 범위에 가까움"), valuesFor(item));
+        const control = node(onSelect && selectablePositive(item) ? "button" : "strong", positiveLabel(item));
+        if (control.tagName === "BUTTON") control.onclick = () => onSelect(item.id);
+        positives.append(control, valuesFor(item), node("p", "유지 권고 · 같은 촬영 각도에서 이 동작을 반복해 확인하세요."));
+        const image = still(item);
+        if (image) positives.append(image);
       }
       if (!doc.positives.length) positives.append(node("p", "확인 가능한 강점을 제시할 영상 근거가 부족합니다."));
     } else if (items.length) summary.append(node("p", "제공된 파일의 예시 판정입니다. 추적 신뢰도가 낮은 구간의 수치는 주의해서 해석하세요."));
@@ -138,6 +167,8 @@ window.SwingFindings = (() => {
         entry.append(values);
       }
       improvements.append(entry);
+      const image = still(item);
+      if (image) entry.append(image);
       if (item.drill) drills.append(node("p", item.label + " · " + item.drill));
       for (const query of item.youtube ?? []) {
         const link = node("a", query);

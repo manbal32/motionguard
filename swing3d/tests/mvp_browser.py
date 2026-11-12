@@ -107,6 +107,33 @@ def run(browser, url, width, name, output):
     review.screenshot(path=output / f"mvp_{name}_summary.png")
     if width != 390:
         assert page.request.post(url + "/api/coaching/analyze", data={"allow_external": False}).status == 422
+    # The bundled wide shot has no reliable strength. Inject a visibly marked fixture for the selection UI.
+    def add_positive(route):
+        response = route.fetch(timeout=60000)
+        data = response.json()
+        if response.ok and not data["positives"]:
+            track = page.request.get(url + "/api/track/" + data["track_id"]).json()
+            phase, frame, channel, measured, model = page.evaluate("""track => {
+                const reference = SwingReference.expand(track);
+                for (const phase of ['down','impact','finish','address']) {
+                    const frame = track.meta.phase_frames[phase];
+                    const row = frame - track.meta.source_frames[0];
+                    for (const key of ['lean','kneeL','kneeR','swing']) {
+                        const measured = track.track[row][track.channels.indexOf(key)] * 180 / Math.PI;
+                        const model = reference[row][SwingReference.channels.indexOf(key)] * 180 / Math.PI;
+                        if (Math.abs(measured-model) < 7.95) return [phase, frame, key, measured, model];
+                    }
+                }
+            }""", track)
+            time = track["events"][phase]
+            data["positives"] = [{"id": "fixture_positive", "phase": phase, "frame": frame, "channel": channel,
+                                  "range": [max(0,time - .02), min(1,time + .02)], "confidence": .9, "reliable": True,
+                                  "measured": measured, "reference": model, "difference": measured - model,
+                                  "example_only": True}]
+            if route.request.method == "POST":
+                page.route("**/api/coaching/report/" + data["report_id"], lambda report: report.fulfill(json=data))
+        route.fulfill(response=response, json=data)
+    page.route("**/api/coaching/analyze", add_positive)
     with page.expect_response("**/api/coaching/analyze", timeout=60000) as analyzed:
         page.locator("#summary-approve").click()
     result = analyzed.value.json()
@@ -121,7 +148,8 @@ def run(browser, url, width, name, output):
     page.locator("#findings").screenshot(path=output / f"mvp_{name}_findings.png")
     link = page.locator("#finding-body a").first
     expect(link).to_have_attribute("href", YOUTUBE)
-    button = page.locator("#finding-options button").first
+    improvements = page.get_by_role("group", name="개선점 · 교정")
+    button = improvements.get_by_role("button").first
     first = result["findings"][0]
     expect(page.locator("#timecode")).to_contain_text(str(first["frame"]) + "프레임")
     page.wait_for_function("!document.querySelector('#original').seeking")
@@ -145,6 +173,15 @@ def run(browser, url, width, name, output):
             const [a,b] = poseTrace.exaggerated.points[i]; return Math.hypot(x-a,y-b);
         }))""")
         assert displacement > 2, displacement
+        stance = page.evaluate("""() => {
+            const left = poseTrace.joints.points, right = poseTrace.exaggerated.points;
+            const delta = indices => Math.max(...indices.map(i => Math.hypot(left[i][0]-right[i][0], left[i][1]-right[i][1])));
+            const length = ([a,b]) => Math.hypot(a[0]-b[0], a[1]-b[1]);
+            const lengths = poseTrace.joints.links.map((link, i) => Math.abs(length(link)-length(poseTrace.exaggerated.links[i])));
+            return {lower:delta([8,9,10,11,12,13,14,15,16,17]), maxLimbLength:Math.max(...lengths.filter((_,i)=>i!==7&&i!==8))};
+        }""")
+        assert stance["lower"] == 0 and stance["maxLimbLength"] < 1e-8, stance
+        print("2.5x torso stance/limbs:", stance)
         print("2.5x maximum image-coordinate displacement:", displacement)
         overlay.screenshot(path=output / "avatar_25x_frame_1.png")
         for i in (2, 3):
@@ -152,8 +189,10 @@ def run(browser, url, width, name, output):
             expect(page.locator("#joints")).to_have_attribute("data-frame", str(first["frame"] + i - 1))
             expect(page.locator("#exaggerated")).to_have_attribute("data-frame", str(first["frame"] + i - 1))
             overlay.screenshot(path=output / f"avatar_25x_frame_{i}.png")
-        page.locator("#finding-options button").nth(1).click()
+        improvements.get_by_role("button").nth(1).click()
         expect(page.locator("#compare-values strong")).to_have_text("골반 회전")
+        page.locator("#compare-factor").evaluate("el => {el.value = 2.5; el.dispatchEvent(new Event('input'));}")
+        assert page.evaluate("poseTrace.joints.points.slice(12).every((p,i) => p.every((x,j) => x === poseTrace.exaggerated.points[i+12][j]))")
         overlay.screenshot(path=output / "avatar_second_finding.png")
         page.locator("#ticks").get_by_role("button", name="피니시", exact=True).evaluate("button => button.click()")
         expect(page.locator("#phase-label")).to_have_text("피니시")
@@ -178,20 +217,32 @@ def run(browser, url, width, name, output):
         page.locator("#play").click()
         expect(page.locator("#original")).to_have_js_property("paused", True)
         page.locator("#compare-loop").click()
+    positive = page.get_by_role("group", name="잘한 점 · 유지").get_by_role("button").first
+    positive.click()
+    expect(page.locator("#joints")).to_have_attribute("data-frame", str(result["positives"][0]["frame"]))
+    expect(page.locator("#exaggerated")).to_have_attribute("data-frame", str(result["positives"][0]["frame"]))
+    expect(page.locator("#compare-cue")).to_contain_text("유지할 동작")
+    expect(page.locator("#compare-factor")).to_be_disabled()
+    expect(page.locator("#compare-factor")).to_have_value("1")
+    assert page.evaluate("JSON.stringify(poseTrace.joints.points) === JSON.stringify(poseTrace.exaggerated.points)")
+    page.locator("#overlay").screenshot(path=output / f"mvp_{name}_positive.png")
+    button.evaluate("element => element.click()")
+    page.wait_for_function("!document.querySelector('#original').seeking")
+    if width != 390:
         assert not page.evaluate("Boolean(window.Swing3D || window.THREE)")
         page.locator("#swing-details > summary").click()
         expect(page.locator("#viewer canvas")).to_be_visible()
         with page.expect_download(timeout=60000) as recording:
             page.locator("#record").click()
         assert recording.value.suggested_filename.endswith(".webm") and recording.value.path().stat().st_size > 1000
-    button.click()
-    page.wait_for_function("!document.querySelector('#original').seeking")
+        page.evaluate("window.Swing3D.dispose()")
     page.locator("#open-report").click()
     page.wait_for_url("**/report/*?coaching=*")
     expect(page.locator("#report-image img")).to_be_visible()
     expect(page.locator("#report-findings")).to_contain_text("데모 피드백")
     expect(page.locator("#report-findings")).to_contain_text(goal)
     expect(page.locator("#report-stills figure")).to_have_count(5)
+    expect(page.locator(".finding-still")).to_have_count(3)
     expect(page.locator("#report-findings a").first).to_have_attribute("href", YOUTUBE)
     page.evaluate("document.fonts.ready")
     page.locator(".sheet").screenshot(path=output / f"mvp_{name}_report.png")

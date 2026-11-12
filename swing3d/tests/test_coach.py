@@ -71,6 +71,9 @@ class CoachTest(unittest.TestCase):
         self.assertEqual(result["findings"][0]["measured"], 14)
         self.assertEqual(result["findings"][0]["reference"], 44)
         self.assertEqual(result["findings"][0]["frame"], 105)
+        self.assertEqual(result["findings"][0]["confidence"], 0.9)
+        self.assertEqual(result["positives"][0]["confidence"], 0.9)
+        self.assertEqual(result["positives"][0]["frame"], 105)
 
     def test_no_key_429_and_invalid_json_fall_back_with_empty_history(self):
         no_key = self.provider()

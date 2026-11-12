@@ -39,7 +39,7 @@
         const figure = node("figure");
         const image = node("img");
         image.src = saved.image;
-        image.alt = "선택 프레임의 실측 자세와 교육용 과장 자세";
+        image.alt = saved.positive ? "선택 프레임의 실측 자세와 유지할 동작" : "선택 프레임의 실측 자세와 교육용 과장 자세";
         const caption = node("figcaption", saved.label ?? "선택 프레임");
         caption.append(" · ", number(saved.frame, "프레임", 0), " · ", number(saved.factor, "×"));
         figure.append(image, caption, node("p", saved.values, "num"));

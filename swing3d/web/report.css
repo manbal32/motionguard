@@ -32,6 +32,7 @@ dd { margin:0 0 8px; color:var(--ink-2); }
 @media(max-width:570px) { #report-stills { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 #report-image img { aspect-ratio:auto; display:block; }
 .print-help { color:var(--ink-2); font-size:12px; }
+.finding-still { max-width:180px; margin:6px 0; }
 @page { size:A4; margin:14mm; }
 @media print {
   :root, :root[data-theme="dark"] { color-scheme:light; --paper:white; --ink:#1b2024; --ink-2:#575a58; --ink-3:#666a66; --rule:#c8c9c1; --signal:#9c530c; }

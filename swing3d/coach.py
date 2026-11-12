@@ -151,7 +151,8 @@ def evidence(track):
         references[phase] = [reference(i, key, column) for key, column in zip(channels, columns)]
         if phase == "address":
             continue
-        reliable = min(rows[i][confidence], meta.get("phase_confidence", {}).get(phase, 1)) >= 0.45
+        quality = min(rows[i][confidence], meta.get("phase_confidence", {}).get(phase, 1))
+        reliable = quality >= 0.45
         for k, key in enumerate(channels):
             # Zero torso/hips downstream can be the known measurement floor. Wrist is a proxy.
             if key == "wrist" or key in {"torso", "hips"} and phase in {"down", "impact"} and not rows[i][columns[k]]:
@@ -170,7 +171,7 @@ def evidence(track):
                 "severity": "high" if abs(gap) >= 3 * threshold else "medium" if abs(gap) >= 2 * threshold else "low",
                 "direction": "excess" if gap > 0 else "deficit", "camera": "dtl",
                 "youtube": [f"골프 {label} {name} 연습", f"golf {english} drill"],
-                "deviation": abs(gap) >= threshold, "reliable": reliable,
+                "deviation": abs(gap) >= threshold, "reliable": reliable, "confidence": round(quality, 3),
             }
     return {"columns": ["frame", "confidence", *channels], "windows": windows,
             "normalized": sorted(DISTANCES)}, references, candidates
