@@ -36,7 +36,8 @@
           <ol id="coach-log" aria-label="상담 기록" aria-live="polite"></ol>
           <form id="coach-form">
             <label for="coach-message">스윙 고민이나 연습 목표</label>
-            <div class="row"><textarea id="coach-message" maxlength="500" rows="2" required></textarea><button id="coach-send">보내기</button></div>
+            <div class="row"><textarea id="coach-message" maxlength="500" rows="2" aria-describedby="coach-keys" required></textarea><button id="coach-send" type="submit">보내기</button></div>
+            <p id="coach-keys">Enter로 전송 · Shift+Enter로 줄바꿈</p>
           </form>
           <p id="coach-status" role="status"></p>
         </div>

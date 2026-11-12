@@ -42,6 +42,9 @@
   const consent = byId("coach-consent");
   const message = byId("coach-message");
   const coachStatus = byId("coach-status");
+  const coachForm = byId("coach-form");
+  const desktopKeyboard = matchMedia("(pointer: fine)");
+  let composing = false;
 
   function showMode() {
     byId("coach-mode").textContent = consent.checked && providerMode === "gemini" ? "Gemini 연결 설정됨" : "데모 모드";
@@ -65,14 +68,23 @@
     const line = node("li");
     line.append(node("strong", label), node("span", value));
     byId("coach-log").append(line);
-    line.scrollIntoView({block: "nearest"});
+    const log = byId("coach-log");
+    log.scrollTop = log.scrollHeight;
     return line;
   }
 
-  byId("coach-form").addEventListener("submit", async event => {
+  message.addEventListener("compositionstart", () => { composing = true; });
+  message.addEventListener("compositionend", () => { composing = false; });
+  message.addEventListener("keydown", event => {
+    if (event.key !== "Enter" || event.shiftKey || event.isComposing || event.keyCode === 229 || composing) return;
+    event.preventDefault();
+    if (!event.repeat) coachForm.requestSubmit();
+  });
+
+  coachForm.addEventListener("submit", async event => {
     event.preventDefault();
     const value = message.value.trim();
-    if (!selected || selected.csv || request || chatRequest || !value) return;
+    if (!selected || selected.csv || request || chatRequest || composing || !value) return;
     if (messages.length >= 20) {
       coachStatus.textContent = "상담 10턴을 기록했습니다. 분석하기를 눌러 주세요.";
       return;
@@ -80,6 +92,8 @@
     const controller = new AbortController();
     chatRequest = controller;
     byId("coach-send").disabled = byId("start").disabled = consent.disabled = true;
+    message.readOnly = true;
+    coachForm.setAttribute("aria-busy", "true");
     messages.push({role: "user", text: value});
     const line = chatLine("나", value);
     coachStatus.textContent = "답변을 기다리는 중입니다.";
@@ -94,11 +108,16 @@
       if (controller.signal.aborted) return;
       messages.pop();
       line.remove();
-      coachStatus.textContent = error.message;
+      coachStatus.textContent = error.message + " 입력한 메시지를 다시 보낼 수 있습니다.";
     } finally {
       if (chatRequest === controller) {
         chatRequest = undefined;
         byId("coach-send").disabled = byId("start").disabled = consent.disabled = false;
+        message.readOnly = false;
+        coachForm.removeAttribute("aria-busy");
+        if (desktopKeyboard.matches && (document.activeElement === message || document.activeElement === document.body)) {
+          message.focus({preventScroll: true});
+        }
       }
     }
   });
@@ -126,6 +145,8 @@
     if (request || !file) return;
     chatRequest?.abort();
     chatRequest = undefined;
+    composing = message.readOnly = false;
+    coachForm.removeAttribute("aria-busy");
     messages = [];
     message.value = coachStatus.textContent = "";
     byId("coach-log").replaceChildren();

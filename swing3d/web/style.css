@@ -123,3 +123,5 @@ td { text-align: right; white-space: nowrap; }
 #coach-log li { padding:6px 0; border-top:1px solid var(--rule); overflow-wrap:anywhere; }
 #coach-log strong { display:block; color:var(--ink-2); font-size:12px; }
 #coach-message { flex:1 1 160px; min-width:0; color:var(--ink); background:var(--ground-2); border:1px solid var(--rule-hi); padding:8px; font:inherit; }
+#coach-send { min-height:44px; align-self:center; }
+@media (pointer:coarse) { #coach-panel #coach-keys { display:none; } }

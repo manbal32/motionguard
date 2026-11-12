@@ -16,27 +16,86 @@ from server import Handler, ThreadingHTTPServer
 YOUTUBE = re.compile(r"^https://www.youtube.com/results\?search_query=")
 
 
+def chat(page, mobile):
+    message = page.locator("#coach-message")
+    send = page.locator("#coach-send")
+    expect(send).to_be_visible()
+    queued = []
+    endpoint = "**/api/coaching/chat"
+    page.route(endpoint, lambda route: queued.append(route))
+    if mobile:
+        assert send.bounding_box()["height"] >= 44
+    else:
+        message.fill("   ")
+        message.press("Enter")
+        expect(page.locator("#coach-log li")).to_have_count(0)
+        message.fill("한글 조합 검증")
+        message.evaluate("""input => {
+            input.dispatchEvent(new CompositionEvent('compositionstart'));
+            input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true}));
+            input.dispatchEvent(new CompositionEvent('compositionend'));
+            input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', isComposing: true, bubbles: true}));
+            input.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', keyCode: 229, bubbles: true}));
+        }""")
+        expect(page.locator("#coach-log li")).to_have_count(0)
+        message.fill("드라이버에서 슬라이스가 납니다.")
+        message.press("End")
+        message.press("Shift+Enter")
+        expect(message).to_have_value("드라이버에서 슬라이스가 납니다.\n")
+        expect(page.locator("#coach-log li")).to_have_count(0)
+        message.press("Enter")
+        expect(page.locator("#coach-form")).to_have_attribute("aria-busy", "true")
+        expect(page.locator("#coach-status")).to_contain_text("답변을 기다리는 중")
+        expect(page.locator("#coach-log li")).to_have_count(1)
+        expect(send).to_be_disabled()
+        expect(page.locator("#start")).to_be_disabled()
+        message.press("Enter")
+        page.locator("#coach-form").evaluate("form => form.requestSubmit()")
+        assert len(queued) == 1
+        queued.pop().abort()
+        expect(page.locator("#coach-status")).to_contain_text("다시 보낼 수 있습니다")
+        expect(message).to_have_value("드라이버에서 슬라이스가 납니다.\n")
+        expect(message).to_be_focused()
+    assert not queued
+    page.unroute(endpoint)
+
+    for text in ["드라이버에서 슬라이스가 납니다. 골반 회전이 부족한 것 같아요.",
+                 "다운스윙에서 자세를 유지하고 싶습니다."]:
+        message.fill(text)
+        with page.expect_response(endpoint):
+            if mobile:
+                send.tap()
+            else:
+                message.press("Enter")
+        expect(message).to_have_value("")
+        if not mobile:
+            expect(message).to_be_focused()
+    expect(page.locator("#coach-log li")).to_have_count(4)
+    expect(page.locator("#coach-log")).to_contain_text("데모 응답")
+
+
 def run(browser, url, width, name, output):
     page = browser.new_page(viewport={"width": width, "height": 844 if width == 390 else 1040},
-                            device_scale_factor=2)
+                            device_scale_factor=2, has_touch=width == 390, is_mobile=width == 390)
     errors = []
+    analyses = []
     page.on("pageerror", lambda error: errors.append(str(error)))
+    page.on("request", lambda request: analyses.append(request.url)
+            if request.method == "POST" and request.url.endswith(("/api/video", "/api/coaching/analyze")) else None)
     page.add_init_script(f"({TRACE})();")
     page.goto(url)
     page.locator("#video").set_input_files(ROOT / "samples/golf_swing.mp4")
     expect(page.locator("#coach-panel")).to_be_visible()
-    for message in ["드라이버에서 슬라이스가 납니다. 골반 회전이 부족한 것 같아요.",
-                    "다운스윙에서 자세를 유지하고 싶습니다."]:
-        page.locator("#coach-message").fill(message)
-        page.locator("#coach-send").click()
-        expect(page.locator("#coach-message")).to_have_value("")
-    expect(page.locator("#coach-log li")).to_have_count(4)
-    expect(page.locator("#coach-log")).to_contain_text("데모 응답")
+    chat(page, width == 390)
+    assert not analyses
     page.locator("#upload").screenshot(path=output / f"mvp_{name}_consultation.png")
 
     with page.expect_response("**/api/coaching/analyze", timeout=60000) as analyzed:
         page.locator("#start").click()
     result = analyzed.value.json()
+    assert len(analyses) == 2, analyses
+    sent = analyzed.value.request.post_data_json["messages"]
+    assert len(sent) == 4 and [item["role"] for item in sent] == ["user", "assistant"] * 2
     assert result["mode"] == "demo" and 0 < len(result["findings"]) <= 3, result
     expect(page.locator("#finding-body")).to_contain_text("슬라이스")
     expect(page.locator("#finding-body")).to_contain_text("잘한 점")
