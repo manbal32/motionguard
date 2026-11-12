@@ -82,7 +82,7 @@
         model.classList.add("reference");
         cell.append(value, model);
       }
-      if (track.evidence && phase !== "finish") {
+      if (track.evidence && (phase !== "finish" || track.evidence.has_finish_still)) {
         const figure = node("figure");
         const image = node("img");
         image.src = "/api/still/" + id + "/" + phase;

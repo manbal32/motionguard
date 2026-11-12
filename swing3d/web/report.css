@@ -15,7 +15,7 @@ section { border-bottom:1px solid var(--rule); padding:20px 0; }
 .row { display:flex; gap:8px; margin-top:12px; }
 button { border:1px solid var(--rule); border-radius:0; background:transparent; color:inherit; font:inherit; padding:4px 12px; cursor:pointer; }
 button[aria-pressed="true"] { border-color:var(--ink); }
-#report-stills { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+#report-stills { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
 figure { margin:0; }
 figure img { width:100%; aspect-ratio:16/9; object-fit:contain; border:1px solid var(--rule); }
 figcaption { font-size:12px; }

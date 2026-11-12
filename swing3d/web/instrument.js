@@ -1,4 +1,4 @@
-/* global SwingReference, Swing3D, SwingFindings */
+/* global SwingReference, SwingFindings, SwingExaggeration, SwingPoseAvatar */
 (() => {
   "use strict";
   const byId = id => document.getElementById(id);
@@ -36,6 +36,13 @@
   let request;
   let evidence;
   let viewer;
+  let viewerAssets;
+  let loopBounds;
+  const loop = byId("compare-loop");
+  const summaryPanel = byId("summary-review");
+  const summaryFields = [...summaryPanel.querySelectorAll("textarea")];
+  const approve = byId("summary-approve");
+  const preview = byId("upload-preview");
   let messages = [];
   let chatRequest;
   let providerMode = "demo";
@@ -59,7 +66,7 @@
   async function coachPost(path, data, signal) {
     const response = await fetch("/api/coaching/" + path, {
       method: "POST", headers: {"Content-Type": "application/json"}, signal,
-      body: JSON.stringify({ ...data, messages, allow_external: consent.checked }),
+      body: JSON.stringify({ ...(path === "analyze" ? {} : {messages}), ...data, allow_external: consent.checked }),
     });
     return readResponse(response);
   }
@@ -90,6 +97,7 @@
       return;
     }
     const controller = new AbortController();
+    summaryPanel.hidden = true;
     chatRequest = controller;
     byId("coach-send").disabled = byId("start").disabled = consent.disabled = true;
     message.readOnly = true;
@@ -143,6 +151,10 @@
 
   function select(file, csv = false) {
     if (request || !file) return;
+    summaryPanel.hidden = true;
+    preview.pause();
+    preview.removeAttribute("src");
+    preview.hidden = true;
     chatRequest?.abort();
     chatRequest = undefined;
     composing = message.readOnly = false;
@@ -159,12 +171,16 @@
     mediaUrl = undefined;
     evidence = undefined;
     comparison = activeFinding = undefined;
+    loopBounds = undefined;
+    loop.disabled = true;
+    loop.setAttribute("aria-pressed", "false");
     selected = undefined;
     duration = undefined;
     for (const id of ["zoom-person", "toggle-joints", "compare-reference"]) byId(id).setAttribute("aria-pressed", "true");
     byId("overlay").hidden = byId("phases").hidden = true;
     for (const id of ["findings", "swing-view", "export"]) byId(id).hidden = true;
-    Swing3D.dispose();
+    window.Swing3D?.dispose();
+    byId("swing-details").open = false;
     viewer = undefined;
     byId("start").disabled = true;
     report("대기 중", 0);
@@ -196,6 +212,8 @@
       }
       selected = { file, csv };
       byId("start").disabled = false;
+      preview.src = candidate;
+      preview.hidden = false;
       byId("coach-panel").hidden = false;
       showMode();
     };
@@ -234,14 +252,58 @@
     return result;
   }
 
-  async function analyze() {
+  async function reviewSummary() {
+    if (!selected || request || chatRequest) return;
+    if (selected.csv) return analyze();
+    const controller = new AbortController();
+    request = controller;
+    byId("start").disabled = byId("coach-send").disabled = consent.disabled = true;
+    summaryPanel.hidden = true;
+    report("상담 요약 준비", 0);
+    try {
+      const result = await coachPost("summary", {}, controller.signal);
+      for (const input of summaryFields) {
+        input.value = result.summary[input.name];
+        input.readOnly = true;
+      }
+      byId("summary-origin").textContent = result.mode === "gemini" ? "Gemini 요약 · 확인이 필요합니다"
+        : "로컬 정리 · " + (result.reason ?? "사용자 입력을 확인해 주세요.");
+      summaryPanel.hidden = false;
+      byId("summary-heading").focus();
+      report("상담 요약 확인 대기", 0);
+    } catch (error) {
+      report("요약을 불러오지 못했습니다. 분석하기로 다시 시도해 주세요. " + error.message, 0);
+    } finally {
+      request = undefined;
+      byId("start").disabled = byId("coach-send").disabled = consent.disabled = false;
+    }
+  }
+
+  byId("summary-edit").onclick = () => {
+    for (const input of summaryFields) input.readOnly = false;
+    summaryFields[0].focus();
+  };
+  byId("summary-cancel").onclick = () => {
+    summaryPanel.hidden = true;
+    report("상담 요약을 닫았습니다.", 0);
+    byId("start").focus();
+  };
+  approve.onclick = () => {
+    if (!summaryPanel.hidden) analyze(Object.fromEntries(summaryFields.map(input => [input.name, input.value])));
+  };
+
+  async function analyze(approvedSummary) {
     if (!selected || request || chatRequest) return;
     const { file, csv } = selected;
+    if (!csv && !approvedSummary) return;
     const controller = new AbortController();
     request = controller;
     byId("start").disabled = byId("video").disabled = byId("csv").disabled = true;
     byId("cancel").disabled = false;
     byId("coach-send").disabled = consent.disabled = true;
+    approve.disabled = byId("summary-edit").disabled = byId("summary-cancel").disabled = true;
+    for (const input of summaryFields) input.readOnly = true;
+    preview.pause();
     report(csv ? "좌표 읽기" : "좌표 추출 준비", 0);
     try {
       const response = await fetch(csv ? "/api/track" : "/api/video", {
@@ -251,21 +313,19 @@
       const track = await readResponse(response);
       if (controller.signal.aborted) return;
       evidence = track.evidence;
+      activeFinding = undefined;
       comparison = { track, reference: SwingReference.expand(track), displayed: track.track, options: [] };
       if (evidence) setupVideo();
       setupStills(track);
       let coaching;
       if (!csv) {
         report("상담과 영상 계측 종합 중", 97);
-        try {
-          coaching = await coachPost("analyze", {track_id: track.track_id}, controller.signal);
-        } catch (error) {
-          if (controller.signal.aborted) throw error;
-          coachStatus.textContent = "종합 피드백을 읽지 못했습니다. 분석하기로 다시 시도해 주세요. " + error.message;
-        }
+        coaching = await coachPost("analyze", {track_id: track.track_id, approved: true,
+          conversation_summary: approvedSummary}, controller.signal);
       }
       report("계측 완료", 100);
       await setupFindings(track, coaching);
+      summaryPanel.hidden = true;
 
     } catch (error) {
       report(controller.signal.aborted ? "분석을 취소했습니다." : (error.message || "분석에 실패했습니다.")
@@ -275,6 +335,7 @@
       byId("start").disabled = byId("video").disabled = byId("csv").disabled = false;
       byId("cancel").disabled = true;
       byId("coach-send").disabled = consent.disabled = false;
+      approve.disabled = byId("summary-edit").disabled = byId("summary-cancel").disabled = false;
     }
   }
 
@@ -293,6 +354,7 @@
     }
     byId("compare-stage").style.aspectRatio = video.videoWidth + " / " + video.videoHeight;
     const frame = Math.max(0, Math.min(evidence.frames.length - 1, Math.floor(mediaTime * evidence.fps + 0.001)));
+    canvas.dataset.frame = alternate.dataset.frame = String(frame);
     const { width, height } = canvas;
     const time = byId("timecode");
     time.replaceChildren(quantity(video.currentTime.toFixed(2), "s"), " · ", quantity(String(frame), "프레임"));
@@ -305,7 +367,10 @@
     const points = evidence.frames[frame];
     const sample = sampleIndex(frame);
     updateValues(sample);
-    if (!points) return;
+    if (!points) {
+      byId("compare-cue").textContent = "이 프레임에서 관절을 추적하지 못했습니다.";
+      return;
+    }
     const zoom = byId("zoom-person").getAttribute("aria-pressed") === "true" ? evidence.overlay_crop?.[2] ?? 1 : 1;
     const scale = video.clientWidth / width / zoom;
     if (!(scale > 0)) return;
@@ -325,7 +390,14 @@
         : baseline[comparison.track.channels.indexOf(channel)]) : null;
     const show = byId("toggle-joints").getAttribute("aria-pressed") === "true";
     if (show) paint(ctx, skeleton, reference, scale, line, diameter);
+    const colors = {far: styles.getPropertyValue("--ink-3").trim(), near: "#66716b",
+      shirt: styles.getPropertyValue("--ink-2").trim(), skin: "#c8c9c1", shoes: "#a9ada7"};
+    if (reference && hasDeviation(sample)) SwingPoseAvatar.paint(alternateContext, reference, colors, .24);
+    SwingPoseAvatar.paint(alternateContext, displayed, colors);
+    canvas.dataset.pelvis = SwingPoseAvatar.anatomy(skeleton).pelvis.join(",");
+    alternate.dataset.pelvis = SwingPoseAvatar.anatomy(displayed).pelvis.join(",");
     paint(alternateContext, displayed, reference, scale, line, diameter);
+    paintCue(skeleton, displayed, scale);
   }
 
   function sampleIndex(frame) {
@@ -364,7 +436,7 @@
           Math.max(1e-9, distance(pose[moving], pivot))))));
       rotate(indices, pivot, Math.sign(angle) * Math.min(Math.abs(angle), bound));
     }
-    const upper = [11,12,13,14,15,16,17,18,19,20,21,22];
+    const upper = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
     turnTorso(upper, shoulders, delta("torso"), [[11,23],[12,24]]);
     turnTorso(upper, pelvis, delta("lean"), [[11,23],[12,24]]);
     turnTorso([23,24,25,26,27,28,29,30,31,32], pelvis, delta("hips"), [[23,11],[24,12]]);
@@ -408,6 +480,11 @@
     if (context === ctx) {
       const contrast = styles.getPropertyValue("--ground").trim();
       for (const link of links) segment(pose, link, contrast, line + 1.2, 1);
+      const {head, neck} = SwingPoseAvatar.anatomy(pose);
+      segment([[...neck, .85], [...head, .85]], [0, 1], styles.getPropertyValue("--ink-2").trim(), line, 1);
+      context.beginPath();
+      context.ellipse(head[0], head[1], 2 / scale, 2 / scale, 0, 0, 2 * Math.PI);
+      context.stroke();
     }
     for (const link of links) segment(pose, link, ink, line, 1);
     const signal = getComputedStyle(document.documentElement).getPropertyValue("--signal").trim();
@@ -427,10 +504,59 @@
 
   function hasDeviation(sample) {
     if (!activeFinding) return false;
+    const { meta, track } = comparison.track;
+    const time = (meta.hold + (meta.dur - meta.hold) * sample / Math.max(1, track.length - 1)) / meta.dur;
+    if (time < activeFinding.range[0] || time > activeFinding.range[1]) return false;
     const { channel } = activeFinding;
     const measured = comparison.track.track[sample][comparison.track.channels.indexOf(channel)];
     const reference = comparison.reference[sample][SwingReference.channels.indexOf(channel)];
     return Math.abs(measured - reference) >= (["shiftX", "heelR"].includes(channel) ? 0.02 : 8 * Math.PI / 180);
+  }
+
+  function paintCue(measured, shown, scale) {
+    const output = byId("compare-cue");
+    output.textContent = "";
+    if (!hasDeviation(comparison.sample)) return;
+    const channel = activeFinding.channel;
+    const index = comparison.track.channels.indexOf(channel);
+    const actual = comparison.track.track[comparison.sample][index];
+    const target = comparison.reference[comparison.sample][SwingReference.channels.indexOf(channel)];
+    const normalized = channel === "shiftX" || channel === "heelR";
+    const difference = (actual - target) * (normalized ? 1 : 180 / Math.PI);
+    output.replaceChildren(activeFinding.label + " · 참고 대비 ", quantity(difference.toFixed(normalized ? 3 : 1), normalized ? "정규화" : "°"));
+    const joints = [...new Set(bones[channel].flat())];
+    const movement = i => Math.hypot(shown[i][0] - measured[i][0], shown[i][1] - measured[i][1]);
+    const joint = joints.reduce((a, b) => movement(b) > movement(a) ? b : a);
+    if (Number(factor.value) === 1) return;
+    const c = alternateContext;
+    const position = measured[joint];
+    const start = Math.atan2(measured[joints[0]][1] - measured[joints.at(-1)][1], measured[joints[0]][0] - measured[joints.at(-1)][0]);
+    const size = 19 / scale;
+    const visible = movement(joint) * scale >= 3;
+    const turn = Math.sign(difference) * Math.min(1.3, Math.max(.38, Math.abs(actual - target) * (normalized ? 8 : 1)));
+    if (!visible) output.append(" · 관절 이동이 작아 호와 화살표로 차이 방향을 표시합니다.");
+    c.save();
+    c.strokeStyle = styles.getPropertyValue("--signal").trim();
+    c.lineWidth = 1.6 / scale;
+    c.beginPath();
+    let x, y, heading;
+    if (visible) {
+      [x, y] = shown[joint];
+      heading = Math.atan2(y - position[1], x - position[0]);
+      c.moveTo(position[0], position[1]);
+      c.lineTo(x, y);
+    } else {
+      c.ellipse(position[0], position[1], size, size, 0, start, start + turn, turn < 0);
+      x = position[0] + size * Math.cos(start + turn);
+      y = position[1] + size * Math.sin(start + turn);
+      heading = start + turn + Math.sign(turn) * Math.PI / 2;
+    }
+    for (const angle of [-.55, .55]) {
+      c.moveTo(x, y);
+      c.lineTo(x - 6 / scale * Math.cos(heading + angle), y - 6 / scale * Math.sin(heading + angle));
+    }
+    c.stroke();
+    c.restore();
   }
 
   function updateValues(sample) {
@@ -483,6 +609,8 @@
     const band = byId("compare-range");
     if (evidence) {
       const timeline = evidence.fps * duration;
+      loopBounds = [left / evidence.fps, Math.min(duration, (right + 1) / evidence.fps)];
+      loop.disabled = loopBounds[1] <= loopBounds[0];
       band.style.left = 100 * left / timeline + "%";
       band.style.width = 100 * (right - left) / timeline + "%";
     }
@@ -542,7 +670,7 @@
     byId("confidence").textContent = low.length
       ? "추적 신뢰도 낮음 · " + low.map(([, label]) => label).join(" · ")
       : "각도는 영상의 관절 좌표에서 추정한 값입니다.";
-    for (const [phase, label] of phases.slice(0, 4)) {
+    for (const [phase, label] of phases) {
       const record = node("article", undefined, "phase-record");
       const position = (track.events[phase] * track.meta.dur - track.meta.hold) / (track.meta.dur - track.meta.hold);
       const start = track.meta.source_frames?.[0] ?? 0;
@@ -598,22 +726,25 @@
     byId("comparison-unavailable").hidden = !!evidence;
     byId("compare-range").hidden = true;
     byId("compare-values").replaceChildren();
+    activeFinding = undefined;
+    loopBounds = undefined;
+    loop.disabled = true;
+    loop.setAttribute("aria-pressed", "false");
     factor.value = 1;
     comparison.options = SwingFindings.choices(byId("finding-options"), doc, track, chooseFinding);
     factor.disabled = comparison.options.length === 0;
-    if (comparison.options.length) chooseFinding(comparison.options[0].id, false);
+    if (comparison.options.length) chooseFinding(comparison.options[0].id);
     else changeFactor();
     SwingFindings.render(byId("finding-body"), track, doc, id => {
       chooseFinding(id);
       byId("overlay").scrollIntoView({ block: "start" });
     });
-    try {
-      viewer = Swing3D.mount(byId("viewer"), track, { findings: doc, autoplay: false, externalFindings: true });
-    } catch (error) {
-      byId("viewer").textContent = "3D를 열 수 없습니다. WebGL을 지원하는 브라우저에서 다시 열어 주세요.";
-    }
+    window.Swing3D?.dispose();
+    viewer = undefined;
+    byId("swing-details").open = false;
+    comparison.findings = doc;
     byId("export").hidden = false;
-    byId("record").disabled = !viewer;
+    byId("record").disabled = false;
     byId("record-progress").textContent = "";
     const reportLink = byId("open-report");
     reportLink.href = "/report/" + encodeURIComponent(track.track_id)
@@ -648,10 +779,49 @@
     };
   }
 
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const script = node("script");
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = () => { script.remove(); reject(new Error("3D 스크립트 로딩 실패")); };
+      document.head.append(script);
+    });
+  }
+
+  async function openViewer() {
+    if (viewer || !comparison?.findings) return viewer;
+    const current = comparison;
+    const host = byId("viewer");
+    try {
+      viewerAssets ??= (async () => {
+        if (!window.THREE) await loadScript("/vendor/three/three.min.js");
+        if (!window.Swing3D) await loadScript("/swing3d.js");
+      })().catch(error => { viewerAssets = undefined; throw error; });
+      await viewerAssets;
+      if (comparison !== current) return;
+      viewer ??= window.Swing3D.mount(host, current.track, {
+        findings: current.findings, autoplay: false, externalFindings: true,
+      });
+      return viewer;
+    } catch {
+      host.textContent = "3D를 열 수 없습니다. WebGL을 지원하는 브라우저에서 다시 열어 주세요.";
+    }
+  }
+  byId("swing-details").addEventListener("toggle", event => {
+    if (event.currentTarget.open) openViewer();
+  });
+
   byId("record").addEventListener("click", async () => {
-    if (!viewer) return;
     const button = byId("record");
     const status = byId("record-progress");
+    button.disabled = true;
+    byId("swing-details").open = true;
+    if (!await openViewer()) {
+      button.disabled = false;
+      status.textContent = "3D를 열지 못했습니다.";
+      return;
+    }
     button.disabled = byId("start").disabled = byId("video").disabled = byId("csv").disabled = true;
     const upload = byId("upload");
     upload.inert = true;
@@ -690,19 +860,41 @@
     delete drop.dataset.dragging;
     select(event.dataTransfer.files[0]);
   });
-  byId("start").addEventListener("click", analyze);
+  byId("start").addEventListener("click", reviewSummary);
   byId("cancel").addEventListener("click", () => request?.abort());
   byId("play").addEventListener("click", () => {
-    if (video.paused) video.play().catch(() => report("영상을 재생할 수 없습니다. 파일을 다시 선택해 주세요.", 100));
+    if (video.paused) {
+      wrapLoop(true);
+      video.play().catch(() => report("영상을 재생할 수 없습니다. 파일을 다시 선택해 주세요.", 100));
+    }
     else video.pause();
   });
   for (const event of ["play", "pause", "ended"]) video.addEventListener(event, () => {
     byId("play").textContent = video.paused ? "재생" : "일시정지";
   });
-  for (const event of ["seeked", "loadeddata", "timeupdate"]) video.addEventListener(event, () => updateOverlay());
+  function wrapLoop(fromPlay = false) {
+    if (!loopBounds || loop.getAttribute("aria-pressed") !== "true" || (!fromPlay && video.paused)) return false;
+    const [start, end] = loopBounds;
+    if (video.currentTime >= end || (fromPlay && video.currentTime < start)) {
+      video.currentTime = start;
+      return true;
+    }
+    return false;
+  }
+  loop.onclick = () => {
+    const enabled = loop.getAttribute("aria-pressed") !== "true";
+    loop.setAttribute("aria-pressed", String(enabled));
+    if (enabled) wrapLoop(true);
+  };
+  video.addEventListener("ended", () => {
+    if (wrapLoop(true)) video.play().catch(() => {});
+  });
+  for (const event of ["seeked", "loadeddata", "timeupdate"]) video.addEventListener(event, () => {
+    if (!wrapLoop()) updateOverlay();
+  });
   if (video.requestVideoFrameCallback) {
     const paint = (_, metadata) => {
-      updateOverlay(metadata.mediaTime);
+      if (!wrapLoop() && !video.seeking) updateOverlay(metadata.mediaTime);
       video.requestVideoFrameCallback(paint);
     };
     video.requestVideoFrameCallback(paint);

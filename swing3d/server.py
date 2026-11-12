@@ -73,7 +73,7 @@ class Handler(SimpleHTTPRequestHandler):
             if sample.is_file():
                 headers["X-Swing3D-Source-SHA256"] = hashlib.sha256(sample.read_bytes()).hexdigest()
             self.respond(data, headers=headers)
-        elif match := re.fullmatch(r"/api/still/([a-f0-9]{64})/(address|top|down|impact)", path):
+        elif match := re.fullmatch(r"/api/still/([a-f0-9]{64})/(address|top|down|impact|finish)", path):
             track_id, phase = match.groups()
             image = self.tracks / f"{track_id}.{phase}.jpg"
             if not (self.tracks / f"{track_id}.json").is_file() or not image.is_file():
@@ -105,7 +105,7 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
         path = urlsplit(self.path).path
-        if path in {"/api/coaching/chat", "/api/coaching/analyze"}:
+        if path in {"/api/coaching/chat", "/api/coaching/summary", "/api/coaching/analyze"}:
             try:
                 self.post_coaching(path)
             except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
@@ -151,15 +151,19 @@ class Handler(SimpleHTTPRequestHandler):
             data = json.loads(self.rfile.read(size))
             if not isinstance(data, dict) or type(data.get("allow_external")) is not bool:
                 raise ValueError("상담 요청 형식이 올바르지 않습니다.")
-            messages = coach.history(data.get("messages"))
             provider = self.coaching_provider() if data["allow_external"] else coach.Gemini()
             if not data["allow_external"]:
                 provider.key = ""
                 provider.offline_reason = "외부 전송 없이 데모로 진행했습니다."
             headers = {"Cache-Control": "no-store"}
-            if path.endswith("/chat"):
-                self.respond(coach.chat(messages, provider), headers=headers)
+            if path.endswith(("/chat", "/summary")):
+                messages = coach.history(data.get("messages"))
+                action = coach.chat if path.endswith("/chat") else coach.summarize
+                self.respond(action(messages, provider), headers=headers)
                 return
+            if data.get("approved") is not True:
+                raise ValueError("상담 요약을 먼저 확인해 주세요.")
+            summary = coach.validate_summary(data.get("conversation_summary"))
             track_id = data.get("track_id")
             if not isinstance(track_id, str) or not re.fullmatch(r"[a-f0-9]{64}", track_id):
                 raise ValueError("트랙 ID가 올바르지 않습니다.")
@@ -170,7 +174,7 @@ class Handler(SimpleHTTPRequestHandler):
             track = json.loads(file.read_text(encoding="utf-8"))
             if not track.get("evidence"):
                 raise ValueError("영상으로 계측한 트랙이 필요합니다.")
-            result = coach.analyze(track, messages, provider)
+            result = coach.analyze(track, summary, provider)
             report_id = uuid4().hex
             result.update(report_id=report_id, track_id=track_id)
             reports = self.tracks / "coaching"
@@ -233,11 +237,11 @@ class Handler(SimpleHTTPRequestHandler):
     def get_or_build_video(self, payload, progress):
         import video_pose
 
-        key = hashlib.sha256(b"video-evidence-5\0" + f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}".encode()
+        key = hashlib.sha256(b"video-evidence-6\0" + f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}".encode()
                              + b"\0" + payload).hexdigest()
         target = self.tracks / (key + ".json")
         if target.exists() and all((self.tracks / f"{key}.{phase}.jpg").is_file()
-                                   for phase in ("address", "top", "down", "impact")):
+                                   for phase in coach.PHASES):
             return json.loads(target.read_text(encoding="utf-8"))
         with TemporaryDirectory() as temp:
             source = Path(temp) / "upload.mp4"
@@ -248,14 +252,14 @@ class Handler(SimpleHTTPRequestHandler):
             phases = result["meta"]["phase_frames"]
             progress("국면 스틸컷 준비", 95)
             crops, overlay_crop = video_pose.person_crops(timeline, phases)
-            images = video_pose.phase_jpegs(source, {phase: frame for phase, frame in phases.items() if phase != "finish"}, crops)
+            images = video_pose.phase_jpegs(source, phases, crops)
         result["track_id"] = key
         sample = ROOT / "samples/golf_swing.mp4"
         if sample.is_file() and payload == sample.read_bytes():
             result["findings_id"] = "sample"
         result["evidence"] = {
             "id": key, "fps": fps, "landmark_names": video_pose.LANDMARK_NAMES, "frames": timeline,
-            "phase_frames": phases, "still_crops": crops, "overlay_crop": overlay_crop,
+            "phase_frames": phases, "still_crops": crops, "overlay_crop": overlay_crop, "has_finish_still": True,
         }
         self.tracks.mkdir(parents=True, exist_ok=True)
         for phase, jpeg in images.items():

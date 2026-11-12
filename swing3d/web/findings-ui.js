@@ -80,8 +80,8 @@ window.SwingFindings = (() => {
         summary.append(tokens);
       }
       const consultation = section("상담 요약 · 자기보고");
-      for (const [key, label] of [["concern", "고민"], ["goal", "목표"], ["hypothesis", "사용자 추정"]]) {
-        consultation.append(node("p", label + " · " + doc.conversation_summary[key]));
+      for (const [key, label] of [["concern", "고민"], ["improvement", "개선 희망"], ["hypothesis", "사용자 추정"], ["goal", "연습 목표"]]) {
+        consultation.append(node("p", label + " · " + (doc.conversation_summary[key] || "입력 없음")));
       }
       section("자기보고와 영상 근거").append(node("p", doc.comparison));
       const positives = section("잘한 점");
@@ -107,7 +107,9 @@ window.SwingFindings = (() => {
       const line = node("p");
       line.append(node("strong", title), " · 몸통 ", number(torso), " / 교본 ",
         number(referenceTrack[sample][SwingReference.channels.indexOf("torso")] * 180 / Math.PI));
-      if (track.meta.phase_confidence?.[key] < 0.45) line.append(" · 추적 신뢰도 낮음");
+      const confidence = track.meta.phase_confidence?.[key];
+      if (confidence !== undefined) line.append(" · 추적 신뢰도 ", number(confidence * 100, "%", 0),
+        confidence < 0.45 ? " · 낮음" : "");
       feedback.append(line);
     }
 
@@ -147,6 +149,11 @@ window.SwingFindings = (() => {
     }
     if (items.length && !drills.querySelector("p")) drills.append(node("p", "제공된 드릴이 없습니다."));
     if (doc.mode) {
+      if (items.filter(item => !item.example_only).length > 1) {
+        const order = section("개선 순서와 관계");
+        order.append(node("p", items.map(item => item.label).join(" → ")),
+          node("p", "각 항목을 순서대로 연습해 같은 국면을 다시 비교하세요. 영상 한 편으로 항목 간 인과관계를 확인하기 어렵습니다."));
+      }
       section("다음 연습 목표").append(node("p", doc.next_goal));
       const limits = section("분석 한계");
       for (const limit of doc.limitations) limits.append(node("p", limit));

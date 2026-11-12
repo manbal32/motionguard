@@ -89,8 +89,10 @@ def capture(page, url, tracks):
                                    label="검증용 · 골반 회전", severity="high"))
     page.route("**/api/coaching/analyze", lambda route: route.fulfill(json=sample))
     page.locator("#video").set_input_files(ROOT / "samples/golf_swing.mp4")
+    start.click()
+    expect(page.locator("#summary-review")).to_be_visible()
     with page.expect_response("**/api/video"):
-        start.click()
+        page.locator("#summary-approve").click()
     expect(buttons).to_have_count(2, timeout=30000)
     video_file, = set(tracks.glob("*.json")) - {csv_file}
     video_track = json.loads(video_file.read_text(encoding="utf-8"))

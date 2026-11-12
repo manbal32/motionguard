@@ -28,6 +28,7 @@
           <input id="video" class="visually-hidden" type="file" accept="video/mp4,video/quicktime,.mp4,.mov">
         </div>
         <details><summary>좌표 CSV로 열기</summary><input id="csv" type="file" accept=".csv,text/csv" aria-label="좌표 CSV"></details>
+        <video id="upload-preview" controls muted playsinline hidden aria-label="업로드한 스윙 미리보기"></video>
         <div id="coach-panel" hidden>
           <h3>골프 코치 상담 <span id="coach-mode" class="caption" role="status"></span></h3>
           <p class="caption">영상을 먼저 선택하세요. 상담 없이 분석할 수도 있습니다.</p>
@@ -42,6 +43,18 @@
           <p id="coach-status" role="status"></p>
         </div>
         <div class="row"><button id="start" disabled>분석하기</button><span id="file-info" aria-live="polite">영상을 먼저 선택하세요.</span></div>
+        <section id="summary-review" hidden aria-labelledby="summary-heading">
+          <h3 id="summary-heading" tabindex="-1">상담 내용 요약 확인</h3>
+          <p id="summary-origin" role="status"></p>
+          <p>사용자 자기보고입니다. 영상에서 확인된 사실은 분석 후 따로 표시합니다.</p>
+          <div class="summary-fields">
+            <label>고민<textarea name="concern" maxlength="500" rows="2" readonly></textarea></label>
+            <label>개선하고 싶은 부분<textarea name="improvement" maxlength="500" rows="2" readonly></textarea></label>
+            <label>사용자가 추정한 원인<textarea name="hypothesis" maxlength="500" rows="2" readonly></textarea></label>
+            <label>연습 목표<textarea name="goal" maxlength="500" rows="2" readonly></textarea></label>
+          </div>
+          <div class="row"><button id="summary-edit">요약 수정</button><button id="summary-approve">이 내용으로 종합 분석</button><button id="summary-cancel">요약 닫기</button></div>
+        </section>
       </div>
     </section>
     <section id="progress">
@@ -77,6 +90,7 @@
       <button id="previous" aria-label="이전 프레임">−1 <small>프레임</small></button>
       <button id="next" aria-label="다음 프레임">+1 <small>프레임</small></button>
       <button id="speed" aria-pressed="false">0.5<small>×</small></button>
+      <button id="compare-loop" aria-pressed="false" disabled>구간 반복</button>
       <div class="scrubber"><div class="compare-band"><i id="compare-range" hidden></i></div><input id="seek" type="range" min="0" step="any" aria-label="영상 재생 위치"><div id="ticks"></div></div>
       <output id="timecode" class="num"></output>
       <button id="zoom-person" aria-pressed="true">인물 확대</button>
@@ -88,6 +102,7 @@
       <button id="compare-reference" aria-pressed="true">교본 겹치기</button>
     </div>
     <div id="compare-values" class="compare-values num"></div>
+    <p id="compare-cue" class="compare-warning"></p>
     <p class="compare-warning">오른쪽은 교육용 과장이며 측정값이 아닙니다 · 왼쪽 수치가 실제 측정입니다</p>
   </section>
   <section id="phases" hidden>
@@ -103,8 +118,11 @@
     <div id="finding-body" class="section-body finding-layout"></div>
   </section>
   <section id="swing-view" hidden>
-    <header><span class="index">06</span><h2>3D 스윙</h2></header>
-    <div id="viewer" class="section-body"></div>
+    <details id="swing-details">
+      <summary>다른 각도에서 보기 · 3D 재구성</summary>
+      <p class="section-body">단일 영상에서 알 수 없는 깊이를 추정한 3D 재구성입니다.</p>
+      <div id="viewer" class="section-body"></div>
+    </details>
   </section>
   <section id="export" hidden>
     <header><span class="index">07</span><h2>내려받기</h2></header>
@@ -115,11 +133,10 @@
     </div>
   </section>
 </main>
-<script src="/vendor/three/three.min.js"></script>
 <script type="importmap">{"imports":{"three":"/vendor/three/three.module.js","three/addons/":"/vendor/three/addons/"}}</script>
 <script src="/reference.js"></script>
 <script src="/exaggerate.js"></script>
-<script src="/swing3d.js"></script>
+<script src="/pose-avatar.js"></script>
 <script src="/findings-ui.js"></script>
 <script src="/instrument.js" defer></script>
 </body>

@@ -21,7 +21,7 @@ class EvidenceTests(TestCase):
             return frames, fps, timeline
 
         def stills(path, indices, crops):
-            self.assertEqual(indices, {"address": 98, "top": 152, "down": 161, "impact": 164})
+            self.assertEqual(indices, {"address": 98, "top": 152, "down": 161, "impact": 164, "finish": 205})
             return {phase: b"\xff\xd8" + str(frame).encode() + b"\xff\xd9" for phase, frame in indices.items()}
 
         with patch.object(video_pose, "extract", side_effect=extract), patch.object(video_pose, "phase_jpegs", side_effect=stills):
@@ -39,6 +39,8 @@ class EvidenceTests(TestCase):
         response = self.connection.getresponse()
         self.assertEqual(response.getheader("Content-Type"), "image/jpeg")
         self.assertEqual(response.read(), b"\xff\xd8152\xff\xd9")
+        self.connection.request("GET", f'/api/still/{result["id"]}/finish')
+        self.assertEqual(self.connection.getresponse().read(), b"\xff\xd8205\xff\xd9")
 
     def test_unknown_still_returns_404(self):
         self.connection.request("GET", f"/api/still/{'a' * 64}/impact")

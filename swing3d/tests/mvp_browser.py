@@ -90,34 +90,108 @@ def run(browser, url, width, name, output):
     assert not analyses
     page.locator("#upload").screenshot(path=output / f"mvp_{name}_consultation.png")
 
-    with page.expect_response("**/api/coaching/analyze", timeout=60000) as analyzed:
+    page.locator("#start").click()
+    review = page.locator("#summary-review")
+    expect(review).to_be_visible()
+    assert not analyses
+    if width != 390:
+        page.locator("#summary-cancel").click()
+        expect(review).to_be_hidden()
         page.locator("#start").click()
+        expect(review).to_be_visible()
+        assert not analyses
+    page.locator("#summary-edit").click()
+    goal = "수정 승인 · 다운스윙에서 자세를 유지"
+    review.locator("[name=goal]").fill(goal)
+    assert not analyses
+    review.screenshot(path=output / f"mvp_{name}_summary.png")
+    if width != 390:
+        assert page.request.post(url + "/api/coaching/analyze", data={"allow_external": False}).status == 422
+    with page.expect_response("**/api/coaching/analyze", timeout=60000) as analyzed:
+        page.locator("#summary-approve").click()
     result = analyzed.value.json()
     assert len(analyses) == 2, analyses
-    sent = analyzed.value.request.post_data_json["messages"]
-    assert len(sent) == 4 and [item["role"] for item in sent] == ["user", "assistant"] * 2
+    sent = analyzed.value.request.post_data_json
+    assert sent["approved"] is True and "messages" not in sent
+    assert sent["conversation_summary"] == result["conversation_summary"]
+    assert result["conversation_summary"]["goal"] == goal
     assert result["mode"] == "demo" and 0 < len(result["findings"]) <= 3, result
     expect(page.locator("#finding-body")).to_contain_text("슬라이스")
     expect(page.locator("#finding-body")).to_contain_text("잘한 점")
+    page.locator("#findings").screenshot(path=output / f"mvp_{name}_findings.png")
     link = page.locator("#finding-body a").first
     expect(link).to_have_attribute("href", YOUTUBE)
     button = page.locator("#finding-options button").first
-    button.click()
     first = result["findings"][0]
     expect(page.locator("#timecode")).to_contain_text(str(first["frame"]) + "프레임")
     page.wait_for_function("!document.querySelector('#original').seeking")
     assert page.locator("#compare-factor").input_value() == {"low": "1.5", "medium": "2", "high": "2.5"}[first["severity"]]
-    assert page.evaluate("poseTrace.joints.points.length === 18 && poseTrace.exaggerated.points.length === 18")
+    assert page.evaluate("""() => {
+        const c = document.querySelector('#exaggerated');
+        const points = poseTrace.exaggerated.points;
+        const pose = poseTrace.joints.points;
+        return points.length > 0 && pose.length === points.length
+            && c.dataset.pelvis === document.querySelector('#joints').dataset.pelvis
+            && c.getContext('2d').getImageData(0,0,c.width,c.height).data.filter((v,i)=>i%4===3&&v>240).length > 600;
+    }""")
     page.locator("#overlay").screenshot(path=output / f"mvp_{name}_comparison.png")
     page.locator("#compare-factor").evaluate("el => {el.value = 1; el.dispatchEvent(new Event('input'));}")
     assert page.evaluate("JSON.stringify(poseTrace.joints.points) === JSON.stringify(poseTrace.exaggerated.points)")
+    if width != 390:
+        overlay = page.locator("#overlay")
+        overlay.screenshot(path=output / "avatar_1x.png")
+        page.locator("#compare-factor").evaluate("el => {el.value = 2.5; el.dispatchEvent(new Event('input'));}")
+        displacement = page.evaluate("""Math.max(...poseTrace.joints.points.map(([x,y],i) => {
+            const [a,b] = poseTrace.exaggerated.points[i]; return Math.hypot(x-a,y-b);
+        }))""")
+        assert displacement > 2, displacement
+        print("2.5x maximum image-coordinate displacement:", displacement)
+        overlay.screenshot(path=output / "avatar_25x_frame_1.png")
+        for i in (2, 3):
+            page.locator("#next").click()
+            expect(page.locator("#joints")).to_have_attribute("data-frame", str(first["frame"] + i - 1))
+            expect(page.locator("#exaggerated")).to_have_attribute("data-frame", str(first["frame"] + i - 1))
+            overlay.screenshot(path=output / f"avatar_25x_frame_{i}.png")
+        page.locator("#finding-options button").nth(1).click()
+        expect(page.locator("#compare-values strong")).to_have_text("골반 회전")
+        overlay.screenshot(path=output / "avatar_second_finding.png")
+        page.locator("#ticks").get_by_role("button", name="피니시", exact=True).evaluate("button => button.click()")
+        expect(page.locator("#phase-label")).to_have_text("피니시")
+        page.wait_for_function("!document.querySelector('#original').seeking")
+        overlay.screenshot(path=output / "avatar_finish.png")
+        button.click()
+        page.locator("#speed").click()
+        assert page.locator("#original").evaluate("v => v.playbackRate") == .5
+        page.locator("#compare-loop").click()
+        page.wait_for_function("!document.querySelector('#original').seeking")
+        page.evaluate("""() => {
+            const v = document.querySelector('#original');
+            window.loopTimes = [];
+            v.addEventListener('seeked', () => loopTimes.push(v.currentTime));
+        }""")
+        page.locator("#play").click()
+        page.wait_for_function("loopTimes.length >= 3")
+        times = page.evaluate("loopTimes")
+        assert max(times) - min(times) < .04, times
+        print("Loop restart timestamps:", times)
+        expect(page.locator("#original")).to_have_js_property("paused", False)
+        page.locator("#play").click()
+        expect(page.locator("#original")).to_have_js_property("paused", True)
+        page.locator("#compare-loop").click()
+        assert not page.evaluate("Boolean(window.Swing3D || window.THREE)")
+        page.locator("#swing-details > summary").click()
+        expect(page.locator("#viewer canvas")).to_be_visible()
+        with page.expect_download(timeout=60000) as recording:
+            page.locator("#record").click()
+        assert recording.value.suggested_filename.endswith(".webm") and recording.value.path().stat().st_size > 1000
     button.click()
     page.wait_for_function("!document.querySelector('#original').seeking")
     page.locator("#open-report").click()
     page.wait_for_url("**/report/*?coaching=*")
     expect(page.locator("#report-image img")).to_be_visible()
     expect(page.locator("#report-findings")).to_contain_text("데모 피드백")
-    expect(page.locator("#report-findings")).to_contain_text("다운스윙에서 자세를 유지")
+    expect(page.locator("#report-findings")).to_contain_text(goal)
+    expect(page.locator("#report-stills figure")).to_have_count(5)
     expect(page.locator("#report-findings a").first).to_have_attribute("href", YOUTUBE)
     page.evaluate("document.fonts.ready")
     page.locator(".sheet").screenshot(path=output / f"mvp_{name}_report.png")
@@ -143,7 +217,7 @@ def main():
         thread.start()
         try:
             with sync_playwright() as playwright:
-                browser = playwright.chromium.launch(channel="chrome")
+                browser = playwright.chromium.launch(channel="chrome", args=["--use-angle=swiftshader", "--enable-unsafe-swiftshader"])
                 output = ROOT / "mockups" / "shots"
                 for width, name in [(1360, "desktop"), (390, "mobile")]:
                     run(browser, f"http://127.0.0.1:{server.server_port}", width, name, output)

@@ -57,7 +57,7 @@ progress::-moz-progress-bar { background: var(--ink); }
 #ticks { position: relative; height: 23px; }
 #ticks button { position: absolute; padding: 1px 0 0 4px; border: 0; border-left: 1px solid var(--rule-hi); font: 10px var(--sans); color: var(--ink-2); }
 #ticks button { white-space: nowrap; }
-.stills { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+.stills { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
 .phase-record { min-width: 0; border: 1px solid var(--rule); }
 .phase-record button, .phase-record img { display: block; width: 100%; }
 .phase-record button { border: 0; padding: 0; text-align: left; }
@@ -125,3 +125,13 @@ td { text-align: right; white-space: nowrap; }
 #coach-message { flex:1 1 160px; min-width:0; color:var(--ink); background:var(--ground-2); border:1px solid var(--rule-hi); padding:8px; font:inherit; }
 #coach-send { min-height:44px; align-self:center; }
 @media (pointer:coarse) { #coach-panel #coach-keys { display:none; } }
+#upload-preview { width:100%; max-height:240px; margin-top:8px; background:var(--ground); }
+#summary-review { border-top:1px solid var(--rule); margin-top:12px; padding:12px 0 0; }
+#summary-review h3 { margin:0; }
+.summary-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:8px 0; }
+.summary-fields label { display:grid; gap:4px; color:var(--ink-2); }
+.summary-fields textarea { width:100%; resize:vertical; font:inherit; color:var(--ink); background:var(--ground-2); border:1px solid var(--rule-hi); padding:6px; }
+.summary-fields textarea[readonly] { border-color:var(--rule); }
+#swing-details > summary { padding:12px 16px; cursor:pointer; }
+#compare-cue { color:var(--ink-2); }
+@media (max-width:720px) { .summary-fields { grid-template-columns:1fr; } }
