@@ -2,13 +2,14 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
-/* 레이아웃 — 위에서 아래로 흐르는 계층 밴드. 각 밴드 왼쪽에 계층 이름, 밴드 사이에 흐르는 데이터의 형태. */
+/* 레이아웃 — 계측 트랙과 상담 트랙이 나란히 내려와 종합 판단에서 합류한다. */
 :root{
   --ground:#f5f7f7; --panel:#ffffff; --panel-2:#eef1f1;
   --ink:#14191b; --ink-2:#566266; --ink-3:#8b9499;
   --rule:#d4dadc; --rule-hi:#b3bcbf;
   --signal:#b86a12; --signal-bg:#fdf3e6;
   --ext:#2b6575; --ext-bg:#e8f1f3;
+  --human:#4a5d2b; --human-bg:#f0f4e8;
   --sans:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,monospace;
 }
@@ -18,6 +19,7 @@
   --rule:#242b29; --rule-hi:#39423f;
   --signal:#d98a2b; --signal-bg:#231a0e;
   --ext:#6fb3c4; --ext-bg:#102126;
+  --human:#9fc064; --human-bg:#161c0f;
   color-scheme:dark;
 }}
 :root[data-theme="dark"]{
@@ -26,101 +28,106 @@
   --rule:#242b29; --rule-hi:#39423f;
   --signal:#d98a2b; --signal-bg:#231a0e;
   --ext:#6fb3c4; --ext-bg:#102126;
+  --human:#9fc064; --human-bg:#161c0f;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
   font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased}
-.page{max-width:980px;margin:0 auto;
+.page{max-width:1000px;margin:0 auto;
   padding-left:max(16px,env(safe-area-inset-left,0px));
   padding-right:max(16px,env(safe-area-inset-right,0px));
   padding-block:32px 56px}
 .num,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
-/* 머리말 */
 .head{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:8px}
 .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--ink-3);margin:0 0 6px}
 h1{font-size:clamp(22px,4.4vw,30px);font-weight:700;letter-spacing:-.015em;margin:0 0 8px;
   text-wrap:balance}
-.lede{margin:0;color:var(--ink-2);font-size:14.5px;max-width:62ch}
+.lede{margin:0;color:var(--ink-2);font-size:14.5px;max-width:64ch}
 .meta{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:12px;
   font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
 .meta b{color:var(--ink-2);font-weight:500}
 
-/* 범례 */
-.legend{display:flex;flex-wrap:wrap;gap:8px 16px;padding:10px 0 22px;
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;padding:10px 0 20px;
   font-family:var(--mono);font-size:11px;color:var(--ink-2)}
 .legend i{display:inline-flex;align-items:center;gap:6px;font-style:normal}
-.swatch{width:11px;height:11px;border:1px solid var(--rule-hi);flex:0 0 auto}
-.swatch.local{background:var(--panel)}
+.swatch{width:12px;height:12px;border:1.5px solid var(--rule-hi);flex:0 0 auto}
 .swatch.ext{background:var(--ext-bg);border-color:var(--ext)}
 .swatch.gate{background:var(--signal-bg);border-color:var(--signal)}
+.swatch.human{background:var(--human-bg);border-color:var(--human)}
 
-/* 계층 밴드 */
-.band{display:grid;grid-template-columns:132px 1fr;gap:16px;
-  border:1px solid var(--rule);background:var(--panel);padding:14px 16px}
-.band.external{background:var(--ext-bg);border-color:var(--ext)}
-.band.gate{background:var(--signal-bg);border-color:var(--signal)}
-@media (max-width:640px){.band{grid-template-columns:1fr;gap:10px}}
-.bl{min-width:0}
-.bl .idx{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.1em}
-.bl h2{font-size:14.5px;font-weight:600;margin:1px 0 4px;letter-spacing:-.01em}
-.bl .where{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--ink-3);border:1px solid var(--rule-hi);padding:1px 6px;display:inline-block}
-.band.external .where{color:var(--ext);border-color:var(--ext)}
-.band.gate .where{color:var(--signal);border-color:var(--signal)}
+/* 노드 */
+.node{border:1px solid var(--rule);background:var(--panel);padding:12px 14px}
+.node.external{background:var(--ext-bg);border-color:var(--ext)}
+.node.gate{background:var(--signal-bg);border-color:var(--signal)}
+.node.human{background:var(--human-bg);border-color:var(--human)}
+.nh{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:9px;
+  padding-bottom:7px;border-bottom:1px solid var(--rule)}
+.node.external .nh{border-color:var(--ext)}
+.node.gate .nh{border-color:var(--signal)}
+.node.human .nh{border-color:var(--human)}
+.nh .idx{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.1em}
+.nh h2{font-size:14.5px;font-weight:600;margin:0;letter-spacing:-.01em}
+.nh .where{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-3);border:1px solid var(--rule-hi);padding:1px 6px;margin-left:auto}
+.node.external .where{color:var(--ext);border-color:var(--ext)}
+.node.gate .where{color:var(--signal);border-color:var(--signal)}
+.node.human .where{color:var(--human);border-color:var(--human)}
 
-.boxes{display:flex;flex-wrap:wrap;gap:10px;min-width:0}
-.box{flex:1 1 180px;min-width:0;border:1px solid var(--rule-hi);background:var(--ground);
-  padding:9px 11px}
-.band.external .box,.band.gate .box{background:var(--panel)}
-.box h3{font-size:13px;font-weight:600;margin:0 0 3px}
-.box p{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.55}
-.box code{font-family:var(--mono);font-size:11.5px;color:var(--ink);background:var(--panel-2);
-  padding:0 3px;border-radius:2px;word-break:break-word}
+.boxes{display:flex;flex-wrap:wrap;gap:9px;min-width:0}
+.box{flex:1 1 185px;min-width:0;border:1px solid var(--rule-hi);background:var(--ground);
+  padding:8px 10px}
+.node.external .box,.node.gate .box,.node.human .box{background:var(--panel)}
+.box h3{font-size:12.5px;font-weight:600;margin:0 0 3px}
+.box p{margin:0;font-size:12px;color:var(--ink-2);line-height:1.55}
+.box code{font-family:var(--mono);font-size:11px;color:var(--ink);background:var(--panel-2);
+  padding:0 3px;word-break:break-word}
 
-/* 흐름 화살표 */
-.flow{display:grid;grid-template-columns:132px 1fr;gap:16px;padding:0}
-@media (max-width:640px){.flow{grid-template-columns:1fr;gap:0}}
-.flow .spacer{}
-.flow .line{position:relative;display:flex;align-items:center;gap:10px;padding:7px 16px;min-width:0}
-.flow .line::before{content:"";width:1px;height:28px;background:var(--rule-hi);flex:0 0 auto;
-  margin-left:12px}
-.flow .line::after{content:"";position:absolute;left:9px;bottom:3px;
-  border-left:3.5px solid transparent;border-right:3.5px solid transparent;
+/* 연결선 */
+.conn{display:flex;flex-direction:column;align-items:center;gap:0;padding:4px 0}
+.conn .ln{width:1px;height:16px;background:var(--rule-hi)}
+.conn .hd{border-left:4px solid transparent;border-right:4px solid transparent;
   border-top:6px solid var(--rule-hi)}
-.flow .tag{font-family:var(--mono);font-size:11px;color:var(--ink-2);
-  font-variant-numeric:tabular-nums;min-width:0}
-.flow .tag b{color:var(--ink);font-weight:500}
+.conn .tag{font-family:var(--mono);font-size:11px;color:var(--ink-2);text-align:center;
+  font-variant-numeric:tabular-nums;padding:3px 10px;max-width:100%;min-width:0}
+.conn .tag b{color:var(--ink);font-weight:500}
+
+/* 병렬 트랙 */
+.tracks{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+@media (max-width:760px){.tracks{grid-template-columns:1fr;gap:0}}
+.track{min-width:0}
+.track-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink-3);padding:0 0 7px;border-bottom:1px dashed var(--rule-hi);margin-bottom:10px}
+.merge{font-family:var(--mono);font-size:11px;color:var(--ink-3);text-align:center;
+  padding:10px 0 2px;letter-spacing:.06em}
+
+/* 끝단 */
+.endpoint{border:1px solid var(--ink);background:var(--panel);padding:11px 14px;
+  display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
+.endpoint strong{font-size:14px;font-weight:600;white-space:nowrap}
+.endpoint span{font-size:12.5px;color:var(--ink-2);min-width:0;flex:1 1 240px}
 
 /* 제약 주입 */
-.constraint{display:grid;grid-template-columns:132px 1fr;gap:16px;padding:0}
-@media (max-width:640px){.constraint{grid-template-columns:1fr}}
-.cbox{border:1px dashed var(--signal);background:var(--signal-bg);padding:9px 11px;
-  margin:0 16px;min-width:0}
-.cbox h3{font-size:12.5px;font-weight:600;margin:0 0 3px;color:var(--signal)}
-.cbox p{margin:0;font-size:12.5px;color:var(--ink-2)}
-.cbox .arrow{font-family:var(--mono);font-size:11px;color:var(--signal);display:block;margin-top:4px}
+.cbox{border:1px dashed var(--signal);background:var(--signal-bg);padding:8px 10px;min-width:0}
+.cbox h3{font-size:12px;font-weight:600;margin:0 0 3px;color:var(--signal)}
+.cbox p{margin:0;font-size:12px;color:var(--ink-2)}
 
-/* 사용자 끝단 */
-.endpoint{border:1px solid var(--ink);background:var(--panel);padding:12px 16px;
-  display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-.endpoint strong{font-size:14.5px;font-weight:600}
-.endpoint span{font-size:12.5px;color:var(--ink-2);min-width:0}
+/* 분기 */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:620px){.split{grid-template-columns:1fr}}
 
 /* 설계 근거 */
 .why{margin-top:40px}
 .why h2{font-size:17px;font-weight:700;margin:0 0 4px;letter-spacing:-.01em}
 .why .sub{margin:0 0 16px;color:var(--ink-2);font-size:13.5px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;
-  background:var(--rule);border:1px solid var(--rule)}
-.card{background:var(--panel);padding:13px 14px;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:10px}
+.card{background:var(--panel);border:1px solid var(--rule);padding:12px 13px;min-width:0}
 .card .n{font-family:var(--mono);font-size:10.5px;color:var(--signal);letter-spacing:.1em}
-.card h3{font-size:13.5px;font-weight:600;margin:2px 0 5px}
+.card h3{font-size:13px;font-weight:600;margin:2px 0 5px}
 .card p{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.6}
 
-/* 표 */
 .tablewrap{overflow-x:auto;margin-top:16px;border:1px solid var(--rule)}
 table{border-collapse:collapse;width:100%;min-width:430px;background:var(--panel)}
 caption{text-align:left;font-size:12px;color:var(--ink-3);padding:9px 12px;
@@ -133,8 +140,8 @@ td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowra
 tr.pick td{background:var(--signal-bg)}
 tr.pick td:first-child{font-weight:600;color:var(--signal)}
 
-.foot{margin-top:26px;padding-top:12px;border-top:1px solid var(--rule);
-  font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.foot{margin-top:24px;padding-top:12px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.7}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -142,153 +149,206 @@ tr.pick td:first-child{font-weight:600;color:var(--signal)}
   <header class="head">
     <p class="eyebrow">Term Project · Agent Service Architecture</p>
     <h1>MotionGuard 서비스 구성도</h1>
-    <p class="lede">골프 스윙 영상을 지각하고, 측정 수치로 추론하고, 사람이 볼 수 있을 만큼
-      과장해서 되돌려주는 코칭 에이전트. 지각과 추론을 분리해 LLM 이 영상을 직접 보지 않는다.</p>
+    <p class="lede">골프 스윙 영상을 지각하고, 사용자와의 상담을 측정 수치와 합쳐 추론하고,
+      문제 구간을 사람이 알아볼 수 있을 만큼 과장해 되돌려주는 코칭 에이전트.
+      계측과 상담이 따로 흐르다 종합 판단에서 합류하며, 사람이 두 지점에서 개입한다.</p>
     <div class="meta">
       <span>에이전트 <b>MotionGuard</b></span>
-      <span>추론 모델 <b>Gemini</b></span>
+      <span>추론 <b>Gemini</b></span>
       <span>지각 <b>MediaPipe Pose</b></span>
-      <span>분석 1회 <b class="num">≈ 2,200 토큰</b></span>
+      <span>종합 판단 <b class="num">≈ 2,200 토큰</b></span>
     </div>
   </header>
 
   <div class="legend">
-    <i><span class="swatch local"></span>로컬 실행 · 네트워크 없음</i>
+    <i><span class="swatch"></span>로컬 실행 · 네트워크 없음</i>
     <i><span class="swatch ext"></span>외부 API 호출</i>
+    <i><span class="swatch human"></span>사람의 개입</i>
     <i><span class="swatch gate"></span>제약 · 검증 게이트</i>
   </div>
 
-  <!-- 입력 -->
   <div class="endpoint">
     <strong>사용자</strong>
-    <span>스윙 영상(≤ 30초)을 올리고, 무엇이 불편한지 대화로 말한다 — “캐스팅이 나는 것 같다”</span>
+    <span>스윙 영상을 올리고, 고민을 말한다 — “캐스팅이 나는 것 같다”</span>
   </div>
 
-  <div class="flow"><div class="spacer"></div><div class="line">
-    <span class="tag">영상 <b>mp4 / mov</b> · 증상 발화 <b>자연어</b></span></div></div>
+  <div class="conn"><span class="ln"></span><span class="hd"></span>
+    <span class="tag">영상 <b>mp4 / mov</b> · 대화 <b>자연어 다중 턴</b></span></div>
 
-  <!-- 지각 -->
-  <section class="band">
-    <div class="bl"><div class="idx">01</div><h2>지각</h2><span class="where">로컬</span></div>
-    <div class="boxes">
-      <div class="box"><h3>랜드마크 추출</h3>
-        <p>MediaPipe Pose, VIDEO 모드. 프레임마다 <code>33</code>개 관절의 <code>x·y·z·visibility</code>.
-           사람을 못 찾은 프레임은 직전 값으로 메우고 신뢰도 <code>0</code>으로 표시한다.</p></div>
-      <div class="box"><h3>인물 크롭</h3>
-        <p>전 구간 바운딩 박스의 합집합으로 <strong>고정 크롭</strong>을 잡는다. 프레임마다 바꾸면 화면이 흔들린다.</p></div>
+  <!-- 병렬 트랙 -->
+  <div class="tracks">
+    <!-- 계측 -->
+    <div class="track">
+      <div class="track-head">계측 트랙</div>
+      <section class="node">
+        <div class="nh"><span class="idx">01</span><h2>지각</h2><span class="where">로컬</span></div>
+        <div class="boxes">
+          <div class="box"><h3>랜드마크 추출</h3>
+            <p>MediaPipe Pose, VIDEO 모드. 프레임마다 <code>33</code>관절의
+               <code>x·y·z·visibility</code>. 못 찾은 프레임은 직전 값으로 메우고 신뢰도 <code>0</code>.</p></div>
+          <div class="box"><h3>인물 크롭</h3>
+            <p>전 구간 바운딩 박스의 합집합으로 <strong>고정 크롭</strong>. 프레임마다 바꾸면 화면이 흔들린다.</p></div>
+        </div>
+      </section>
+      <div class="conn"><span class="ln"></span><span class="hd"></span>
+        <span class="tag"><b class="num">33</b>관절 × 전 프레임</span></div>
+      <section class="node">
+        <div class="nh"><span class="idx">02</span><h2>표상</h2><span class="where">로컬</span></div>
+        <div class="boxes">
+          <div class="box"><h3>9채널 각도 트랙</h3>
+            <p><code>swing torso hips lean wrist shiftX kneeL kneeR heelR</code>.
+               2D 투영 각도를 <code>atan2</code>·<code>acos</code>로 유도한다.</p></div>
+          <div class="box"><h3>잡음 제거</h3>
+            <p>프레임당 변위 <code>0.12</code> 초과를 버리고 Savitzky-Golay(2차·7표본)로 고른다.
+               이동평균과 달리 <strong>봉우리를 깎지 않는다</strong> — 탑과 임팩트가 봉우리다.</p></div>
+          <div class="box"><h3>국면 검출</h3>
+            <p>어드레스 · 백스윙 탑 · 다운스윙 · 임팩트 · 피니시 <code>5</code>지점.</p></div>
+          <div class="box"><h3>교본 트랙 전개</h3>
+            <p>기준값을 <strong>사용자의 국면 인덱스</strong>로 보간하고 어드레스를 실측값에 맞춘다.
+               체격·카메라 거리 차이를 지운다.</p></div>
+        </div>
+      </section>
     </div>
-  </section>
 
-  <div class="flow"><div class="spacer"></div><div class="line">
-    <span class="tag"><b class="num">33</b> 랜드마크 × 전 프레임</span></div></div>
-
-  <!-- 표상 -->
-  <section class="band">
-    <div class="bl"><div class="idx">02</div><h2>표상</h2><span class="where">로컬</span></div>
-    <div class="boxes">
-      <div class="box"><h3>9채널 각도 트랙</h3>
-        <p><code>swing</code> <code>torso</code> <code>hips</code> <code>lean</code> <code>wrist</code>
-           <code>shiftX</code> <code>kneeL</code> <code>kneeR</code> <code>heelR</code>.
-           2D 투영 각도를 <code>atan2</code>·<code>acos</code>로 유도한다.</p></div>
-      <div class="box"><h3>잡음 제거</h3>
-        <p>프레임당 변위 <code>0.12</code> 초과를 이상치로 버리고, Savitzky-Golay(2차·7표본)로 고른다.
-           이동평균과 달리 <strong>봉우리를 깎지 않는다</strong> — 탑과 임팩트가 봉우리다.</p></div>
-      <div class="box"><h3>국면 검출</h3>
-        <p>어드레스 · 백스윙 탑 · 다운스윙 · 임팩트 · 피니시 <code>5</code>개 지점.</p></div>
-      <div class="box"><h3>교본 트랙 전개</h3>
-        <p>국면별 기준값을 <strong>사용자의 국면 인덱스</strong>로 보간한다. 어드레스를 실측값으로 맞춰
-           체격·카메라 거리 차이를 지운다.</p></div>
+    <!-- 상담 -->
+    <div class="track">
+      <div class="track-head">상담 트랙</div>
+      <section class="node external">
+        <div class="nh"><span class="idx">03</span><h2>상담 대화</h2><span class="where">외부</span></div>
+        <div class="boxes">
+          <div class="box"><h3>자유 다중 턴</h3>
+            <p>사용자가 고민 · 증상 · 목표를 Gemini 와 여러 턴 이야기한다.
+               사용자의 말은 측정 사실이 아니라 <strong>자기보고</strong>로 취급한다.</p></div>
+          <div class="box"><h3>영상은 보내지 않는다</h3>
+            <p>외부로 나가는 것은 대화 텍스트뿐이다. 원본 영상과 좌표는 로컬에 남는다.</p></div>
+        </div>
+      </section>
+      <div class="conn"><span class="ln"></span><span class="hd"></span>
+        <span class="tag">사용자가 <b>‘분석하기’</b>를 누른다</span></div>
+      <section class="node human">
+        <div class="nh"><span class="idx">04</span><h2>상담 요약 승인</h2><span class="where">사람</span></div>
+        <div class="boxes">
+          <div class="box"><h3>요약을 먼저 되돌려준다</h3>
+            <p>대화를 <code>고민 / 연습 목표 / 사용자가 생각한 원인</code>으로 정리해 보여준다.
+               확인 없이 최종 판정으로 넘어가지 않는다.</p></div>
+          <div class="box"><h3>수정 · 승인</h3>
+            <p>사용자가 고치거나 승인한다. 승인된 값은 종합 분석 · 화면 · 리포트에
+               <strong>같은 값으로 전파</strong>되며 재요약이 덮어쓰지 않는다.</p></div>
+        </div>
+      </section>
     </div>
-  </section>
+  </div>
 
-  <div class="flow"><div class="spacer"></div><div class="line">
-    <span class="tag">국면 전후 <b class="num">±5</b>표본 = <b class="num">55 × 9</b> 수치 + 대화 요약 ·
-      <b class="num">≈ 1,500</b> 입력 토큰</span></div></div>
+  <div class="merge">계측 트랙 ─┬─ 상담 트랙</div>
+  <div class="conn"><span class="ln"></span><span class="hd"></span>
+    <span class="tag">승인 요약 <b>+</b> 국면 전후 <b class="num">±5</b>표본(<b class="num">55×9</b>)
+      <b>+</b> 교본값 <b>+</b> 신뢰도 · <b class="num">≈1,500</b> 입력 토큰</span></div>
 
-  <!-- 제약 주입 -->
-  <div class="constraint"><div class="spacer"></div>
+  <!-- 제약 -->
+  <div class="split" style="margin-bottom:10px">
     <div class="cbox"><h3>결함 사전 — 선택지 제한</h3>
-      <p>판정 가능한 결함 <strong>8종</strong>만 제시한다. 캐스팅·골반 미회전·어깨 회전 부족·조기 열림·
-         스웨이·상체 들림·무릎 펴짐·체중 미이동. 각 결함은 채널과 구간에 묶여 있다.</p>
-      <span class="arrow">↓ 프롬프트에 주입</span></div></div>
+      <p>판정 가능한 결함 <strong>8종</strong>만 제시한다. 캐스팅 · 골반 미회전 · 어깨 회전 부족 ·
+         조기 열림 · 스웨이 · 상체 들림 · 무릎 펴짐 · 체중 미이동. 각 결함은 채널과 구간에 묶여 있다.</p></div>
+    <div class="cbox"><h3>입력 분리</h3>
+      <p><code>conversation_summary</code> · <code>measured_evidence</code> ·
+         <code>reference_data</code> · <code>confidence</code> 를 섞지 않고 따로 넘긴다.
+         자기보고와 실측을 모델이 구분할 수 있어야 한다.</p></div>
+  </div>
 
   <!-- 추론 -->
-  <section class="band external">
-    <div class="bl"><div class="idx">03</div><h2>추론</h2><span class="where">외부</span></div>
+  <section class="node external">
+    <div class="nh"><span class="idx">05</span><h2>종합 판단</h2><span class="where">외부</span></div>
     <div class="boxes">
-      <div class="box"><h3>Gemini 판정</h3>
-        <p>영상이 아니라 <strong>수치</strong>를 읽는다. 이미 각도를 갖고 있는데 그림으로 바꿔 다시
-           읽히는 것은 손해다. 스틸샷은 좌표로 볼 수 없는 것(그립·페이스·공 위치)에만 선택적으로 붙인다.</p></div>
-      <div class="box"><h3>findings 출력</h3>
-        <p>결함마다 <code>channel</code> <code>range</code> <code>measured</code> <code>reference</code>
-           <code>direction</code> <code>severity</code> <code>camera</code> <code>youtube</code>.
-           <code>≈ 700</code> 출력 토큰.</p></div>
+      <div class="box"><h3>수치를 읽는다</h3>
+        <p>영상이 아니라 각도 수치를 읽는다. 이미 각도를 갖고 있는데 그림으로 바꿔 다시 읽히는 것은
+           손해다. 스틸샷은 좌표로 볼 수 없는 것에만 선택적으로 붙인다.</p></div>
+      <div class="box"><h3>잘한 점 · 개선점</h3>
+        <p>둘 다 국면 · 채널 · 측정 수치 · 신뢰도에 대응시킨다. 개선점은 우선순위
+           <code>1–3</code>개. 자기보고와 실측의 일치 / 불일치도 함께 낸다.</p></div>
+      <div class="box"><h3>findings 계약</h3>
+        <p><code>channel range measured reference direction severity camera youtube</code>.
+           <code>≈700</code> 출력 토큰.</p></div>
     </div>
   </section>
 
-  <div class="flow"><div class="spacer"></div><div class="line">
-    <span class="tag">findings JSON <b>motionguard.findings/1</b></span></div></div>
+  <div class="conn"><span class="ln"></span><span class="hd"></span>
+    <span class="tag"><b>positives[]</b> · <b>findings[]</b></span></div>
 
   <!-- 검증 -->
-  <section class="band gate">
-    <div class="bl"><div class="idx">04</div><h2>검증</h2><span class="where">게이트</span></div>
+  <section class="node gate">
+    <div class="nh"><span class="idx">06</span><h2>검증</h2><span class="where">게이트</span></div>
     <div class="boxes">
       <div class="box"><h3>계약 검증</h3>
         <p>채널이 화이트리스트에 없으면 <strong>거부</strong>한다. <code>wrist</code> 판정은 검지 기반
-           측정이 있을 때만 통과시킨다 — CSV 업로드 경로에는 검지가 없다.</p></div>
+           측정이 있을 때만 통과 — CSV 업로드 경로에는 검지가 없다.</p></div>
+      <div class="box"><h3>실측값 대조</h3>
+        <p>모델이 낸 정량값을 서버의 실측 트랙에 대조해 매핑한다. <strong>수치를 지어내지 못하게</strong>
+           하는 지점이다.</p></div>
       <div class="box"><h3>행동 자격 심사</h3>
         <p><code>channel</code>과 <code>range</code>를 모두 갖춘 결함만 <strong>과장 렌더링으로 보낸다.</strong>
-           측정 근거가 없는 지적은 텍스트 코멘트로만 남는다. 환각이 화면을 움직이지 못하게 하는 지점이다.</p></div>
+           근거 없는 지적은 텍스트로만 남는다.</p></div>
     </div>
   </section>
 
-  <div class="flow"><div class="spacer"></div><div class="line">
-    <span class="tag">검증 통과 findings <b>+</b> 측정 트랙 <b>+</b> 교본 트랙</span></div></div>
+  <div class="conn"><span class="ln"></span><span class="hd"></span>
+    <span class="tag">검증 통과분 <b>+</b> 측정 트랙 <b>+</b> 교본 트랙</span></div>
 
   <!-- 행동 -->
-  <section class="band">
-    <div class="bl"><div class="idx">05</div><h2>행동</h2><span class="where">로컬</span></div>
+  <section class="node">
+    <div class="nh"><span class="idx">07</span><h2>행동</h2><span class="where">로컬</span></div>
     <div class="boxes">
-      <div class="box"><h3>과장 계산</h3>
-        <p><code>표시값 = 교본 + (측정 − 교본) × 배율</code>. 전체가 아니라 <strong>차이만</strong> 증폭한다.
-           배율은 심각도에서 오고 상한은 <code>3.0</code>. 측정값의 부호를 넘지 않도록 <code>0</code>에
-           점근 압축한다 — 넘으면 “반대로 돌았다”는 날조가 된다.</p></div>
-      <div class="box"><h3>2D 나란히 비교 <span class="mono" style="color:var(--ink-3);font-size:10px">주</span></h3>
-        <p>왼쪽은 원본 영상 + 측정 좌표, 오른쪽은 같은 프레임·같은 각도의 과장. 측정한 평면에서
-           측정한 값을 키우므로 보지 않은 축을 건드리지 않는다.</p></div>
+      <div class="box"><h3>스탠스 보존 아바타</h3>
+        <p>오른쪽 아바타는 교본 복제가 아니라 <strong>그 사용자의 해당 프레임 랜드마크</strong>에서
+           출발한다. 발 위치 · 어깨 높이 · 척추 전경사를 <code>1.0×</code>에서 유지한다.</p></div>
+      <div class="box"><h3>국소 과장</h3>
+        <p><code>표시값 = 교본 + (측정 − 교본) × 배율</code>. 전체가 아니라 <strong>차이만</strong>,
+           그중에서도 <strong>선택한 채널만</strong> 증폭한다. 상한 <code>3.0</code>, 측정값의 부호를
+           넘지 않도록 <code>0</code>에 점근 압축한다.</p></div>
+      <div class="box"><h3>잘한 점은 과장하지 않는다</h3>
+        <p>긍정은 무채색 ‘유지’ 라벨로 해당 프레임만 표시한다. 경고색 주황은 개선점에만 쓴다 —
+           경고와 칭찬이 같은 색을 쓰면 안 된다.</p></div>
+      <div class="box"><h3>동기화 2D 비교</h3>
+        <p>왼쪽 원본 영상 + 실측 관절, 오른쪽 같은 프레임의 2D 사람형 아바타.
+           재생 · 구간 반복 · <code>0.5×</code> · 1프레임 이동을 공유한다.</p></div>
       <div class="box"><h3>3D 재구성 <span class="mono" style="color:var(--ink-3);font-size:10px">보조</span></h3>
         <p>정면 촬영은 스윙 플레인이 보이지 않는다. 그때만 다운 더 라인으로 돌려 본다.
            깊이는 측정값이 아니라 추정이라고 명시한다.</p></div>
-      <div class="box"><h3>연습 영상 · 리포트</h3>
-        <p>findings 의 <code>youtube</code> 검색어로 관련 영상을 붙이고, 국면별 수치 리포트를 낸다.</p></div>
+      <div class="box"><h3>연습 영상 · PDF 리포트</h3>
+        <p>finding 의 검색어로 YouTube 링크를 붙이고, 승인 요약 · 잘한 점 · 개선점 · 측정 근거 ·
+           <strong>재지 못한 것</strong>을 담아 인쇄 → PDF 로 낸다.</p></div>
     </div>
   </section>
 
-  <div class="flow"><div class="spacer"></div><div class="line">
-    <span class="tag">측정값 · 교본값 · 과장값을 <b>항상 함께</b> 표시 · 과장 배율 <b class="num">1.0</b>에서 측정값과 일치</span></div></div>
+  <div class="conn"><span class="ln"></span><span class="hd"></span>
+    <span class="tag">측정값 · 교본값 · 과장값을 <b>항상 함께</b> 표시 ·
+      <b class="num">1.0×</b>에서 측정값과 일치</span></div>
 
   <div class="endpoint">
     <strong>사용자</strong>
-    <span>“백스윙 탑에서 몸통이 <span class="num">14°</span>밖에 안 돌았습니다” — 수치와 과장된 그림을 함께 본다</span>
+    <span>“백스윙 탑에서 몸통이 <span class="num">14°</span>밖에 안 돌았습니다” —
+      수치와 움직이는 과장을 함께 본다</span>
   </div>
 
   <!-- 설계 근거 -->
   <section class="why">
     <h2>설계 근거</h2>
-    <p class="sub">에이전트 설계에서 의도적으로 선택한 네 가지.</p>
+    <p class="sub">에이전트 설계에서 의도적으로 선택한 다섯 가지.</p>
     <div class="grid">
       <div class="card"><div class="n">01</div><h3>지각과 추론의 분리</h3>
-        <p>LLM 이 영상을 직접 보지 않는다. 지각은 결정론적 모델이 맡고, LLM 은 그 출력인 수치만
+        <p>LLM 이 영상을 직접 보지 않는다. 지각은 결정론적 모델이 맡고 LLM 은 그 출력인 수치만
            읽는다. 토큰이 줄고, 같은 영상에 같은 좌표가 나오므로 판정이 재현된다.</p></div>
-      <div class="card"><div class="n">02</div><h3>출력 공간의 제약</h3>
-        <p>결함 사전 8종으로 선택지를 좁히고, 스키마로 다시 검증한다. 자유 서술을 받지 않으므로
-           “그럴듯한 코칭”이 측정 근거 없이 화면을 움직이지 못한다.</p></div>
-      <div class="card"><div class="n">03</div><h3>행동과 근거의 결합</h3>
+      <div class="card"><div class="n">02</div><h3>사람이 개입하는 두 지점</h3>
+        <p>증상 수집은 대화로, 그 요약은 승인으로 받는다. 에이전트가 자기 요약을 스스로 입력에
+           넣지 않는다. 오해가 최종 판정까지 번지기 전에 사람이 끊을 수 있다.</p></div>
+      <div class="card"><div class="n">03</div><h3>출력 공간의 제약</h3>
+        <p>결함 사전 8종으로 선택지를 좁히고, 스키마와 실측 트랙으로 두 번 검증한다.
+           자유 서술을 받지 않으므로 “그럴듯한 코칭”이 근거 없이 화면을 움직이지 못한다.</p></div>
+      <div class="card"><div class="n">04</div><h3>행동과 근거의 결합</h3>
         <p>채널과 구간을 가진 결함만 과장 렌더링까지 간다. 에이전트의 행동 범위가 자기 측정값의
            범위를 넘지 못하도록 구조로 막았다.</p></div>
-      <div class="card"><div class="n">04</div><h3>로컬 우선</h3>
-        <p>외부 호출은 Gemini 판정과 영상 검색뿐이다. 원본 영상과 좌표는 로컬에 남는다. 모델과
-           렌더링 라이브러리를 저장소에 포함해 네트워크 없이도 지각·표상·행동이 동작한다.</p></div>
+      <div class="card"><div class="n">05</div><h3>로컬 우선</h3>
+        <p>외부로 나가는 것은 대화 텍스트와 계측 요약뿐이고 원본 영상은 로컬에 남는다.
+           모델과 렌더링 라이브러리를 저장소에 포함해 네트워크 없이도 지각 · 표상 · 행동이 돈다.</p></div>
     </div>
 
     <div class="tablewrap">
@@ -310,5 +370,7 @@ tr.pick td:first-child{font-weight:600;color:var(--signal)}
   </section>
 
   <p class="foot">측정 기준점 — 4초 영상 51프레임 실측 시 입력 2,584 / 출력 517 토큰.
-    입력 예산 상한 3,000 토큰, 초과 시 표본 간격을 늘려 줄인다.</p>
+    입력 예산 상한 3,000 토큰, 초과 시 표본 간격을 늘려 줄인다.<br>
+    한계 — 단일 시점 2D 에서는 깊이 방향 회전, 클럽 페이스, 공 스핀을 단정할 수 없다.
+    교본은 교육용 참고값이지 유일한 정답이 아니다.</p>
 </div>
