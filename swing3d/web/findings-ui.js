@@ -31,7 +31,7 @@ window.SwingFindings = (() => {
 
   function choices(parent, doc, track, onSelect) {
     parent.replaceChildren();
-    const improvements = doc.findings.filter(item => item.channel && item.range &&
+    const improvements = doc.findings.filter(item => item.channel && (item.range || item.phase) &&
       (item.channel !== "wrist" || track.meta.wrist_source === "index"));
     const positives = (doc.positives ?? []).filter(selectablePositive)
       .map(item => ({...item, positive: true, label: positiveLabel(item)}));
@@ -152,7 +152,7 @@ window.SwingFindings = (() => {
     }
     for (const [index, item] of items.entries()) {
       const entry = node("div", undefined, "finding-line");
-      const button = onSelect && item.channel && item.range ? node("button", item.label) : node("strong", item.label);
+      const button = onSelect && item.channel && (item.range || item.phase) ? node("button", item.label) : node("strong", item.label);
       if (button.tagName === "BUTTON") button.onclick = () => onSelect(item.id);
       if (doc.mode && !item.example_only) entry.append(number(index + 1, "순위", 0), " ");
       entry.append(button);

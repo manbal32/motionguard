@@ -7,6 +7,17 @@ window.SwingExaggeration = (() => {
     return t * t * (3 - 2 * t);
   };
 
+  function resolve(track, finding) {
+    const { meta } = track;
+    const frame = (track.evidence?.phase_frames ?? meta.phase_frames)?.[finding.phase];
+    if (!Number.isInteger(frame) || !Number.isInteger(finding.span_frames) || finding.span_frames < 1) return finding;
+    const start = meta.source_frames?.[0] ?? 0;
+    const time = offset => (meta.hold + (meta.dur - meta.hold) *
+      (frame - start + offset) / Math.max(1, track.track.length - 1)) / meta.dur;
+    // Keep the envelope centered even when the window extends beyond the sampled frames.
+    return { ...finding, frame, range: [-finding.span_frames, finding.span_frames].map(time) };
+  }
+
   function apply(track, reference, finding, multiplier) {
     const measuredIndex = track.channels.indexOf(finding?.channel);
     const referenceIndex = SwingReference.channels.indexOf(finding?.channel);
@@ -39,5 +50,5 @@ window.SwingExaggeration = (() => {
       return displayed;
     });
   }
-  return Object.freeze({ levels, apply });
+  return Object.freeze({ levels, apply, resolve });
 })();

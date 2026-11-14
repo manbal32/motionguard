@@ -47,7 +47,14 @@ def validate_findings(data, *, wrist_source="forearm"):
             if (not isinstance(bounds, list) or len(bounds) != 2
                     or not all(map(number, bounds)) or not 0 <= bounds[0] < bounds[1] <= 1):
                 raise ValueError(f"{prefix}.range는 0~1 사이의 오름차순 구간이어야 합니다.")
-        pose = "channel" in item and "range" in item
+        if "phase" in item:
+            if item["phase"] not in ("address", "top", "down", "impact", "finish"):
+                raise ValueError(f"{prefix}.phase는 유효한 스윙 국면이어야 합니다.")
+            if type(item.get("span_frames")) is not int or item["span_frames"] < 1:
+                raise ValueError(f"{prefix}.span_frames는 양의 정수여야 합니다.")
+        elif "span_frames" in item:
+            raise ValueError(f"{prefix}.span_frames에는 phase가 필요합니다.")
+        pose = "channel" in item and ("range" in item or "phase" in item)
         for field in ("measured", "reference"):
             if (pose or field in item) and not number(item.get(field)):
                 raise ValueError(f"{prefix}.{field}는 유한한 도 단위 숫자여야 합니다.")

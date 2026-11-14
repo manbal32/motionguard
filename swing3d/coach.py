@@ -164,7 +164,7 @@ def evidence(track):
             radius = (meta["dur"] - meta["hold"]) / meta["dur"] * 5 / max(1, len(rows) - 1)
             name, english = CHANNELS[key]
             candidates[f"{phase}_{key}"] = {
-                "id": f"{phase}_{key}", "channel": key, "phase": phase, "frame": i + start,
+                "id": f"{phase}_{key}", "channel": key, "phase": phase, "frame": i + start, "span_frames": 5,
                 "range": [max(0, point - radius), min(1, point + radius)],
                 "measured": measured, "reference": target, "difference": round(gap, 3),
                 "label": f"{label} · {name} {'교본보다 작음' if gap < 0 else '교본보다 큼'}",
@@ -228,6 +228,8 @@ def analyze(track, summary, provider):
             "positives": {"type": "ARRAY", "items": id_schema(positive_ids), "maxItems": 3},
             "improvements": {"type": "ARRAY", "maxItems": 3, "items": object_schema({
                 "id": id_schema(improvement_ids), "drill": STRING,
+                "phase": dict(STRING, enum=list(PHASES)),
+                "span_frames": {"type": "INTEGER", "minimum": 5, "maximum": 5},
                 "youtube": {"type": "ARRAY", "items": STRING, "minItems": 2, "maxItems": 2},
             })},
         })
@@ -238,7 +240,7 @@ def analyze(track, summary, provider):
         answer, usage["analysis"] = provider.generate(
             "한국어 골프 코칭 JSON을 반환한다. 필드: summary, comparison, next_goal (문자열), "
             "positives (near_reference ID 문자열 최대 3개), improvements (우선순위 순으로 최대 3개, "
-            "{id, drill, youtube:[한국어 검색어, 영어 검색어]}). deviation ID만 개선에 사용한다. "
+            "{id, phase:ID에 해당하는 국면, span_frames:5, drill, youtube:[한국어 검색어, 영어 검색어]}). deviation ID만 개선에 사용한다. "
             "candidate_ids가 비어 있거나 해당 분류의 ID가 없으면 해당 배열을 반드시 비운다. "
             "영상 수치와 신뢰도 수치는 서버가 넣으므로 summary와 comparison에 숫자를 쓰지 않는다. "
             "comparison에서 자기보고와 영상의 합의 또는 불일치와 불확실성을 밝힌다. "
@@ -255,6 +257,8 @@ def analyze(track, summary, provider):
         positives = [candidates[key] for key in dict.fromkeys(answer["positives"]) if not candidates[key]["deviation"]]
         for entry in answer["improvements"]:
             item = candidates[entry["id"]]
+            if entry.get("phase", item["phase"]) != item["phase"] or entry.get("span_frames", 5) != 5:
+                raise ValueError("invalid phase window")
             if not item["deviation"] or any(prior["id"] == item["id"] for prior in improvements):
                 raise ValueError("invalid evidence")
             if not isinstance(entry["youtube"], list) or len(entry["youtube"]) != 2:

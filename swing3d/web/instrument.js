@@ -627,8 +627,10 @@
   }
 
   function chooseFinding(id, seek = true) {
-    activeFinding = comparison.options.find(item => item.id === id);
-    if (!activeFinding) return;
+    const finding = comparison.options.find(item => item.id === id);
+    if (!finding) return;
+    activeFinding = SwingExaggeration.resolve(comparison.track, finding);
+    if (!activeFinding.range) { activeFinding = undefined; return; }
     for (const button of byId("finding-options").querySelectorAll("button")) {
       const numbers = button.querySelector(".finding-numbers");
       if (!button.findingNumbers) button.findingNumbers = numbers.cloneNode(true);
@@ -846,7 +848,9 @@
       await viewerAssets;
       if (comparison !== current) return;
       viewer ??= window.Swing3D.mount(host, current.track, {
-        findings: current.findings, autoplay: false, externalFindings: true,
+        findings: { ...current.findings, findings: current.findings.findings
+          .map(item => SwingExaggeration.resolve(current.track, item)).filter(item => item.range) },
+        autoplay: false, externalFindings: true,
       });
       return viewer;
     } catch {

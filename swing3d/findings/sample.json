@@ -6,6 +6,8 @@
       "id": "sample_torso_turn",
       "label": "백스윙 탑에서 몸통 회전이 교본보다 작게 추정됐습니다",
       "channel": "torso",
+      "phase": "top",
+      "span_frames": 8,
       "range": [
         0.058,
         0.12
