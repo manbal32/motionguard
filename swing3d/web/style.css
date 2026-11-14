@@ -102,7 +102,7 @@ td { text-align: right; white-space: nowrap; }
 .comparison-panes { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; padding:0 16px 12px; }
 .pane-label { font-size:12px; color:var(--ink-2); margin-bottom:4px; }
 .comparison-panes .video-stage { width:100%; margin:0; border:1px solid var(--rule); box-sizing:content-box; width:calc(100% - 2px); }
-.compare-grid { background-color:var(--ground); background-image:linear-gradient(rgba(233,231,224,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(233,231,224,.045) 1px,transparent 1px); background-size:28px 28px; }
+.compare-grid { background:#142420; }
 #exaggerated { transform-origin:0 0; }
 #compare-factor { accent-color:var(--ink); vertical-align:middle; }
 .compare-band { position:relative; height:3px; }

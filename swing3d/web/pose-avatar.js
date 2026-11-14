@@ -28,13 +28,17 @@
   function paint(ctx, pose, colors, alpha = 1) {
     const {head, neck, pelvis, height: h, facing, up} = anatomy(pose);
     const side = [-up[1], up[0]];
+    function finish() {
+      ctx.fill();
+      ctx.stroke();
+    }
     function shape(points, fill) {
       ctx.fillStyle = fill;
       ctx.beginPath();
       ctx.moveTo(...points[0]);
       for (const p of points.slice(1)) ctx.lineTo(...p);
       ctx.closePath();
-      ctx.fill();
+      finish();
     }
     function capsule(a, b, start, end, color) {
       const length = Math.max(.01, distance(a, b));
@@ -48,7 +52,7 @@
       ctx.fillStyle = color;
       ctx.beginPath();
       ctx.ellipse(p[0], p[1], rx, ry, angle, 0, 2 * Math.PI);
-      ctx.fill();
+      finish();
     }
     function limb(right, color) {
       const [hip, knee, ankle, heel, toe] = [23, 25, 27, 29, 31].map(i => pose[i + right]);
@@ -67,6 +71,21 @@
     const angle = Math.atan2(up[0], -up[1]);
     ctx.save();
     ctx.globalAlpha = alpha;
+    ctx.strokeStyle = colors.outline;
+    ctx.lineWidth = h * .025;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    const hand = [0, 1].map(i => [pose[15 + i], pose[19 + i]])
+      .sort((a, b) => Math.min(...b.map(p => p[2])) - Math.min(...a.map(p => p[2])))[0];
+    const [wrist, index] = hand;
+    const grip = distance(wrist, index);
+    if (grip > 1 && hand.every(point => point[2] >= .45)) {
+      const tip = offset(index, (index[0] - wrist[0]) * h * 1.7 / grip,
+        (index[1] - wrist[1]) * h * 1.7 / grip);
+      capsule(wrist, tip, h * .026, h * .016, colors.shoes);
+      ellipse(tip, h * .085, h * .041, Math.atan2(index[1] - wrist[1], index[0] - wrist[0]) + 1,
+        colors.near);
+    }
     limb(far, colors.far);
     arm(far, colors.far);
     limb(1 - far, colors.near);
@@ -85,6 +104,9 @@
       shape([offset(head, facing * h * .13, -h * .08), offset(head, facing * h * .25, h * .027),
         offset(chin, facing * h * .11, 0)], colors.skin);
     }
+    const brim = facing || 0;
+    ellipse(offset(head, up[0] * h * .105, up[1] * h * .105), h * .19, h * .15, angle, colors.near);
+    ellipse(offset(head, brim * h * .11, -h * .04), h * .22, h * .045, angle, colors.shirt);
     ctx.restore();
     return {head, neck, pelvis};
   }

@@ -391,13 +391,20 @@
         : baseline[comparison.track.channels.indexOf(channel)]) : null;
     const show = byId("toggle-joints").getAttribute("aria-pressed") === "true";
     if (show) paint(ctx, skeleton, reference, scale, line, diameter);
-    const colors = {far: styles.getPropertyValue("--ink-3").trim(), near: "#66716b",
-      shirt: styles.getPropertyValue("--ink-2").trim(), skin: "#c8c9c1", shoes: "#a9ada7"};
-    if (reference && hasDeviation(sample)) SwingPoseAvatar.paint(alternateContext, reference, colors, .24);
+    const colors = activeFinding?.positive
+      ? { far: "#63716d", near: "#778680", shirt: "#87938e", skin: "#a4ada9", shoes: "#899691", outline: "#45534e" }
+      : { far: "#257561", near: "#307f6e", shirt: "#2E8B74", skin: "#70b8a5", shoes: "#55a38e", outline: "#1F6B58" };
+    const floor = Math.max(...[29, 30, 31, 32].map(i => measured[i][1]));
+    alternateContext.strokeStyle = "#54706a";
+    alternateContext.lineWidth = 1 / scale;
+    alternateContext.beginPath();
+    alternateContext.moveTo(0, floor + 3 / scale);
+    alternateContext.lineTo(alternate.width, floor + 3 / scale);
+    alternateContext.stroke();
+    if (reference && hasDeviation(sample)) SwingPoseAvatar.paint(alternateContext, reference, colors, .28);
     SwingPoseAvatar.paint(alternateContext, displayed, colors);
     canvas.dataset.pelvis = SwingPoseAvatar.anatomy(skeleton).pelvis.join(",");
     alternate.dataset.pelvis = SwingPoseAvatar.anatomy(displayed).pelvis.join(",");
-    paint(alternateContext, displayed, reference, scale, line, diameter);
     paintCue(skeleton, displayed, scale);
   }
 
@@ -560,6 +567,7 @@
     const movement = i => Math.hypot(shown[i][0] - measured[i][0], shown[i][1] - measured[i][1]);
     const joint = joints.reduce((a, b) => movement(b) > movement(a) ? b : a);
     if (Number(factor.value) === 1) return;
+    if (["torso", "hips", "lean"].includes(channel)) output.append(" · 깊이 방향의 차이는 호와 교본 잔상으로 표시합니다.");
     const c = alternateContext;
     const position = measured[joint];
     const start = Math.atan2(measured[joints[0]][1] - measured[joints.at(-1)][1], measured[joints[0]][0] - measured[joints.at(-1)][0]);
@@ -571,18 +579,22 @@
     c.strokeStyle = styles.getPropertyValue("--signal").trim();
     c.lineWidth = 1.6 / scale;
     c.beginPath();
-    let x, y, heading;
+    for (const [a, b] of bones[channel]) {
+      c.moveTo(shown[a][0], shown[a][1]);
+      c.lineTo(shown[b][0], shown[b][1]);
+    }
+    c.stroke();
+    c.beginPath();
     if (visible) {
-      [x, y] = shown[joint];
-      heading = Math.atan2(y - position[1], x - position[0]);
+      const [x, y] = shown[joint];
       c.moveTo(position[0], position[1]);
       c.lineTo(x, y);
-    } else {
-      c.ellipse(position[0], position[1], size, size, 0, start, start + turn, turn < 0);
-      x = position[0] + size * Math.cos(start + turn);
-      y = position[1] + size * Math.sin(start + turn);
-      heading = start + turn + Math.sign(turn) * Math.PI / 2;
     }
+    c.moveTo(position[0] + size * Math.cos(start), position[1] + size * Math.sin(start));
+    c.ellipse(position[0], position[1], size, size, 0, start, start + turn, turn < 0);
+    const x = position[0] + size * Math.cos(start + turn);
+    const y = position[1] + size * Math.sin(start + turn);
+    const heading = start + turn + Math.sign(turn) * Math.PI / 2;
     for (const angle of [-.55, .55]) {
       c.moveTo(x, y);
       c.lineTo(x - 6 / scale * Math.cos(heading + angle), y - 6 / scale * Math.sin(heading + angle));
