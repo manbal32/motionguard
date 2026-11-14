@@ -160,3 +160,24 @@
 `.env` · `local-data/` · `*.mp4` · `*.mov` · `outputs/` 커밋 금지.
 개인 스윙 사진과 상담 원문을 공개 브랜치에 올리지 마라.
 커밋 전 `git diff --cached` 로 키 패턴을 확인한다.
+
+---
+
+## 실행 환경 · 로컬 클론 없이 진행하는 경우
+
+이 작업은 저장소에서 바로 진행해도 된다. 로컬에 받아 둔 것이 없어도 막히지 않는다.
+
+- 작업 브랜치는 `feature/swing3d` 다. 끝나면 **같은 브랜치에 push** 하고 원격 SHA 를 보고한다.
+  PR 로 올릴 거면 base 를 `feature/swing3d` 로 둔다. `main` 에 직접 올리지 마라.
+- **`GEMINI_API_KEY` 가 없어도 된다.** 이번 작업은 고정 판정 파일
+  (`findings/golf1.json`, `findings/sample.json`)로 진행한다. 키가 없으면 상담 · 요약은
+  데모 모드로 떨어지는데 그대로 두면 된다. **키를 요구하거나 만들어 넣지 마라.**
+- 모델(`models/pose_landmarker_lite.task`), 샘플 영상(`samples/golf_swing.mp4`),
+  three.js 와 폰트는 **이미 저장소에 있다.** 내려받지 말고 그대로 쓴다.
+- 파이썬 의존성은 `swing3d/requirements.txt` 로 설치한다.
+
+### 접촉 시트를 만들 수 없는 환경이라면
+
+Playwright 나 MediaPipe 가 설치되지 않아 `mockups/shots/contact_04.png` 를 만들 수
+없으면, **그 사실을 먼저 보고하고 멈춰라.** 스크린샷 없이 "완료" 라고 하지 마라.
+그 경우 1단계 코드 수정과 통과 조건의 숫자 5개까지만 내고 보고한다.
