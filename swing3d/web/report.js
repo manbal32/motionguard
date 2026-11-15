@@ -74,11 +74,12 @@
       for (const key of keys) {
         const actual = track.track[sample][track.channels.indexOf(key)] * 180 / Math.PI;
         const reference = referenceTrack[sample][SwingReference.channels.indexOf(key)] * 180 / Math.PI;
-        const measured = key !== "wrist" || track.meta.wrist_source === "index";
+        const unavailable = track.meta.unavailable?.includes(key);
+        const measured = !unavailable && (key !== "wrist" || track.meta.wrist_source === "index");
         const cell = row.insertCell();
-        const value = measured ? number(actual) : node("span", "—");
+        const value = measured ? number(actual) : node("span", unavailable ? "이 촬영 각도에서는 측정할 수 없습니다" : "—");
         if (measured && Math.abs(actual - reference) >= 8) value.classList.add("delta");
-        const model = number(reference);
+        const model = unavailable ? node("span", "—") : number(reference);
         model.classList.add("reference");
         cell.append(value, model);
       }

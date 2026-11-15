@@ -17,7 +17,7 @@ def number(value):
         return False
 
 
-def validate_findings(data, *, wrist_source="forearm"):
+def validate_findings(data, *, wrist_source="forearm", unavailable=()):
     if not isinstance(data, dict) or data.get("schema") != SCHEMA:
         raise ValueError(f"schema는 {SCHEMA}이어야 합니다.")
     if data.get("reference") != "model":
@@ -42,6 +42,8 @@ def validate_findings(data, *, wrist_source="forearm"):
                 raise ValueError(f"{prefix}.channel은 스윙 자세 채널이어야 합니다.")
             if channel == "wrist" and wrist_source != "index":
                 raise ValueError(f"{prefix}.channel: wrist 판정에는 검지 기반 측정이 필요합니다.")
+            if channel in unavailable:
+                raise ValueError(f"{prefix}.channel: 이 촬영 각도에서는 {channel}을 측정할 수 없습니다.")
         if "range" in item:
             bounds = item["range"]
             if (not isinstance(bounds, list) or len(bounds) != 2

@@ -147,16 +147,21 @@ def evidence(track):
         # Stride 2 keeps the compact numeric payload bounded, retaining both ends and the phase frame.
         indices = sorted({max(0, min(len(rows) - 1, i + offset)) for offset in (-5, -3, -1, 0, 1, 3, 5)})
         windows[phase] = [[j + start, round(rows[j][confidence], 2),
-                           *[rounded(units(rows[j][column], key), key) for key, column in zip(channels, columns)]] for j in indices]
-        references[phase] = [reference(i, key, column) for key, column in zip(channels, columns)]
+                           *[None if rows[j][column] is None else rounded(units(rows[j][column], key), key)
+                             for key, column in zip(channels, columns)]] for j in indices]
+        references[phase] = [None if rows[i][column] is None else reference(i, key, column)
+                             for key, column in zip(channels, columns)]
         if phase == "address":
             continue
-        quality = min(rows[i][confidence], meta.get("phase_confidence", {}).get(phase, 1))
-        reliable = quality >= 0.45
         for k, key in enumerate(channels):
-            # Zero torso/hips downstream can be the known measurement floor. Wrist is a proxy.
-            if key == "wrist" or key in {"torso", "hips"} and phase in {"down", "impact"} and not rows[i][columns[k]]:
+            if key == "wrist" or key in meta.get("unavailable", ()) or rows[i][columns[k]] is None:
                 continue
+            if not rows[i][columns[k]] and key in {"torso", "hips"} and phase in {"down", "impact"} and "rotation_sign_source" not in meta:
+                continue
+            per_channel = meta.get("channel_confidence", {}).get(key)
+            quality = (per_channel[i] if per_channel else
+                       min(rows[i][confidence], meta.get("phase_confidence", {}).get(phase, 1)))
+            reliable = quality >= 0.45
             measured, target = windows[phase][indices.index(i)][k + 2], references[phase][k]
             threshold = 0.02 if key in DISTANCES else 8
             gap = measured - target
@@ -235,6 +240,7 @@ def analyze(track, summary, provider):
         })
         payload = {"conversation_summary": summary, "measured_evidence": measured,
                    "reference_data": references, "confidence": track["meta"].get("phase_confidence", {}),
+                   "unavailable": track["meta"].get("unavailable", []),
                    "candidate_ids": {key: "deviation" if item["deviation"] else "near_reference"
                                      for key, item in candidates.items()}}
         answer, usage["analysis"] = provider.generate(
@@ -291,4 +297,5 @@ def analyze(track, summary, provider):
     return validate_findings({"schema": SCHEMA, "reference": "model", "findings": improvements,
                               "mode": "demo" if reason else "gemini", "reason": reason, "usage": usage,
                               "conversation_summary": summary, "summary": synthesis, "comparison": comparison,
-                              "positives": positives, "next_goal": next_goal, "limitations": LIMITATIONS})
+                              "positives": positives, "next_goal": next_goal, "limitations": LIMITATIONS},
+                             unavailable=track["meta"].get("unavailable", ()))

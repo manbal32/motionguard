@@ -24,14 +24,14 @@
         : Math.round(last * (events[phase] * meta.dur - meta.hold) / (meta.dur - meta.hold)))));
     const address = channels.map(channel => track.track[indices[0]][track.channels.indexOf(channel)]);
     const keys = channels.map((channel, i) => model[channel].map(value =>
-      address[i] + (value - model[channel][0]) * (["shiftX", "heelR"].includes(channel) ? 1 : Math.PI / 180)));
+      address[i] === null ? null : address[i] + (value - model[channel][0]) * (["shiftX", "heelR"].includes(channel) ? 1 : Math.PI / 180)));
     return track.track.map((_, index) => {
       if (index <= indices[0]) return address.slice();
       const upper = indices.findIndex(value => value > index);
       if (upper < 0) return keys.map(values => values[4]);
       const t = (index - indices[upper - 1]) / (indices[upper] - indices[upper - 1]);
       const blend = t * t * (3 - 2 * t);
-      return keys.map(values => values[upper - 1] + (values[upper] - values[upper - 1]) * blend);
+      return keys.map(values => values[upper] === null ? null : values[upper - 1] + (values[upper] - values[upper - 1]) * blend);
     });
   }
 

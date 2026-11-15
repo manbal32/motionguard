@@ -755,14 +755,15 @@
         const row = body.insertRow();
         const measured = track.track[sample][track.channels.indexOf(channel)] * 180 / Math.PI;
         const reference = comparison.reference[sample][SwingReference.channels.indexOf(channel)] * 180 / Math.PI;
-        const isMeasured = channel !== "wrist" || track.meta.wrist_source === "index";
+        const unavailable = track.meta.unavailable?.includes(channel);
+        const isMeasured = !unavailable && (channel !== "wrist" || track.meta.wrist_source === "index");
         const heading = node("th", channelLabel);
         heading.scope = "row";
         row.append(heading);
         const input = row.insertCell();
-        input.append(isMeasured ? quantity(measured.toFixed(1), "°") : node("span", "—", "reference"));
+        input.append(isMeasured ? quantity(measured.toFixed(1), "°") : node("span", unavailable ? "이 촬영 각도에서는 측정할 수 없습니다" : "—", "reference"));
         const model = row.insertCell();
-        model.append(quantity(reference.toFixed(1), "°"));
+        model.append(unavailable ? node("span", "—") : quantity(reference.toFixed(1), "°"));
         model.className = "reference";
         if (isMeasured && Math.abs(measured - reference) >= 8) input.className = "delta";
       }

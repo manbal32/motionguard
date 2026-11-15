@@ -21,7 +21,9 @@ window.SwingFindings = (() => {
     if (!track.findings_id) return { reference: "model", findings: [] };
     const response = await fetch("/api/findings/" + encodeURIComponent(track.findings_id));
     if (!response.ok) throw new Error("판정 파일을 읽지 못했습니다.");
-    return response.json();
+    const doc = await response.json();
+    const unavailable = track.meta.unavailable ?? [];
+    return {...doc, findings: doc.findings.filter(item => !unavailable.includes(item.channel))};
   }
 
   const positiveLabel = item => (item.example_only ? "검증 예시 · " : "") + (phases.find(([key]) => key === item.phase)?.[1] ?? "") +
@@ -134,8 +136,9 @@ window.SwingFindings = (() => {
       const row = track.track[sample];
       const torso = row[track.channels.indexOf("torso")] * 180 / Math.PI;
       const line = node("p");
-      line.append(node("strong", title), " · 몸통 ", number(torso), " / 교본 ",
-        number(referenceTrack[sample][SwingReference.channels.indexOf("torso")] * 180 / Math.PI));
+      line.append(node("strong", title), " · 몸통 ");
+      if (track.meta.unavailable?.includes("torso")) line.append("이 촬영 각도에서는 측정할 수 없습니다");
+      else line.append(number(torso), " / 교본 ", number(referenceTrack[sample][SwingReference.channels.indexOf("torso")] * 180 / Math.PI));
       const confidence = track.meta.phase_confidence?.[key];
       if (confidence !== undefined) line.append(" · 추적 신뢰도 ", number(confidence * 100, "%", 0),
         confidence < 0.45 ? " · 낮음" : "");

@@ -50,7 +50,7 @@ CHANNELS = [
 ]
 
 SCHEMA = "motionguard.swingtrack/2"
-TRACK_REVISION = 2
+TRACK_REVISION = 3
 OPTIONAL = ("LEFT_INDEX", "RIGHT_INDEX")
 
 REQUIRED = [
@@ -97,7 +97,7 @@ def _unwrap(values: Sequence[float]) -> List[float]:
     return out
 
 
-def _clean_landmarks(frames: List[Dict], fps: float):
+def _clean_landmarks(frames: List[Dict], fps: float, *, channel_quality=False):
     """Reject invalid observations before computing any angles."""
     # golf1 (64.31 fps): pooled displacement p95 is about 0.03, while wrist
     # glitches reach 0.13–0.31. Leave margin for the fast downswing, and scale
@@ -105,6 +105,7 @@ def _clean_landmarks(frames: List[Dict], fps: float):
     step_limit = 0.12 * 64.31 / fps
     cleaned = [frame.copy() for frame in frames]
     confidence = [1.0] * len(frames)
+    quality = {}
     confidence_landmarks = set(REQUIRED[:8])
     shoulder_width = [abs(frame["LEFT_SHOULDER"][0] - frame["RIGHT_SHOULDER"][0])
                       for frame in frames]
@@ -112,7 +113,7 @@ def _clean_landmarks(frames: List[Dict], fps: float):
 
     for name in REQUIRED:
         observations = [frame[name] for frame in frames]
-        valid = [obs[3] >= 0.5 for obs in observations]
+        valid = [obs[3] >= (0.3 if channel_quality else 0.5) for obs in observations]
         for i in range(1, len(observations) - 1):
             before, current, after = (obs[:2] for obs in observations[i - 1:i + 2])
             if (math.dist(before, current) > step_limit
@@ -128,6 +129,8 @@ def _clean_landmarks(frames: List[Dict], fps: float):
         if not anchors:
             raise ValueError(f"랜드마크 신뢰도 부족 ({name})")
         anchor_set = set(anchors)
+        quality[name] = [max(0.0, min(1.0 if i in anchor_set else 0.25, obs[3]))
+                         for i, obs in enumerate(observations)]
         for i, observation in enumerate(observations):
             if i not in anchor_set:
                 confidence[i] = 0.0
@@ -145,7 +148,7 @@ def _clean_landmarks(frames: List[Dict], fps: float):
     if typical_width > 0:
         for i, width in enumerate(shoulder_width):
             confidence[i] = min(confidence[i], width / (0.25 * typical_width))
-    return cleaned, confidence
+    return cleaned, quality if channel_quality else confidence
 
 
 def _smooth(values: Sequence[float]) -> List[float]:
@@ -169,7 +172,7 @@ def _index_wrist(frames):
         observations = {}
         for i, frame in enumerate(frames):
             points = [frame.get(name) for name in (side + "_ELBOW", side + "_WRIST", finger)]
-            if any(point is None or point[3] < 0.5 or not all(map(math.isfinite, point)) for point in points):
+            if any(point is None or point[3] < 0.3 or not all(map(math.isfinite, point)) for point in points):
                 continue
             elbow, wrist, index = points
             forearm = [wrist[j] - elbow[j] for j in range(3)]
@@ -193,6 +196,40 @@ def _index_wrist(frames):
 
 # ── 본체 ──────────────────────────────────────────────────────────────
 
+def _swing_phases(sw, fps, *, relaxed=False):
+    """Find a sustained excursion from a locally stable address and its return."""
+    rise, fall, follow = (math.ceil(seconds * fps) for seconds in (0.30, 0.15, 0.20))
+    lead = max(3, round(0.12 * fps))
+    candidates = []
+    for start in range(lead, len(sw) - rise - fall - follow):
+        history = sw[start - lead:start]
+        address = sorted(history)[len(history) // 2]
+        if max(history) - min(history) > (0.40 if relaxed else 0.26) or abs(sw[start] - address) >= (0.14 if relaxed else 0.06):
+            continue
+        for direction in (-1, 1):
+            if (sw[start + 1] - address) * direction < 0.06:
+                continue
+            impact = next((i for i in range(start + 2, len(sw) - follow)
+                           if (sw[i] - sw[start]) * direction <= 0), None)
+            if impact is None or impact - start < rise + fall:
+                continue
+            eligible = range(start + rise, impact - fall + 1) if relaxed else range(start + 1, impact)
+            top = max(eligible, key=lambda i: (sw[i] - sw[start]) * direction)
+            peak = (sw[top] - sw[start]) * direction
+            if relaxed and peak < 0.85 * max((sw[i] - sw[start]) * direction for i in range(start + 1, impact)):
+                continue
+            if top - start < rise or impact - top < fall or peak < 0.55:
+                continue
+            down = max(top + 1, impact - max(2, int(0.06 * fps)))
+            end = min(len(sw) - 1, impact + int(0.65 * fps))
+            candidates.append((peak, start, top, down, impact, end, direction))
+    if not candidates:
+        if not relaxed:
+            return _swing_phases(sw, fps, relaxed=True)
+        raise ValueError("영상에서 스윙을 찾지 못했습니다. 어드레스부터 피니시까지 한 번의 스윙이 담기도록 잘라서 올려 주세요.")
+    return max(candidates)[1:]
+
+
 def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     """프레임별 랜드마크 dict 리스트 → 트랙 JSON.
 
@@ -208,7 +245,7 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
         if missing:
             raise ValueError(f"프레임 {i} 필수 랜드마크 누락: {', '.join(missing)}")
     index_wrist, wrist_anchors = _index_wrist(frames)
-    frames, confidence = _clean_landmarks(frames, fps)
+    frames, landmark_quality = _clean_landmarks(frames, fps, channel_quality=True)
     raw = []
     for d in frames:
         sh = _mid(d, "LEFT_SHOULDER", "RIGHT_SHOULDER")
@@ -241,55 +278,55 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     if min(shw_max, hpw_max, tln_max) <= 0:
         raise ValueError("랜드마크 폭이나 길이가 유효하지 않습니다.")
 
-    # 이벤트 검출: 백스윙 탑 = 스윙각 절대값 최대, 임팩트 = 그 뒤 어드레스값 복귀
-    top = max(range(len(sw)), key=lambda i: abs(sw[i] - sw[0]))
-    back = 1 if sw[top] > sw[0] else -1
-
-    start = 0
-    for i in range(top, 0, -1):
-        if abs(sw[i] - sw[0]) < 0.06:
-            start = i
-            break
-
-    impact = top
-    for i in range(top, len(sw)):
-        if (sw[i] - sw[start]) * back <= 0:
-            impact = i
-            break
-    end = min(len(sw) - 1, impact + int(0.65 * fps))
+    start, top, down, impact, end, back = _swing_phases(sw, fps)
 
     base_sw, base_hx, base_heel = sw[start], hx[start], hr[start]
-    base_turn = math.acos(max(-1.0, min(1.0, shw[start] / shw_max)))
-    base_hip = math.acos(max(-1.0, min(1.0, hpw[start] / hpw_max)))
+    width_ratio = shw[start] / shw_max
+    unavailable = [] if width_ratio >= 0.60 else ["torso", "hips"]
+    crossing = max(range(down, impact + 1), key=shw.__getitem__)
+
+    def rotation(widths, maximum, i):
+        camera_angle = lambda w: math.acos(max(0.0, min(1.0, w / maximum)))
+        excursion = abs(camera_angle(widths[i]) - camera_angle(widths[start]))
+        return excursion if i <= crossing and i < impact else -excursion
+
+    dependencies = {
+        "swing": REQUIRED[:2] + REQUIRED[6:8], "torso": REQUIRED[:2], "hips": REQUIRED[2:4],
+        "lean": REQUIRED[:4], "wrist": REQUIRED[4:8], "shiftX": REQUIRED[2:4],
+        "kneeL": REQUIRED[2:3] + REQUIRED[8:9] + REQUIRED[10:11],
+        "kneeR": REQUIRED[3:4] + REQUIRED[9:10] + REQUIRED[11:12],
+        "heelR": REQUIRED[13:14] + REQUIRED[15:16],
+    }
+    channel_confidence = {key: [] for key in dependencies}
     base_lean = 0.40 * (1 - tln[start] / tln_max)
     base_wrist = -(fa[start] - sw[start])
 
     track = []
     for i in range(start, end + 1):
         s = (sw[i] - base_sw) * back            # 백스윙이 + 가 되도록 방향 정규화
-        sign = 1.0 if s >= 0 else -1.0
-        # 폭 단축률에서 역산한 회전량은 어드레스 기준값보다 작아질 수 있다.
-        # 그대로 두면 sign 과 곱해져 몸통과 반대 방향으로 도는 값이 나오고,
-        # 백스윙 탑에서 골반이 몸통을 상쇄해 몸이 안 도는 것처럼 보였다.
-        turn = max(0.0, math.acos(max(-1.0, min(1.0, shw[i] / shw_max))) - base_turn)
-        hip = max(0.0, math.acos(max(-1.0, min(1.0, hpw[i] / hpw_max))) - base_hip)
+        turn = None if unavailable else round(rotation(shw, shw_max, i), 3)
+        hip = None if unavailable else round(rotation(hpw, hpw_max, i) * 0.85, 3)
         lean = 0.40 * (1 - tln[i] / tln_max) - base_lean + 0.26
         wrist = -(fa[i] - sw[i]) - base_wrist
         if index_wrist is not None:
             wrist = max(0, min(math.pi, index_wrist[i]))
-            if i not in wrist_anchors:
-                confidence[i] = 0
+        for key, names in dependencies.items():
+            grade = sum(landmark_quality[name][i] for name in names) / len(names)
+            if key == "wrist" and index_wrist is not None and i not in wrist_anchors:
+                grade = min(grade, 0.25)
+            channel_confidence[key].append(None if key in unavailable else round(grade, 3))
+        confidence = min(values[-1] for values in channel_confidence.values() if values[-1] is not None)
         track.append([
             round(s, 3),
-            round(turn * sign, 3),
-            round(hip * sign * 0.85, 3),
+            turn,
+            hip,
             round(max(0.05, min(0.42, lean)), 3),
             round(wrist if index_wrist is not None else max(-0.35, min(1.70, wrist)), 3),
             round((hx[i] - base_hx) * -1.1 * back, 3),
             round(max(0.02, min(0.50, kl[i])), 3),
             round(max(0.02, min(0.50, kr[i])), 3),
             round(max(0.0, min(1.0, (base_heel - hr[i]) * 9)), 3),
-            round(confidence[i], 3),
+            confidence,
         ])
 
     n = len(track) - 1
@@ -297,7 +334,7 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     events = {
         "address": 0.0,
         "top": (top - start) / n,
-        "down": max(0.0, (impact - start - int(0.06 * fps))) / n,
+        "down": (down - start) / n,
         "impact": (impact - start) / n,
         "finish": 1.0,
     }
@@ -316,18 +353,23 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
             "source_frames": [start, end],
             "backswing_sign": back,
             "wrist_source": "index" if index_wrist is not None else "forearm",
-            "measured": [c for c in CHANNELS if c != "confidence" and (c != "wrist" or index_wrist is not None)],
+            "camera_facing": "front" if not unavailable else "oblique",
+            "address_shoulder_width_ratio": round(width_ratio, 4),
+            "unavailable": unavailable,
+            "rotation_sign_source": "frontal_pass",
+            "channel_confidence": channel_confidence,
+            "measured": [c for c in CHANNELS if c != "confidence" and c not in unavailable and (c != "wrist" or index_wrist is not None)],
             "modeled": [] if index_wrist is not None else ["wrist"],
             "phase_frames": {
                 "address": start, "top": top,
-                "down": max(start, impact - int(0.06 * fps)),
+                "down": down,
                 "impact": impact, "finish": end,
             },
             "phase_confidence": {
                 phase: round(track[index][-1], 3)
                 for phase, index in {
                     "address": 0, "top": top - start,
-                    "down": max(0, impact - start - int(0.06 * fps)),
+                    "down": down - start,
                     "impact": impact - start, "finish": len(track) - 1,
                 }.items()
             },
