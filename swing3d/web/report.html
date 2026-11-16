@@ -14,15 +14,16 @@
   </header>
   <p id="report-status" role="status">스윙 기록을 읽는 중입니다.</p>
   <div id="report-body" hidden>
-    <section><h2>한눈에</h2><p id="summary"></p></section>
-    <section><h2>국면별 기록</h2><div id="report-stills"></div><div class="scroller"><table id="report-angles" aria-label="국면별 각도"></table></div><p class="legend">측정값 · 회색은 교본 기준 · 호박색은 교본과 <span class="num">8<small>°</small></span> 이상 차이</p></section>
-    <section><h2>판정과 다음 연습</h2><div id="report-findings"></div></section>
+    <section id="report-answer"><h2>당신이 물어본 것</h2><div id="report-question"></div><h2>답</h2><div id="summary"></div></section>
     <section id="report-comparison" hidden><h2>2D 자세 비교</h2><p>왼쪽은 원본과 측정 관절입니다. 오른쪽은 교육용 과장이며 측정값이 아닙니다.</p><div id="report-image"></div></section>
-    <section><h2>재지 못한 것</h2>
+    <section id="first-practice" hidden><h2>먼저 할 연습</h2><p></p></section>
+    <section class="report-next"><h2>판정과 다음 연습</h2><div id="report-findings"></div></section>
+    <section class="report-limits" id="report-limits"><h2>재지 못한 것</h2>
       <dl><dt>깊이 방향 회전</dt><dd>몸통과 골반 각도는 단일 영상에서 관찰한 폭 변화로 추정합니다.</dd>
       <dt>클럽 페이스와 그립</dt><dd>클럽을 직접 검출하지 않아 페이스 방향과 손가락 배치는 측정하지 않습니다.</dd>
       <dt>손목 코킹</dt><dd id="wrist-limit"></dd></dl>
     </section>
+    <section class="report-appendix"><h2>부록 · 국면별 기록</h2><div id="report-stills"></div><div class="scroller"><table id="report-angles" aria-label="국면별 각도"></table></div><p class="legend">측정값 · 회색은 교본 기준 · 호박색은 교본과 <span class="num">8<small>°</small></span> 이상 차이</p></section>
   </div>
 </main>
 <script src="/reference.js"></script><script src="/findings-ui.js"></script><script src="/report.js" defer></script>

@@ -118,7 +118,25 @@ td { text-align: right; white-space: nowrap; }
 .finding-options button { text-align:left; }
 .finding-options .finding-numbers { display:grid; font-size:12px; }
 .finding-options .finding-numbers > span { white-space:nowrap; }
-@media(max-width:720px) { .comparison-panes { grid-template-columns:1fr; } }
+.comparison-panes .video-stage { max-width:var(--portrait-width,100%); margin-inline:auto; }
+#mobile-pose,#mobile-toggle,#mobile-values,#mobile-finding { display:none; }
+@media(max-width:719px) {
+  #overlay { display:flex; flex-direction:column; }
+  .comparison-panes { display:block; padding:0; }
+  .comparison-panes > :nth-child(2), .comparison-panes .pane-label, #compare-values,#compare-cue,#compare-warning { display:none; }
+  .comparison-panes .video-stage { width: min(calc(100% - 2px), var(--mobile-video-width,100%)); }
+  #mobile-pose,#mobile-toggle,#mobile-values,#mobile-finding { display:block; }
+  #mobile-pose { opacity:.8; visibility:hidden; }
+  #joints { z-index:1; }
+  .phase-label { z-index:2; }
+  #overlay[data-mobile-mode="exaggerated"] #mobile-pose { visibility:visible; }
+  #mobile-finding,#mobile-values { padding:4px 12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #mobile-toggle { min-width:44px; min-height:44px; margin:6px 12px 0; touch-action:manipulation; }
+  #factor-transport,#video-transport { padding:4px 12px; gap:4px 8px; }
+  #factor-transport { order:0; }
+  #video-transport { order:1; }
+  #comparison-controls { order:2; }
+}
 #coach-panel { border-block:1px solid var(--rule); padding:12px 0; margin:12px 0; }
 #coach-panel h3 { margin:0; font-size:16px; }
 #coach-panel p, #coach-panel label { display:block; margin:4px 0; }

@@ -68,14 +68,13 @@
   </div>
   <section id="overlay" hidden>
     <header><span class="index">03</span><h2>스윙 나란히 비교</h2><span id="compare-caption" class="caption"></span></header>
-    <div id="comparison-controls" class="section-body">
-      <div id="finding-options" class="finding-options" aria-label="비교할 결함"></div>
-    </div>
+    <p id="mobile-finding"></p>
     <div id="comparison-panes" class="comparison-panes">
     <div><p class="pane-label">원본 영상 · 측정 좌표</p><div class="video-stage">
       <div id="video-layer">
       <video id="original" playsinline preload="metadata" aria-label="원본 스윙 영상"></video>
       <canvas id="joints" aria-label="관절 오버레이"></canvas>
+      <canvas id="mobile-pose" aria-hidden="true"></canvas>
       </div>
       <span id="phase-label" class="phase-label"></span>
     </div>
@@ -85,6 +84,8 @@
     </div></div>
     </div>
     <p id="comparison-unavailable" class="section-body" hidden>영상이 포함된 트랙을 열면 같은 프레임의 뼈대를 비교할 수 있습니다.</p>
+    <button id="mobile-toggle" type="button" aria-pressed="false">측정 1.0×</button>
+    <p id="mobile-values" class="num"></p>
     <div class="transport" id="video-transport">
       <button id="play">재생</button>
       <button id="previous" aria-label="이전 프레임">−1 <small>프레임</small></button>
@@ -96,7 +97,7 @@
       <button id="zoom-person" aria-pressed="true">인물 확대</button>
       <button id="toggle-joints" aria-pressed="true">관절 표시</button>
     </div>
-    <div class="transport">
+    <div class="transport" id="factor-transport">
       <label>과장 배율 <input id="compare-factor" type="range" min="1" max="3" step="0.1" value="1"></label>
       <output id="compare-factor-value" class="num"></output>
       <button id="compare-reference" aria-pressed="true">교본 겹치기</button>
@@ -104,6 +105,10 @@
     <div id="compare-values" class="compare-values num"></div>
     <p id="compare-cue" class="compare-warning"></p>
     <p class="compare-warning" id="compare-warning">오른쪽은 교육용 과장이며 측정값이 아닙니다 · 왼쪽 수치가 실제 측정입니다</p>
+    <details id="comparison-controls" class="section-body" open>
+      <summary>비교 항목</summary>
+      <div id="finding-options" class="finding-options" aria-label="비교할 결함"></div>
+    </details>
   </section>
   <section id="phases" hidden>
     <header><span class="index">04</span><h2>국면 스틸컷</h2><span class="caption">스틸컷을 선택하면 원본 영상이 해당 프레임으로 이동합니다.</span></header>

@@ -327,6 +327,7 @@
       report("계측 완료", 100);
       await setupFindings(track, coaching);
       summaryPanel.hidden = true;
+      if (evidence && mobileView.matches) byId("overlay").scrollIntoView({block: "start"});
 
     } catch (error) {
       report(controller.signal.aborted ? "분석을 취소했습니다." : (error.message || "분석에 실패했습니다.")
@@ -349,6 +350,18 @@
 
   function updateOverlay(mediaTime = video.currentTime) {
     if (!evidence || !video.videoWidth) return;
+    const overlay = byId("overlay");
+    const aspect = video.videoWidth / video.videoHeight;
+    overlay.style.setProperty("--mobile-video-width", 420 * aspect + "px");
+    if (aspect < 1) overlay.style.setProperty("--portrait-width", 590 * aspect + "px");
+    else overlay.style.removeProperty("--portrait-width");
+    const mobile = byId("mobile-pose");
+    if (mobile.width !== video.videoWidth || mobile.height !== video.videoHeight) {
+      mobile.width = video.videoWidth;
+      mobile.height = video.videoHeight;
+    }
+    const mobileContext = mobile.getContext("2d");
+    mobileContext.clearRect(0, 0, mobile.width, mobile.height);
     if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight || alternate.width !== video.videoWidth) {
       canvas.width = alternate.width = video.videoWidth;
       canvas.height = alternate.height = video.videoHeight;
@@ -406,7 +419,46 @@
     canvas.dataset.pelvis = SwingPoseAvatar.anatomy(skeleton).pelvis.join(",");
     alternate.dataset.pelvis = SwingPoseAvatar.anatomy(displayed).pelvis.join(",");
     paintCue(skeleton, displayed, scale);
+    if (mobileView.matches) mobileContext.drawImage(alternate, 0, 0);
   }
+
+  const mobileView = matchMedia("(max-width: 719px)");
+  const compareToggle = byId("mobile-toggle");
+  function mobileMode(exaggerated) {
+    byId("overlay").dataset.mobileMode = exaggerated ? "exaggerated" : "measured";
+    compareToggle.setAttribute("aria-pressed", String(exaggerated));
+    compareToggle.textContent = exaggerated ? "과장 " + Number(factor.value).toFixed(1) + "×" : "측정 1.0×";
+  }
+  let holdTimer;
+  let holding = false;
+  let suppressClick = false;
+  compareToggle.addEventListener("pointerdown", event => {
+    if (event.button !== 0) return;
+    suppressClick = false;
+    compareToggle.setPointerCapture(event.pointerId);
+    holdTimer = setTimeout(() => {
+      holding = true;
+      mobileMode(true);
+    }, 200);
+  });
+  function releaseToggle() {
+    clearTimeout(holdTimer);
+    if (!holding) return;
+    holding = false;
+    suppressClick = true;
+    mobileMode(false);
+  }
+  for (const event of ["pointerup", "pointercancel", "lostpointercapture"]) {
+    compareToggle.addEventListener(event, releaseToggle);
+  }
+  compareToggle.onclick = event => {
+    if (!suppressClick || event.detail === 0) mobileMode(compareToggle.getAttribute("aria-pressed") !== "true");
+    suppressClick = false;
+  };
+  mobileView.addEventListener("change", () => {
+    byId("comparison-controls").open = !mobileView.matches;
+    updateOverlay();
+  });
 
   function sampleIndex(frame) {
     const start = comparison.track.meta.source_frames?.[0] ?? 0;
@@ -606,13 +658,15 @@
   function updateValues(sample) {
     comparison.sample = sample;
     const output = byId("compare-values");
-    if (!activeFinding) { output.textContent = ""; return; }
+    if (!activeFinding) { output.textContent = ""; byId("mobile-values").textContent = "비교 수치 없음"; return; }
     const channel = activeFinding.channel;
     const index = comparison.track.channels.indexOf(channel);
     const measured = comparison.track.track[sample][index];
     const reference = comparison.reference[sample][SwingReference.channels.indexOf(channel)];
     const displayed = comparison.displayed[sample][index];
     const normalized = channel === "shiftX" || channel === "heelR";
+    const compact = value => normalized ? value.toFixed(3) : Math.round(value * 180 / Math.PI) + "°";
+    byId("mobile-values").textContent = (SwingFindings.channels[channel] ?? channel) + " " + compact(measured) + " · 교본 " + compact(reference);
     const show = value => quantity((value * (normalized ? 1 : 180 / Math.PI)).toFixed(normalized ? 3 : 1), normalized ? "정규화" : "°");
     const entry = (label, value, style) => {
       const item = node("span", label + " ", style);
@@ -632,6 +686,7 @@
     comparison.displayed = SwingExaggeration.apply(comparison.track, comparison.reference,
       activeFinding?.positive ? null : activeFinding, Number(factor.value));
     const value = (activeFinding?.positive ? 1 : Number(factor.value)).toFixed(1);
+    mobileMode(compareToggle.getAttribute("aria-pressed") === "true");
     byId("compare-caption").replaceChildren(activeFinding?.positive ? "유지 " : "과장 ", quantity(value, "×"));
     byId("compare-factor-value").replaceChildren(quantity(value, "×"));
     if (evidence) updateOverlay();
@@ -643,6 +698,10 @@
     if (!finding) return;
     activeFinding = SwingExaggeration.resolve(comparison.track, finding);
     if (!activeFinding.range) { activeFinding = undefined; return; }
+    byId("mobile-finding").textContent = activeFinding.label;
+    compareToggle.disabled = !!activeFinding.positive;
+    if (mobileView.matches && seek) byId("comparison-controls").open = false;
+    mobileMode(false);
     for (const button of byId("finding-options").querySelectorAll("button")) {
       const numbers = button.querySelector(".finding-numbers");
       if (!button.findingNumbers) button.findingNumbers = numbers.cloneNode(true);
@@ -782,6 +841,10 @@
     byId("comparison-unavailable").hidden = !!evidence;
     byId("compare-range").hidden = true;
     byId("compare-values").replaceChildren();
+    byId("comparison-controls").open = !mobileView.matches;
+    byId("mobile-finding").textContent = "선택할 비교 항목 없음";
+    compareToggle.disabled = true;
+    mobileMode(false);
     activeFinding = undefined;
     loopBounds = undefined;
     loop.disabled = true;

@@ -41,19 +41,35 @@
         image.src = saved.image;
         image.alt = saved.positive ? "선택 프레임의 실측 자세와 유지할 동작" : "선택 프레임의 실측 자세와 교육용 과장 자세";
         const caption = node("figcaption", saved.label ?? "선택 프레임");
-        caption.append(" · ", number(saved.frame, "프레임", 0), " · ", number(saved.factor, "×"));
-        figure.append(image, caption, node("p", saved.values, "num"));
+        caption.append(" · ", number(saved.factor, "×"));
+        figure.append(image, caption);
         byId("report-image").append(figure);
       } else {
         byId("report-image").append(node("p", "이 탭에 비교 이미지가 없습니다. 도구의 비교 화면에서 리포트를 다시 열면 현재 자세가 담깁니다."));
       }
     }
     doc ??= await load(track);
-    const items = render(byId("report-findings"), track, doc);
-    byId("title").textContent = items[0]?.label ?? "스윙 네 국면을 계측했습니다";
-    byId("summary").textContent = doc.mode ? (doc.mode === "demo" ? "데모 피드백 · 실제 영상 계측" : "Gemini 종합 피드백")
-      : items.length ? "제공된 판정 파일을 바탕으로 표시했습니다."
-      : "판정 파일이 연결되면 해당 국면과 근거를 함께 표시합니다.";
+    const findings = byId("report-findings");
+    const items = render(findings, track, doc, undefined, true);
+    byId("title").textContent = "스윙 리포트";
+    const blocks = [...findings.children];
+    const move = (title, destination) => {
+      const block = blocks.find(el => el.querySelector("h3")?.textContent === title);
+      if (!block) return;
+      block.querySelector("h3").remove();
+      for (const child of [...block.children]) destination.append(child);
+      block.remove();
+    };
+    move("상담 요약 · 자기보고", byId("report-question"));
+    if (!byId("report-question").children.length) byId("report-question").textContent = "상담 입력이 없습니다.";
+    move("전체 요약", byId("summary"));
+    move("자기보고와 영상 근거", byId("summary"));
+    move("분석 한계", byId("report-limits"));
+    if (items[0]?.drill) {
+      const practice = byId("first-practice");
+      practice.querySelector("p").textContent = items[0].drill;
+      practice.hidden = false;
+    }
     byId("facts").append(number(track.meta.dur, "s"), " · ", number(track.meta.fps, "fps"), " · ", number(track.meta.samples, "표본", 0));
     byId("wrist-limit").textContent = track.meta.wrist_source === "index"
       ? "검지 방향으로 샤프트를 근사한 추정값입니다." : "검지 좌표가 없어 손목 각도를 판정하지 않습니다.";

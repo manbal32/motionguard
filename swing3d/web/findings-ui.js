@@ -65,17 +65,21 @@ window.SwingFindings = (() => {
     return [...improvements, ...positives];
   }
 
-  function render(parent, track, doc, onSelect) {
+  function render(parent, track, doc, onSelect, customer = false) {
     parent.replaceChildren();
     const items = doc.mode ? doc.findings : [...doc.findings].sort((a,b) => (severity[b.severity] ?? 0) - (severity[a.severity] ?? 0));
     const valuesFor = item => {
       const line = node("p");
       const distance = ["shiftX", "heelR"].includes(item.channel);
       const format = value => number(value, distance ? "정규화" : "°", distance ? 3 : 1);
-      if (item.frame !== undefined) line.append(number(item.frame, "프레임", 0), " · ");
+      if (customer && distance) {
+        line.textContent = item.difference < 0 ? "참고 동작보다 작게 나타났습니다." : "참고 동작보다 크게 나타났습니다.";
+        return line;
+      }
+      if (!customer && item.frame !== undefined) line.append(number(item.frame, "프레임", 0), " · ");
       line.append(doc.mode ? "측정 " : "파일 기록 ", format(item.measured), " · 교본 ", format(item.reference));
       if (doc.mode) line.append(" · 차이 ", format(item.difference));
-      if (Number.isFinite(item.confidence)) line.append(" · 추적 신뢰도 ", number(item.confidence * 100, "%", 0));
+      if (!customer && Number.isFinite(item.confidence)) line.append(" · 추적 신뢰도 ", number(item.confidence * 100, "%", 0));
       return line;
     };
     function still(item) {
@@ -101,7 +105,7 @@ window.SwingFindings = (() => {
       summary.prepend(node("strong", doc.mode === "demo" ? "데모 피드백 · 실제 영상 계측" : "Gemini 종합 피드백"));
       if (doc.reason) summary.append(node("p", doc.reason));
       const totals = Object.values(doc.usage ?? {});
-      if (totals.length) {
+      if (!customer && totals.length) {
         const tokens = node("p", "Gemini 사용량 · 입력 ");
         tokens.append(number(totals.reduce((sum, usage) => sum + (usage.input ?? 0), 0), "토큰", 0),
           " · 출력 ", number(totals.reduce((sum, usage) => sum + (usage.output ?? 0), 0), "토큰", 0));
@@ -126,6 +130,7 @@ window.SwingFindings = (() => {
 
     const feedback = section("구간별 피드백");
     const referenceTrack = SwingReference.expand(track);
+    let deferred = false;
     for (const [index, [key, title]] of phases.entries()) {
       const phase = track.events[key];
       const frame = track.meta.phase_frames?.[key];
@@ -135,15 +140,20 @@ window.SwingFindings = (() => {
         : Math.max(0, Math.min(track.track.length - 1, frame - track.meta.source_frames[0]));
       const row = track.track[sample];
       const torso = row[track.channels.indexOf("torso")] * 180 / Math.PI;
+      const quality = track.meta.channel_confidence?.torso?.[sample] ?? track.meta.phase_confidence?.[key];
+      if (customer && quality < .45) { deferred = true; continue; }
+      if (customer && Math.abs(torso - referenceTrack[sample][SwingReference.channels.indexOf("torso")] * 180 / Math.PI) < .05) continue;
       const line = node("p");
       line.append(node("strong", title), " · 몸통 ");
       if (track.meta.unavailable?.includes("torso")) line.append("이 촬영 각도에서는 측정할 수 없습니다");
       else line.append(number(torso), " / 교본 ", number(referenceTrack[sample][SwingReference.channels.indexOf("torso")] * 180 / Math.PI));
       const confidence = track.meta.phase_confidence?.[key];
-      if (confidence !== undefined) line.append(" · 추적 신뢰도 ", number(confidence * 100, "%", 0),
+      if (!customer && confidence !== undefined) line.append(" · 추적 신뢰도 ", number(confidence * 100, "%", 0),
         confidence < 0.45 ? " · 낮음" : "");
       feedback.append(line);
     }
+    if (deferred) feedback.append(node("p", "이 구간은 흔들림이 있어 판단을 미뤘습니다."));
+    if (customer && feedback.children.length === 1) feedback.remove();
 
     const improvements = section(items.some(item => item.example_only) ? "비교 예시 · 추적 신뢰도 부족" : "개선 포인트");
     const drills = section("추천 드릴");
@@ -162,7 +172,7 @@ window.SwingFindings = (() => {
       if (item.channel) {
         const values = valuesFor(item);
         if (item.deviation || Math.abs(item.measured - item.reference) >= 8) values.className = "delta";
-        if (doc.mode && item.range) {
+        if (!customer && doc.mode && item.range) {
           const position = bound => track.meta.source_frames[0] + Math.max(0, Math.min(track.track.length - 1,
             (bound * track.meta.dur - track.meta.hold) / (track.meta.dur - track.meta.hold) * (track.track.length - 1)));
           values.append(" · 구간 ", number(position(item.range[0]), "프레임", 0), "–", number(position(item.range[1]), "프레임", 0));

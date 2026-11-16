@@ -33,6 +33,17 @@ dd { margin:0 0 8px; color:var(--ink-2); }
 #report-image img { aspect-ratio:auto; display:block; }
 .print-help { color:var(--ink-2); font-size:12px; }
 .finding-still { max-width:180px; margin:6px 0; }
+@media(max-width:570px) {
+  .sheet { margin-top:12px; }
+  .report-head, section { padding-block:8px; }
+  #report-answer { line-height:1.5; }
+  #report-answer p { margin:2px 0; }
+  #report-answer h2 { margin:0; }
+  #report-image img { max-height:220px; object-fit:contain; }
+}
+@media print {
+  .report-next, .report-limits, .report-appendix { break-before:page; }
+}
 @page { size:A4; margin:14mm; }
 @media print {
   :root, :root[data-theme="dark"] { color-scheme:light; --paper:white; --ink:#1b2024; --ink-2:#575a58; --ink-3:#666a66; --rule:#c8c9c1; --signal:#9c530c; }
