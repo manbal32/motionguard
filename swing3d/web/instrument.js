@@ -363,6 +363,10 @@
   }
 
   function updateOverlay(mediaTime = video.currentTime) {
+    if (!evidence && comparison?.track.pose_landmarks) {
+      paintTrackPose();
+      return;
+    }
     if (!evidence || !video.videoWidth) return;
     const overlay = byId("overlay");
     const aspect = video.videoWidth / video.videoHeight;
@@ -434,6 +438,40 @@
     mobileContext.drawImage(alternate, 0, 0);
   }
 
+  function paintTrackPose() {
+    const {track, displayed, reference} = comparison;
+    const sample = comparison.sample ?? 0;
+    const points = track.pose_landmarks[sample];
+    const context = alternateContext;
+    const stage = byId("comparison-panes");
+    if (!points || !stage.clientWidth || !stage.clientHeight) return;
+    alternate.width = stage.clientWidth;
+    alternate.height = stage.clientHeight;
+    const body = points.slice(11).filter(point => point[2] > 0);
+    if (!body.length) return;
+    const xs = body.map(point => point[0]), ys = body.map(point => point[1]);
+    const x = (Math.min(...xs) + Math.max(...xs)) / 2;
+    const y = (Math.min(...ys) + Math.max(...ys)) / 2;
+    const scale = Math.min(alternate.width * .65 / Math.max(.01, Math.max(...xs) - Math.min(...xs)),
+      alternate.height * .62 / Math.max(.01, Math.max(...ys) - Math.min(...ys)));
+    const measured = points.map(([px, py, confidence]) =>
+      [(px - x) * scale + alternate.width / 2, (py - y) * scale + alternate.height / 2, confidence]);
+    for (const hand of [19, 20]) {
+      if (!measured[hand][2]) measured[hand] = [...measured[hand - 4].slice(0, 2), 0];
+    }
+    const baseline = track.track[sample];
+    const exaggerating = compareToggle.getAttribute("aria-pressed") === "true";
+    const shown = project(measured, baseline, key => (exaggerating ? displayed[sample] : baseline)[track.channels.indexOf(key)]);
+    const model = project(measured, baseline, key => key === activeFinding?.channel
+      ? reference[sample][SwingReference.channels.indexOf(key)] : baseline[track.channels.indexOf(key)]);
+    const colors = {far:"#2F7F69", near:"#58C9A3", shirt:"#58C9A3", skin:"#83D8BA", shoes:"#58C9A3", outline:"#2F7F69"};
+    if (byId("compare-reference").getAttribute("aria-pressed") === "true") {
+      SwingPoseAvatar.paint(context, model, colors, .30);
+    }
+    SwingPoseAvatar.paint(context, shown, colors);
+    if (exaggerating) paintCue(measured, shown, 1);
+  }
+
   byId("playback-details").open = false;
   let swipeStart;
   const panes = byId("comparison-panes");
@@ -458,6 +496,7 @@
     byId("overlay").dataset.mobileMode = exaggerated ? "exaggerated" : "measured";
     compareToggle.setAttribute("aria-pressed", String(exaggerated));
     compareToggle.textContent = exaggerated ? "과장 " + Number(factor.value).toFixed(1) + "×" : "◉ 누르고 있으면 과장";
+    if (!evidence && comparison?.track.pose_landmarks) paintTrackPose();
   }
   let holdTimer;
   let holding = false;
@@ -722,7 +761,10 @@
     byId("compare-caption").replaceChildren(activeFinding?.positive ? "유지 " : "과장 ", quantity(value, "×"));
     byId("compare-factor-value").replaceChildren(quantity(value, "×"));
     if (evidence) updateOverlay();
-    else updateValues(comparison.sample ?? 0);
+    else {
+      updateValues(comparison.sample ?? 0);
+      paintTrackPose();
+    }
   }
 
   function chooseFinding(id, seek = true) {
@@ -761,7 +803,7 @@
       band.style.width = 100 * (right - left) / timeline + "%";
     }
     band.hidden = !evidence;
-    comparison.sample = sampleIndex(Math.round((left + right) / 2));
+    comparison.sample = sampleIndex(activeFinding.frame ?? Math.round((left + right) / 2));
     factor.disabled = !!activeFinding.positive;
     factor.value = activeFinding.positive ? 1 : SwingExaggeration.levels[activeFinding.severity] ?? 2;
     paneLabel.textContent = activeFinding.positive ? "같은 프레임 · 유지할 동작" : "같은 프레임 · 교육용 과장";
@@ -875,7 +917,9 @@
     byId("findings").hidden = false;
     byId("swing-view").hidden = false;
     byId("overlay").hidden = false;
-    byId("comparison-panes").hidden = byId("video-transport").hidden = !evidence;
+    byId("comparison-panes").hidden = !(evidence || track.pose_landmarks);
+    byId("video-transport").hidden = !evidence;
+    byId("overlay").classList.toggle("track-only", !evidence && !!track.pose_landmarks);
     byId("comparison-unavailable").hidden = !!evidence;
     byId("compare-range").hidden = true;
     byId("compare-values").replaceChildren();
@@ -1082,6 +1126,9 @@
     updateOverlay();
   });
   new ResizeObserver(() => updateOverlay()).observe(video);
+  new ResizeObserver(() => {
+    if (!evidence && comparison?.track.pose_landmarks) paintTrackPose();
+  }).observe(byId("comparison-panes"));
   byId("toggle-joints").addEventListener("click", event => {
     const toggle = event.currentTarget;
     toggle.setAttribute("aria-pressed", String(toggle.getAttribute("aria-pressed") !== "true"));

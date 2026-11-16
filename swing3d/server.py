@@ -281,7 +281,7 @@ class Handler(SimpleHTTPRequestHandler):
                 temporary.unlink(missing_ok=True)
 
     def get_or_build(self, payload):
-        key = hashlib.sha256(f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}:report-1".encode() + b"\0" + payload).hexdigest()
+        key = hashlib.sha256(f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}:report-2".encode() + b"\0" + payload).hexdigest()
         target = self.tracks / (key + ".json")
         if target.exists():
             return json.loads(target.read_text(encoding="utf-8"))
@@ -301,6 +301,13 @@ class Handler(SimpleHTTPRequestHandler):
         if not math.isfinite(fps) or fps <= 0:
             raise ValueError("유효하지 않은 프레임 속도입니다.")
         result = swing_track.build_track(frames, fps)
+        from video_pose import LANDMARK_NAMES
+        start, end = result["meta"]["source_frames"]
+        result["pose_landmarks"] = [
+            [[*frame[name][:2], frame[name][3]] if name in frame and all(map(math.isfinite, frame[name])) else [0, 0, 0]
+             for name in LANDMARK_NAMES]
+            for frame in frames[start:end + 1]
+        ]
         result["track_id"] = key
         sample = ROOT / "samples/golf1_export.csv"
         if sample.is_file() and payload == sample.read_bytes():
