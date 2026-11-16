@@ -1,0 +1,224 @@
+<title>MotionGuard 모바일 목표 화면</title>
+<style>
+/* 390×844 네 화면. 한 화면에 하나씩. */
+:root{
+  --ground:#0C141C; --panel:#152435; --panel-2:#1C3049; --rule:#243648;
+  --ink:#F3EFE6; --ink-2:#9DACBD; --ink-3:#64748B;
+  --em:#58C9A3; --em-dim:#2F7F69; --amber:#E8A33D;
+  --sans:'Noto Sans KR','Apple SD Gothic Neo',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+body{background:#060A0E;font-family:var(--sans);padding:40px;display:flex;gap:36px;align-items:flex-start}
+.ph{width:390px;height:844px;background:var(--ground);color:var(--ink);
+  border:1px solid #2A3A4C;border-radius:28px;overflow:hidden;position:relative;
+  display:flex;flex-direction:column;flex:0 0 auto}
+.cap{position:absolute;top:-30px;left:2px;font-size:14px;color:#7D8C9E;letter-spacing:.04em}
+.wrap{position:relative}
+
+/* 공통 바 */
+.top{display:flex;align-items:center;gap:10px;padding:16px 18px 12px;flex:0 0 auto}
+.mark{font-size:15px;font-weight:700;letter-spacing:.02em}
+.mark i{font-style:normal;color:var(--em)}
+.step{margin-left:auto;font-size:12px;color:var(--ink-3);letter-spacing:.1em}
+.body{flex:1 1 auto;overflow:hidden;padding:0 18px;display:flex;flex-direction:column;gap:14px}
+.foot{flex:0 0 auto;padding:14px 18px 22px;border-top:1px solid var(--rule);background:var(--ground)}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;height:52px;border:0;
+  border-radius:12px;background:var(--em);color:#06201A;font-family:var(--sans);font-size:17px;font-weight:700}
+.btn.ghost{background:transparent;border:1px solid var(--rule);color:var(--ink-2);height:48px;font-size:15px;font-weight:500}
+
+h2{font-size:21px;font-weight:700;line-height:1.35;letter-spacing:-.01em}
+.sub{font-size:13.5px;color:var(--ink-2);line-height:1.55}
+
+/* 1 업로드·상담 */
+.thumb{height:132px;border-radius:12px;overflow:hidden;position:relative;flex:0 0 auto;
+  background:linear-gradient(170deg,#1B2B22,#0E1812)}
+.thumb .f{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+.thumb .tag{position:absolute;left:10px;bottom:9px;font-size:11px;color:var(--ink-2);
+  background:rgba(6,10,14,.72);padding:3px 8px;border-radius:5px}
+.chat{display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.msg{max-width:84%;font-size:14px;line-height:1.5;padding:11px 14px;border-radius:14px}
+.msg.me{align-self:flex-end;background:var(--em-dim);color:#EAF7F2;border-bottom-right-radius:4px}
+.msg.ai{align-self:flex-start;background:var(--panel);color:var(--ink);border-bottom-left-radius:4px}
+.msg b{display:block;font-size:10.5px;font-weight:600;color:var(--ink-3);margin-bottom:3px;letter-spacing:.08em}
+.field{display:flex;gap:8px;align-items:center;margin-top:auto;padding-bottom:4px}
+.field .in{flex:1;height:46px;border:1px solid var(--rule);border-radius:12px;background:var(--panel);
+  display:flex;align-items:center;padding:0 14px;font-size:14px;color:var(--ink-3)}
+.field .send{width:46px;height:46px;border-radius:12px;background:var(--panel-2);
+  display:flex;align-items:center;justify-content:center;color:var(--em);font-size:17px}
+
+/* 2 요약 */
+.card{background:var(--panel);border-radius:12px;padding:13px 14px}
+.card .k{font-size:11px;color:var(--em);letter-spacing:.1em;margin-bottom:5px}
+.card .v{font-size:14.5px;line-height:1.5;color:var(--ink)}
+.card .v.empty{color:var(--ink-3)}
+.note{font-size:12.5px;color:var(--ink-3);line-height:1.5}
+
+/* 3 비교 */
+.stage{position:relative;flex:1 1 auto;margin:0 -18px;background:#0A1016;overflow:hidden}
+.stage .bay{position:absolute;inset:0;background:
+  linear-gradient(180deg,#141C14 0%,#1C2A1E 62%,#24351F 62%,#1A2617 100%)}
+.stage svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+.fname{position:absolute;left:14px;top:12px;right:14px;display:flex;align-items:center;gap:8px}
+.fname .t{font-size:14.5px;font-weight:700}
+.fname .n{margin-left:auto;font-size:11.5px;color:var(--ink-3)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--amber);flex:0 0 auto}
+.readout{position:absolute;left:0;right:0;bottom:0;padding:12px 16px 14px;
+  background:linear-gradient(180deg,rgba(10,16,22,0),rgba(10,16,22,.94) 42%)}
+.readout .line{font-size:14.5px;color:var(--ink);letter-spacing:.01em}
+.readout .line b{color:var(--amber);font-weight:700}
+.readout .line s{text-decoration:none;color:var(--ink-3)}
+.scale{display:flex;align-items:center;gap:10px;margin-top:9px}
+.scale .bar{flex:1;height:3px;border-radius:2px;background:#2B3B4D;position:relative}
+.scale .bar i{position:absolute;left:0;top:0;bottom:0;width:62%;background:var(--em);border-radius:2px}
+.scale .bar u{position:absolute;left:62%;top:50%;width:15px;height:15px;margin:-7.5px 0 0 -7.5px;
+  background:var(--ink);border-radius:50%}
+.scale .v{font-size:12.5px;color:var(--ink-2);min-width:34px;text-align:right}
+.hold{display:flex;align-items:center;justify-content:center;gap:9px;height:56px;border-radius:14px;
+  background:var(--amber);color:#2A1A05;font-size:16px;font-weight:700;margin-top:12px}
+.pager{display:flex;align-items:center;justify-content:space-between;padding:10px 2px 0}
+.pager span{font-size:13px;color:var(--ink-3)}
+.pager .pill{display:flex;gap:5px}
+.pager .pill i{width:6px;height:6px;border-radius:50%;background:#2B3B4D}
+.pager .pill i.on{background:var(--amber);width:18px;border-radius:3px}
+
+/* 4 리포트 */
+.rhead{font-size:11px;letter-spacing:.14em;color:var(--em)}
+.answer{font-size:15px;line-height:1.65;color:var(--ink)}
+.answer em{font-style:normal;color:var(--amber);font-weight:600}
+.shot{height:150px;border-radius:12px;overflow:hidden;position:relative;display:flex;flex:0 0 auto}
+.shot>div{flex:1;position:relative;overflow:hidden}
+.shot .l{background:linear-gradient(170deg,#1B2B22,#0E1812)}
+.shot .r{background:#0E1A16;border-left:1px solid var(--rule)}
+.shot svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+.shot .lb{position:absolute;left:7px;bottom:6px;font-size:10px;color:var(--ink-2);
+  background:rgba(6,10,14,.7);padding:2px 6px;border-radius:4px}
+.drill{background:var(--panel);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:12px 14px}
+.drill .k{font-size:11px;letter-spacing:.1em;color:var(--amber);margin-bottom:5px}
+.drill .v{font-size:14px;line-height:1.55;color:var(--ink)}
+.more{font-size:13px;color:var(--ink-3);text-align:center;padding-top:4px}
+</style>
+
+<!-- 공용 골퍼 실루엣 -->
+<svg width="0" height="0" style="position:absolute"><defs>
+<g id="golfer">
+  <path d="M30 14a7 7 0 1 1 14 0 7 7 0 0 1-14 0Z"/>
+  <path d="M37 21c-7 1-11 5-12 11l-3 20c-.4 3 1 5 4 5l22 .4c3 0 4.6-2 4.2-5L49 32c-1-6-5-10-12-11Z"/>
+  <path d="M25 33c-4 4-8 9-10 14-1 2 2 4 3.4 2l9-12ZM49 33c4 4 8 9 10 14 1 2-2 4-3.4 2l-9-12Z"/>
+  <path d="M27 56l-3 24c-.3 3 4 3.4 4.6.6L33 62l3 19c.5 2.8 5 2.4 4.6-.6l-3-24Z"/>
+  <path d="M22 80c-2 1-3 3-1 3.6l9 .6c1.6 0 2-2.4.4-2.8ZM41 80c-2 1-3 3-1 3.6l9 .6c1.6 0 2-2.4.4-2.8Z"/>
+  <path d="M58 48 72 14" stroke-width="2.2" stroke="currentColor" fill="none" stroke-linecap="round"/>
+  <path d="M70 13h5.5" stroke-width="3" stroke="currentColor" fill="none" stroke-linecap="round"/>
+</g>
+</defs></svg>
+
+<!-- ① 업로드 · 상담 -->
+<div class="wrap"><div class="cap">① 업로드 · 상담</div>
+<div class="ph">
+  <div class="top"><span class="mark">Motion<i>Guard</i></span><span class="step">1 / 3</span></div>
+  <div class="body">
+    <div class="thumb">
+      <svg class="f" width="78" height="96" viewBox="0 0 74 88" fill="#CFE3D6" opacity=".82"><use href="#golfer"/></svg>
+      <span class="tag">4.0초 · 세로</span>
+    </div>
+    <h2>어디가 고민이세요?</h2>
+    <div class="chat">
+      <div class="msg me">백스윙이 잘 안 돼</div>
+      <div class="msg ai"><b>코치</b>백스윙에서 어느 지점이 불편하신가요? 테이크어웨이 방향인지, 몸통 회전인지요.</div>
+      <div class="msg me">팔로만 드는 느낌이야</div>
+    </div>
+    <div class="field">
+      <div class="in">메시지 입력</div>
+      <div class="send">↑</div>
+    </div>
+  </div>
+  <div class="foot"><div class="btn">분석하기</div></div>
+</div></div>
+
+<!-- ② 요약 승인 -->
+<div class="wrap"><div class="cap">② 요약 확인</div>
+<div class="ph">
+  <div class="top"><span class="mark">Motion<i>Guard</i></span><span class="step">2 / 3</span></div>
+  <div class="body">
+    <h2>이렇게 이해했어요</h2>
+    <p class="sub">맞는지 확인해 주세요. 고치시면 그대로 분석에 반영됩니다.</p>
+    <div class="card"><div class="k">고민</div><div class="v">백스윙이 잘 안 됨</div></div>
+    <div class="card"><div class="k">개선하고 싶은 것</div><div class="v">몸의 꼬임</div></div>
+    <div class="card"><div class="k">본인이 생각한 원인</div><div class="v">팔로만 드는 느낌이라 꼬임이 부족함</div></div>
+    <div class="card"><div class="k">연습 목표</div><div class="v empty">입력 없음</div></div>
+    <p class="note">영상은 이 기기에서 처리합니다. 동의한 상담 내용과 계측 수치만 전송됩니다.</p>
+  </div>
+  <div class="foot">
+    <div class="btn">이대로 분석</div>
+    <div style="height:9px"></div>
+    <div class="btn ghost">고치기</div>
+  </div>
+</div></div>
+
+<!-- ③ 결과 · 비교 -->
+<div class="wrap"><div class="cap">③ 결과 — 비교가 주인공</div>
+<div class="ph">
+  <div class="top"><span class="mark">Motion<i>Guard</i></span><span class="step">3 / 3</span></div>
+  <div class="body" style="padding-bottom:0">
+    <div class="stage">
+      <div class="bay"></div>
+      <!-- 교본 잔상 -->
+      <svg width="150" height="186" viewBox="0 0 74 88" fill="#58C9A3" opacity=".22"
+           style="margin-left:-9px"><use href="#golfer"/></svg>
+      <!-- 과장된 자세 -->
+      <svg width="150" height="186" viewBox="0 0 74 88" fill="#58C9A3" opacity=".92"><use href="#golfer"/></svg>
+      <!-- 각도 호와 화살표 -->
+      <svg width="150" height="186" viewBox="0 0 74 88" fill="none" stroke="#E8A33D" stroke-width="1.6">
+        <path d="M22 44a16 16 0 0 1 14-6" stroke-linecap="round"/>
+        <path d="M36 38l-4.6-2.4.6 5.2Z" fill="#E8A33D" stroke="none"/>
+      </svg>
+      <div class="fname"><span class="dot"></span><span class="t">골반 회전 부족</span><span class="n">1 / 3</span></div>
+      <div class="readout">
+        <div class="line">백스윙 탑 · <b>42°</b> <s>교본 24°</s></div>
+        <div class="scale">
+          <span class="v" style="text-align:left">1.0×</span>
+          <span class="bar"><i></i><u></u></span>
+          <span class="v">2.5×</span>
+        </div>
+      </div>
+    </div>
+    <div class="hold">◉ 누르고 있으면 과장</div>
+    <div class="pager">
+      <span>← 이전</span>
+      <span class="pill"><i class="on"></i><i></i><i></i></span>
+      <span>다음 →</span>
+    </div>
+  </div>
+  <div class="foot"><div class="btn ghost">리포트 보기</div></div>
+</div></div>
+
+<!-- ④ 리포트 첫 화면 -->
+<div class="wrap"><div class="cap">④ 리포트 — 첫 화면에 답</div>
+<div class="ph">
+  <div class="top"><span class="mark">Motion<i>Guard</i></span><span class="step">리포트</span></div>
+  <div class="body">
+    <div>
+      <div class="rhead">물어보신 것</div>
+      <p class="sub" style="margin-top:6px">백스윙이 잘 안 됨 · 팔로만 드는 느낌</p>
+    </div>
+    <div>
+      <div class="rhead">답</div>
+      <p class="answer" style="margin-top:7px">보신 게 맞습니다. 몸통은 교본만큼 돌았는데
+        <em>골반이 따라오지 않았습니다.</em> 그래서 팔로만 드는 느낌이 납니다.</p>
+    </div>
+    <div class="shot">
+      <div class="l">
+        <svg width="96" height="118" viewBox="0 0 74 88" fill="#CFE3D6" opacity=".8"><use href="#golfer"/></svg>
+        <span class="lb">내 스윙</span>
+      </div>
+      <div class="r">
+        <svg width="96" height="118" viewBox="0 0 74 88" fill="#58C9A3" opacity=".9"><use href="#golfer"/></svg>
+        <span class="lb">과장 2.5×</span>
+      </div>
+    </div>
+    <div class="drill">
+      <div class="k">먼저 이것부터</div>
+      <div class="v">클럽을 어깨에 메고 <b>골반만</b> 돌려 백스윙 탑을 만드는 연습</div>
+    </div>
+    <p class="more">아래로 · 나머지 2가지 · 연습 영상 · 재지 못한 것</p>
+  </div>
+</div></div>
