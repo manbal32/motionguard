@@ -245,14 +245,19 @@ td { text-align: right; white-space: nowrap; }
   width:min(calc(100% - 2px), calc(min(100cqh, 420px) * var(--video-aspect, 1.7778)));
   max-width:none;
 }
-#upload-preview { flex:2 1 132px; height:0; min-height:105px; max-height:none; }
-#coach-panel { flex:3 1 260px; }
+/* 영상이 주인공이다. 세로 영상도 세로로 커져야 한다 */
+#upload-preview { flex:4 1 300px; height:0; min-height:200px; max-height:none;
+  width:100%; object-fit:contain; background:#0A1016; border-radius:12px; }
+/* 상담 영역은 눌려도 잘리지 않는다 */
+#coach-panel { flex:2 1 210px; overflow-y:auto; overscroll-behavior:contain; }
+#coach-form { flex:0 0 auto; }
 #coach-log { flex:1; min-height:0; max-height:none; }
 #coach-log:empty { background:var(--panel); border-radius:12px; }
 #upload:not(:has(#upload-preview:not([hidden]))) #drop { flex:1; display:grid; align-content:center; justify-items:start; gap:8px; }
-.summary-fields { flex:1; grid-auto-rows:minmax(64px,1fr); }
+/* 빈 칸을 화면만큼 늘리지 않는다. 내용만큼만 */
+.summary-fields { flex:0 0 auto; grid-auto-rows:auto; }
 .summary-fields label { display:flex; flex-direction:column; }
-.summary-fields textarea { flex:1; min-height:28px; }
+.summary-fields textarea { min-height:28px; }
 #overlay,#upload { min-width:0; }
 .instrument { height:100dvh; min-height:fit-content; }
 .flow-foot { flex:none; }
