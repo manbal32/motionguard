@@ -917,10 +917,14 @@
     reportLink.href = "/report/" + encodeURIComponent(track.track_id)
       + (coaching?.report_id ? "?coaching=" + coaching.report_id : "");
     reportLink.onclick = async event => {
-      if (!coaching?.report_id || !evidence || video.readyState < 2) return;
+      if (!coaching?.report_id || !evidence) return;
       event.preventDefault();
       video.pause();
       if (video.seeking) await new Promise(resolve => video.addEventListener("seeked", resolve, {once: true}));
+      if (video.readyState < 2) {
+        location.assign(reportLink.href);
+        return;
+      }
       updateOverlay();
       const snapshot = document.createElement("canvas");
       snapshot.width = 960;

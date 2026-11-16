@@ -53,8 +53,8 @@ dd { margin:0 0 8px; color:var(--ink-2); }
   :root { --sans:"Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif; }
   :root[data-theme="dark"] { --paper:#0C141C; --ink:#F3EFE6; --ink-2:#9DACBD; --ink-3:#64748B; --rule:#243648; --signal:#E8A33D; }
 }
-@media screen and (max-width:719px) {
-  .sheet { width:auto; margin:0; padding:16px 18px 12px; }
+@media screen {
+  .sheet { width:min(100%, 560px); margin:0 auto; padding:16px 18px 12px; }
   .report-head { border:0; padding:0 0 8px; }
   #title,#facts { display:none; }
   .report-head .row { margin:8px 0 0; }
