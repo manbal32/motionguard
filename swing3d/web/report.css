@@ -44,6 +44,33 @@ dd { margin:0 0 8px; color:var(--ink-2); }
 @media print {
   .report-next, .report-limits, .report-appendix { break-before:page; }
 }
+
+.report-brand { display:flex; font-size:15px; font-weight:700; letter-spacing:.02em; }
+.report-brand em { font-style:normal; color:#58C9A3; }
+.report-brand span { margin-left:auto; color:var(--ink-2); font-size:12px; font-weight:400; }
+#report-more > summary { cursor:pointer; color:var(--ink-2); font-size:13px; padding:12px 0; }
+@media screen {
+  :root { --sans:"Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif; }
+  :root[data-theme="dark"] { --paper:#0C141C; --ink:#F3EFE6; --ink-2:#9DACBD; --ink-3:#64748B; --rule:#243648; --signal:#E8A33D; }
+}
+@media screen and (max-width:719px) {
+  .sheet { width:auto; margin:0; padding:16px 18px 12px; }
+  .report-head { border:0; padding:0 0 8px; }
+  #title,#facts { display:none; }
+  .report-head .row { margin:8px 0 0; }
+  .report-head button { min-height:44px; border-radius:12px; font-size:13px; }
+  .print-help { display:none; }
+  #report-answer,#report-comparison,#first-practice { border:0; padding:8px 0; }
+  #report-answer h2,#report-comparison h2,#first-practice h2 { font-size:12px; letter-spacing:.08em; color:#58C9A3; margin:0 0 4px; }
+  #report-answer h2:not(:first-child) { margin-top:12px; }
+  #report-question { color:var(--ink-2); font-size:13.5px; }
+  #summary { font-size:15px; line-height:1.5; }
+  #report-comparison p { font-size:12.5px; color:var(--ink-2); }
+  #report-image img { height:150px; max-height:none; border-radius:12px; background:#0A1016; }
+  #first-practice { background:var(--panel,#152435); border-left:3px solid var(--signal); border-radius:0 10px 10px 0; padding:12px 14px; }
+  #first-practice h2 { color:var(--signal); }
+}
+@media print { #report-more > summary { display:none; } }
 @page { size:A4; margin:14mm; }
 @media print {
   :root, :root[data-theme="dark"] { color-scheme:light; --paper:white; --ink:#1b2024; --ink-2:#575a58; --ink-3:#666a66; --rule:#c8c9c1; --signal:#9c530c; }

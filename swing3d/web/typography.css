@@ -14,3 +14,10 @@
 }
 .num { font: inherit; font-family: var(--mono); font-variant-numeric: tabular-nums; }
 .num small, small.unit { font-size: .76em; color: var(--ink-3); margin-inline-start: 2px; }
+@font-face {
+  font-family:"Noto Sans KR";
+  src:url("/vendor/noto-sans-kr.woff2") format("woff2");
+  font-style:normal;
+  font-weight:100 900;
+  font-display:swap;
+}

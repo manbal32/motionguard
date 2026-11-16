@@ -8,7 +8,11 @@
       button.setAttribute("aria-pressed", String(button.dataset.theme === value));
     }
   }
-  theme(matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  theme("dark");
+  let detailsWereOpen;
+  const more = byId("report-more");
+  window.addEventListener("beforeprint", () => { detailsWereOpen = more.open; more.open = true; });
+  window.addEventListener("afterprint", () => { more.open = detailsWereOpen; });
   for (const button of document.querySelectorAll("button[data-theme]")) {
     button.onclick = () => theme(button.dataset.theme);
   }

@@ -41,6 +41,13 @@
   let loopBounds;
   const loop = byId("compare-loop");
   const summaryPanel = byId("summary-review");
+  const flow = document.querySelector(".instrument");
+  function step(value) {
+    flow.dataset.step = value;
+    byId("flow-step").textContent = (value === "busy" ? 2 : value) + " / 3";
+    window.scrollTo(0, 0);
+  }
+  byId("flow-back").onclick = () => { video.pause(); step(1); };
   const summaryFields = [...summaryPanel.querySelectorAll("textarea")];
   const approve = byId("summary-approve");
   const preview = byId("upload-preview");
@@ -270,6 +277,7 @@
       byId("summary-origin").textContent = result.mode === "gemini" ? "Gemini 요약 · 확인이 필요합니다"
         : "로컬 정리 · " + (result.reason ?? "사용자 입력을 확인해 주세요.");
       summaryPanel.hidden = false;
+      step(2);
       byId("summary-heading").focus();
       report("상담 요약 확인 대기", 0);
     } catch (error) {
@@ -286,6 +294,7 @@
   };
   byId("summary-cancel").onclick = () => {
     summaryPanel.hidden = true;
+    step(1);
     report("상담 요약을 닫았습니다.", 0);
     byId("start").focus();
   };
@@ -297,6 +306,7 @@
     if (!selected || request || chatRequest) return;
     const { file, csv } = selected;
     if (!csv && !approvedSummary) return;
+    step("busy");
     const controller = new AbortController();
     request = controller;
     byId("start").disabled = byId("video").disabled = byId("csv").disabled = true;
@@ -327,9 +337,13 @@
       report("계측 완료", 100);
       await setupFindings(track, coaching);
       summaryPanel.hidden = true;
-      if (evidence && mobileView.matches) byId("overlay").scrollIntoView({block: "start"});
+      byId("result-details").hidden = byId("result-actions").hidden = false;
+      byId("result-details").open = false;
+      step(3);
+      updateOverlay();
 
     } catch (error) {
+      step(csv ? 1 : 2);
       report(controller.signal.aborted ? "분석을 취소했습니다." : (error.message || "분석에 실패했습니다.")
         + " 전신이 보이는 MP4를 선택하거나 좌표 CSV로 다시 시도해 주세요.", 0);
     } finally {
@@ -423,11 +437,30 @@
   }
 
   const mobileView = matchMedia("(max-width: 719px)");
+  byId("playback-details").open = !mobileView.matches;
+  let swipeStart;
+  const panes = byId("comparison-panes");
+  panes.addEventListener("pointerdown", event => {
+    if (mobileView.matches && event.pointerType === "touch") {
+      swipeStart = [event.clientX, event.clientY];
+      panes.setPointerCapture(event.pointerId);
+    }
+  });
+  panes.addEventListener("pointerup", event => {
+    if (!swipeStart) return;
+    const [x, y] = swipeStart;
+    swipeStart = undefined;
+    const dx = event.clientX - x;
+    if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(event.clientY - y)) {
+      byId(dx < 0 ? "finding-next" : "finding-prev").click();
+    }
+  });
+  panes.addEventListener("pointercancel", () => { swipeStart = undefined; });
   const compareToggle = byId("mobile-toggle");
   function mobileMode(exaggerated) {
     byId("overlay").dataset.mobileMode = exaggerated ? "exaggerated" : "measured";
     compareToggle.setAttribute("aria-pressed", String(exaggerated));
-    compareToggle.textContent = exaggerated ? "과장 " + Number(factor.value).toFixed(1) + "×" : "측정 1.0×";
+    compareToggle.textContent = exaggerated ? "과장 " + Number(factor.value).toFixed(1) + "×" : "◉ 누르고 있으면 과장";
   }
   let holdTimer;
   let holding = false;
@@ -436,10 +469,8 @@
     if (event.button !== 0) return;
     suppressClick = false;
     compareToggle.setPointerCapture(event.pointerId);
-    holdTimer = setTimeout(() => {
-      holding = true;
-      mobileMode(true);
-    }, 200);
+    holding = true;
+    mobileMode(true);
   });
   function releaseToggle() {
     clearTimeout(holdTimer);
@@ -452,10 +483,18 @@
     compareToggle.addEventListener(event, releaseToggle);
   }
   compareToggle.onclick = event => {
-    if (!suppressClick || event.detail === 0) mobileMode(compareToggle.getAttribute("aria-pressed") !== "true");
+    if (event.detail === 0 && !suppressClick) mobileMode(false);
     suppressClick = false;
   };
+  compareToggle.addEventListener("keydown", event => {
+    if (event.key === " " || event.key === "Enter") { event.preventDefault(); mobileMode(true); }
+  });
+  compareToggle.addEventListener("keyup", event => {
+    if (event.key === " " || event.key === "Enter") { event.preventDefault(); mobileMode(false); }
+  });
+  compareToggle.addEventListener("blur", () => mobileMode(false));
   mobileView.addEventListener("change", () => {
+    byId("playback-details").open = !mobileView.matches;
     byId("comparison-controls").open = !mobileView.matches;
     updateOverlay();
   });
@@ -699,6 +738,12 @@
     activeFinding = SwingExaggeration.resolve(comparison.track, finding);
     if (!activeFinding.range) { activeFinding = undefined; return; }
     byId("mobile-finding").textContent = activeFinding.label;
+    const position = comparison.options.findIndex(item => item.id === id);
+    byId("finding-position").textContent = (position + 1) + " / " + comparison.options.length;
+    byId("finding-prev").disabled = position < 1;
+    byId("finding-next").disabled = position >= comparison.options.length - 1;
+    byId("finding-prev").onclick = () => chooseFinding(comparison.options[position - 1].id);
+    byId("finding-next").onclick = () => chooseFinding(comparison.options[position + 1].id);
     compareToggle.disabled = !!activeFinding.positive;
     if (mobileView.matches && seek) byId("comparison-controls").open = false;
     mobileMode(false);

@@ -7,11 +7,9 @@
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-<main class="instrument">
-  <header class="masthead">
-    <p class="eyebrow">MotionGuard / Swing3D</p>
-    <h1>스윙 코칭</h1>
-    <p>고민을 이야기하고 영상으로 계측한 자세를 교본과 비교하세요.</p>
+<main class="instrument" data-step="1">
+  <header class="flow-top">
+    <strong>Motion<em>Guard</em></strong><span id="flow-step">1 / 3</span>
   </header>
   <nav class="stepper" aria-label="분석 단계">
     <a href="#upload">01 업로드</a><a href="#progress">02 분석</a><a href="#overlay">03 관절 오버레이</a>
@@ -42,18 +40,18 @@
           </form>
           <p id="coach-status" role="status"></p>
         </div>
-        <div class="row"><button id="start" disabled>분석하기</button><span id="file-info" aria-live="polite">영상을 먼저 선택하세요.</span></div>
+        <div class="flow-foot" id="upload-actions"><span id="file-info" aria-live="polite">영상을 먼저 선택하세요.</span><button id="start" disabled>분석하기</button></div>
         <section id="summary-review" hidden aria-labelledby="summary-heading">
-          <h3 id="summary-heading" tabindex="-1">상담 내용 요약 확인</h3>
+          <h2 id="summary-heading" tabindex="-1">이렇게 이해했어요</h2>
           <p id="summary-origin" role="status"></p>
           <p>사용자 자기보고입니다. 영상에서 확인된 사실은 분석 후 따로 표시합니다.</p>
           <div class="summary-fields">
-            <label>고민<textarea name="concern" maxlength="500" rows="2" readonly></textarea></label>
-            <label>개선하고 싶은 부분<textarea name="improvement" maxlength="500" rows="2" readonly></textarea></label>
-            <label>사용자가 추정한 원인<textarea name="hypothesis" maxlength="500" rows="2" readonly></textarea></label>
-            <label>연습 목표<textarea name="goal" maxlength="500" rows="2" readonly></textarea></label>
+            <label>고민<textarea name="concern" placeholder="입력 없음" maxlength="500" rows="2" readonly></textarea></label>
+            <label>개선하고 싶은 부분<textarea name="improvement" placeholder="입력 없음" maxlength="500" rows="2" readonly></textarea></label>
+            <label>사용자가 추정한 원인<textarea name="hypothesis" placeholder="입력 없음" maxlength="500" rows="2" readonly></textarea></label>
+            <label>연습 목표<textarea name="goal" placeholder="입력 없음" maxlength="500" rows="2" readonly></textarea></label>
           </div>
-          <div class="row"><button id="summary-edit">요약 수정</button><button id="summary-approve">이 내용으로 종합 분석</button><button id="summary-cancel">요약 닫기</button></div>
+          <div class="flow-foot"><button id="summary-approve">이대로 분석</button><button id="summary-edit">고치기</button><button id="summary-cancel">상담으로 돌아가기</button></div>
         </section>
       </div>
     </section>
@@ -69,6 +67,7 @@
   <section id="overlay" hidden>
     <header><span class="index">03</span><h2>스윙 나란히 비교</h2><span id="compare-caption" class="caption"></span></header>
     <p id="mobile-finding"></p>
+    <div id="finding-pager"><button id="finding-prev" aria-label="이전 비교 항목">← 이전</button><output id="finding-position"></output><button id="finding-next" aria-label="다음 비교 항목">다음 →</button></div>
     <div id="comparison-panes" class="comparison-panes">
     <div><p class="pane-label">원본 영상 · 측정 좌표</p><div class="video-stage">
       <div id="video-layer">
@@ -84,8 +83,9 @@
     </div></div>
     </div>
     <p id="comparison-unavailable" class="section-body" hidden>영상이 포함된 트랙을 열면 같은 프레임의 뼈대를 비교할 수 있습니다.</p>
-    <button id="mobile-toggle" type="button" aria-pressed="false">측정 1.0×</button>
+    <button id="mobile-toggle" type="button" aria-pressed="false">누르고 있으면 과장</button>
     <p id="mobile-values" class="num"></p>
+    <details id="playback-details" open><summary>재생 도구</summary>
     <div class="transport" id="video-transport">
       <button id="play">재생</button>
       <button id="previous" aria-label="이전 프레임">−1 <small>프레임</small></button>
@@ -97,6 +97,7 @@
       <button id="zoom-person" aria-pressed="true">인물 확대</button>
       <button id="toggle-joints" aria-pressed="true">관절 표시</button>
     </div>
+    </details>
     <div class="transport" id="factor-transport">
       <label>과장 배율 <input id="compare-factor" type="range" min="1" max="3" step="0.1" value="1"></label>
       <output id="compare-factor-value" class="num"></output>
@@ -110,6 +111,7 @@
       <div id="finding-options" class="finding-options" aria-label="비교할 결함"></div>
     </details>
   </section>
+  <details id="result-details" hidden><summary>판정 기록 · 다른 각도에서 보기</summary>
   <section id="phases" hidden>
     <header><span class="index">04</span><h2>국면 스틸컷</h2><span class="caption">스틸컷을 선택하면 원본 영상이 해당 프레임으로 이동합니다.</span></header>
     <div class="section-body">
@@ -133,10 +135,11 @@
     <header><span class="index">07</span><h2>내려받기</h2></header>
     <div class="section-body row">
       <button id="record">3D 영상 저장</button>
-      <a class="button" id="open-report">스윙 리포트 열기</a>
       <output id="record-progress" role="status"></output>
     </div>
   </section>
+  </details>
+  <footer class="flow-foot" id="result-actions" hidden><button id="flow-back">다시 상담</button><a class="button" id="open-report">리포트 보기</a></footer>
 </main>
 <script type="importmap">{"imports":{"three":"/vendor/three/three.module.js","three/addons/":"/vendor/three/addons/"}}</script>
 <script src="/reference.js"></script>

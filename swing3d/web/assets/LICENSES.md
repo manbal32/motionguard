@@ -10,3 +10,4 @@
 - `samples/golf_swing_portrait.mp4`는 같은 샘플에서 골퍼 주변을 잘라 위아래 여백을 더한 432×768 테스트 영상입니다. 원본과 동일한 CC BY 4.0을 적용합니다.
 
 - IBM Plex Sans KR and IBM Plex Mono are bundled for offline use under the SIL Open Font License 1.1. [Plex Sans KR notice](../vendor/plex-OFL.txt) · [Plex Mono notice](../vendor/plex-mono-OFL.txt)
+- `web/vendor/noto-sans-kr.woff2` is a Korean and Latin subset of Noto Sans KR, distributed under the SIL Open Font License 1.1 in `web/vendor/noto-sans-kr-OFL.txt`. [Source](https://github.com/google/fonts/tree/main/ofl/notosanskr)
