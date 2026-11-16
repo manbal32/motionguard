@@ -230,3 +230,93 @@ PC 에서도 벽이고 폰에서는 못 쓴다. **내용을 버리는 것이 아
     넘지 않는다.** 각 화면(①②③④)에서 가장 큰 빈 구간의 높이를 px 로 출력하라.
 16. 두 폭에서 **같은 컴포넌트와 같은 조작**을 쓴다. 폭에 따라 분기하는 레이아웃 코드는
     최대 폭 제한과 글자 크기 조정 외에는 두지 마라. 분기가 남아 있으면 어디인지 보고하라.
+
+---
+
+# 셸 참조 구현 — 해석하지 말고 옮겨라
+
+지난 두 번은 말로 설명해서 틀렸다. 이번엔 **동작하는 코드**를 올려 뒀다.
+
+**`mockups/shell_reference.html`** — 브라우저로 열면 네 화면이 보인다.
+`mockups/shell_reference.png` 이 그 렌더 결과다. 이 파일 상단의 CSS 가 정답이고,
+`web/style.css` 는 그것과 같은 구조가 되어야 한다. 새로 발명하지 마라.
+
+핵심은 여섯 줄이다.
+
+```css
+html, body { height: 100%; }
+body { display: flex; margin: 0; }
+
+.instrument {
+  flex: 1 1 auto;
+  width: min(840px, calc(100% - 32px));   /* 폭 분기는 이것 하나뿐 */
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;                          /* 없으면 자식이 스크롤되지 않는다 */
+  padding-block: 14px max(18px, env(safe-area-inset-bottom, 0px));
+}
+
+.flow-head { flex: 0 0 auto; }            /* 머리 — 고정 */
+.flow-body { flex: 1 1 auto; min-height: 0; overflow-y: auto;
+             display: flex; flex-direction: column; gap: 12px; }
+.flow-foot { flex: 0 0 auto; border-top: 1px solid var(--rule); }
+
+.grow { flex: 1 1 auto; min-height: 0; }  /* 남는 높이를 가져갈 요소에 붙인다 */
+```
+
+`.grow` 를 붙이는 대상 — 화면마다 **하나씩만**:
+
+| 화면 | `.grow` 를 받는 요소 |
+|---|---|
+| ① 업로드·상담 | `.media` (영상 미리보기) 와 `.chat` (대화 목록) |
+| ② 요약 확인 | 마지막 편집 칸 |
+| ③ 비교 | `.stage` (영상 무대) |
+| ④ 리포트 | 본문 스크롤 영역 |
+
+## 지금 코드에서 지울 것
+
+```css
+/* 삭제 */
+.instrument { width: min(1240px, calc(100% - 48px)); margin: 40px auto 64px; }
+@media (min-width:1280px) { .setup        { grid-template-columns: 1fr 1fr; } }
+@media (min-width:1280px) { .finding-layout { grid-template-columns: 1fr 1fr; } }
+```
+
+`1240px` 과 `40px auto 64px` 때문에 셸이 뷰포트 높이를 쓰지 않는다.
+이 두 값이 `1440 × 900` 의 빈 450px 을 만든 원인이다.
+`min-width:1280px` 2단 분기는 통과 조건 16 과 정면으로 어긋난다. 둘 다 없앤다.
+`max-width:719px` 블록과 `pointer:coarse` 블록은 **남겨도 된다** — 글자 크기와
+터치 타겟만 다루고 레이아웃을 바꾸지 않는 한.
+
+## 검증은 숫자로 보고하라
+
+내가 참조 구현을 이 방법으로 쟀고, **네 화면 전부 최대 빈 구간 18px (2.1%)** 이 나왔다.
+같은 스크립트를 `web/` 에 돌려서 같은 표를 제출하라.
+
+```js
+// 각 화면의 가장 큰 연속 빈 세로 구간
+const root = document.querySelector('.instrument');
+const h = root.getBoundingClientRect();
+const rects = [...root.querySelectorAll('*')]
+  .filter(e => e.offsetWidth > 20 && e.offsetHeight > 6)
+  .map(e => e.getBoundingClientRect())
+  .map(r => [r.top - h.top, r.bottom - h.top])
+  .sort((a, b) => a[0] - b[0]);
+let cur = 0, gap = 0;
+for (const [t, b] of rects) { if (t > cur) gap = Math.max(gap, t - cur); cur = Math.max(cur, b); }
+gap = Math.max(gap, h.height - cur);
+console.log(Math.round(gap), (gap / h.height * 100).toFixed(1) + '%');
+```
+
+제출 형식 — 이 표가 없으면 보고로 받지 않는다.
+
+| 화면 | 390×844 빈 구간 | 1440×900 빈 구간 |
+|---|---|---|
+| ① 업로드·상담 | ?px (?%) | ?px (?%) |
+| ② 요약 확인 | ?px (?%) | ?px (?%) |
+| ③ 비교 | ?px (?%) | ?px (?%) |
+| ④ 리포트 | ?px (?%) | ?px (?%) |
+
+전부 20% 이하여야 한다. 그리고 남아 있는 폭 분기(미디어 쿼리)를 전부 나열하고,
+각각 레이아웃을 바꾸는지 글자/터치만 바꾸는지 적어라.
