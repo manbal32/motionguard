@@ -366,9 +366,7 @@
     if (!evidence || !video.videoWidth) return;
     const overlay = byId("overlay");
     const aspect = video.videoWidth / video.videoHeight;
-    overlay.style.setProperty("--mobile-video-width", 420 * aspect + "px");
-    if (aspect < 1) overlay.style.setProperty("--portrait-width", 590 * aspect + "px");
-    else overlay.style.removeProperty("--portrait-width");
+    overlay.style.setProperty("--video-aspect", aspect);
     const mobile = byId("mobile-pose");
     if (mobile.width !== video.videoWidth || mobile.height !== video.videoHeight) {
       mobile.width = video.videoWidth;
@@ -433,15 +431,14 @@
     canvas.dataset.pelvis = SwingPoseAvatar.anatomy(skeleton).pelvis.join(",");
     alternate.dataset.pelvis = SwingPoseAvatar.anatomy(displayed).pelvis.join(",");
     paintCue(skeleton, displayed, scale);
-    if (mobileView.matches) mobileContext.drawImage(alternate, 0, 0);
+    mobileContext.drawImage(alternate, 0, 0);
   }
 
-  const mobileView = matchMedia("(max-width: 719px)");
-  byId("playback-details").open = !mobileView.matches;
+  byId("playback-details").open = false;
   let swipeStart;
   const panes = byId("comparison-panes");
   panes.addEventListener("pointerdown", event => {
-    if (mobileView.matches && event.pointerType === "touch") {
+    if (event.pointerType === "touch") {
       swipeStart = [event.clientX, event.clientY];
       panes.setPointerCapture(event.pointerId);
     }
@@ -493,11 +490,7 @@
     if (event.key === " " || event.key === "Enter") { event.preventDefault(); mobileMode(false); }
   });
   compareToggle.addEventListener("blur", () => mobileMode(false));
-  mobileView.addEventListener("change", () => {
-    byId("playback-details").open = !mobileView.matches;
-    byId("comparison-controls").open = !mobileView.matches;
-    updateOverlay();
-  });
+
 
   function sampleIndex(frame) {
     const start = comparison.track.meta.source_frames?.[0] ?? 0;
@@ -745,7 +738,7 @@
     byId("finding-prev").onclick = () => chooseFinding(comparison.options[position - 1].id);
     byId("finding-next").onclick = () => chooseFinding(comparison.options[position + 1].id);
     compareToggle.disabled = !!activeFinding.positive;
-    if (mobileView.matches && seek) byId("comparison-controls").open = false;
+    if (seek) byId("comparison-controls").open = false;
     mobileMode(false);
     for (const button of byId("finding-options").querySelectorAll("button")) {
       const numbers = button.querySelector(".finding-numbers");
@@ -886,7 +879,7 @@
     byId("comparison-unavailable").hidden = !!evidence;
     byId("compare-range").hidden = true;
     byId("compare-values").replaceChildren();
-    byId("comparison-controls").open = !mobileView.matches;
+    byId("comparison-controls").open = false;
     byId("mobile-finding").textContent = "선택할 비교 항목 없음";
     compareToggle.disabled = true;
     mobileMode(false);
