@@ -21,7 +21,7 @@ class EvidenceTests(TestCase):
             return frames, fps, timeline
 
         def stills(path, indices, crops):
-            self.assertEqual(indices, {"address": 98, "top": 152, "down": 161, "impact": 164, "finish": 205})
+            self.assertEqual(indices, {"address": 42, "top": 152, "down": 158, "impact": 164, "finish": 205})
             return {phase: b"\xff\xd8" + str(frame).encode() + b"\xff\xd9" for phase, frame in indices.items()}
 
         with patch.object(video_pose, "extract", side_effect=extract), patch.object(video_pose, "phase_jpegs", side_effect=stills):
