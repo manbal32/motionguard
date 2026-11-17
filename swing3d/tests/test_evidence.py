@@ -48,6 +48,19 @@ class EvidenceTests(TestCase):
         self.assertEqual(response.status, 404)
         self.assertIn("스틸컷", json.load(response)["reason"])
 
+    def test_unusable_video_reports_reason_without_generating_stills(self):
+        from test_frame_acceptance import skeleton
+        frames = [skeleton(0.6, 0.4, 0.3)] * 30
+        with patch.object(video_pose, 'extract', return_value=(frames, 30, [None] * 30)), \
+                patch.object(video_pose, 'phase_jpegs') as stills:
+            self.connection.request('POST', '/api/video', b'invalid-anatomy',
+                                    {'Accept': 'application/x-ndjson'})
+            response = self.connection.getresponse()
+            events = [json.loads(line) for line in response]
+        self.assertEqual(events[-1]['type'], 'error')
+        self.assertIn('50%', events[-1]['reason'])
+        stills.assert_not_called()
+
 
     def test_crops_use_one_scale_and_preserve_bounds(self):
         points = [[0.45, 0.4, 0.99]] * 15 + [[0.55, 0.55, 0.99]] * 18
