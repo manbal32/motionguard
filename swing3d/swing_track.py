@@ -50,7 +50,7 @@ CHANNELS = [
 ]
 
 SCHEMA = "motionguard.swingtrack/2"
-TRACK_REVISION = 3
+TRACK_REVISION = 4
 OPTIONAL = ("LEFT_INDEX", "RIGHT_INDEX")
 
 REQUIRED = [
@@ -196,7 +196,31 @@ def _index_wrist(frames):
 
 # ── 본체 ──────────────────────────────────────────────────────────────
 
-def _swing_phases(sw, fps, *, relaxed=False):
+def _address_frame(hands, top, fps):
+    """End of a low, quiet hand interval before the selected backswing top.
+
+    Compare short intervals rather than a single low observation (which can be
+    a tracking spike). Scale tolerances by this recording's hand excursion.
+    """
+    window = max(3, round(0.12 * fps))
+    last = top - math.ceil(0.30 * fps)
+    intervals = []
+    for end in range(window - 1, last + 1):
+        points = hands[end - window + 1:end + 1]
+        height = sum(p[1] for p in points) / window
+        motion = sum(math.dist(a, b) for a, b in zip(points, points[1:])) / (window - 1)
+        intervals.append((end, height, motion))
+    if not intervals:
+        return None
+    excursion = max(p[1] for p in hands[:top + 1]) - min(p[1] for p in hands[:top + 1])
+    lowest = max(height for _, height, _ in intervals)
+    low = [item for item in intervals if item[1] >= lowest - 0.05 * excursion]
+    quiet = min(motion for _, _, motion in low)
+    tolerance = max(quiet * 1.5, 0.01 * excursion / window)
+    return max(end for end, _, motion in low if motion <= tolerance)
+
+
+def _swing_phases(sw, fps, *, relaxed=False, hands=None):
     """Find a sustained excursion from a locally stable address and its return."""
     rise, fall, follow = (math.ceil(seconds * fps) for seconds in (0.30, 0.15, 0.20))
     lead = max(3, round(0.12 * fps))
@@ -220,14 +244,21 @@ def _swing_phases(sw, fps, *, relaxed=False):
                 continue
             if top - start < rise or impact - top < fall or peak < 0.55:
                 continue
-            down = max(top + 1, impact - max(2, int(0.06 * fps)))
+            # Mid-downswing, independent of recording speed. Do not move the
+            # observed top or change fps to make slow-motion footage look fast.
+            down = (top + impact) // 2
             end = min(len(sw) - 1, impact + int(0.65 * fps))
             candidates.append((peak, start, top, down, impact, end, direction))
     if not candidates:
         if not relaxed:
-            return _swing_phases(sw, fps, relaxed=True)
+            return _swing_phases(sw, fps, relaxed=True, hands=hands)
         raise ValueError("영상에서 스윙을 찾지 못했습니다. 어드레스부터 피니시까지 한 번의 스윙이 담기도록 잘라서 올려 주세요.")
-    return max(candidates)[1:]
+    start, top, down, impact, end, direction = max(candidates)[1:]
+    if hands is not None:
+        address = _address_frame(hands, top, fps)
+        if address is not None:
+            start = address
+    return start, top, down, impact, end, direction
 
 
 def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
@@ -278,11 +309,17 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     if min(shw_max, hpw_max, tln_max) <= 0:
         raise ValueError("랜드마크 폭이나 길이가 유효하지 않습니다.")
 
-    start, top, down, impact, end, back = _swing_phases(sw, fps)
+    hands = [_mid(d, "LEFT_WRIST", "RIGHT_WRIST") for d in frames]
+    start, top, down, impact, end, back = _swing_phases(sw, fps, hands=hands)
 
     base_sw, base_hx, base_heel = sw[start], hx[start], hr[start]
     width_ratio = shw[start] / shw_max
-    unavailable = [] if width_ratio >= 0.60 else ["torso", "hips"]
+    if width_ratio >= 0.80:
+        camera_facing, unavailable = "front", []
+    elif width_ratio >= 0.45:
+        camera_facing, unavailable = "oblique", ["hips"]
+    else:
+        camera_facing, unavailable = "down_the_line", ["torso", "hips"]
     crossing = max(range(down, impact + 1), key=shw.__getitem__)
 
     def rotation(widths, maximum, i):
@@ -304,8 +341,8 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     track = []
     for i in range(start, end + 1):
         s = (sw[i] - base_sw) * back            # 백스윙이 + 가 되도록 방향 정규화
-        turn = None if unavailable else round(rotation(shw, shw_max, i), 3)
-        hip = None if unavailable else round(rotation(hpw, hpw_max, i) * 0.85, 3)
+        turn = None if "torso" in unavailable else round(rotation(shw, shw_max, i), 3)
+        hip = None if "hips" in unavailable else round(rotation(hpw, hpw_max, i) * 0.85, 3)
         lean = 0.40 * (1 - tln[i] / tln_max) - base_lean + 0.26
         wrist = -(fa[i] - sw[i]) - base_wrist
         if index_wrist is not None:
@@ -353,7 +390,7 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
             "source_frames": [start, end],
             "backswing_sign": back,
             "wrist_source": "index" if index_wrist is not None else "forearm",
-            "camera_facing": "front" if not unavailable else "oblique",
+            "camera_facing": camera_facing,
             "address_shoulder_width_ratio": round(width_ratio, 4),
             "unavailable": unavailable,
             "rotation_sign_source": "frontal_pass",
