@@ -117,6 +117,8 @@ def model():
 
 
 def evidence(track):
+    if track['meta'].get('usable') is False:
+        raise ValueError(track['meta']['unusable_reason'])
     channels = list(CHANNELS)
     rows, meta = track["track"], track["meta"]
     columns = [track["channels"].index(key) for key in channels]

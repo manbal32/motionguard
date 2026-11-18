@@ -50,7 +50,7 @@ CHANNELS = [
 ]
 
 SCHEMA = "motionguard.swingtrack/2"
-TRACK_REVISION = 3
+TRACK_REVISION = 5
 OPTIONAL = ("LEFT_INDEX", "RIGHT_INDEX")
 
 REQUIRED = [
@@ -153,6 +153,8 @@ def _clean_landmarks(frames: List[Dict], fps: float, *, channel_quality=False):
 
 def _smooth(values: Sequence[float]) -> List[float]:
     """Quadratic Savitzky–Golay, seven samples, with one-sided edge fits."""
+    if len(values) < 7:
+        return list(values)
     result = []
     for i in range(len(values)):
         start = max(0, min(i - 3, len(values) - 7))
@@ -196,38 +198,138 @@ def _index_wrist(frames):
 
 # ── 본체 ──────────────────────────────────────────────────────────────
 
-def _swing_phases(sw, fps, *, relaxed=False):
+def _frame_acceptance(frames):
+    """Validate original observations before interpolation, angles or smoothing."""
+    status, previous_height = [], None
+    for i, frame in enumerate(frames):
+        shoulder, hip, ankle = (_mid(frame, 'LEFT_' + name, 'RIGHT_' + name)[1]
+                                for name in ('SHOULDER', 'HIP', 'ANKLE'))
+        height = ankle - shoulder
+        reason = None
+        if not all(math.isfinite(v) for name in REQUIRED for v in frame[name]):
+            reason = '좌표 또는 신뢰도가 유한수가 아닙니다.'
+        elif not all(0 < y < 1 for y in (shoulder, hip, ankle)):
+            reason = '어깨·골반·발목이 화면 범위를 벗어났습니다.'
+        elif height <= 0.05 or math.isclose(height, 0.05, abs_tol=1e-12):
+            reason = '발목이 어깨보다 충분히 아래에 있지 않습니다.'
+        elif not shoulder < hip < ankle:
+            reason = '골반이 어깨와 발목 사이에 있지 않습니다.'
+        elif previous_height is not None and (abs(height / previous_height - 1) >= 0.40
+                or math.isclose(abs(height / previous_height - 1), 0.40, abs_tol=1e-12)):
+            reason = '인물 높이가 직전 채택 프레임보다 40% 이상 급변했습니다.'
+        if reason is None:
+            previous_height = height
+        status.append({'frame': i, 'accepted': reason is None, 'reason': reason})
+    return status
+
+
+def _unusable_track(fps, hold, status, reason):
+    """Preserve the source timeline without inventing phases or measurements."""
+    count = len(status)
+    unavailable = CHANNELS[:-1]
+    return {
+        'schema': SCHEMA, 'channels': CHANNELS,
+        'frame_status': status,
+        'track': [[None] * len(unavailable) + [0.0] for _ in status],
+        'events': {},
+        'meta': {
+            'usable': False, 'unusable_reason': reason,
+            'accepted_frames': sum(item['accepted'] for item in status),
+            'total_frames': count, 'fps': round(fps, 2), 'hold': hold,
+            'dur': round((count - 1) / fps + hold, 3), 'samples': count,
+            'source_frames': [0, count - 1], 'backswing_sign': None,
+            'wrist_source': 'unavailable', 'camera_facing': 'unknown',
+            'address_shoulder_width_ratio': None, 'unavailable': unavailable,
+            'rotation_sign_source': 'unavailable', 'measured': [], 'modeled': [],
+            'channel_confidence': {key: [None] * count for key in unavailable},
+            'phase_frames': {}, 'phase_confidence': {},
+        },
+    }
+
+
+def _address_frame(hands, top, fps, *, frame_numbers=None):
+    """End of a low, quiet hand interval before the selected backswing top.
+
+    Compare short intervals rather than a single low observation (which can be
+    a tracking spike). Scale tolerances by this recording's hand excursion.
+    """
+    window = max(3, round(0.12 * fps))
+    numbers = list(range(len(hands))) if frame_numbers is None else frame_numbers
+    last = numbers[top] - math.ceil(0.30 * fps)
+    intervals = []
+    for end in range(window - 1, top):
+        if numbers[end] > last or numbers[end] - numbers[end - window + 1] != window - 1:
+            continue
+        points = hands[end - window + 1:end + 1]
+        height = sum(p[1] for p in points) / window
+        motion = sum(math.dist(a, b) for a, b in zip(points, points[1:])) / (window - 1)
+        intervals.append((end, height, motion))
+    if not intervals:
+        return None
+    excursion = max(p[1] for p in hands[:top + 1]) - min(p[1] for p in hands[:top + 1])
+    lowest = max(height for _, height, _ in intervals)
+    low = [item for item in intervals if item[1] >= lowest - 0.05 * excursion]
+    quiet = min(motion for _, _, motion in low)
+    tolerance = max(quiet * 1.5, 0.01 * excursion / window)
+    return max(end for end, _, motion in low if motion <= tolerance)
+
+
+def _swing_phases(sw, fps, *, relaxed=False, hands=None, frame_numbers=None):
     """Find a sustained excursion from a locally stable address and its return."""
     rise, fall, follow = (math.ceil(seconds * fps) for seconds in (0.30, 0.15, 0.20))
     lead = max(3, round(0.12 * fps))
+    numbers = list(range(len(sw))) if frame_numbers is None else frame_numbers
     candidates = []
-    for start in range(lead, len(sw) - rise - fall - follow):
-        history = sw[start - lead:start]
+    for start in range(lead, len(sw) - 1):
+        history = [sw[i] for i in range(start - lead, start)
+                   if numbers[i] >= numbers[start] - lead]
+        if len(history) < 3:
+            continue
         address = sorted(history)[len(history) // 2]
         if max(history) - min(history) > (0.40 if relaxed else 0.26) or abs(sw[start] - address) >= (0.14 if relaxed else 0.06):
             continue
         for direction in (-1, 1):
             if (sw[start + 1] - address) * direction < 0.06:
                 continue
-            impact = next((i for i in range(start + 2, len(sw) - follow)
-                           if (sw[i] - sw[start]) * direction <= 0), None)
-            if impact is None or impact - start < rise + fall:
+            impact = next((i for i in range(start + 2, len(sw))
+                           if numbers[-1] - numbers[i] >= follow
+                           and (sw[i] - sw[start]) * direction <= 0), None)
+            if impact is None or numbers[impact] - numbers[start] < rise + fall:
                 continue
-            eligible = range(start + rise, impact - fall + 1) if relaxed else range(start + 1, impact)
+            eligible = [i for i in range(start + 1, impact)
+                        if not relaxed or (numbers[i] - numbers[start] >= rise
+                                           and numbers[impact] - numbers[i] >= fall)]
+            if not eligible:
+                continue
             top = max(eligible, key=lambda i: (sw[i] - sw[start]) * direction)
             peak = (sw[top] - sw[start]) * direction
             if relaxed and peak < 0.85 * max((sw[i] - sw[start]) * direction for i in range(start + 1, impact)):
                 continue
-            if top - start < rise or impact - top < fall or peak < 0.55:
+            if numbers[top] - numbers[start] < rise or numbers[impact] - numbers[top] < fall or peak < 0.55:
                 continue
-            down = max(top + 1, impact - max(2, int(0.06 * fps)))
-            end = min(len(sw) - 1, impact + int(0.65 * fps))
+            # Mid-downswing, independent of recording speed. Do not move the
+            # observed top or change fps to make slow-motion footage look fast.
+            if impact - top < 2:
+                continue
+            midpoint = (numbers[top] + numbers[impact]) / 2
+            down = min(range(top + 1, impact), key=lambda i: abs(numbers[i] - midpoint))
+            if not 0.25 <= (numbers[down] - numbers[top]) / (numbers[impact] - numbers[top]) <= 0.75:
+                continue
+            end = max(i for i in range(impact, len(sw))
+                      if numbers[i] <= numbers[impact] + int(0.65 * fps))
+            if numbers[end] - numbers[impact] < follow:
+                continue
             candidates.append((peak, start, top, down, impact, end, direction))
     if not candidates:
         if not relaxed:
-            return _swing_phases(sw, fps, relaxed=True)
+            return _swing_phases(sw, fps, relaxed=True, hands=hands, frame_numbers=numbers)
         raise ValueError("영상에서 스윙을 찾지 못했습니다. 어드레스부터 피니시까지 한 번의 스윙이 담기도록 잘라서 올려 주세요.")
-    return max(candidates)[1:]
+    start, top, down, impact, end, direction = max(candidates)[1:]
+    if hands is not None:
+        address = _address_frame(hands, top, fps, frame_numbers=numbers)
+        if address is not None:
+            start = address
+    return start, top, down, impact, end, direction
 
 
 def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
@@ -244,8 +346,19 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
         missing = [name for name in REQUIRED if name not in frame]
         if missing:
             raise ValueError(f"프레임 {i} 필수 랜드마크 누락: {', '.join(missing)}")
+    status = _frame_acceptance(frames)
+    frame_numbers = [item['frame'] for item in status if item['accepted']]
+    if len(frame_numbers) < len(frames) / 2:
+        return _unusable_track(fps, hold, status,
+                               '해부학적으로 유효한 프레임이 전체의 50% 미만이어서 이 영상으로는 측정할 수 없습니다.')
+    # No rejected observation may become an interpolation anchor, a smoothing
+    # input, a wrist estimate or a width maximum. Keep source indices separately.
+    frames = [frames[i] for i in frame_numbers]
     index_wrist, wrist_anchors = _index_wrist(frames)
-    frames, landmark_quality = _clean_landmarks(frames, fps, channel_quality=True)
+    try:
+        frames, landmark_quality = _clean_landmarks(frames, fps, channel_quality=True)
+    except ValueError as error:
+        return _unusable_track(fps, hold, status, str(error))
     raw = []
     for d in frames:
         sh = _mid(d, "LEFT_SHOULDER", "RIGHT_SHOULDER")
@@ -276,13 +389,25 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
 
     shw_max, hpw_max, tln_max = max(shw), max(hpw), max(tln)
     if min(shw_max, hpw_max, tln_max) <= 0:
-        raise ValueError("랜드마크 폭이나 길이가 유효하지 않습니다.")
+        return _unusable_track(fps, hold, status, '채택 프레임의 랜드마크 폭이나 길이가 유효하지 않습니다.')
 
-    start, top, down, impact, end, back = _swing_phases(sw, fps)
+    hands = [_mid(d, "LEFT_WRIST", "RIGHT_WRIST") for d in frames]
+    try:
+        start, top, down, impact, end, back = _swing_phases(
+            sw, fps, hands=hands, frame_numbers=frame_numbers)
+    except ValueError:
+        return _unusable_track(fps, hold, status,
+                               '채택 프레임 안에서 어드레스부터 피니시까지의 스윙을 찾지 못했습니다. '
+                               '어드레스부터 한 번의 스윙이 담긴 영상으로 확인해 주세요.')
 
     base_sw, base_hx, base_heel = sw[start], hx[start], hr[start]
     width_ratio = shw[start] / shw_max
-    unavailable = [] if width_ratio >= 0.60 else ["torso", "hips"]
+    if width_ratio >= 0.80:
+        camera_facing, unavailable = "front", []
+    elif width_ratio >= 0.45:
+        camera_facing, unavailable = "oblique", ["hips"]
+    else:
+        camera_facing, unavailable = "down_the_line", ["torso", "hips"]
     crossing = max(range(down, impact + 1), key=shw.__getitem__)
 
     def rotation(widths, maximum, i):
@@ -304,8 +429,8 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     track = []
     for i in range(start, end + 1):
         s = (sw[i] - base_sw) * back            # 백스윙이 + 가 되도록 방향 정규화
-        turn = None if unavailable else round(rotation(shw, shw_max, i), 3)
-        hip = None if unavailable else round(rotation(hpw, hpw_max, i) * 0.85, 3)
+        turn = None if "torso" in unavailable else round(rotation(shw, shw_max, i), 3)
+        hip = None if "hips" in unavailable else round(rotation(hpw, hpw_max, i) * 0.85, 3)
         lean = 0.40 * (1 - tln[i] / tln_max) - base_lean + 0.26
         wrist = -(fa[i] - sw[i]) - base_wrist
         if index_wrist is not None:
@@ -329,13 +454,24 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
             confidence,
         ])
 
+    source_start, source_end = frame_numbers[start], frame_numbers[end]
+    phases = dict(zip(('address', 'top', 'down', 'impact', 'finish'),
+                      (frame_numbers[i] for i in (start, top, down, impact, end))))
+    # Restore gaps on the original timeline; rejected rows are explicitly null,
+    # never a confident interpolation or a zero angle. The numeric row contract
+    # stays compatible with the existing 9-channel viewer.
+    observed = dict(zip(frame_numbers[start:end + 1], track))
+    track = [observed.get(i, [None] * 9 + [0.0]) for i in range(source_start, source_end + 1)]
+    for key, values in channel_confidence.items():
+        observed_quality = dict(zip(frame_numbers[start:end + 1], values))
+        channel_confidence[key] = [observed_quality.get(i) for i in range(source_start, source_end + 1)]
     n = len(track) - 1
     dur = n / fps
     events = {
         "address": 0.0,
-        "top": (top - start) / n,
-        "down": (down - start) / n,
-        "impact": (impact - start) / n,
+        "top": (phases['top'] - source_start) / n,
+        "down": (phases['down'] - source_start) / n,
+        "impact": (phases['impact'] - source_start) / n,
         "finish": 1.0,
     }
     # hold(정지 구간)를 앞에 붙인 타임라인 기준으로 환산
@@ -345,33 +481,30 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     return {
         "schema": SCHEMA,
         "channels": CHANNELS,
+        "frame_status": status,
         "meta": {
+            "usable": True,
+            "unusable_reason": None,
+            "accepted_frames": len(frame_numbers),
+            "total_frames": len(status),
             "fps": round(fps, 2),
             "hold": hold,
             "dur": round(total, 3),
             "samples": len(track),
-            "source_frames": [start, end],
+            "source_frames": [source_start, source_end],
             "backswing_sign": back,
             "wrist_source": "index" if index_wrist is not None else "forearm",
-            "camera_facing": "front" if not unavailable else "oblique",
+            "camera_facing": camera_facing,
             "address_shoulder_width_ratio": round(width_ratio, 4),
             "unavailable": unavailable,
             "rotation_sign_source": "frontal_pass",
             "channel_confidence": channel_confidence,
             "measured": [c for c in CHANNELS if c != "confidence" and c not in unavailable and (c != "wrist" or index_wrist is not None)],
             "modeled": [] if index_wrist is not None else ["wrist"],
-            "phase_frames": {
-                "address": start, "top": top,
-                "down": down,
-                "impact": impact, "finish": end,
-            },
+            "phase_frames": phases,
             "phase_confidence": {
                 phase: round(track[index][-1], 3)
-                for phase, index in {
-                    "address": 0, "top": top - start,
-                    "down": down - start,
-                    "impact": impact - start, "finish": len(track) - 1,
-                }.items()
+                for phase, index in ((phase, frame - source_start) for phase, frame in phases.items())
             },
         },
         "events": {k: round(v, 4) for k, v in events.items()},
