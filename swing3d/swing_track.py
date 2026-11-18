@@ -50,7 +50,7 @@ CHANNELS = [
 ]
 
 SCHEMA = "motionguard.swingtrack/2"
-TRACK_REVISION = 5
+TRACK_REVISION = 6
 OPTIONAL = ("LEFT_INDEX", "RIGHT_INDEX")
 
 REQUIRED = [
@@ -208,6 +208,8 @@ def _frame_acceptance(frames):
         reason = None
         if not all(math.isfinite(v) for name in REQUIRED for v in frame[name]):
             reason = '좌표 또는 신뢰도가 유한수가 아닙니다.'
+        elif all(frame[name][3] <= 0 for name in REQUIRED):
+            reason = '인물 미검출로 채운 프레임은 측정 관측이 아닙니다.'
         elif not all(0 < y < 1 for y in (shoulder, hip, ankle)):
             reason = '어깨·골반·발목이 화면 범위를 벗어났습니다.'
         elif height <= 0.05 or math.isclose(height, 0.05, abs_tol=1e-12):
@@ -223,7 +225,7 @@ def _frame_acceptance(frames):
     return status
 
 
-def _unusable_track(fps, hold, status, reason):
+def _unusable_track(fps, hold, status, reason, extra_meta=None):
     """Preserve the source timeline without inventing phases or measurements."""
     count = len(status)
     unavailable = CHANNELS[:-1]
@@ -233,6 +235,7 @@ def _unusable_track(fps, hold, status, reason):
         'track': [[None] * len(unavailable) + [0.0] for _ in status],
         'events': {},
         'meta': {
+            **(extra_meta or {}),
             'usable': False, 'unusable_reason': reason,
             'accepted_frames': sum(item['accepted'] for item in status),
             'total_frames': count, 'fps': round(fps, 2), 'hold': hold,
@@ -338,6 +341,8 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     frames[i] 는 {landmark_name: (x, y, z, visibility), ...} 형태.
     반환값의 track 은 CHANNELS 순서의 리스트들이다.
     """
+    diagnostics = dict(getattr(frames, 'extraction_meta', {}))
+    diagnostics['shoulder_width_max'] = None
     if len(frames) < 10:
         raise ValueError("프레임이 너무 적다: %d" % len(frames))
     if not math.isfinite(fps) or fps <= 0:
@@ -350,7 +355,7 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     frame_numbers = [item['frame'] for item in status if item['accepted']]
     if len(frame_numbers) < len(frames) / 2:
         return _unusable_track(fps, hold, status,
-                               '해부학적으로 유효한 프레임이 전체의 50% 미만이어서 이 영상으로는 측정할 수 없습니다.')
+                               '해부학적으로 유효한 프레임이 전체의 50% 미만이어서 이 영상으로는 측정할 수 없습니다.', diagnostics)
     # No rejected observation may become an interpolation anchor, a smoothing
     # input, a wrist estimate or a width maximum. Keep source indices separately.
     frames = [frames[i] for i in frame_numbers]
@@ -358,7 +363,7 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     try:
         frames, landmark_quality = _clean_landmarks(frames, fps, channel_quality=True)
     except ValueError as error:
-        return _unusable_track(fps, hold, status, str(error))
+        return _unusable_track(fps, hold, status, str(error), diagnostics)
     raw = []
     for d in frames:
         sh = _mid(d, "LEFT_SHOULDER", "RIGHT_SHOULDER")
@@ -388,8 +393,9 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     hr = _smooth([r["heelR"] for r in raw])
 
     shw_max, hpw_max, tln_max = max(shw), max(hpw), max(tln)
+    diagnostics['shoulder_width_max'] = shw_max
     if min(shw_max, hpw_max, tln_max) <= 0:
-        return _unusable_track(fps, hold, status, '채택 프레임의 랜드마크 폭이나 길이가 유효하지 않습니다.')
+        return _unusable_track(fps, hold, status, '채택 프레임의 랜드마크 폭이나 길이가 유효하지 않습니다.', diagnostics)
 
     hands = [_mid(d, "LEFT_WRIST", "RIGHT_WRIST") for d in frames]
     try:
@@ -398,7 +404,7 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     except ValueError:
         return _unusable_track(fps, hold, status,
                                '채택 프레임 안에서 어드레스부터 피니시까지의 스윙을 찾지 못했습니다. '
-                               '어드레스부터 한 번의 스윙이 담긴 영상으로 확인해 주세요.')
+                               '어드레스부터 한 번의 스윙이 담긴 영상으로 확인해 주세요.', diagnostics)
 
     base_sw, base_hx, base_heel = sw[start], hx[start], hr[start]
     width_ratio = shw[start] / shw_max
@@ -483,6 +489,7 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
         "channels": CHANNELS,
         "frame_status": status,
         "meta": {
+            **diagnostics,
             "usable": True,
             "unusable_reason": None,
             "accepted_frames": len(frame_numbers),
