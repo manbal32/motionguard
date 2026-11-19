@@ -19,10 +19,9 @@ MODEL_DIR = ROOT / "models"
 MODEL_NAME = "pose_landmarker_lite.task"
 MAX_SECONDS = 30.0
 
+# MediaPipe returns 33 internally; application data starts at the shoulders.
+BODY_INDICES = tuple(range(11, 33))
 LANDMARK_NAMES = [
-    "NOSE", "LEFT_EYE_INNER", "LEFT_EYE", "LEFT_EYE_OUTER",
-    "RIGHT_EYE_INNER", "RIGHT_EYE", "RIGHT_EYE_OUTER",
-    "LEFT_EAR", "RIGHT_EAR", "MOUTH_LEFT", "MOUTH_RIGHT",
     "LEFT_SHOULDER", "RIGHT_SHOULDER", "LEFT_ELBOW", "RIGHT_ELBOW",
     "LEFT_WRIST", "RIGHT_WRIST", "LEFT_PINKY", "RIGHT_PINKY",
     "LEFT_INDEX", "RIGHT_INDEX", "LEFT_THUMB", "RIGHT_THUMB",
@@ -30,6 +29,12 @@ LANDMARK_NAMES = [
     "LEFT_ANKLE", "RIGHT_ANKLE", "LEFT_HEEL", "RIGHT_HEEL",
     "LEFT_FOOT_INDEX", "RIGHT_FOOT_INDEX",
 ]
+
+class WorldObservations(dict):
+    def __init__(self):
+        super().__init__()
+        self.world = {}
+
 
 
 class ExtractionError(Exception):
@@ -51,9 +56,10 @@ class PoseFrames(list):
     The optional evidence timeline is in original-image coordinates instead.
     A list subclass preserves the existing extract(... )[:2] calling contract.
     """
-    def __init__(self, frames, extraction_meta):
+    def __init__(self, frames, extraction_meta, world_frames=None):
         super().__init__(frames)
         self.extraction_meta = extraction_meta
+        self.world_frames = world_frames or [None] * len(frames)
 
 
 def crop_to_original(point, box):
@@ -109,7 +115,7 @@ def _detect_pass(capture, options, source_fps, *, stride=1, box=None, progress=N
     import mediapipe as mp
     from mediapipe.tasks.python import vision as mp_vision
 
-    observations = {}
+    observations = WorldObservations()
     with mp_vision.PoseLandmarker.create_from_options(options) as landmarker:
         index = 0
         while capture.grab():
@@ -130,9 +136,16 @@ def _detect_pass(capture, options, source_fps, *, stride=1, box=None, progress=N
                 int(index / source_fps * 1000))
             if result.pose_landmarks:
                 observations[index] = {
-                    LANDMARK_NAMES[i]: (lm.x, lm.y, lm.z, getattr(lm, 'visibility', 1.0))
-                    for i, lm in enumerate(result.pose_landmarks[0]) if i < len(LANDMARK_NAMES)
+                    name: (lm.x, lm.y, lm.z, getattr(lm, 'visibility', 1.0))
+                    for name, i in zip(LANDMARK_NAMES, BODY_INDICES)
+                    for lm in [result.pose_landmarks[0][i]]
                 }
+                if result.pose_world_landmarks:
+                    observations.world[index] = {
+                        name: (lm.x, lm.y, lm.z, getattr(lm, 'visibility', 1.0))
+                        for name, i in zip(LANDMARK_NAMES, BODY_INDICES)
+                        for lm in [result.pose_world_landmarks[0][i]]
+                    }
             if progress and index % (5 * stride) == 0:
                 progress('인물 찾기' if box is None else '크롭 자세 추출',
                          min(85, round((20 if box is None else 65) * index / total)
@@ -204,12 +217,12 @@ def extract(video_path: str, *, evidence=False, progress=None):
                 return tuple((d['LEFT_SHOULDER'][j] + d['RIGHT_SHOULDER'][j]) / 2 for j in (0, 1))
             original = {name: crop_to_original(p, box) for name, p in second[i].items()}
             errors.append(math.dist(midpoint(first[i]), midpoint(original)))
-    meta = {'crop_box': box, 'coordinate_space': 'crop', 'pass1_stride': 3,
+    meta = {'original_size': [width,height], 'crop_box': box, 'coordinate_space': 'crop', 'pass1_stride': 3,
             'pass1_observations': len(first), 'pass2_observations': len(second),
             'crop_alignment_error_max': max(errors) if errors else None,
             'crop_alignment_error_mean': sum(errors) / len(errors) if errors else None,
             'crop_alignment_samples': len(errors), 'extraction_seconds': time.perf_counter() - started}
-    frames = PoseFrames(frames, meta)
+    frames = PoseFrames(frames, meta, [getattr(second, "world", {}).get(i) for i in range(total)])
     return (frames, fps, timeline) if evidence else (frames, fps)
 
 def person_box(points):
