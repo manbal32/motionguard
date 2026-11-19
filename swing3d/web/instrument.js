@@ -63,6 +63,28 @@
   addEventListener("resize", fitFields);
   const approve = byId("summary-approve");
   const preview = byId("upload-preview");
+  byId('preview-slot').append(preview);
+  byId('drop').append(document.querySelector('#upload>.section-body>details'));
+  byId('coach-panel').insertBefore(byId('coach-mode'),byId('coach-log'));
+  for(const button of byId('coach-examples').children)button.onclick=()=>{message.value=button.textContent;message.focus();};
+  async function drawCSVPreview(file){
+    try{
+      const text=await file.text(),lines=text.trim().split(/\r?\n/),header=lines.shift().split(',');
+      const col=Object.fromEntries(header.map((key,i)=>[key,i]));
+      const byFrame=new Map();
+      for(const line of lines){const row=line.split(','),landmark=row[col.landmark];if(!BODY_NAMES.includes(landmark))continue;
+        const frame=Number(row[col.frame_idx]);if(!byFrame.has(frame))byFrame.set(frame,{});byFrame.get(frame)[landmark]=[Number(row[col.x]),Number(row[col.y]),Number(row[col.visibility])];}
+      const first=[...byFrame.values()].find(frame=>BODY_NAMES.every(name=>frame[name]));if(!first)return;
+      const c=byId('preview-avatar'),slot=byId('preview-slot'),dpr=devicePixelRatio||1,w=slot.clientWidth,h=slot.clientHeight;
+      c.width=w*dpr;c.height=h*dpr;const ctx=c.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+      const pose=BODY_NAMES.map(name=>first[name]),box=SwingPoseAvatar.bounds(pose.map(([x,y,v])=>[x*400,y*400,v]));
+      const scale=Math.min((w-28)/(box[2]-box[0]),(h-28)/(box[3]-box[1]));
+      const mapped=pose.map(([x,y,v])=>[(x*400-(box[0]+box[2])/2)*scale+w/2,(y*400-(box[1]+box[3])/2)*scale+h/2,v]);
+      const tint=styles.getPropertyValue('--avatar').trim(),colors=Object.fromEntries(['far','near','shirt','skin','shoes','outline'].map(k=>[k,tint]));
+      SwingPoseAvatar.paint(ctx,mapped,colors,.92);byId('preview-guide').hidden=true;c.hidden=false;
+    }catch{/* Invalid CSV is explained by the existing analysis validation. */}
+  }
+  const BODY_NAMES=['LEFT_SHOULDER','RIGHT_SHOULDER','LEFT_ELBOW','RIGHT_ELBOW','LEFT_WRIST','RIGHT_WRIST','LEFT_PINKY','RIGHT_PINKY','LEFT_INDEX','RIGHT_INDEX','LEFT_THUMB','RIGHT_THUMB','LEFT_HIP','RIGHT_HIP','LEFT_KNEE','RIGHT_KNEE','LEFT_ANKLE','RIGHT_ANKLE','LEFT_HEEL','RIGHT_HEEL','LEFT_FOOT_INDEX','RIGHT_FOOT_INDEX'];
   let messages = [];
   let chatRequest;
   let providerMode = "demo";
@@ -93,6 +115,7 @@
 
   function chatLine(label, value) {
     const line = node("li");
+    line.dataset.role=label==="나"?"user":"assistant";
     line.append(node("strong", label), node("span", value));
     byId("coach-log").append(line);
     const log = byId("coach-log");
@@ -111,7 +134,7 @@
   coachForm.addEventListener("submit", async event => {
     event.preventDefault();
     const value = message.value.trim();
-    if (!selected || request || chatRequest || composing || !value) return;
+    if (request || chatRequest || composing || !value) return;
     if (messages.length >= 20) {
       coachStatus.textContent = "상담 10턴을 기록했습니다. 분석하기를 눌러 주세요.";
       return;
@@ -122,6 +145,7 @@
     byId("coach-send").disabled = byId("start").disabled = consent.disabled = true;
     message.readOnly = true;
     coachForm.setAttribute("aria-busy", "true");
+    byId('coach-log').querySelector('.coach-welcome')?.remove();byId('coach-examples').hidden=true;
     messages.push({role: "user", text: value});
     const line = chatLine("나", value);
     coachStatus.textContent = "답변을 기다리는 중입니다.";
@@ -171,6 +195,7 @@
 
   function select(file, csv = false) {
     if (request || !file) return;
+    const replacing=!!selected;
     summaryPanel.hidden = true;
     preview.pause();
     preview.removeAttribute("src");
@@ -179,10 +204,10 @@
     chatRequest = undefined;
     composing = message.readOnly = false;
     coachForm.removeAttribute("aria-busy");
-    messages = [];
+    if(replacing){messages=[];byId("coach-log").replaceChildren(node("li","어디가 고민이세요? 한 줄로 적어 주셔도 됩니다.","coach-welcome"));byId("coach-examples").hidden=false;}
     message.value = coachStatus.textContent = "";
-    byId("coach-log").replaceChildren();
-    byId("coach-panel").hidden = true;
+    byId("coach-panel").hidden = false;
+    byId("preview-guide").hidden=false;byId("preview-avatar").hidden=true;
     byId("coach-send").disabled = consent.disabled = false;
     video.pause();
     video.removeAttribute("src");
@@ -213,7 +238,7 @@
     if (csv) {
       selected = { file, csv };
       byId("start").disabled = false;
-      byId("coach-panel").hidden=false;showMode();
+      byId("coach-panel").hidden=false;showMode();drawCSVPreview(file);
       return;
     }
     if (!/\.(mp4|mov)$/i.test(file.name)) {
@@ -234,7 +259,7 @@
       selected = { file, csv };
       byId("start").disabled = false;
       preview.src = candidate;
-      preview.hidden = false;
+      preview.hidden = false;byId("preview-guide").hidden=true;byId("preview-avatar").hidden=true;
       byId("coach-panel").hidden = false;
       showMode();
     };

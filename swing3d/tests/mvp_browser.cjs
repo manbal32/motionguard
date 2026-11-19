@@ -8,7 +8,7 @@ const fs=require('fs'),path=require('path'),root=path.resolve(__dirname,'..'),sh
   await p.goto(url);await p.locator('#csv').setInputFiles(path.join(root,'samples/swing_front_landmarks.csv'));
   const message=p.locator('#coach-message');await message.fill('백스윙 탑에서 몸통 회전이 궁금합니다.');
   await message.evaluate(e=>{e.dispatchEvent(new CompositionEvent('compositionstart'));e.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));});
-  expect(await p.locator('#coach-log li').count()).toBe(0);
+  expect(await p.locator('#coach-log li:not(.coach-welcome)').count()).toBe(0);
   await message.evaluate(e=>e.dispatchEvent(new CompositionEvent('compositionend')));await message.press('Shift+Enter');expect(await message.inputValue()).toContain('\n');await message.press('Enter');await expect(p.locator('#coach-send')).toBeEnabled();
   await message.fill('회전 순서를 천천히 연습하고 싶어요.');await p.locator('#coach-send').click();await expect(p.locator('#coach-send')).toBeEnabled();
   const snap=async name=>{await p.evaluate(()=>document.fonts.ready);await p.screenshot({path:path.join(shots,name+'.png')});metrics.screens[name]=[width,height,2];};

@@ -19,6 +19,7 @@
     <section id="upload">
       <header><span class="index">01</span><h2>영상 업로드</h2><span class="caption">최대 <b class="num">30</b><small>초</small> · <b class="num">150</b><small>MB</small></span></header>
       <div class="section-body flow-body">
+        <div id="preview-slot"><img id="preview-guide" src="/assets/capture-guide.svg" alt="전신이 화면에 들어오도록 카메라를 고정하고 스윙 한 번을 촬영해 주세요."><canvas id="preview-avatar" hidden aria-label="업로드한 좌표의 어드레스 자세"></canvas></div>
         <div id="drop">
           <strong>스윙 영상을 끌어다 놓으세요</strong>
           <p>MP4 또는 MOV · 골퍼의 전신이 보이는 영상</p>
@@ -27,12 +28,13 @@
         </div>
         <details><summary>좌표 CSV로 열기</summary><input id="csv" type="file" accept=".csv,text/csv" aria-label="좌표 CSV"></details>
         <video id="upload-preview" controls muted playsinline hidden aria-label="업로드한 스윙 미리보기"></video>
-        <div id="coach-panel" hidden>
+        <div id="coach-panel">
           <h3>어디가 고민이세요? <span id="coach-mode" class="caption" role="status"></span></h3>
           <p class="caption">영상을 먼저 선택하세요. 상담 없이 분석할 수도 있습니다.</p>
           <details class="privacy"><summary>영상·상담 데이터 안내</summary><p>영상은 이 기기에서 처리합니다. 동의하면 상담 텍스트와 계측 수치가 Gemini로 전송됩니다. 상담 요약은 로컬 리포트에 저장됩니다.</p></details>
           <label><input id="coach-consent" type="checkbox"> Gemini에 상담 텍스트와 계측 수치 전송 동의</label>
-          <ol id="coach-log" class="chat grow" aria-label="상담 기록" aria-live="polite"></ol>
+          <ol id="coach-log" class="chat grow" aria-label="상담 기록" aria-live="polite"><li class="coach-welcome">어디가 고민이세요? 한 줄로 적어 주셔도 됩니다.</li></ol>
+          <div id="coach-examples" aria-label="고민 예시"><button type="button">백스윙이 잘 안 돼요</button><button type="button">슬라이스가 납니다</button><button type="button">비거리가 줄었어요</button></div>
           <form id="coach-form">
             <label for="coach-message">스윙 고민이나 연습 목표</label>
             <div class="row"><textarea id="coach-message" maxlength="500" rows="2" aria-describedby="coach-keys" required></textarea><button id="coach-send" type="submit">보내기</button></div>
