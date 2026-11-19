@@ -1,5 +1,9 @@
 # MotionGuard — 새 세션 인수인계
 
+## 최신 실행 — 2026-11-19 (9cfee75 기준)
+
+[BUILD_COMPLETE_RESULTS.md](BUILD_COMPLETE_RESULTS.md)에 1–9단계 통과 조건 표와 실제 출력 전문을 기록했다. PR #5 구현을 이어 5단계 새 게이트·머리 잘림을 수정하고 6–9단계를 완료했다. 현재 정본 게이트 미통과 0개, 검증 한계는 결과 문서에 별도 명시했다. 새 캡처 m1–m5/d1–d5/g1–g3/h1–h2와 report.pdf가 최신이다. 이전 BUILD_RESULTS.md는 당시 3% 게이트로 중단한 역사 기록이다.
+
 ## 먼저 읽을 것
 
 **[MOTIONGUARD_BUILD.md](MOTIONGUARD_BUILD.md) 가 전체 단일 기준이다.**
@@ -33,3 +37,12 @@
 - 얼굴 11점은 만들지 않는다. 어깨 아래 22점만
 - SMPL / SMPL-X / GVHMR 사용 금지 (비영리 라이선스. 이것은 사업이다)
 - 로컬 MediaPipe 모델과 vendor 파일은 유지해 오프라인 계측이 가능해야 한다
+
+## 2026-11-19 구현·실측 인계
+
+첨부 단일 기준으로 1~4단계를 수행하고 **5단계 픽셀 조건 미통과에서 중단**했습니다. 자세한 표와 증거는 [BUILD_RESULTS.md](BUILD_RESULTS.md).
+- 실제 스윙: 81/118/141/146/172, X-factor 탑 −33.6319° / 임팩트 +12.6589°.
+- 얼굴 없는 22점, world 회전, 3상태 안내, 점수 API 30.04/100 구현.
+- 390px 캔버스 이동 33.1198px, 픽셀 차이 **2.171846% < 3%**. 머리 상단 잘림도 남음.
+- Python 43 tests +13 subtests, JS 4 tests 통과. `python tests/build_browser.py`는 실제 픽셀 기준에서 exit 1.
+- **6~9단계 미진행**. tokens/design 전면 이식, 새 리포트/PDF, 프로필/예상 타수/drills/최종 15장 캡처가 완료된 것이 아님.
