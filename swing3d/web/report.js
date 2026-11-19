@@ -3,11 +3,11 @@
  const $=id=>document.getElementById(id),{node,labels,phases,cell,pair,improvements,diagram}=MotionCustomer;
  $('print-report').onclick=async()=>{await document.fonts.ready;window.print();};
  try{
-  const id=location.pathname.split('/').at(-1),reportId=new URLSearchParams(location.search).get('coaching');
+  const id=new URLSearchParams(location.search).get('track')??location.pathname.split('/').at(-1),reportId=new URLSearchParams(location.search).get('coaching');
   if(!/^[a-f0-9]{64}$/.test(id)||!/^[a-f0-9]{32}$/.test(reportId??''))throw Error('리포트 주소를 확인해 주세요.');
   const response=await fetch('/api/coaching/report/'+reportId);if(!response.ok)throw Error('리포트를 찾을 수 없습니다.');const doc=await response.json();
   if(doc.track_id!==id)throw Error('분석과 리포트가 일치하지 않습니다.');
-  $('return-result').href='/?result='+reportId;
+  $('return-result').href=new URL('./?result='+reportId,location.href).href;
   const report=doc.customer_report,items=improvements(doc),score=doc.score;
   $('report-round').textContent=String(doc.session??1).padStart(2,'0')+'회';$('report-date').textContent=(report.issued_at??'').slice(0,10);
   $('report-total').textContent=score.total===null?'—':Math.round(score.total);

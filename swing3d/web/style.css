@@ -31,3 +31,4 @@ textarea,input[type=text],select{font:var(--t-body);background:var(--paper);colo
 
 /* Keep the body on stage; transport and fine selection are deliberate disclosures. */
 #mobile-values{display:none}#playback-details #comparison-controls{display:block}#overlay>#comparison-panes{min-height:45%}#overlay>#point-phases{order:1}#overlay>#mobile-toggle{order:2}#overlay>#finding-pager{order:3}#overlay>#playback-details{order:4}#playback-details #point-controls{margin-block:9px}#playback-details #mobile-values{display:block}#result-actions{flex-direction:column}
+.site-notice{flex:none;font:var(--t-note);background:var(--warn-bg);color:var(--ink);padding:8px;border-radius:var(--r)}
