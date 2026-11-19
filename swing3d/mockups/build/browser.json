@@ -1,0 +1,26 @@
+{
+  "canvasCSS": [
+    356,
+    302
+  ],
+  "landmarks": 22,
+  "frame": 118,
+  "maxJointPx": 33.119763057121084,
+  "pixelDifference": 0.023792692908698565,
+  "playFrames": [
+    118,
+    133
+  ],
+  "seekFrame": 141,
+  "exact390": {
+    "canvasCSS": [
+      390,
+      302
+    ],
+    "landmarks": 22,
+    "frame": 118,
+    "maxJointPx": 33.119763057121084,
+    "pixelDifference": 0.021718458142299203
+  },
+  "errors": []
+}
