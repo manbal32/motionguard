@@ -45,10 +45,13 @@
   const flow = document.querySelector(".instrument");
   function step(value) {
     flow.dataset.step = value;
-    byId("flow-step").textContent = value === "guide" ? "촬영 안내" : (value === "busy" ? 2 : value) + " / 3";
+    byId("flow-step").textContent = value === "guide" ? "촬영 안내" : (value === "busy" ? 2 : value) + " / 5";
     window.scrollTo(0, 0);
   }
-  byId("flow-back").onclick = () => { video.pause(); step(1); };
+  byId("flow-back").onclick = () => {video.pause();pointPlaying=false;step(3);};
+  byId("flow-back").textContent="결과로";
+  byId("new-analysis").onclick=()=>{video.pause();pointPlaying=false;step(1);};
+  byId("show-points").onclick=()=>{step(4);updateOverlay();};
   const summaryFields = [...summaryPanel.querySelectorAll("textarea")];
   const approve = byId("summary-approve");
   const preview = byId("upload-preview");
@@ -100,7 +103,7 @@
   coachForm.addEventListener("submit", async event => {
     event.preventDefault();
     const value = message.value.trim();
-    if (!selected || selected.csv || request || chatRequest || composing || !value) return;
+    if (!selected || request || chatRequest || composing || !value) return;
     if (messages.length >= 20) {
       coachStatus.textContent = "상담 10턴을 기록했습니다. 분석하기를 눌러 주세요.";
       return;
@@ -336,7 +339,7 @@
       let coaching;
       {
         report("상담과 영상 계측 종합 중", 97);
-        coaching = await coachPost("analyze", {track_id: track.track_id, approved: true,
+        coaching = await coachPost("analyze", {track_id: track.track_id, profile_id: window.MotionProfileId, approved: true,
           conversation_summary: approvedSummary}, controller.signal);
       }
       report("계측 완료", 100);
@@ -344,6 +347,9 @@
       summaryPanel.hidden = true;
       byId("result-details").hidden = byId("result-actions").hidden = false;
       byId("result-details").open = false;
+      comparison.coaching=coaching;
+      MotionCustomer.renderResult(coaching,track,id=>{chooseFinding(id);step(4);updateOverlay();});
+      byId('results').hidden=false;
       step(3);
       updateOverlay();
 
@@ -447,12 +453,24 @@
       h*.80 / Math.max(1e-4,Math.max(...ys)-Math.min(...ys)));
     const x=(Math.min(...xs)+Math.max(...xs))/2, y=(Math.min(...ys)+Math.max(...ys))/2;
     const measured=points.map(p=>[(p[0]-x)*scale+w/2,(p[1]-y)*scale+h*.49,p[2]]);
-    const base=project(measured,baseline,key=>baseline[comparison.track.channels.indexOf(key)]);
+    let base=project(measured,baseline,key=>baseline[comparison.track.channels.indexOf(key)]);
     const held=compareToggle.getAttribute("aria-pressed")==="true" && !activeFinding?.positive;
     const target=comparison.displayed[sample];
-    const shown=project(measured,baseline,key=>(held?target:baseline)[comparison.track.channels.indexOf(key)]);
-    const reference=project(measured,baseline,key=>key===activeFinding?.channel
+    let shown=project(measured,baseline,key=>(held?target:baseline)[comparison.track.channels.indexOf(key)]);
+    let reference=project(measured,baseline,key=>key===activeFinding?.channel
       ? comparison.reference[sample][SwingReference.channels.indexOf(key)] : baseline[comparison.track.channels.indexOf(key)]);
+    // Keep the framing identical at 1x and 2.5x: fit the maximum illustration
+    // as well as the measured/reference poses, not the currently held pose.
+    const maxRow=SwingExaggeration.apply(comparison.track,comparison.reference,
+      activeFinding?.positive?null:activeFinding,2.5)[sample];
+    const extreme=project(measured,baseline,key=>maxRow[comparison.track.channels.indexOf(key)]);
+    const boxes=[base,reference,extreme].map(SwingPoseAvatar.bounds);
+    const left=Math.min(...boxes.map(b=>b[0])),top=Math.min(...boxes.map(b=>b[1]));
+    const right=Math.max(...boxes.map(b=>b[2])),bottom=Math.max(...boxes.map(b=>b[3]));
+    const padding=parseFloat(styles.getPropertyValue('--gap'))||14;
+    const fit=Math.min((w-2*padding)/(right-left),(h-2*padding)/(bottom-top));
+    const transform=pose=>pose.map(([x,y,v])=>[(x-(left+right)/2)*fit+w/2,(y-(top+bottom)/2)*fit+h/2,v]);
+    base=transform(base);shown=transform(shown);reference=transform(reference);
     const tint=styles.getPropertyValue("--avatar").trim();const colors={far:tint,near:tint,shirt:tint,skin:tint,shoes:tint,outline:tint};
     if (byId("compare-reference").getAttribute("aria-pressed")==="true" && !activeFinding?.positive) {
       SwingPoseAvatar.paint(alternateContext,reference,colors,.30);
@@ -491,6 +509,7 @@
     if(points)renderAvatar(points,comparison.track.track[sample],sample);
   }
 
+  byId("playback-details").append(byId("factor-transport"));
   byId("playback-details").open = false;
   let swipeStart;
   const panes = byId("comparison-panes");
@@ -957,7 +976,8 @@
     else changeFactor();
     SwingFindings.render(byId("finding-body"), track, doc, id => {
       chooseFinding(id);
-      byId("overlay").scrollIntoView({ block: "start" });
+      step(4);
+      updateOverlay();
     });
     window.Swing3D?.dispose();
     viewer = undefined;
@@ -1003,6 +1023,8 @@
       location.assign(reportLink.href);
     };
   }
+
+  byId("playback-details").append(byId("result-details"));
 
   byId('guidance-retry').onclick=()=>{byId('quality-guidance').hidden=true;step(1);byId('video').click();};
 
@@ -1071,7 +1093,10 @@
       if (comparison !== current) return;
       viewer ??= window.Swing3D.mount(host, current.track, {
         findings: { ...current.findings, findings: current.findings.findings
-          .map(item => SwingExaggeration.resolve(current.track, item)).filter(item => item.range) },
+          .map(item => SwingExaggeration.resolve(current.track, item))
+          .filter(item => item.range)
+          .map(item => ({...item,range:item.range.map(v=>Math.max(0,Math.min(1,v)))}))
+          .filter(item => item.range[0]<item.range[1]) },
         autoplay: false, externalFindings: true,
       });
       return viewer;

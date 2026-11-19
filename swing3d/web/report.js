@@ -1,124 +1,45 @@
-/* global SwingFindings, SwingReference */
-(async () => {
-  const { node, number, phases, channels, load, render } = SwingFindings;
-  const byId = id => document.getElementById(id);
-  function theme(value) {
-    document.documentElement.dataset.theme = value;
-    for (const button of document.querySelectorAll("button[data-theme]")) {
-      button.setAttribute("aria-pressed", String(button.dataset.theme === value));
-    }
+/* Customer report: tables and diagrams from the saved, approved analysis. */
+(async()=>{
+ const $=id=>document.getElementById(id),{node,labels,phases,value,improvements,diagram}=MotionCustomer;
+ $('print-report').onclick=async()=>{await document.fonts.ready;window.print();};
+ try{
+  const id=location.pathname.split('/').at(-1),reportId=new URLSearchParams(location.search).get('coaching');
+  if(!/^[a-f0-9]{64}$/.test(id)||!/^[a-f0-9]{32}$/.test(reportId??''))throw Error('리포트 주소를 확인해 주세요.');
+  const response=await fetch('/api/coaching/report/'+reportId);if(!response.ok)throw Error('리포트를 찾을 수 없습니다.');const doc=await response.json();
+  if(doc.track_id!==id)throw Error('분석과 리포트가 일치하지 않습니다.');
+  const report=doc.customer_report,items=improvements(doc),score=doc.score;
+  $('report-round').textContent=String(doc.session??1).padStart(2,'0')+'회';$('report-date').textContent=(report.issued_at??'').slice(0,10);
+  $('report-total').textContent=score.total===null?'—':Math.round(score.total);
+  const delta=doc.comparison_history;if(delta?.comparable){$('report-delta').hidden=false;$('report-delta').textContent=(delta.total_delta>=0?'+':'')+delta.total_delta.toFixed(1)+'점';}
+  for(const e of doc.profile?.entries??[{score_total:score.total}]){const bar=node('i');bar.style.height=(5+(e.score_total??0)*.25)+'px';bar.setAttribute('aria-label',String(e.score_total));$('report-round-bars').append(bar);}
+  $('report-question').textContent=report.concern;$('report-conclusion').textContent=report.conclusion;$('report-strength').textContent=report.strength;
+  $('report-measured').textContent=`이번 영상에서는 ${score.measured_count}개 항목을 쟀습니다.`;$('measurement-note').textContent=report.measurement_note;
+  for(const [i,item] of items.entries()){
+   const row=$('report-summary-table').tBodies[0].insertRow();
+   for(const text of [labels[item.channel],value(item.measured,item.channel),value(item.reference,item.channel),item.state]){const cell=row.insertCell();cell.textContent=text;}
+   row.cells[2].className='ref';row.cells[3].className='state'+(item.state==='적정'?' good':'');
+   const card=node('article',undefined,'gap-row');card.dataset.finding=item.id;card.dataset.difference=String(item.measured-item.reference);
+   const content=node('div',undefined,'c'),title=node('h3',item.title),state=node('span',item.state,'state'+(item.state==='적정'?' good':''));title.append(state);
+   content.append(title,node('p',item.observation,'d'),node('p',`${phases[item.phase]} · ${value(item.measured,item.channel)} / 교본 ${value(item.reference,item.channel)}`,'v'),node('p',item.drill,'d'));
+   card.append(node('span',String(i+1),'no'),diagram(item),content);$('report-improvements').append(card);
+   const drill=window.MotionDrills?.get(item)??{title:'관련 연습 영상 검색',url:'https://www.youtube.com/results?'+new URLSearchParams({search_query:item.youtube?.[0]??'골프 '+labels[item.channel]+' 연습'}),seconds:null,curated:false};
+   const link=node('a',undefined,'vid-card');link.href=drill.url;link.target='_blank';link.rel='noopener noreferrer';link.dataset.curated=String(!!drill.curated);
+   const meta=node('span',undefined,'m');meta.append(node('b',drill.title),node('span',(drill.seconds?Math.floor(drill.seconds/60)+'분 '+String(drill.seconds%60).padStart(2,'0')+'초':'검색 결과')+` · 고칠 점 ${i+1}번`,'sub'));
+   link.append(node('span','▶','th'),meta);$('report-videos').append(link);
   }
-  theme("dark");
-  let detailsWereOpen;
-  const more = byId("report-more");
-  window.addEventListener("beforeprint", () => { detailsWereOpen = more.open; more.open = true; });
-  window.addEventListener("afterprint", () => { more.open = detailsWereOpen; });
-  for (const button of document.querySelectorAll("button[data-theme]")) {
-    button.onclick = () => theme(button.dataset.theme);
-  }
-  byId("print-report").onclick = async () => {
-    await document.fonts.ready;
-    await Promise.allSettled([...document.images].map(image => image.decode()));
-    window.print();
-  };
-
-  try {
-    const id = location.pathname.split("/").at(-1);
-    if (!/^[a-f0-9]{64}$/.test(id)) throw new Error("리포트 주소가 올바르지 않습니다.");
-    const response = await fetch("/api/track/" + id);
-    if (!response.ok) throw new Error("저장된 트랙을 찾지 못했습니다.");
-    const track = await response.json();
-    const coaching = new URLSearchParams(location.search).get("coaching");
-    let doc;
-    if (coaching) {
-      if (!/^[a-f0-9]{32}$/.test(coaching)) throw new Error("상담 리포트 주소가 올바르지 않습니다.");
-      const result = await fetch("/api/coaching/report/" + coaching, {cache: "no-store"});
-      if (!result.ok) throw new Error("상담 리포트를 읽지 못했습니다.");
-      doc = await result.json();
-      if (doc.track_id !== id) throw new Error("상담 리포트가 영상 트랙과 일치하지 않습니다.");
-      byId("report-comparison").hidden = false;
-      let saved;
-      try { saved = JSON.parse(sessionStorage.getItem("motionguard:" + coaching)); } catch {}
-      if (saved?.image?.startsWith("data:image/jpeg;base64,")) {
-        const figure = node("figure");
-        const image = node("img");
-        image.src = saved.image;
-        image.alt = saved.positive ? "선택 프레임의 실측 자세와 유지할 동작" : "선택 프레임의 실측 자세와 개선 포인트 그림 자세";
-        const caption = node("figcaption", saved.label ?? "선택 프레임");
-        caption.append(" · ", number(saved.factor, "×"));
-        figure.append(image, caption);
-        byId("report-image").append(figure);
-      } else {
-        byId("report-image").append(node("p", "이 탭에 비교 이미지가 없습니다. 도구의 비교 화면에서 리포트를 다시 열면 현재 자세가 담깁니다."));
-      }
-    }
-    doc ??= await load(track);
-    const findings = byId("report-findings");
-    const items = render(findings, track, doc, undefined, true);
-    byId("title").textContent = "스윙 리포트";
-    const blocks = [...findings.children];
-    const move = (title, destination) => {
-      const block = blocks.find(el => el.querySelector("h3")?.textContent === title);
-      if (!block) return;
-      block.querySelector("h3").remove();
-      for (const child of [...block.children]) destination.append(child);
-      block.remove();
-    };
-    move("상담 요약 · 자기보고", byId("report-question"));
-    if (!byId("report-question").children.length) byId("report-question").textContent = "상담 입력이 없습니다.";
-    move("전체 요약", byId("summary"));
-    move("자기보고와 영상 근거", byId("summary"));
-    move("분석 한계", byId("report-limits"));
-    if (items[0]?.drill) {
-      const practice = byId("first-practice");
-      practice.querySelector("p").textContent = items[0].drill;
-      practice.hidden = false;
-    }
-    byId("facts").append(number(track.meta.dur, "s"), " · ", number(track.meta.fps, "fps"), " · ", number(track.meta.samples, "표본", 0));
-    byId("wrist-limit").textContent = track.meta.wrist_source === "index"
-      ? "검지 방향으로 샤프트를 근사한 추정값입니다." : "검지 좌표가 없어 손목 각도를 판정하지 않습니다.";
-    const table = byId("report-angles");
-    const referenceTrack = SwingReference.expand(track);
-    const keys = ["swing","torso","hips","lean","wrist"];
-    const head = table.createTHead().insertRow();
-    for (const label of ["국면", ...keys.map(key => channels[key])]) head.append(node("th", label));
-    const body = table.createTBody();
-    for (const [phase, label] of phases) {
-      const frame = track.meta.phase_frames?.[phase];
-      const start = track.meta.source_frames?.[0] ?? 0;
-      const fraction = (track.events[phase] * track.meta.dur - track.meta.hold) / (track.meta.dur - track.meta.hold);
-      const sample = Math.max(0, Math.min(track.track.length - 1, frame === undefined
-        ? Math.round(fraction * (track.track.length - 1)) : frame - start));
-      const row = body.insertRow();
-      row.append(node("th", label));
-      for (const key of keys) {
-        const actual = track.track[sample][track.channels.indexOf(key)] * 180 / Math.PI;
-        const reference = referenceTrack[sample][SwingReference.channels.indexOf(key)] * 180 / Math.PI;
-        const unavailable = track.meta.unavailable?.includes(key);
-        const measured = !unavailable && (key !== "wrist" || track.meta.wrist_source === "index");
-        const cell = row.insertCell();
-        const value = measured ? number(actual) : node("span", unavailable ? "이 촬영 각도에서는 측정할 수 없습니다" : "—");
-        if (measured && Math.abs(actual - reference) >= 8) value.classList.add("delta");
-        const model = unavailable ? node("span", "—") : number(reference);
-        model.classList.add("reference");
-        cell.append(value, model);
-      }
-      if (track.evidence && (phase !== "finish" || track.evidence.has_finish_still)) {
-        const figure = node("figure");
-        const image = node("img");
-        image.src = "/api/still/" + id + "/" + phase;
-        image.alt = label + " 원본 프레임";
-        image.onerror = () => image.replaceWith(node("p", "스틸컷을 읽지 못했습니다."));
-        const caption = node("figcaption", label + " · ");
-        caption.append(number(track.evidence.phase_frames[phase], "프레임", 0));
-        figure.append(image, caption);
-        byId("report-stills").append(figure);
-      }
-    }
-    byId("report-body").hidden = false;
-    byId("report-status").hidden = true;
-    byId("print-report").disabled = false;
-  } catch (error) {
-    byId("report-status").textContent = error.message + " 도구 화면에서 분석을 다시 실행해 주세요.";
-  }
+  if(!items.length)$('report-improvements').append(node('p','확정한 개선 포인트가 없습니다.','note'));
+  const strokes=doc.strokes;
+  if(strokes){const range=v=>v.map(n=>n.toFixed(1)).join('–')+'타';$('strokes-current').textContent=range(strokes.current);$('strokes-after').textContent=range(strokes.after);$('strokes-condition').textContent=strokes.condition;
+   $('strokes-missing').textContent=strokes.missing_note;
+   $('strokes-basis').append(node('p',strokes.basis));
+   $('strokes-basis').append(node('p',`기준 ${strokes.base}타 + 측정 항목의 영향 ${strokes.penalty.toFixed(2)}타. 선택한 개선 포인트만 교본값에 맞춰 다시 계산합니다.`));
+   for(const item of strokes.contributions)$('strokes-basis').append(node('p',`${phases[item.id.split('_')[0]]} · ${labels[item.id.split('_').slice(1).join('_')]} ${item.score.toFixed(1)}점 × 가중치 ${item.weight} × 영향 ${item.impact} → +${item.penalty.toFixed(2)}타`));
+  }else $('report-strokes').hidden=true;
+  $('report-goal').textContent=report.goal?'다음 연습 목표 · '+report.goal:'';$('report-mode').textContent=(doc.mode==='demo'?'데모 코칭':'상담·영상 종합')+' · '+report.issued_at.slice(0,16).replace('T',' ');
+  $('appendix-facts').textContent=`회차 ${doc.session??1} · 총점 ${score.total} · 측정 ${score.measured_count}개`;
+  for(const [key,label] of [['concern','고민'],['improvement','개선 희망'],['hypothesis','사용자 추정'],['goal','연습 목표']])$('appendix-approved').append(node('p',label+' · '+(doc.conversation_summary[key]||'입력 없음')));
+  $('appendix-excluded').textContent=score.excluded.length?score.excluded.map(k=>{const [phase,...channel]=k.split('_');return(phases[phase]??phase)+' '+(labels[channel.join('_')]??'동작');}).join(' · '):'제외한 항목 없음';
+  for(const item of score.items){const row=$('report-angles').tBodies[0].insertRow();for(const text of [phases[item.phase],labels[item.channel],value(item.measured,item.channel),value(item.reference,item.channel),item.score.toFixed(1),item.state])row.insertCell().textContent=text;}
+  $('report-body').hidden=false;$('report-status').hidden=true;$('print-report').disabled=false;
+ }catch(error){$('report-status').textContent=error.message+' 분석 화면에서 다시 열어 주세요.';}
 })();

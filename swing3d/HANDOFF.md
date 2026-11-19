@@ -1,5 +1,9 @@
 # MotionGuard — 새 세션 인수인계
 
+## 최신 실행 — 2026-11-19 (9cfee75 기준)
+
+[BUILD_COMPLETE_RESULTS.md](BUILD_COMPLETE_RESULTS.md)에 1–9단계 통과 조건 표와 실제 출력 전문을 기록했다. PR #5 구현을 이어 5단계 새 게이트·머리 잘림을 수정하고 6–9단계를 완료했다. 현재 정본 게이트 미통과 0개, 검증 한계는 결과 문서에 별도 명시했다. 새 캡처 m1–m5/d1–d5/g1–g3/h1–h2와 report.pdf가 최신이다. 이전 BUILD_RESULTS.md는 당시 3% 게이트로 중단한 역사 기록이다.
+
 ## 먼저 읽을 것
 
 **[MOTIONGUARD_BUILD.md](MOTIONGUARD_BUILD.md) 가 전체 단일 기준이다.**

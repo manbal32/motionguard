@@ -1,3 +1,5 @@
+> 이전 실행 기록입니다. 9cfee75의 정정과 후속 완료 결과는 [BUILD_COMPLETE_RESULTS.md](BUILD_COMPLETE_RESULTS.md)를 보세요. 아래 당시 출력은 보존합니다.
+
 # MOTIONGUARD_BUILD 실측 — 5단계에서 중단
 
 **1~4단계를 통과하고 5단계에서 미통과했습니다. 지시대로 6~9단계는 수행하지 않았습니다.**

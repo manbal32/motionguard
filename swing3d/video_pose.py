@@ -217,7 +217,7 @@ def extract(video_path: str, *, evidence=False, progress=None):
                 return tuple((d['LEFT_SHOULDER'][j] + d['RIGHT_SHOULDER'][j]) / 2 for j in (0, 1))
             original = {name: crop_to_original(p, box) for name, p in second[i].items()}
             errors.append(math.dist(midpoint(first[i]), midpoint(original)))
-    meta = {'crop_box': box, 'coordinate_space': 'crop', 'pass1_stride': 3,
+    meta = {'original_size': [width,height], 'crop_box': box, 'coordinate_space': 'crop', 'pass1_stride': 3,
             'pass1_observations': len(first), 'pass2_observations': len(second),
             'crop_alignment_error_max': max(errors) if errors else None,
             'crop_alignment_error_mean': sum(errors) / len(errors) if errors else None,

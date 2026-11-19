@@ -99,5 +99,21 @@
     return {head, neck, pelvis};
   }
 
-  window.SwingPoseAvatar = Object.freeze({anatomy, paint});
+  // Use the very same drawing primitives for layout, including the derived head,
+  // cap, stroke widths and club. Landmark-only bounds omit those shapes.
+  function bounds(pose) {
+    const xs=[],ys=[];let stroke=0;
+    const point=(x,y)=>{xs.push(x);ys.push(y);};
+    const ctx={save(){},restore(){},beginPath(){},closePath(){},fill(){},stroke(){},
+      moveTo:point,lineTo:point,
+      ellipse(x,y,rx,ry,angle){
+        const dx=Math.hypot(rx*Math.cos(angle),ry*Math.sin(angle));
+        const dy=Math.hypot(rx*Math.sin(angle),ry*Math.cos(angle));
+        point(x-dx,y-dy);point(x+dx,y+dy);
+      },set lineWidth(value){stroke=Math.max(stroke,value/2);}};
+    paint(ctx,pose,{});
+    return [Math.min(...xs)-stroke,Math.min(...ys)-stroke,
+            Math.max(...xs)+stroke,Math.max(...ys)+stroke];
+  }
+  window.SwingPoseAvatar = Object.freeze({anatomy, paint, bounds});
 })();

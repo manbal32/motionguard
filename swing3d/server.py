@@ -13,6 +13,8 @@ from uuid import uuid4
 import coach
 import swing_track
 import scoring
+import customer_report
+import profiles
 from findings_contract import validate_findings
 
 ROOT = Path(__file__).resolve().parent
@@ -53,11 +55,28 @@ class Handler(SimpleHTTPRequestHandler):
                          headers={"Cache-Control": "no-store"})
             return
         if match := re.fullmatch(r"/api/coaching/report/([a-f0-9]{32})", path):
-            file = self.tracks / "coaching" / (match[1] + ".json")
+            file = self.tracks / "reports" / (match[1] + ".json")
+            if not file.is_file():
+                file = self.tracks / "coaching" / (match[1] + ".json")
             if file.is_file():
-                self.respond(json.loads(file.read_text(encoding="utf-8")), headers={"Cache-Control": "no-store"})
+                document=json.loads(file.read_text(encoding="utf-8"))
+                if 'customer_report' not in document:
+                    source=self.tracks/(document.get('track_id','')+'.json')
+                    if source.is_file():
+                        track=json.loads(source.read_text());document['score']=track.get('score',scoring.compute(track))
+                        document['customer_report']=customer_report.build(document,track)
+                        document['strokes']=profiles.strokes(document['score'],document['customer_report']['improvements'])
+                self.respond(document, headers={"Cache-Control": "no-store"})
             else:
                 self.failure("상담 리포트를 찾을 수 없습니다.", 404)
+            return
+        if match := re.fullmatch(r"/api/profile/([a-f0-9-]{36})", path):
+            try:
+                profile = profiles.load(self.tracks, match[1])
+            except ValueError as error:
+                self.failure(str(error), 422); return
+            if profile is None: self.failure("기록이 없습니다.",404)
+            else: self.respond(profile,headers={"Cache-Control":"no-store"})
             return
         if finding:
             file = self.findings / (finding[1] + ".json")
@@ -103,6 +122,15 @@ class Handler(SimpleHTTPRequestHandler):
             self.failure("트랙을 찾을 수 없습니다.", 404)
         else:
             super().do_GET()
+
+    def do_DELETE(self):
+        match = re.fullmatch(r"/api/profile/([a-f0-9-]{36})", urlsplit(self.path).path)
+        if not match:
+            self.failure("기록이 없습니다.",404); return
+        try:
+            with self.cache_lock: profiles.delete(self.tracks,match[1])
+            self.respond({"ok":True})
+        except ValueError as error: self.failure(str(error),422)
 
     def do_POST(self):
         path = urlsplit(self.path).path
@@ -152,6 +180,7 @@ class Handler(SimpleHTTPRequestHandler):
             data = json.loads(self.rfile.read(size))
             if not isinstance(data, dict) or type(data.get("allow_external")) is not bool:
                 raise ValueError("상담 요청 형식이 올바르지 않습니다.")
+            if path.endswith("/analyze") and "profile_id" in data: profiles.identity(data["profile_id"])
             provider = self.coaching_provider() if data["allow_external"] else coach.Gemini()
             if not data["allow_external"]:
                 provider.key = ""
@@ -178,6 +207,10 @@ class Handler(SimpleHTTPRequestHandler):
             result = coach.analyze(track, summary, provider)
             report_id = uuid4().hex
             result.update(report_id=report_id, track_id=track_id, score=track.get("score",scoring.compute(track)))
+            result["customer_report"]=customer_report.build(result,track)
+            result["strokes"]=profiles.strokes(result["score"],result["customer_report"]["improvements"])
+            with self.cache_lock:
+                profiles.save(self.tracks,result,track,data.get("profile_id"))
             reports = self.tracks / "coaching"
             reports.mkdir(parents=True, exist_ok=True)
             (reports / (report_id + ".json")).write_text(json.dumps(result, ensure_ascii=False), encoding="utf-8")
