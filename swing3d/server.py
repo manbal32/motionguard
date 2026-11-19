@@ -249,6 +249,8 @@ class Handler(SimpleHTTPRequestHandler):
             frames, fps, timeline = video_pose.extract(str(source), evidence=True, progress=progress)
             progress("국면 검출", 88)
             result = swing_track.build_track(frames, fps)
+            if result['meta'].get('usable') is False:
+                raise video_pose.ExtractionError(result['meta']['unusable_reason'])
             phases = result["meta"]["phase_frames"]
             progress("국면 스틸컷 준비", 95)
             crops, overlay_crop = video_pose.person_crops(timeline, phases)
@@ -301,6 +303,8 @@ class Handler(SimpleHTTPRequestHandler):
         if not math.isfinite(fps) or fps <= 0:
             raise ValueError("유효하지 않은 프레임 속도입니다.")
         result = swing_track.build_track(frames, fps)
+        if result['meta'].get('usable') is False:
+            raise ValueError(result['meta']['unusable_reason'])
         from video_pose import LANDMARK_NAMES
         start, end = result["meta"]["source_frames"]
         result["pose_landmarks"] = [

@@ -10,6 +10,8 @@ swing_track.build_track() 이 기대하는 형식과 동일하다.
 from __future__ import annotations
 
 from pathlib import Path
+import math
+import time
 from typing import Dict, List
 
 ROOT = Path(__file__).resolve().parent
@@ -43,92 +45,172 @@ def ensure_model() -> Path:
     )
 
 
+class PoseFrames(list):
+    """Crop-space observations with extraction provenance for build_track.
+
+    The optional evidence timeline is in original-image coordinates instead.
+    A list subclass preserves the existing extract(... )[:2] calling contract.
+    """
+    def __init__(self, frames, extraction_meta):
+        super().__init__(frames)
+        self.extraction_meta = extraction_meta
+
+
+def crop_to_original(point, box):
+    """Map a crop-normalized landmark to original normalized x/y and z."""
+    x, y, z, visibility = point
+    return (box['x'] + x * box['w'], box['y'] + y * box['h'],
+            z * box['w'], visibility)
+
+
+def original_to_crop(point, box):
+    x, y, z, visibility = point
+    return ((x - box['x']) / box['w'], (y - box['y']) / box['h'],
+            z / box['w'], visibility)
+
+
+def box_envelope(boxes):
+    """One fixed envelope shared by extraction and still/playback crops."""
+    return (min(b[0] for b in boxes), min(b[1] for b in boxes),
+            max(b[2] for b in boxes), max(b[3] for b in boxes))
+
+
+def extraction_crop(observations, width, height):
+    """Square in physical pixels, with 25% padding on each side."""
+    import swing_track
+
+    ordered = sorted(observations)
+    status = swing_track._frame_acceptance([observations[i] for i in ordered])
+    valid = [i for i, item in zip(ordered, status) if item['accepted']]
+    boxes = [box for i in valid if (box := person_box([
+        (p[0], p[1], p[3]) for p in observations[i].values()]))]
+    if not boxes:
+        raise ExtractionError('1패스에서 해부학적으로 유효한 인물을 찾지 못해 크롭할 수 없습니다.')
+    x0, y0, x1, y1 = box_envelope(boxes)
+    desired = math.ceil(max((x1 - x0) * width, (y1 - y0) * height) * 1.5)
+    side = max(1, min(width, height, desired))
+    desired_left = round((x0 + x1) * width / 2 - side / 2)
+    desired_top = round((y0 + y1) * height / 2 - side / 2)
+    left = max(0, min(width - side, desired_left))
+    top = max(0, min(height - side, desired_top))
+    return {
+        'x': left / width, 'y': top / height, 'w': side / width, 'h': side / height,
+        'pixels': [left, top, side, side], 'source_size': [width, height],
+        'resized_side': max(640, side), 'padding_per_side': 0.25,
+        'boundary_limited': side < desired or left != desired_left or top != desired_top,
+        'inverse_transform': {'function': 'video_pose.crop_to_original',
+                              'x': 'box.x + x_crop * box.w',
+                              'y': 'box.y + y_crop * box.h', 'z': 'z_crop * box.w'},
+    }, valid
+
+
+def _detect_pass(capture, options, source_fps, *, stride=1, box=None, progress=None, total=1):
+    import cv2
+    import mediapipe as mp
+    from mediapipe.tasks.python import vision as mp_vision
+
+    observations = {}
+    with mp_vision.PoseLandmarker.create_from_options(options) as landmarker:
+        index = 0
+        while capture.grab():
+            if index % stride:
+                index += 1
+                continue
+            ok, image = capture.retrieve()
+            if not ok:
+                raise ExtractionError('영상 프레임을 읽을 수 없습니다.')
+            if box is not None:
+                left, top, w, h = box['pixels']
+                image = image[top:top + h, left:left + w]
+                side = box['resized_side']
+                image = cv2.resize(image, (side, side), interpolation=cv2.INTER_LINEAR)
+            rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            result = landmarker.detect_for_video(
+                mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb),
+                int(index / source_fps * 1000))
+            if result.pose_landmarks:
+                observations[index] = {
+                    LANDMARK_NAMES[i]: (lm.x, lm.y, lm.z, getattr(lm, 'visibility', 1.0))
+                    for i, lm in enumerate(result.pose_landmarks[0]) if i < len(LANDMARK_NAMES)
+                }
+            if progress and index % (5 * stride) == 0:
+                progress('인물 찾기' if box is None else '크롭 자세 추출',
+                         min(85, round((20 if box is None else 65) * index / total)
+                             + (0 if box is None else 20)))
+            index += 1
+    return observations, index
+
+
 def extract(video_path: str, *, evidence=False, progress=None):
-    """영상 → (frames, fps). 실패하면 ExtractionError 를 올린다."""
+    """Sparse full-image localization, then full-rate square-crop measurement."""
+    started = time.perf_counter()
     try:
         import cv2
-        import mediapipe as mp
         from mediapipe.tasks import python as mp_python
         from mediapipe.tasks.python import vision as mp_vision
     except ImportError as error:
-        raise ExtractionError(
-            "영상 업로드에는 mediapipe 설치가 필요합니다. "
-            "`py -3 -m pip install mediapipe` 로 설치한 뒤 다시 시도해 주세요. "
-            "좌표 CSV 업로드는 설치 없이 그대로 쓸 수 있습니다."
-        ) from error
-
-    model = ensure_model()
+        raise ExtractionError('영상 업로드에는 mediapipe 설치가 필요합니다. '
+                              '`python3 -m pip install mediapipe`로 설치해 주세요.') from error
     capture = cv2.VideoCapture(video_path)
     if not capture.isOpened():
-        raise ExtractionError("영상을 열 수 없습니다. mp4 또는 mov 파일인지 확인해 주세요.")
-
+        raise ExtractionError('영상을 열 수 없습니다. mp4 또는 mov 파일인지 확인해 주세요.')
     try:
-        source_fps = capture.get(cv2.CAP_PROP_FPS) or 0.0
+        fps = capture.get(cv2.CAP_PROP_FPS) or 0.0
         total = int(capture.get(cv2.CAP_PROP_FRAME_COUNT) or 0)
-        if source_fps <= 0 or total <= 0:
-            raise ExtractionError("영상의 프레임 정보를 읽을 수 없습니다.")
-        duration = total / source_fps
-        if duration > MAX_SECONDS + 0.5:
-            raise ExtractionError(
-                f"영상이 {duration:.0f}초입니다. {MAX_SECONDS:.0f}초 이하로 잘라서 올려주세요."
-            )
-
+        width, height = (int(capture.get(p)) for p in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT))
+        if fps <= 0 or total <= 0 or min(width, height) <= 0:
+            raise ExtractionError('영상의 프레임 정보를 읽을 수 없습니다.')
+        if total / fps > MAX_SECONDS + 0.5:
+            raise ExtractionError(f'영상이 {total / fps:.0f}초입니다. {MAX_SECONDS:.0f}초 이하로 잘라서 올려주세요.')
         options = mp_vision.PoseLandmarkerOptions(
-            base_options=mp_python.BaseOptions(model_asset_buffer=model.read_bytes()),
-            running_mode=mp_vision.RunningMode.VIDEO,
-            num_poses=1,
-            min_pose_detection_confidence=0.5,
-            min_pose_presence_confidence=0.5,
-            min_tracking_confidence=0.5,
-            output_segmentation_masks=False,
-        )
-
-        frames: List[Dict] = []
-        misses = 0
-        with mp_vision.PoseLandmarker.create_from_options(options) as landmarker:
-            index = 0
-            while True:
-                ok, image = capture.read()
-                if not ok:
-                    break
-                if progress and index % 5 == 0:
-                    progress("좌표 추출", min(85, round(85 * index / total)))
-                rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
-                result = landmarker.detect_for_video(mp_image, int(index / source_fps * 1000))
-                if not result.pose_landmarks:
-                    misses += 1
-                    frames.append(None)
-                    index += 1
-                    continue
-                landmarks = result.pose_landmarks[0]
-                frames.append({
-                    LANDMARK_NAMES[i]: (lm.x, lm.y, lm.z, getattr(lm, "visibility", 1.0))
-                    for i, lm in enumerate(landmarks) if i < len(LANDMARK_NAMES)
-                })
-                index += 1
+            base_options=mp_python.BaseOptions(model_asset_buffer=ensure_model().read_bytes()),
+            running_mode=mp_vision.RunningMode.VIDEO, num_poses=1,
+            min_pose_detection_confidence=0.5, min_pose_presence_confidence=0.5,
+            min_tracking_confidence=0.5, output_segmentation_masks=False)
+        first, decoded = _detect_pass(capture, options, fps, stride=3, progress=progress, total=total)
+        if decoded != total:
+            raise ExtractionError('원본 영상의 프레임 수와 읽은 프레임 수가 다릅니다.')
+        box, first_valid = extraction_crop(first, width, height)
     finally:
         capture.release()
-
-    if len(frames) - misses < 20:
-        raise ExtractionError(
-            f"사람을 안정적으로 찾지 못했습니다. 인식된 표본 {len(frames) - misses}개, 놓친 프레임 {misses}개. "
-            "전신이 화면에 들어오고 밝은 영상으로 다시 시도해 주세요."
-        )
-    # Preserve original frame indices even when MediaPipe misses a person.
-    timeline = [
-        [[round(frame[name][0], 5), round(frame[name][1], 5), round(frame[name][3], 3)]
-         for name in LANDMARK_NAMES] if frame else None
-        for frame in frames
-    ] if evidence else None
-    previous = next(frame for frame in frames if frame)
-    for index, frame in enumerate(frames):
-        if frame is None:
-            frames[index] = {name: (*point[:3], 0) for name, point in previous.items()}
-        else:
-            previous = frame
-    return (frames, source_fps, timeline) if evidence else (frames, source_fps)
-
+    capture = cv2.VideoCapture(video_path)
+    try:
+        second, decoded = _detect_pass(capture, options, fps, box=box, progress=progress, total=total)
+    finally:
+        capture.release()
+    if decoded != total:
+        raise ExtractionError('2패스의 프레임 수가 원본과 다릅니다.')
+    if len(second) < 20:
+        raise ExtractionError(f'크롭 영상에서 사람을 안정적으로 찾지 못했습니다. 인식된 표본 {len(second)}개.')
+    # Missing observations retain the source frame number and zero visibility.
+    previous = second[min(second)]
+    frames, timeline = [], [] if evidence else None
+    for i in range(total):
+        observed = second.get(i)
+        if observed is not None:
+            previous = observed
+        frames.append(observed if observed is not None else {
+            name: (*p[:3], 0.0) for name, p in previous.items()})
+        if evidence:
+            original = {name: crop_to_original(p, box) for name, p in observed.items()} if observed else None
+            timeline.append([[round(original[name][0], 5), round(original[name][1], 5),
+                              round(original[name][3], 3)] for name in LANDMARK_NAMES] if original else None)
+    # Cross-pass agreement is a diagnostic, not an identity: the two inferences
+    # may disagree. Never use first-pass landmarks as measurement replacements.
+    errors = []
+    for i in first_valid:
+        if i in second:
+            def midpoint(d):
+                return tuple((d['LEFT_SHOULDER'][j] + d['RIGHT_SHOULDER'][j]) / 2 for j in (0, 1))
+            original = {name: crop_to_original(p, box) for name, p in second[i].items()}
+            errors.append(math.dist(midpoint(first[i]), midpoint(original)))
+    meta = {'crop_box': box, 'coordinate_space': 'crop', 'pass1_stride': 3,
+            'pass1_observations': len(first), 'pass2_observations': len(second),
+            'crop_alignment_error_max': max(errors) if errors else None,
+            'crop_alignment_error_mean': sum(errors) / len(errors) if errors else None,
+            'crop_alignment_samples': len(errors), 'extraction_seconds': time.perf_counter() - started}
+    frames = PoseFrames(frames, meta)
+    return (frames, fps, timeline) if evidence else (frames, fps)
 
 def person_box(points):
     """Return the visible body's bounds in normalized image coordinates."""
@@ -162,8 +244,7 @@ def person_crops(timeline, phases):
     # A fixed crop across the swing keeps playback from panning and zooming on tracking noise.
     start, end = phases["address"], phases["finish"]
     swing = [box for index, box in boxes.items() if start <= index <= end] or list(phase_boxes.values())
-    envelope = (min(box[0] for box in swing), min(box[1] for box in swing),
-                max(box[2] for box in swing), max(box[3] for box in swing))
+    envelope = box_envelope(swing)
     return stills, crop(envelope, size_for(envelope, padding=1.25))
 
 

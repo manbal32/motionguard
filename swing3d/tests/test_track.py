@@ -38,15 +38,15 @@ class TrackTests(unittest.TestCase):
         self.assertEqual(data["schema"], swing_track.SCHEMA)
         self.assertEqual(data["channels"], swing_track.CHANNELS)
         self.assertEqual(len(data["track"]), data["meta"]["samples"])
-        self.assertEqual(data["meta"]["samples"], 108)
+        self.assertEqual(data["meta"]["samples"], 164)
         self.assertTrue(all(len(row) == 10 and all(map(math.isfinite, row)) for row in data["track"]))
         events = [data["events"][key] for key in ("address", "top", "down", "impact", "finish")]
         self.assertTrue(0 <= events[0] < events[1] < events[2] < events[3] < events[4] <= 1)
-        self.assertEqual(events, [0.1528, 0.5803, 0.6516, 0.6754, 1.0])
+        self.assertEqual(events, [0.1058, 0.7093, 0.7422, 0.7751, 1.0])
         meta = data["meta"]
         frames = [meta["source_frames"][0] + round((u * meta["dur"] - meta["hold"]) * meta["fps"])
                   for u in events]
-        self.assertEqual(frames, [98, 152, 161, 164, 205])
+        self.assertEqual(frames, [42, 152, 158, 164, 205])
         confidence = [row[data["channels"].index("confidence")] for row in data["track"]]
         self.assertTrue(all(0 <= value <= 1 for value in confidence))
         self.assertGreater(confidence[0], 0.75)
@@ -54,7 +54,7 @@ class TrackTests(unittest.TestCase):
         status, listing = self.request("GET", "/api/tracks")
         self.assertEqual(status, 200)
         self.assertEqual(len(listing), 1)
-        self.assertEqual(listing[0]["samples"], 108)
+        self.assertEqual(listing[0]["samples"], 164)
         self.assertEqual(self.request("GET", "/api/track/" + listing[0]["id"]), (200, data))
 
     def test_missing_landmark_returns_reason(self):

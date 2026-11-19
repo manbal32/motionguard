@@ -21,7 +21,7 @@ class EvidenceTests(TestCase):
             return frames, fps, timeline
 
         def stills(path, indices, crops):
-            self.assertEqual(indices, {"address": 98, "top": 152, "down": 161, "impact": 164, "finish": 205})
+            self.assertEqual(indices, {"address": 42, "top": 152, "down": 158, "impact": 164, "finish": 205})
             return {phase: b"\xff\xd8" + str(frame).encode() + b"\xff\xd9" for phase, frame in indices.items()}
 
         with patch.object(video_pose, "extract", side_effect=extract), patch.object(video_pose, "phase_jpegs", side_effect=stills):
@@ -47,6 +47,19 @@ class EvidenceTests(TestCase):
         response = self.connection.getresponse()
         self.assertEqual(response.status, 404)
         self.assertIn("스틸컷", json.load(response)["reason"])
+
+    def test_unusable_video_reports_reason_without_generating_stills(self):
+        from test_frame_acceptance import skeleton
+        frames = [skeleton(0.6, 0.4, 0.3)] * 30
+        with patch.object(video_pose, 'extract', return_value=(frames, 30, [None] * 30)), \
+                patch.object(video_pose, 'phase_jpegs') as stills:
+            self.connection.request('POST', '/api/video', b'invalid-anatomy',
+                                    {'Accept': 'application/x-ndjson'})
+            response = self.connection.getresponse()
+            events = [json.loads(line) for line in response]
+        self.assertEqual(events[-1]['type'], 'error')
+        self.assertIn('50%', events[-1]['reason'])
+        stills.assert_not_called()
 
 
     def test_crops_use_one_scale_and_preserve_bounds(self):
