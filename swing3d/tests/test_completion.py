@@ -69,3 +69,9 @@ def test_exaggeration_px(tmp_path):
     assert result['exact390']['maxJointPx']>=20
     assert result['exact390']['exclusiveRatio']>=.05
     assert result['allFrames']['maximumAvatarPixelsInOuter8']==0
+
+
+def test_browser_calculation_matches_python():
+    import os,subprocess
+    run=subprocess.run(['node',str(ROOT/'tests/test_browser_core.cjs')],env=dict(os.environ,PYTHON=__import__('sys').executable),capture_output=True,text=True)
+    assert run.returncode==0,run.stdout+run.stderr

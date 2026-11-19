@@ -74,7 +74,8 @@
       const byFrame=new Map();
       for(const line of lines){const row=line.split(','),landmark=row[col.landmark];if(!BODY_NAMES.includes(landmark))continue;
         const frame=Number(row[col.frame_idx]);if(!byFrame.has(frame))byFrame.set(frame,{});byFrame.get(frame)[landmark]=[Number(row[col.x]),Number(row[col.y]),Number(row[col.visibility])];}
-      const first=[...byFrame.values()].find(frame=>BODY_NAMES.every(name=>frame[name]));if(!first)return;
+      const parsed=MotionTrack.csv(text),measured=MotionTrack.build(parsed.frames,parsed.fps,parsed.world);
+      const first=byFrame.get(measured.meta.phase_frames.address)??[...byFrame.values()].find(frame=>BODY_NAMES.every(name=>frame[name]));if(!first)return;
       const c=byId('preview-avatar'),slot=byId('preview-slot'),dpr=devicePixelRatio||1,w=slot.clientWidth,h=slot.clientHeight;
       c.width=w*dpr;c.height=h*dpr;const ctx=c.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
       const pose=BODY_NAMES.map(name=>first[name]),box=SwingPoseAvatar.bounds(pose.map(([x,y,v])=>[x*400,y*400,v]));
@@ -951,7 +952,7 @@
       if (evidence) {
         const button = node("button");
         const image = node("img");
-        image.src = "/api/still/" + encodeURIComponent(evidence.id) + "/" + phase;
+        image.src = evidence.still_urls?.[phase] ?? "/api/still/" + encodeURIComponent(evidence.id) + "/" + phase;
         image.alt = label + " 원본 프레임";
         image.addEventListener("error", () => image.replaceWith(node("p", "스틸컷을 읽지 못했습니다. 영상을 다시 분석해 주세요.")), { once: true });
         button.append(image, title, quantity(String(frame), "프레임"));
