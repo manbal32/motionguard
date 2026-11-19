@@ -1,0 +1,509 @@
+{
+  "real": {
+    "fps": 60.116991157064994,
+    "frames": 242,
+    "body_points": [
+      22
+    ],
+    "world_points": [
+      22
+    ],
+    "phase_frames": {
+      "address": 81,
+      "top": 118,
+      "down": 141,
+      "impact": 146,
+      "finish": 172
+    },
+    "accepted_frames": 242,
+    "total_frames": 242,
+    "impact_verified": true,
+    "impact_height_difference": 0.03453500000000009,
+    "address_to_top_s": 0.6154665975103735,
+    "top_to_impact_s": 0.4657585062240664,
+    "angles_degrees": {
+      "address": {
+        "torso": 0.0,
+        "hips": 0.0,
+        "x_factor": 0.0
+      },
+      "top": {
+        "torso": -139.34018450794298,
+        "hips": -105.70830677889734,
+        "x_factor": -33.631877729045655
+      },
+      "down": {
+        "torso": -13.54712869963221,
+        "hips": -12.33738561099299,
+        "x_factor": -1.2097430886392202
+      },
+      "impact": {
+        "torso": 15.492377709880868,
+        "hips": 2.83344818426046,
+        "x_factor": 12.658929525620408
+      },
+      "finish": {
+        "torso": 97.30072409314764,
+        "hips": 72.90097261282445,
+        "x_factor": 24.399751480323186
+      }
+    },
+    "score": {
+      "total": 30.04,
+      "items": [
+        {
+          "id": "top_swing",
+          "channel": "swing",
+          "phase": "top",
+          "score": 89.64,
+          "measured": 115.3364,
+          "reference": 120.0,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "top_torso",
+          "channel": "torso",
+          "phase": "top",
+          "score": 0,
+          "measured": -139.3402,
+          "reference": 44.0,
+          "state": "부족",
+          "weight": 1
+        },
+        {
+          "id": "top_hips",
+          "channel": "hips",
+          "phase": "top",
+          "score": 0,
+          "measured": -105.7083,
+          "reference": 24.0,
+          "state": "부족",
+          "weight": 1
+        },
+        {
+          "id": "top_lean",
+          "channel": "lean",
+          "phase": "top",
+          "score": 75.65,
+          "measured": 11.9748,
+          "reference": 14.8969,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "top_wrist",
+          "channel": "wrist",
+          "phase": "top",
+          "score": 0,
+          "measured": 18.3919,
+          "reference": 65.5387,
+          "state": "부족",
+          "weight": 1
+        },
+        {
+          "id": "top_shiftX",
+          "channel": "shiftX",
+          "phase": "top",
+          "score": 0,
+          "measured": -0.013,
+          "reference": 0.055,
+          "state": "부족",
+          "weight": 1
+        },
+        {
+          "id": "top_kneeL",
+          "channel": "kneeL",
+          "phase": "top",
+          "score": 95.18,
+          "measured": 9.683,
+          "reference": 8.7189,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "top_kneeR",
+          "channel": "kneeR",
+          "phase": "top",
+          "score": 89.14,
+          "measured": 10.0841,
+          "reference": 7.9122,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "top_heelR",
+          "channel": "heelR",
+          "phase": "top",
+          "score": 100,
+          "measured": 0.0,
+          "reference": 0.0,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "top_x_factor",
+          "channel": "x_factor",
+          "phase": "top",
+          "score": 0,
+          "measured": -33.6319,
+          "reference": 20.0,
+          "state": "부족",
+          "weight": 2
+        },
+        {
+          "id": "down_swing",
+          "channel": "swing",
+          "phase": "down",
+          "score": 59.4,
+          "measured": 58.2698,
+          "reference": 40.0,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "down_torso",
+          "channel": "torso",
+          "phase": "down",
+          "score": 29.9,
+          "measured": -13.5471,
+          "reference": 18.0,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "down_hips",
+          "channel": "hips",
+          "phase": "down",
+          "score": 85.54,
+          "measured": -12.3374,
+          "reference": -8.0,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "down_lean",
+          "channel": "lean",
+          "phase": "down",
+          "score": 54.73,
+          "measured": 13.4645,
+          "reference": 18.8969,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "down_wrist",
+          "channel": "wrist",
+          "phase": "down",
+          "score": 0,
+          "measured": 9.4538,
+          "reference": 50.5387,
+          "state": "부족",
+          "weight": 1
+        },
+        {
+          "id": "down_shiftX",
+          "channel": "shiftX",
+          "phase": "down",
+          "score": 70.0,
+          "measured": 0.043,
+          "reference": 0.025,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "down_kneeL",
+          "channel": "kneeL",
+          "phase": "down",
+          "score": 0.35,
+          "measured": 28.6479,
+          "reference": 8.7189,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "down_kneeR",
+          "channel": "kneeR",
+          "phase": "down",
+          "score": 31.32,
+          "measured": 28.6479,
+          "reference": 14.9122,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "down_heelR",
+          "channel": "heelR",
+          "phase": "down",
+          "score": 70.75,
+          "measured": 0.003,
+          "reference": 0.12,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "down_x_factor",
+          "channel": "x_factor",
+          "phase": "down",
+          "score": 0,
+          "measured": -1.2097,
+          "reference": 26.0,
+          "state": "부족",
+          "weight": 2
+        },
+        {
+          "id": "impact_swing",
+          "channel": "swing",
+          "phase": "impact",
+          "score": 70.46,
+          "measured": -13.2926,
+          "reference": 0.0,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "impact_torso",
+          "channel": "torso",
+          "phase": "impact",
+          "score": 3.35,
+          "measured": 15.4924,
+          "reference": -28.0,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "impact_hips",
+          "channel": "hips",
+          "phase": "impact",
+          "score": 17.22,
+          "measured": 2.8334,
+          "reference": -22.0,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "impact_lean",
+          "channel": "lean",
+          "phase": "impact",
+          "score": 89.02,
+          "measured": 13.5791,
+          "reference": 14.8969,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "impact_wrist",
+          "channel": "wrist",
+          "phase": "impact",
+          "score": 93.89,
+          "measured": 28.7052,
+          "reference": 30.5387,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "impact_shiftX",
+          "channel": "shiftX",
+          "phase": "impact",
+          "score": 0,
+          "measured": 0.059,
+          "reference": -0.055,
+          "state": "과다",
+          "weight": 1
+        },
+        {
+          "id": "impact_kneeL",
+          "channel": "kneeL",
+          "phase": "impact",
+          "score": 0,
+          "measured": 28.6479,
+          "reference": -2.2811,
+          "state": "과다",
+          "weight": 1
+        },
+        {
+          "id": "impact_kneeR",
+          "channel": "kneeR",
+          "phase": "impact",
+          "score": 61.54,
+          "measured": 7.2193,
+          "reference": 14.9122,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "impact_heelR",
+          "channel": "heelR",
+          "phase": "impact",
+          "score": 19.0,
+          "measured": 0.026,
+          "reference": 0.35,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "impact_x_factor",
+          "channel": "x_factor",
+          "phase": "impact",
+          "score": 25.36,
+          "measured": 12.6589,
+          "reference": -6.0,
+          "state": "적정",
+          "weight": 2
+        },
+        {
+          "id": "finish_swing",
+          "channel": "swing",
+          "phase": "finish",
+          "score": 0,
+          "measured": -57.5823,
+          "reference": -135.0,
+          "state": "과다",
+          "weight": 1
+        },
+        {
+          "id": "finish_torso",
+          "channel": "torso",
+          "phase": "finish",
+          "score": 0,
+          "measured": 97.3007,
+          "reference": -65.0,
+          "state": "과다",
+          "weight": 1
+        },
+        {
+          "id": "finish_hips",
+          "channel": "hips",
+          "phase": "finish",
+          "score": 0,
+          "measured": 72.901,
+          "reference": -55.0,
+          "state": "과다",
+          "weight": 1
+        },
+        {
+          "id": "finish_lean",
+          "channel": "lean",
+          "phase": "finish",
+          "score": 38.63,
+          "measured": 12.2613,
+          "reference": 4.8969,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "finish_wrist",
+          "channel": "wrist",
+          "phase": "finish",
+          "score": 26.52,
+          "measured": 57.5823,
+          "reference": 35.5387,
+          "state": "적정",
+          "weight": 1
+        },
+        {
+          "id": "finish_shiftX",
+          "channel": "shiftX",
+          "phase": "finish",
+          "score": 0,
+          "measured": 0.1,
+          "reference": -0.1,
+          "state": "과다",
+          "weight": 1
+        },
+        {
+          "id": "finish_kneeL",
+          "channel": "kneeL",
+          "phase": "finish",
+          "score": 0,
+          "measured": 13.4072,
+          "reference": -7.2811,
+          "state": "과다",
+          "weight": 1
+        },
+        {
+          "id": "finish_kneeR",
+          "channel": "kneeR",
+          "phase": "finish",
+          "score": 0,
+          "measured": 28.6479,
+          "reference": 4.9122,
+          "state": "과다",
+          "weight": 1
+        },
+        {
+          "id": "finish_heelR",
+          "channel": "heelR",
+          "phase": "finish",
+          "score": 0,
+          "measured": 0.177,
+          "reference": 0.85,
+          "state": "부족",
+          "weight": 1
+        },
+        {
+          "id": "finish_x_factor",
+          "channel": "x_factor",
+          "phase": "finish",
+          "score": 0,
+          "measured": 24.3998,
+          "reference": -10.0,
+          "state": "과다",
+          "weight": 2
+        }
+      ],
+      "measured_count": 40,
+      "excluded": []
+    },
+    "score_repeat_difference": 0.0
+  },
+  "guidance": {
+    "too_far": {
+      "usable": false,
+      "unusable_reason": "too_far",
+      "accepted_frames": 242,
+      "total_frames": 242,
+      "shoulder_width_pixels": 25.600000000000023
+    },
+    "tracking_failed": {
+      "usable": false,
+      "unusable_reason": "tracking_failed",
+      "accepted_frames": 0,
+      "total_frames": 242,
+      "shoulder_width_pixels": null
+    },
+    "no_swing": {
+      "usable": false,
+      "unusable_reason": "no_swing",
+      "accepted_frames": 242,
+      "total_frames": 242,
+      "shoulder_width_pixels": null
+    }
+  },
+  "samples": {
+    "golf_swing.mp4": {
+      "frames": 270,
+      "body_point_counts": [
+        22
+      ],
+      "world_point_counts": [
+        22
+      ],
+      "usable": false,
+      "unusable_reason": "no_swing",
+      "phases": {}
+    },
+    "golf_swing_portrait.mp4": {
+      "frames": 270,
+      "body_point_counts": [
+        22
+      ],
+      "world_point_counts": [
+        22
+      ],
+      "usable": false,
+      "unusable_reason": "no_swing",
+      "phases": {}
+    }
+  }
+}

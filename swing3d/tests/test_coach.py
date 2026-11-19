@@ -63,7 +63,7 @@ class CoachTest(unittest.TestCase):
         payload = json.loads(json.loads(send.call_args.args[0].data)["contents"][0]["parts"][0]["text"])
         self.assertEqual(payload["conversation_summary"], summary)
         self.assertEqual(result["conversation_summary"], summary)
-        self.assertEqual(len(payload["measured_evidence"]["columns"]), 11)
+        self.assertEqual(len(payload["measured_evidence"]["columns"]), 12)
         self.assertEqual(len(payload["measured_evidence"]["windows"]), 5)
         self.assertNotIn("finish_torso", payload["candidate_ids"])
         self.assertNotIn("impact_torso", payload["candidate_ids"])
@@ -106,7 +106,7 @@ class CoachTest(unittest.TestCase):
         self.assertEqual(result["mode"], "demo")
         self.assertNotIn("imaginary", {item["id"] for item in result["findings"]})
 
-    def test_low_confidence_preview_is_bundled_demo_only(self):
+    def test_low_confidence_is_not_overridden_by_fixture_id(self):
         recording = track()
         recording["meta"]["phase_confidence"] = dict.fromkeys(coach.PHASES, 0.2)
         provider = self.provider()
@@ -114,7 +114,5 @@ class CoachTest(unittest.TestCase):
         self.assertEqual(coach.analyze(recording, self.empty, provider)["findings"], [])
         recording["findings_id"] = "sample"
         result = coach.analyze(recording, self.empty, provider)
-        self.assertEqual(len(result["findings"]), 2)
-        self.assertTrue(result["findings"][0]["example_only"])
-        self.assertFalse(result["findings"][0]["reliable"])
+        self.assertEqual(result["findings"], [])
         self.assertFalse(result["positives"])

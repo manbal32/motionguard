@@ -1,0 +1,12 @@
+✔ deficits approach zero continuously without reversing either direction (10.512127ms)
+✔ address offsets and actual phase indices anchor all measured channels (0.20571ms)
+✔ zero stays zero and the sign and slope are continuous at the start of exaggeration (37.700255ms)
+✔ exaggeration is exact at 1×, eases at the range and alters only its channel (0.515777ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 55.85189

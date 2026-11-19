@@ -41,17 +41,17 @@ class FrameAcceptanceTests(TestCase):
         meta = track['meta']
         self.assertIs(meta['usable'], False)
         self.assertEqual((meta['accepted_frames'], meta['total_frames']), (4, 10))
-        self.assertIn('50%', meta['unusable_reason'])
+        self.assertEqual(meta['unusable_reason'], 'tracking_failed')
         self.assertEqual(meta['phase_frames'], {})
         self.assertEqual(meta['measured'], [])
         self.assertTrue({'torso', 'hips'} <= set(meta['unavailable']))
         self.assertEqual(len(track['frame_status']), 10)
-        self.assertTrue(all(row == [None] * 9 + [0.0] for row in track['track']))
-        with self.assertRaisesRegex(ValueError, '50%'):
+        self.assertTrue(all(row == [None] * (len(st.CHANNELS)-1) + [0.0] for row in track['track']))
+        with self.assertRaisesRegex(ValueError, '추적하지 못했습니다'):
             coach.evidence(track)
 
     def test_rejected_prefix_and_gap_do_not_change_width_or_source_timing(self):
-        original, fps = st.load_csv(str(ROOT / 'samples/golf1_export.csv'))
+        original, fps = st.load_csv(str(ROOT / 'samples/swing_front_landmarks.csv'))
         baseline = st.build_track(original, fps)
         bad = skeleton(0.6, 0.4, 0.3)
         bad['LEFT_SHOULDER'] = (-100, 0.6, 0, 0.99)
@@ -64,7 +64,7 @@ class FrameAcceptanceTests(TestCase):
         self.assertEqual(track['meta']['total_frames'], len(frames))
         self.assertEqual(track['meta']['address_shoulder_width_ratio'], baseline['meta']['address_shoulder_width_ratio'])
         source = track['meta']['source_frames'][0]
-        self.assertEqual(track['track'][150 - source], [None] * 9 + [0.0])
+        self.assertEqual(track['track'][150 - source], [None] * (len(st.CHANNELS)-1) + [0.0])
         for values in track['meta']['channel_confidence'].values():
             self.assertIsNone(values[150 - source])
         for i in track['meta']['phase_frames'].values():
@@ -72,12 +72,12 @@ class FrameAcceptanceTests(TestCase):
             d = frames[i]
             self.assertGreater(st._mid(d, 'LEFT_ANKLE', 'RIGHT_ANKLE')[1] - st._mid(d, 'LEFT_SHOULDER', 'RIGHT_SHOULDER')[1], 0.05)
         phases = track['meta']['phase_frames']
-        self.assertEqual(phases['top'], baseline['meta']['phase_frames']['top'] + 21)
+        self.assertEqual(phases['top'], baseline['meta']['phase_frames']['top'] + 20)
         self.assertEqual(phases['impact'], baseline['meta']['phase_frames']['impact'] + 21)
         self.assertEqual(track['meta']['fps'], baseline['meta']['fps'])
 
     def test_exactly_half_is_not_low_acceptance(self):
-        original, fps = st.load_csv(str(ROOT / 'samples/golf1_export.csv'))
+        original, fps = st.load_csv(str(ROOT / 'samples/swing_front_landmarks.csv'))
         frames = [skeleton(0.6, 0.4, 0.3)] * len(original) + original
         track = st.build_track(frames, fps)
         self.assertTrue(track['meta']['usable'])
@@ -87,18 +87,18 @@ class FrameAcceptanceTests(TestCase):
             self.assertTrue(track['frame_status'][i]['accepted'])
 
     def test_gap_inside_downswing_remains_in_event_duration(self):
-        original, fps = st.load_csv(str(ROOT / 'samples/golf1_export.csv'))
-        bad = skeleton(0.6, 0.4, 0.3)
-        track = st.build_track(original[:156] + [bad] + original[156:], fps)
-        phases = track['meta']['phase_frames']
-        self.assertEqual((phases['top'], phases['impact']), (152, 165))
-        self.assertTrue(0.25 <= (phases['down'] - 152) / 13 <= 0.75)
-        duration = (track['meta']['source_frames'][1] - track['meta']['source_frames'][0]) / fps
-        normalized_duration = (track['events']['impact'] - track['events']['top'])
-        self.assertAlmostEqual(normalized_duration * (duration + track['meta']['hold']), 13 / fps, places=3)
+        original,fps=st.load_csv(str(ROOT/'samples/swing_front_landmarks.csv'))
+        bad=skeleton(.6,.4,.3)
+        t=st.build_track(original[:142]+[bad]+original[142:],fps)
+        p=t['meta']['phase_frames']
+        self.assertEqual((p['top'],p['impact']),(118,147))
+        elapsed=(t['events']['impact']-t['events']['top'])*t['meta']['dur']
+        self.assertAlmostEqual(elapsed,29/fps,places=3)
+        start=t['meta']['source_frames'][0]
+        self.assertTrue(all(v is None for v in t['track'][142-start][:-1]))
 
     def test_high_acceptance_without_a_swing_does_not_invent_phases(self):
-        frames, fps = st.load_csv(str(ROOT / 'samples/golf1_export.csv'))
+        frames, fps = st.load_csv(str(ROOT / 'samples/swing_front_landmarks.csv'))
         for d in frames:
             sh = st._mid(d, 'LEFT_SHOULDER', 'RIGHT_SHOULDER')
             for side in ('LEFT', 'RIGHT'):

@@ -18,6 +18,7 @@ CHANNELS = {
     "wrist": ("손목 각도", "wrist hinge"), "shiftX": ("좌우 이동", "sway"),
     "kneeL": ("왼무릎 굴곡", "lead knee flex"), "kneeR": ("오른무릎 굴곡", "trail knee flex"),
     "heelR": ("오른 뒤꿈치", "trail heel lift"),
+    "x_factor": ("어깨·골반 분리", "X factor"),
 }
 DISTANCES = {"shiftX", "heelR"}
 SUMMARY_FIELDS = ("concern", "improvement", "hypothesis", "goal")
@@ -118,7 +119,7 @@ def model():
 
 def evidence(track):
     if track['meta'].get('usable') is False:
-        raise ValueError(track['meta']['unusable_reason'])
+        raise ValueError(track['meta'].get('guidance') or track['meta']['unusable_reason'])
     channels = list(CHANNELS)
     rows, meta = track["track"], track["meta"]
     columns = [track["channels"].index(key) for key in channels]
@@ -146,6 +147,8 @@ def evidence(track):
 
     windows, references, candidates = {}, {}, {}
     for (phase, label), i in zip(PHASES.items(), knots):
+        if phase == "impact" and meta.get("impact_verified") is False:
+            continue
         # Stride 2 keeps the compact numeric payload bounded, retaining both ends and the phase frame.
         indices = sorted({max(0, min(len(rows) - 1, i + offset)) for offset in (-5, -3, -1, 0, 1, 3, 5)})
         windows[phase] = [[j + start, round(rows[j][confidence], 2),
@@ -287,15 +290,6 @@ def analyze(track, summary, provider):
                 improvements.append(dict(item, drill=f"{PHASES[item['phase']]}에서 천천히 멈추고 {CHANNELS[item['channel']][0]}을 확인한 뒤 같은 각도에서 다시 촬영하세요."))
             if len(improvements) == 3:
                 break
-        if not improvements and track.get("findings_id") == "sample" and "top_torso" in all_candidates:
-            # The bundled wide shot has low confidence. Its preview demonstrates the controls only.
-            improvements = [
-                dict(all_candidates[key], label="예시 비교 · 백스윙 탑 " + CHANNELS[channel][0], example_only=True,
-                     drill=f"예시 연습: 백스윙 탑에서 멈추고 {CHANNELS[channel][0]} 자세를 같은 각도에서 확인해 보세요.")
-                for key, channel in (("top_torso", "torso"), ("top_hips", "hips"))
-                if key in all_candidates
-            ]
-            synthesis = "추적 신뢰도가 낮아 개선점을 판정하지 못했습니다. 번들 영상의 비교 조작 예시를 표시합니다."
     return validate_findings({"schema": SCHEMA, "reference": "model", "findings": improvements,
                               "mode": "demo" if reason else "gemini", "reason": reason, "usage": usage,
                               "conversation_summary": summary, "summary": synthesis, "comparison": comparison,

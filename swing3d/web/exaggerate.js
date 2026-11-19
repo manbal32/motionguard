@@ -1,7 +1,7 @@
 /* global SwingReference */
 window.SwingExaggeration = (() => {
   const levels = Object.freeze({ low: 1.5, medium: 2, high: 2.5 });
-  const limits = { torso: 18, hips: 15, lean: 15, swing: 25, wrist: 25, kneeL: 20, kneeR: 20 };
+  const limits = { x_factor: 48, torso: 48, hips: 40, lean: 40, swing: 60, wrist: 60, kneeL: 45, kneeR: 45 };
   const smooth = value => {
     const t = Math.max(0, Math.min(1, value));
     return t * t * (3 - 2 * t);
