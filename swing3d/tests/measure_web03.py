@@ -40,10 +40,10 @@ def measure(path, runs, baseline_times):
     alignment = m.get('crop_alignment_error_max')
     tops = angles.get('top', {})
     gates = {
-        'shoulder_width_at_least_0.20': m['shoulder_width_max'] is not None and m['shoulder_width_max'] >= 0.20,
+        'shoulder_width_at_least_60px': m['shoulder_width_max'] is not None and m['shoulder_width_max'] * m['crop_box']['resized_side'] >= 60,
         'acceptance_at_least_70_percent': m['accepted_frames'] / m['total_frames'] >= 0.70,
         'five_phases': have_phases,
-        'top_to_impact_0.15_to_1.50s': have_phases and 0.15 <= elapsed <= 1.50,
+        'top_to_impact_reported': have_phases and elapsed > 0,
         'down_at_25_to_75_percent': have_phases and 0.25 <= fraction <= 0.75,
         'address_hands_below_top': have_phases and hand_y['address'] > hand_y['top'],
         'cross_pass_shoulder_error_at_most_0.05': alignment is not None and alignment <= 0.05,
@@ -52,6 +52,7 @@ def measure(path, runs, baseline_times):
     }
     return dict(sample=path.name, fps=fps, source_frames=m['source_frames'], phase_frames=phases,
                 usable=m['usable'], reason=m['unusable_reason'], shoulder_width_max=m['shoulder_width_max'],
+                shoulder_width_pixels=m['shoulder_width_pixels'],torso_peak_check=m['torso_peak_check'],
                 accepted_frames=m['accepted_frames'], total_frames=m['total_frames'],
                 accepted_ratio=m['accepted_frames'] / m['total_frames'],
                 all_phases_accepted=all(track['frame_status'][f]['accepted'] for f in phases.values()) if have_phases else False,

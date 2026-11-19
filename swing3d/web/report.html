@@ -1,32 +1,12 @@
-<!doctype html>
-<html lang="ko">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MotionGuard 스윙 리포트</title>
-<link rel="stylesheet" href="/report.css">
-<main class="sheet">
-  <header class="report-head">
-    <p class="report-brand">Motion<em>Guard</em><span>리포트</span></p>
-    <h1 id="title">스윙 리포트</h1>
-    <p id="facts"></p>
-    <div class="row" role="group" aria-label="리포트 조작"><button data-theme="light">라이트</button><button data-theme="dark">다크</button><button id="print-report" disabled>인쇄 / PDF 저장</button></div>
-    <p class="print-help">인쇄 창에서 대상을 PDF로 저장으로 선택하세요.</p>
-  </header>
-  <p id="report-status" role="status">스윙 기록을 읽는 중입니다.</p>
-  <div id="report-body" hidden>
-    <section id="report-answer"><h2>당신이 물어본 것</h2><div id="report-question"></div><h2>답</h2><div id="summary"></div></section>
-    <section id="report-comparison" hidden><h2>2D 자세 비교</h2><p>왼쪽은 원본과 측정 관절입니다. 오른쪽은 교육용 과장이며 측정값이 아닙니다.</p><div id="report-image"></div></section>
-    <section id="first-practice" hidden><h2>먼저 할 연습</h2><p></p></section>
-    <details id="report-more"><summary>나머지 개선점 · 연습 영상 · 재지 못한 것</summary>
-    <section class="report-next"><h2>판정과 다음 연습</h2><div id="report-findings"></div></section>
-    <section class="report-limits" id="report-limits"><h2>재지 못한 것</h2>
-      <dl><dt>깊이 방향 회전</dt><dd>몸통과 골반 각도는 단일 영상에서 관찰한 폭 변화로 추정합니다.</dd>
-      <dt>클럽 페이스와 그립</dt><dd>클럽을 직접 검출하지 않아 페이스 방향과 손가락 배치는 측정하지 않습니다.</dd>
-      <dt>손목 코킹</dt><dd id="wrist-limit"></dd></dl>
-    </section>
-    <section class="report-appendix"><h2>부록 · 국면별 기록</h2><div id="report-stills"></div><div class="scroller"><table id="report-angles" aria-label="국면별 각도"></table></div><p class="legend">측정값 · 회색은 교본 기준 · 호박색은 교본과 <span class="num">8<small>°</small></span> 이상 차이</p></section>
-    </details>
-  </div>
-</main>
-<script src="/reference.js"></script><script src="/findings-ui.js"></script><script src="/report.js" defer></script>
-</html>
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>MotionGuard 스윙 리포트</title><link rel="stylesheet" href="/report.css">
+<main class="sheet"><header class="report-head"><p class="report-brand">Motion<em>Guard</em><span>스윙 리포트</span></p><div class="theme-controls"><button data-theme="light">라이트</button><button data-theme="dark">다크</button></div></header>
+<p id="report-status" role="status">스윙 기록을 읽는 중입니다.</p>
+<div id="report-body" hidden><div id="customer-body"><section id="report-answer"><p class="eyebrow">당신이 물어본 것</p><h1 id="report-question"></h1><h2>영상에서 본 답</h2><p id="summary"></p><p id="report-mode" class="note"></p></section>
+<section id="report-comparison" hidden><h2>내 동작과 교육용 과장</h2><div id="report-image"></div><p class="note">원본 동작과 차이를 강조한 교육용 표현을 함께 담았습니다.</p></section>
+<section><h2>잘한 점 · 유지하세요</h2><div id="report-positives"></div></section>
+<section><h2>먼저 연습할 것</h2><div id="report-findings"></div></section>
+<section><h2>연습 영상</h2><div id="report-videos"></div><p class="note">연습을 돕는 검색 링크이며 특정 강의의 정확성을 보증하지 않습니다.</p></section>
+<section id="report-limits"><h2>재지 못한 것</h2><p>카메라 한 대로 공의 회전·구질과 클럽 페이스를 확정할 수 없습니다. 촬영 방향에 따라 몸통·골반 회전은 생략합니다.</p><p id="wrist-limit"></p></section>
+<section><h2>다음 연습 목표</h2><p id="report-goal"></p></section></div>
+<section class="report-appendix"><h2>부록 · 전체 측정 기록</h2><p id="facts"></p><div id="report-approved"></div><div id="report-stills"></div><div class="scroller"><table id="report-angles" aria-label="국면별 전체 수치"></table></div></section></div>
+<footer class="report-foot"><button id="print-report" disabled>PDF 저장</button><a href="/">다시 분석</a></footer></main><script src="/reference.js"></script><script src="/findings-ui.js"></script><script src="/report.js" defer></script></html>

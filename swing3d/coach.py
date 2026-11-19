@@ -118,7 +118,7 @@ def model():
 
 def evidence(track):
     if track['meta'].get('usable') is False:
-        raise ValueError(track['meta']['unusable_reason'])
+        raise ValueError(track['meta'].get('guidance') or track['meta']['unusable_reason'])
     channels = list(CHANNELS)
     rows, meta = track["track"], track["meta"]
     columns = [track["channels"].index(key) for key in channels]
@@ -216,6 +216,42 @@ def summarize(messages, provider):
                 "reason": str(error) if isinstance(error, ProviderError) else "Gemini 요약 형식 오류"}
 
 
+def customer_report(summary, findings, positives, observations=()):
+    """Ground customer prose in validated server values, not internal labels."""
+    replacements = {'신뢰도': '관찰 상태', '프레임': '시점', '정규화': '비율', '채널': '동작'}
+    def prose(text):
+        for old, new in replacements.items():
+            text = text.replace(old, new)
+        return text
+    def meaningful(item):
+        return isinstance(item.get('measured'), (int, float)) and isinstance(item.get('reference'), (int, float)) and abs(item['measured'] - item['reference']) > 1e-9
+    rank = {'high': 3, 'medium': 2, 'low': 1}
+    selected = sorted((f for f in findings if meaningful(f)),
+                      key=lambda f: (rank.get(f.get('severity'), 0), abs(f.get('difference', f['measured']-f['reference'])) / (0.02 if f['channel'] in DISTANCES else 8)), reverse=True)[:3]
+    strengths = [p for p in positives if meaningful(p)][:2]
+    def entry(item):
+        name = CHANNELS.get(item['channel'], ('동작', ''))[0]
+        phase = PHASES.get(item.get('phase'), '스윙 중')
+        if item['channel'] in DISTANCES:
+            value = f"{phase}에서 {name}의 화면상 비율은 {item['measured']:.3f}이며 교본 참고값은 {item['reference']:.3f}입니다."
+        else:
+            value = f"{phase}에서 {name}은 {item['measured']:.1f}도이며 교본 참고값은 {item['reference']:.1f}도입니다."
+        return dict(id=item['id'], phase=item.get('phase'), title=prose(f'{phase} · {name}'),
+                    observation=prose(value), drill=prose(item.get('drill') or '편안한 범위에서 천천히 같은 동작을 반복해 보세요.'),
+                    youtube=item.get('youtube', []), severity=item.get('severity'))
+    concern = summary.get('concern') or '내 스윙을 편안하게 바꾸고 싶어요'
+    requested_phase = next((phase for phase, words in [('top', ('백스윙', '탑')), ('down', ('다운',)), ('impact', ('임팩트',)), ('finish', ('피니시',))] if any(word in concern for word in words)), None)
+    relevant = [o for o in observations if o.get('phase') == requested_phase]
+    relevant.sort(key=lambda o: (o['channel'] != 'swing', -abs(o['measured'] - o['reference'])))
+    answer_item = relevant[0] if relevant else (selected[0] if selected else None)
+    if answer_item:
+        answer = f"말씀하신 ‘{concern}’에 대해 {PHASES.get(answer_item.get('phase'), '스윙')} 동작을 확인했습니다. " + entry(answer_item)['observation'] + ' 힘이 들어간 원인까지는 이 영상으로 확정하지 않습니다.'
+    else:
+        answer = f"말씀하신 ‘{concern}’에 대해 관찰 가능한 동작을 살펴봤습니다. 이번 영상에서는 교본과 뚜렷이 다른 동작을 확정하지 않아 자세 교정을 권하지 않습니다."
+    return dict(concern=concern, answer=prose(answer), positives=[entry(p) for p in strengths],
+                improvements=[entry(f) for f in selected], goal=summary.get('goal') or '같은 각도에서 천천히 반복해 비교하세요.')
+
+
 def analyze(track, summary, provider):
     summary = validate_summary(summary)
     measured, references, all_candidates = evidence(track)
@@ -262,7 +298,7 @@ def analyze(track, summary, provider):
         for key in ("positives", "improvements"):
             if not isinstance(answer[key], list) or len(answer[key]) > 3:
                 raise ValueError("invalid result list")
-        positives = [candidates[key] for key in dict.fromkeys(answer["positives"]) if not candidates[key]["deviation"]]
+        positives = [candidates[key] for key in dict.fromkeys(answer["positives"]) if not candidates[key]["deviation"] and candidates[key]["measured"] != candidates[key]["reference"]]
         for entry in answer["improvements"]:
             item = candidates[entry["id"]]
             if entry.get("phase", item["phase"]) != item["phase"] or entry.get("span_frames", 5) != 5:
@@ -279,7 +315,7 @@ def analyze(track, summary, provider):
         next_goal = "같은 방향에서 전신이 보이도록 다시 촬영하고 같은 국면의 수치를 비교하세요."
         ranked = sorted(candidates.values(), key=lambda item: abs(item["difference"]) /
                         (0.02 if item["channel"] in DISTANCES else 8), reverse=True)
-        positives = [item for item in reversed(ranked) if not item["deviation"]][:2]
+        positives = [item for item in reversed(ranked) if not item["deviation"] and item["measured"] != item["reference"]][:2]
         # Pick distinct joints, keeping the largest difference for each.
         improvements = []
         for item in ranked:
@@ -299,5 +335,6 @@ def analyze(track, summary, provider):
     return validate_findings({"schema": SCHEMA, "reference": "model", "findings": improvements,
                               "mode": "demo" if reason else "gemini", "reason": reason, "usage": usage,
                               "conversation_summary": summary, "summary": synthesis, "comparison": comparison,
-                              "positives": positives, "next_goal": next_goal, "limitations": LIMITATIONS},
+                              "positives": positives, "next_goal": next_goal, "limitations": LIMITATIONS,
+                              "customer_report": customer_report(summary, improvements, positives, candidates.values())},
                              unavailable=track["meta"].get("unavailable", ()))

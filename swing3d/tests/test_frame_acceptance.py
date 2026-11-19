@@ -41,13 +41,13 @@ class FrameAcceptanceTests(TestCase):
         meta = track['meta']
         self.assertIs(meta['usable'], False)
         self.assertEqual((meta['accepted_frames'], meta['total_frames']), (4, 10))
-        self.assertIn('50%', meta['unusable_reason'])
+        self.assertEqual(meta['unusable_reason'], 'tracking_failed')
         self.assertEqual(meta['phase_frames'], {})
         self.assertEqual(meta['measured'], [])
         self.assertTrue({'torso', 'hips'} <= set(meta['unavailable']))
         self.assertEqual(len(track['frame_status']), 10)
         self.assertTrue(all(row == [None] * 9 + [0.0] for row in track['track']))
-        with self.assertRaisesRegex(ValueError, '50%'):
+        with self.assertRaisesRegex(ValueError, '추적하지 못했습니다'):
             coach.evidence(track)
 
     def test_rejected_prefix_and_gap_do_not_change_width_or_source_timing(self):

@@ -1,0 +1,20 @@
+samples/golf_swing.mp4
+usable = True camera = oblique 폭비 = 0.5497
+채택 = 270 / 270 어깨폭 최대 = 0.11916007172493706 추론 픽셀 = 76.26244590395972
+crop_box = {'x': 0.4203125, 'y': 0.3416666666666667, 'w': 0.2859375, 'h': 0.5083333333333333, 'pixels': [269, 123, 183, 183], 'source_size': [640, 360], 'resized_side': 640, 'padding_per_side': 0.25, 'boundary_limited': False, 'inverse_transform': {'function': 'video_pose.crop_to_original', 'x': 'box.x + x_crop * box.w', 'y': 'box.y + y_crop * box.h', 'z': 'z_crop * box.w'}}
+address source frame 4 track row 0 {'torso': None, 'hips': None}
+top source frame 65 track row 61 {'torso': None, 'hips': None}
+down source frame 89 track row 85 {'torso': None, 'hips': None}
+impact source frame 113 track row 109 {'torso': None, 'hips': None}
+finish source frame 132 track row 128 {'torso': None, 'hips': None}
+torso_peak_check = {"source": "width_inverse_diagnostic_only", "eligible_for_coaching": false, "phase_degrees": {"address": 0.0, "top": 17.087563935649342, "down": 15.998512849098972, "impact": -9.966477495805364, "finish": -20.367748591787056}, "max_phase": "top", "peak_frame": 34, "peak_degrees": 32.00905427495525}
+samples/golf_swing_portrait.mp4
+usable = True camera = oblique 폭비 = 0.5752
+채택 = 270 / 270 어깨폭 최대 = 0.11908340737933204 추론 픽셀 = 76.21338072277251
+crop_box = {'x': 0.3425925925925926, 'y': 0.4244791666666667, 'w': 0.42824074074074076, 'h': 0.24088541666666666, 'pixels': [148, 326, 185, 185], 'source_size': [432, 768], 'resized_side': 640, 'padding_per_side': 0.25, 'boundary_limited': False, 'inverse_transform': {'function': 'video_pose.crop_to_original', 'x': 'box.x + x_crop * box.w', 'y': 'box.y + y_crop * box.h', 'z': 'z_crop * box.w'}}
+address source frame 3 track row 0 {'torso': None, 'hips': None}
+top source frame 77 track row 74 {'torso': None, 'hips': None}
+down source frame 94 track row 91 {'torso': None, 'hips': None}
+impact source frame 112 track row 109 {'torso': None, 'hips': None}
+finish source frame 131 track row 128 {'torso': None, 'hips': None}
+torso_peak_check = {"source": "width_inverse_diagnostic_only", "eligible_for_coaching": false, "phase_degrees": {"address": 0.0, "top": 17.770276906727535, "down": 19.30860493011163, "impact": -27.528383454204153, "finish": -11.193135835550342}, "max_phase": "down", "peak_frame": 30, "peak_degrees": 32.69973678160482}

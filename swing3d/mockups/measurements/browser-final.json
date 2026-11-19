@@ -1,0 +1,56 @@
+{
+  "m": {
+    "canvasCSS": [
+      358,
+      276
+    ],
+    "landmarks": 33,
+    "maxJointPx": 45.34145226125345,
+    "pixelDifference": 0.041982936604323534,
+    "pelvisReference": [
+      156.50553923477142,
+      127.43711181113513
+    ],
+    "pelvisShown": [
+      156.50553923477142,
+      127.43711181113513
+    ],
+    "guideRadius": 22.084819573040736,
+    "frame": 132,
+    "standard390": {
+      "width": 390,
+      "maxJointPx": 45.50573288538844,
+      "pixelDifference": 0.04287929278904008
+    },
+    "errors": [],
+    "reportImages": 6,
+    "findings": 3,
+    "positives": 2,
+    "bodyForbiddenWords": 0
+  },
+  "d": {
+    "canvasCSS": [
+      840,
+      333
+    ],
+    "landmarks": 33,
+    "maxJointPx": 54.70544783694707,
+    "pixelDifference": 0.02146074646074646,
+    "pelvisReference": [
+      392.8599440767351,
+      153.7556457721304
+    ],
+    "pelvisShown": [
+      392.8599440767351,
+      153.7556457721304
+    ],
+    "guideRadius": 26.645814919646973,
+    "frame": 132,
+    "recording": "webm downloaded",
+    "errors": [],
+    "reportImages": 6,
+    "findings": 3,
+    "positives": 2,
+    "bodyForbiddenWords": 0
+  }
+}

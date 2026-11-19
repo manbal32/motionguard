@@ -64,8 +64,14 @@
       </div>
     </section>
   </div>
+  <section id="quality-guidance" class="flow-body" hidden aria-labelledby="guidance-title">
+    <h2 id="guidance-title">촬영 위치를 확인해 주세요</h2><p id="guidance-message" role="status"></p>
+    <img src="/assets/capture-guide.svg" alt="카메라 정면에서 전신이 화면 높이의 3분의 2를 채우는 촬영 예시">
+    <button id="guidance-retry" class="primary">다시 찍기</button>
+  </section>
   <section id="overlay" class="flow-body" hidden>
     <header><span class="index">03</span><h2>스윙 나란히 비교</h2><span id="compare-caption" class="caption"></span></header>
+    <div id="quality-notice" hidden><img src="/assets/capture-guide.svg" alt="정면 촬영 예시"><p></p><button id="notice-retry">다시 찍기</button></div>
     <p id="mobile-finding"></p>
     <div id="finding-pager"><button id="finding-prev" aria-label="이전 비교 항목">← 이전</button><output id="finding-position"></output><button id="finding-next" aria-label="다음 비교 항목">다음 →</button></div>
     <div id="comparison-panes" class="comparison-panes stage grow">
@@ -85,9 +91,9 @@
     <p id="comparison-unavailable" class="section-body" hidden>좌표 트랙의 자세를 표시합니다. 원본 영상은 포함되어 있지 않습니다.</p>
     <button id="mobile-toggle" type="button" aria-pressed="false">누르고 있으면 과장</button>
     <p id="mobile-values" class="num"></p>
-    <details id="playback-details" open><summary>재생 도구</summary>
+    <div id="phase-buttons" aria-label="국면 이동"></div><details id="playback-details" open><summary>재생 도구</summary>
     <div class="transport" id="video-transport">
-      <button id="play">재생</button>
+      <button id="play">재생</button><button id="show-original" aria-pressed="false">원본 보기</button>
       <button id="previous" aria-label="이전 프레임">−1 <small>프레임</small></button>
       <button id="next" aria-label="다음 프레임">+1 <small>프레임</small></button>
       <button id="speed" aria-pressed="false">0.5<small>×</small></button>
@@ -99,7 +105,7 @@
     </div>
     </details>
     <div class="transport" id="factor-transport">
-      <label>과장 배율 <input id="compare-factor" type="range" min="1" max="3" step="0.1" value="1"></label>
+      <label>과장 배율 <input id="compare-factor" type="range" min="1" max="2.5" step="0.1" value="1"></label>
       <output id="compare-factor-value" class="num"></output>
       <button id="compare-reference" aria-pressed="true">교본 겹치기</button>
     </div>

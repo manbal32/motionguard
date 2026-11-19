@@ -30,7 +30,7 @@
     [11,12],[11,13],[13,15],[15,19],[12,14],[14,16],[16,20],
     [11,23],[12,24],[23,24],[23,25],[25,27],[27,29],[29,31],
     [24,26],[26,28],[28,30],[30,32]];
-  const drawnJoints = new Set(links.flat());
+  const drawnJoints = new Set(Array.from({length:33}, (_,i) => i));
   let selected;
   let mediaUrl;
   let duration;
@@ -160,6 +160,7 @@
   function select(file, csv = false) {
     if (request || !file) return;
     summaryPanel.hidden = true;
+    byId("quality-guidance").hidden=true;
     preview.pause();
     preview.removeAttribute("src");
     preview.hidden = true;
@@ -249,7 +250,7 @@
         for (const line of lines) {
           const event = JSON.parse(line);
           if (event.type === "progress") report(event.stage, event.percent);
-          if (event.type === "error") throw new Error(event.reason);
+          if (event.type === "error") { const error=new Error(event.reason);error.quality=event.quality;throw error; }
           if (event.type === "result") result = event.data;
         }
       }
@@ -322,6 +323,10 @@
         headers: { Accept: csv ? "application/json" : "application/x-ndjson" },
       });
       const track = await readResponse(response);
+      if (track.meta.usable === false) { showGuidance(track.meta); return; }
+      const notice = byId("quality-notice");
+      notice.hidden = !track.meta.guidance;
+      notice.querySelector("p").textContent = track.meta.guidance ?? "";
       if (controller.signal.aborted) return;
       evidence = track.evidence;
       activeFinding = undefined;
@@ -343,6 +348,7 @@
       updateOverlay();
 
     } catch (error) {
+      if(error.quality){showGuidance(error.quality);return;}
       step(csv ? 1 : 2);
       report(controller.signal.aborted ? "분석을 취소했습니다." : (error.message || "분석에 실패했습니다.")
         + " 전신이 보이는 MP4를 선택하거나 좌표 CSV로 다시 시도해 주세요.", 0);
@@ -357,6 +363,7 @@
 
   function jump(frame) {
     if (!evidence) return;
+    loopBounds=[Math.max(0,frame/evidence.fps-.4),Math.min(duration,frame/evidence.fps+.4)];
     video.pause();
     // Seek just inside the requested frame rather than on a rounded frame boundary.
     video.currentTime = Math.min(duration, (frame + 0.05) / evidence.fps);
@@ -378,9 +385,9 @@
     }
     const mobileContext = mobile.getContext("2d");
     mobileContext.clearRect(0, 0, mobile.width, mobile.height);
-    if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight || alternate.width !== video.videoWidth) {
-      canvas.width = alternate.width = video.videoWidth;
-      canvas.height = alternate.height = video.videoHeight;
+    if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
     }
     byId("compare-stage").style.aspectRatio = video.videoWidth + " / " + video.videoHeight;
     const frame = Math.max(0, Math.min(evidence.frames.length - 1, Math.floor(mediaTime * evidence.fps + 0.001)));
@@ -393,7 +400,7 @@
       ?? phases.findLast(([key]) => evidence.phase_frames[key] <= frame);
     byId("phase-label").textContent = phase?.[1] ?? "어드레스 전";
     ctx.clearRect(0, 0, width, height);
-    alternateContext.clearRect(0, 0, width, height);
+
     const points = evidence.frames[frame];
     const sample = sampleIndex(frame);
     updateValues(sample);
@@ -420,56 +427,68 @@
         : baseline[comparison.track.channels.indexOf(channel)]) : null;
     const show = byId("toggle-joints").getAttribute("aria-pressed") === "true";
     if (show) paint(ctx, skeleton, reference, scale, line, diameter);
-    const colors = activeFinding?.positive
-      ? { far: "#63716d", near: "#778680", shirt: "#87938e", skin: "#a4ada9", shoes: "#899691", outline: "#45534e" }
-      : { far: "#257561", near: "#307f6e", shirt: "#2E8B74", skin: "#70b8a5", shoes: "#55a38e", outline: "#1F6B58" };
-    const floor = Math.max(...[29, 30, 31, 32].map(i => measured[i][1]));
-    alternateContext.strokeStyle = "#54706a";
-    alternateContext.lineWidth = 1 / scale;
-    alternateContext.beginPath();
-    alternateContext.moveTo(0, floor + 3 / scale);
-    alternateContext.lineTo(alternate.width, floor + 3 / scale);
-    alternateContext.stroke();
-    if (reference && hasDeviation(sample)) SwingPoseAvatar.paint(alternateContext, reference, colors, .28);
-    SwingPoseAvatar.paint(alternateContext, displayed, colors);
     canvas.dataset.pelvis = SwingPoseAvatar.anatomy(skeleton).pelvis.join(",");
-    alternate.dataset.pelvis = SwingPoseAvatar.anatomy(displayed).pelvis.join(",");
-    paintCue(skeleton, displayed, scale);
-    mobileContext.drawImage(alternate, 0, 0);
+    canvas.dataset.landmarkCount = "33";
+    renderAvatar(measured, baseline, sample);
+
+  }
+
+  function renderAvatar(points, baseline, sample) {
+    const stage = byId("comparison-panes");
+    const w = stage.clientWidth, h = stage.clientHeight, dpr = window.devicePixelRatio || 1;
+    if (!w || !h) return;
+    alternate.width = Math.round(w*dpr); alternate.height = Math.round(h*dpr);
+    alternateContext.setTransform(dpr,0,0,dpr,0,0);
+    alternateContext.clearRect(0,0,w,h);
+    const body = points.slice(0,33).filter(p => p[2] >= .3);
+    if (!body.length) return;
+    const xs=body.map(p=>p[0]), ys=body.map(p=>p[1]);
+    const scale = Math.min(w*.74 / Math.max(1e-4,Math.max(...xs)-Math.min(...xs)),
+      h*.75 / Math.max(1e-4,Math.max(...ys)-Math.min(...ys)));
+    const x=(Math.min(...xs)+Math.max(...xs))/2, y=(Math.min(...ys)+Math.max(...ys))/2;
+    const measured=points.map(p=>[(p[0]-x)*scale+w/2,(p[1]-y)*scale+h*.49,p[2]]);
+    const base=project(measured,baseline,key=>baseline[comparison.track.channels.indexOf(key)]);
+    const held=compareToggle.getAttribute("aria-pressed")==="true" && !activeFinding?.positive;
+    const target=comparison.displayed[sample];
+    const shown=project(measured,baseline,key=>(held?target:baseline)[comparison.track.channels.indexOf(key)]);
+    const reference=project(measured,baseline,key=>key===activeFinding?.channel
+      ? comparison.reference[sample][SwingReference.channels.indexOf(key)] : baseline[comparison.track.channels.indexOf(key)]);
+    const colors={far:"#58C9A3",near:"#58C9A3",shirt:"#58C9A3",skin:"#58C9A3",shoes:"#58C9A3",outline:"#58C9A3"};
+    if (byId("compare-reference").getAttribute("aria-pressed")==="true" && !activeFinding?.positive) {
+      SwingPoseAvatar.paint(alternateContext,reference,colors,.30);
+    }
+    SwingPoseAvatar.paint(alternateContext,shown,colors,.92);
+    if (activeFinding && !activeFinding.positive && hasDeviation(sample)) paintAngleGuide(shown,reference);
+    alternate.dataset.measuredPose=JSON.stringify(base.slice(0,33));
+    alternate.dataset.displayedPose=JSON.stringify(shown.slice(0,33));
+    alternate.dataset.referencePose=JSON.stringify(reference.slice(0,33));
+    alternate.dataset.landmarkCount="33";
+    alternate.dataset.pelvis=SwingPoseAvatar.anatomy(shown).pelvis.join(",");
+    alternate.dataset.frame=String(evidence ? sample+comparison.track.meta.source_frames[0] : sample);
+  }
+
+  function paintAngleGuide(shown, reference) {
+    const channel=activeFinding.channel;
+    const map={swing:[11,15],wrist:[13,15],lean:[34,33],torso:[33,11],hips:[34,23],
+      kneeL:[25,23],kneeR:[26,24],heelR:[28,30],shiftX:[34,35]};
+    const [pivot,end]=map[channel] ?? [34,33];
+    const c=shown[pivot], a=shown[end], b=reference[end];
+    let start=Math.atan2(a[1]-c[1],a[0]-c[0]), stop=Math.atan2(b[1]-c[1],b[0]-c[0]);
+    let turn=Math.atan2(Math.sin(stop-start),Math.cos(stop-start));
+    if (Math.abs(turn)<.01) return;
+    const radius=Math.hypot(a[0]-c[0],a[1]-c[1])*.45;
+    const ctx=alternateContext;ctx.save();ctx.strokeStyle="#E8A33D";ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.arc(c[0],c[1],radius,start,start+turn,turn<0);ctx.stroke();
+    const angle=start+turn, x=c[0]+radius*Math.cos(angle),y=c[1]+radius*Math.sin(angle);
+    const heading=angle+Math.sign(turn)*Math.PI/2;
+    ctx.beginPath();for(const delta of [-.6,.6]){ctx.moveTo(x,y);ctx.lineTo(x-8*Math.cos(heading+delta),y-8*Math.sin(heading+delta));}ctx.stroke();ctx.restore();
+    alternate.dataset.guideRadius=String(radius);alternate.dataset.guideDirection="toward-reference";
   }
 
   function paintTrackPose() {
-    const {track, displayed, reference} = comparison;
-    const sample = comparison.sample ?? 0;
-    const points = track.pose_landmarks[sample];
-    const context = alternateContext;
-    const stage = byId("comparison-panes");
-    if (!points || !stage.clientWidth || !stage.clientHeight) return;
-    alternate.width = stage.clientWidth;
-    alternate.height = stage.clientHeight;
-    const body = points.slice(11).filter(point => point[2] > 0);
-    if (!body.length) return;
-    const xs = body.map(point => point[0]), ys = body.map(point => point[1]);
-    const x = (Math.min(...xs) + Math.max(...xs)) / 2;
-    const y = (Math.min(...ys) + Math.max(...ys)) / 2;
-    const scale = Math.min(alternate.width * .65 / Math.max(.01, Math.max(...xs) - Math.min(...xs)),
-      alternate.height * .62 / Math.max(.01, Math.max(...ys) - Math.min(...ys)));
-    const measured = points.map(([px, py, confidence]) =>
-      [(px - x) * scale + alternate.width / 2, (py - y) * scale + alternate.height / 2, confidence]);
-    for (const hand of [19, 20]) {
-      if (!measured[hand][2]) measured[hand] = [...measured[hand - 4].slice(0, 2), 0];
-    }
-    const baseline = track.track[sample];
-    const exaggerating = compareToggle.getAttribute("aria-pressed") === "true";
-    const shown = project(measured, baseline, key => (exaggerating ? displayed[sample] : baseline)[track.channels.indexOf(key)]);
-    const model = project(measured, baseline, key => key === activeFinding?.channel
-      ? reference[sample][SwingReference.channels.indexOf(key)] : baseline[track.channels.indexOf(key)]);
-    const colors = {far:"#2F7F69", near:"#58C9A3", shirt:"#58C9A3", skin:"#83D8BA", shoes:"#58C9A3", outline:"#2F7F69"};
-    if (byId("compare-reference").getAttribute("aria-pressed") === "true") {
-      SwingPoseAvatar.paint(context, model, colors, .30);
-    }
-    SwingPoseAvatar.paint(context, shown, colors);
-    if (exaggerating) paintCue(measured, shown, 1);
+    const {track}=comparison, sample=comparison.sample??0, points=track.pose_landmarks[sample];
+    if (!points) return;
+    renderAvatar(points,track.track[sample],sample);
   }
 
   byId("playback-details").open = false;
@@ -496,7 +515,7 @@
     byId("overlay").dataset.mobileMode = exaggerated ? "exaggerated" : "measured";
     compareToggle.setAttribute("aria-pressed", String(exaggerated));
     compareToggle.textContent = exaggerated ? "과장 " + Number(factor.value).toFixed(1) + "×" : "◉ 누르고 있으면 과장";
-    if (!evidence && comparison?.track.pose_landmarks) paintTrackPose();
+    if (evidence) updateOverlay(); else if (comparison?.track.pose_landmarks) paintTrackPose();
   }
   let holdTimer;
   let holding = false;
@@ -545,7 +564,7 @@
     const pose = points.map(point => point.slice());
     const delta = channel => {
       const difference = value(channel) - baseline[comparison.track.channels.indexOf(channel)];
-      return Math.max(-Math.PI / 6, Math.min(Math.PI / 6, difference));
+      return Math.max(-Math.PI / 3, Math.min(Math.PI / 3, difference));
     };
     const pelvis = midpoint(pose[23], pose[24]);
     const shoulders = midpoint(pose[11], pose[12]);
@@ -560,10 +579,10 @@
       }
     }
     const distance = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
-    // Limit the displacement of the two torso attachments to 15% of their measured lengths.
+    // Limit the displacement of the two torso attachments to 40% of their measured lengths.
     function turnTorso(indices, pivot, angle, attachments) {
       const bound = Math.min(...attachments.map(([moving, fixed]) =>
-        2 * Math.asin(Math.min(1, 0.075 * distance(pose[moving], pose[fixed]) /
+        2 * Math.asin(Math.min(1, 0.20 * distance(pose[moving], pose[fixed]) /
           Math.max(1e-9, distance(pose[moving], pivot))))));
       rotate(indices, pivot, Math.sign(angle) * Math.min(Math.abs(angle), bound));
     }
@@ -647,7 +666,7 @@
     }
     context.fillStyle = ink;
     for (const [index, [x, y, confidence]] of pose.slice(0, evidence.landmark_names.length).entries()) {
-      if (!drawnJoints.has(index) || FACE_LANDMARKS.has(evidence.landmark_names[index])) continue;
+      if (!drawnJoints.has(index)) continue;
       context.globalAlpha = Math.max(0, Math.min(1, confidence));
       context.beginPath();
       context.arc(x, y, diameter / (2 * scale), 0, Math.PI * 2);
@@ -737,7 +756,7 @@
     const displayed = comparison.displayed[sample][index];
     const normalized = channel === "shiftX" || channel === "heelR";
     const compact = value => normalized ? value.toFixed(3) : Math.round(value * 180 / Math.PI) + "°";
-    byId("mobile-values").textContent = (SwingFindings.channels[channel] ?? channel) + " " + compact(measured) + " · 교본 " + compact(reference);
+    byId("mobile-values").replaceChildren(node("span",(phases.find(([p])=>p===activeFinding.phase)?.[1] ?? "동작")+" · "),node("b",compact(measured)),node("s"," 교본 "+compact(reference)));
     const show = value => quantity((value * (normalized ? 1 : 180 / Math.PI)).toFixed(normalized ? 3 : 1), normalized ? "정규화" : "°");
     const entry = (label, value, style) => {
       const item = node("span", label + " ", style);
@@ -825,6 +844,7 @@
     updateZoom();
     const ticks = byId("ticks");
     ticks.replaceChildren();
+    byId("phase-buttons").replaceChildren();
     byId("seek").max = String(duration);
     for (const [key, label] of phases) {
       const frame = evidence.phase_frames[key];
@@ -832,6 +852,8 @@
       tick.dataset.position = Math.min(100, frame / evidence.fps / duration * 100);
       tick.addEventListener("click", () => jump(frame));
       ticks.append(tick);
+      const phaseButton=node("button",label); phaseButton.onclick=()=>jump(frame);
+      phaseButton.dataset.phase=key;byId("phase-buttons").append(phaseButton);
     }
     byId("overlay").hidden = false;
     layoutTicks();
@@ -937,7 +959,7 @@
     byId("compare-warning").textContent = "오른쪽은 교육용 과장이며 측정값이 아닙니다 · 왼쪽 수치가 실제 측정입니다";
     comparison.options = SwingFindings.choices(byId("finding-options"), doc, track, chooseFinding);
     factor.disabled = comparison.options.length === 0;
-    if (comparison.options.length) chooseFinding(comparison.options[0].id);
+    if (comparison.options.length) chooseFinding((comparison.options.find(f=>["swing","lean","wrist","torso","hips"].includes(f.channel)) ?? comparison.options[0]).id);
     else changeFactor();
     SwingFindings.render(byId("finding-body"), track, doc, id => {
       chooseFinding(id);
@@ -955,38 +977,52 @@
       + (coaching?.report_id ? "?coaching=" + coaching.report_id : "");
     reportLink.onclick = async event => {
       if (!coaching?.report_id || !evidence) return;
-      event.preventDefault();
-      video.pause();
-      if (video.seeking) await new Promise(resolve => video.addEventListener("seeked", resolve, {once: true}));
-      if (video.readyState < 2) {
-        location.assign(reportLink.href);
-        return;
-      }
-      updateOverlay();
-      const snapshot = document.createElement("canvas");
-      snapshot.width = 960;
-      const height = snapshot.height = Math.round(480 * video.videoHeight / video.videoWidth);
-      const draw = snapshot.getContext("2d");
-      const [x, y, size] = byId("zoom-person").getAttribute("aria-pressed") === "true" ? evidence.overlay_crop : [0, 0, 1];
-      const crop = [x * video.videoWidth, y * video.videoHeight, size * video.videoWidth, size * video.videoHeight];
-      draw.fillStyle = styles.getPropertyValue("--ground").trim();
-      draw.fillRect(0, 0, 960, height);
-      draw.drawImage(video, ...crop, 0, 0, 480, height);
-      draw.drawImage(canvas, ...crop, 0, 0, 480, height);
-      draw.drawImage(alternate, ...crop, 480, 0, 480, height);
+      event.preventDefault(); video.pause();
+      reportLink.setAttribute("aria-busy", "true");
+      const originalId=activeFinding?.id, originalFactor=factor.value;
+      const items=[];
+      byId("playback-details").open=false;
       try {
-        sessionStorage.setItem("motionguard:" + coaching.report_id, JSON.stringify({
-          image: snapshot.toDataURL("image/jpeg", 0.88), factor: Number(factor.value),
-          frame: Math.floor(video.currentTime * evidence.fps + 0.001), label: activeFinding?.label,
-          positive: !!activeFinding?.positive,
-          values: [...byId("compare-values").children].map(item => item.textContent).join(" · "),
-        }));
+        for (const item of (coaching.customer_report?.improvements ?? [])) {
+          chooseFinding(item.id);
+          if(video.seeking) await new Promise(resolve=>video.addEventListener("seeked",resolve,{once:true}));
+          factor.value="2.5"; changeFactor(); mobileMode(true);
+          await new Promise(requestAnimationFrame); updateOverlay();
+          const snapshot=document.createElement("canvas");snapshot.width=480;snapshot.height=640;
+          const draw=snapshot.getContext("2d");draw.fillStyle="#0C141C";draw.fillRect(0,0,480,640);
+          const points=[...JSON.parse(alternate.dataset.displayedPose),...JSON.parse(alternate.dataset.referencePose)];
+          const pixelScale=alternate.width/alternate.clientWidth;
+          const xs=points.map(p=>p[0]*pixelScale),ys=points.map(p=>p[1]*pixelScale);
+          const margin=(Math.max(...ys)-Math.min(...ys))*.15;
+          const left=Math.max(0,Math.min(...xs)-margin),top=Math.max(0,Math.min(...ys)-margin);
+          const width=Math.min(alternate.width,Math.max(...xs)+margin)-left;
+          const height=Math.min(alternate.height,Math.max(...ys)+margin)-top;
+          const ratio=Math.min(480/width,640/height);
+          draw.drawImage(alternate,left,top,width,height,(480-width*ratio)/2,(640-height*ratio)/2,width*ratio,height*ratio);
+          items.push({id:item.id,image:snapshot.toDataURL("image/jpeg",.88)});
+        }
+        sessionStorage.setItem("motionguard:"+coaching.report_id,JSON.stringify({items,image:items[0]?.image,factor:2.5}));
       } catch {
-        // The report still has the measured phase stills if session storage is unavailable.
+        byId("status").textContent="과장 그림을 저장하지 못했습니다. 원본 사진과 수치로 리포트를 엽니다.";
+      } finally {
+        if(originalId) chooseFinding(originalId); factor.value=originalFactor;changeFactor();mobileMode(false);
+        reportLink.removeAttribute("aria-busy");
       }
       location.assign(reportLink.href);
     };
   }
+
+  function showGuidance(meta) {
+    byId("quality-guidance").hidden=false;
+    byId("quality-guidance").dataset.reason=meta.unusable_reason;
+    byId("guidance-message").textContent=meta.guidance;
+    step("guide");
+  }
+  function retry(){byId("quality-guidance").hidden=true;step(1);byId("video").click();}
+  byId("guidance-retry").onclick=byId("notice-retry").onclick=retry;
+  byId("show-original").onclick=e=>{const b=e.currentTarget;const on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",String(on));panes.dataset.original=String(on);};
+  byId("playback-details").append(byId("result-details"));
+  new ResizeObserver(()=>{if(comparison)updateOverlay();}).observe(panes);
 
   function loadScript(src) {
     return new Promise((resolve, reject) => {
@@ -1011,7 +1047,10 @@
       if (comparison !== current) return;
       viewer ??= window.Swing3D.mount(host, current.track, {
         findings: { ...current.findings, findings: current.findings.findings
-          .map(item => SwingExaggeration.resolve(current.track, item)).filter(item => item.range) },
+          .map(item => SwingExaggeration.resolve(current.track, item))
+          .filter(item => item.range)
+          .map(item => ({...item, range: [Math.max(0,item.range[0]),Math.min(1,item.range[1])]}))
+          .filter(item => item.range[0] < item.range[1]) },
         autoplay: false, externalFindings: true,
       });
       return viewer;
@@ -1127,7 +1166,7 @@
   });
   new ResizeObserver(() => updateOverlay()).observe(video);
   new ResizeObserver(() => {
-    if (!evidence && comparison?.track.pose_landmarks) paintTrackPose();
+    if (evidence) updateOverlay(); else if (comparison?.track.pose_landmarks) paintTrackPose();
   }).observe(byId("comparison-panes"));
   byId("toggle-joints").addEventListener("click", event => {
     const toggle = event.currentTarget;
