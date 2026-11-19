@@ -1,0 +1,200 @@
+{
+  "mobile": {
+    "screens": {
+      "empty": {
+        "primary": [
+          "choose-video"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 14,
+        "failures": []
+      },
+      "upload": {
+        "primary": [
+          "start"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 19,
+        "failures": []
+      },
+      "summary": {
+        "primary": [
+          "summary-approve"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 13,
+        "failures": []
+      },
+      "busy": {
+        "primary": [
+          "cancel"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 12,
+        "failures": []
+      },
+      "point": {
+        "primary": [
+          "flow-back"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 15,
+        "failures": []
+      },
+      "result": {
+        "primary": [
+          "result-report"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 38,
+        "failures": []
+      },
+      "report": {
+        "primary": [
+          "print-report"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 318,
+        "failures": []
+      },
+      "guidance_too_far": {
+        "primary": [
+          "guidance-retry"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 6,
+        "failures": []
+      },
+      "guidance_tracking_failed": {
+        "primary": [
+          "guidance-retry"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 6,
+        "failures": []
+      },
+      "guidance_no_swing": {
+        "primary": [
+          "guidance-retry"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 6,
+        "failures": []
+      }
+    },
+    "meters": [
+      {
+        "band": 133.453125,
+        "fill": 66.71875
+      },
+      {
+        "band": 77.703125,
+        "fill": 319.140625
+      },
+      {
+        "band": 68.015625,
+        "fill": 323.984375
+      }
+    ],
+    "errors": []
+  },
+  "desktop": {
+    "screens": {
+      "empty": {
+        "primary": [
+          "choose-video"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 14,
+        "failures": []
+      },
+      "upload": {
+        "primary": [
+          "start"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 19,
+        "failures": []
+      },
+      "summary": {
+        "primary": [
+          "summary-approve"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 13,
+        "failures": []
+      },
+      "busy": {
+        "primary": [
+          "cancel"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 12,
+        "failures": []
+      },
+      "point": {
+        "primary": [
+          "flow-back"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 15,
+        "failures": []
+      },
+      "result": {
+        "primary": [
+          "result-report"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 38,
+        "failures": []
+      },
+      "report": {
+        "primary": [
+          "print-report"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 318,
+        "failures": []
+      },
+      "guidance_too_far": {
+        "primary": [
+          "guidance-retry"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 6,
+        "failures": []
+      },
+      "guidance_tracking_failed": {
+        "primary": [
+          "guidance-retry"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 6,
+        "failures": []
+      },
+      "guidance_no_swing": {
+        "primary": [
+          "guidance-retry"
+        ],
+        "minimumContrast": 4.626697697354277,
+        "textNodes": 6,
+        "failures": []
+      }
+    },
+    "meters": [
+      {
+        "band": 313.140625,
+        "fill": 156.5625
+      },
+      {
+        "band": 182.34375,
+        "fill": 748.828125
+      },
+      {
+        "band": 159.578125,
+        "fill": 760.203125
+      }
+    ],
+    "errors": []
+  }
+}

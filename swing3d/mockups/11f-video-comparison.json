@@ -1,0 +1,154 @@
+{
+  "golf_swing.mp4": {
+    "commonFrames": 270,
+    "coordinates": {
+      "x": {
+        "max": 0.039821131993085235,
+        "rms": 0.004728448209777097
+      },
+      "y": {
+        "max": 0.03720157841841376,
+        "rms": 0.003847147176951438
+      },
+      "z": {
+        "max": 0.1075846666120924,
+        "rms": 0.011198941655911657
+      }
+    },
+    "worldMax": {
+      "x": 0.2688286006450653,
+      "y": 0.1625572144985199,
+      "z": 0.19203823921270669
+    },
+    "browserFPS": 29.97,
+    "pythonFPS": 29.97,
+    "pythonCrop": {
+      "x": 0.4203125,
+      "y": 0.34444444444444444,
+      "w": 0.284375,
+      "h": 0.5055555555555555,
+      "pixels": [
+        269,
+        124,
+        182,
+        182
+      ],
+      "source_size": [
+        640,
+        360
+      ],
+      "resized_side": 640,
+      "padding_per_side": 0.25,
+      "boundary_limited": false,
+      "inverse_transform": {
+        "function": "video_pose.crop_to_original",
+        "x": "box.x + x_crop * box.w",
+        "y": "box.y + y_crop * box.h",
+        "z": "z_crop * box.w"
+      }
+    },
+    "browserCrop": {
+      "x": 0.4203125,
+      "y": 0.3416666666666667,
+      "w": 0.284375,
+      "h": 0.5055555555555555,
+      "pixels": [
+        269,
+        123,
+        182,
+        182
+      ],
+      "source_size": [
+        640,
+        360
+      ],
+      "resized_side": 640,
+      "padding_per_side": 0.25,
+      "boundary_limited": false
+    },
+    "decoder": "WebCodecs",
+    "pythonReason": "no_swing",
+    "browserReason": "no_swing",
+    "pythonPhases": {},
+    "browserPhases": {},
+    "pythonScore": null,
+    "browserScore": null,
+    "browserExtractionSeconds": 12.033800000000745
+  },
+  "golf_swing_portrait.mp4": {
+    "commonFrames": 270,
+    "coordinates": {
+      "x": {
+        "max": 0.0641384958117096,
+        "rms": 0.0077946159214507624
+      },
+      "y": {
+        "max": 0.027289783970142367,
+        "rms": 0.001860453235861057
+      },
+      "z": {
+        "max": 0.1375704517381059,
+        "rms": 0.01876680912114296
+      }
+    },
+    "worldMax": {
+      "x": 0.32655618339776993,
+      "y": 0.25689786672592163,
+      "z": 0.21260760352015495
+    },
+    "browserFPS": 29.97,
+    "pythonFPS": 29.97,
+    "pythonCrop": {
+      "x": 0.3425925925925926,
+      "y": 0.4244791666666667,
+      "w": 0.42824074074074076,
+      "h": 0.24088541666666666,
+      "pixels": [
+        148,
+        326,
+        185,
+        185
+      ],
+      "source_size": [
+        432,
+        768
+      ],
+      "resized_side": 640,
+      "padding_per_side": 0.25,
+      "boundary_limited": false,
+      "inverse_transform": {
+        "function": "video_pose.crop_to_original",
+        "x": "box.x + x_crop * box.w",
+        "y": "box.y + y_crop * box.h",
+        "z": "z_crop * box.w"
+      }
+    },
+    "browserCrop": {
+      "x": 0.3472222222222222,
+      "y": 0.4296875,
+      "w": 0.4166666666666667,
+      "h": 0.234375,
+      "pixels": [
+        150,
+        330,
+        180,
+        180
+      ],
+      "source_size": [
+        432,
+        768
+      ],
+      "resized_side": 640,
+      "padding_per_side": 0.25,
+      "boundary_limited": false
+    },
+    "decoder": "WebCodecs",
+    "pythonReason": "no_swing",
+    "browserReason": "no_swing",
+    "pythonPhases": {},
+    "browserPhases": {},
+    "pythonScore": null,
+    "browserScore": null,
+    "browserExtractionSeconds": 11.593300000000745
+  }
+}

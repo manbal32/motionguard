@@ -1,0 +1,14 @@
+{
+  "mobile": {
+    "errors": [],
+    "missing": [],
+    "outside": [],
+    "reportReturn": true
+  },
+  "desktop": {
+    "errors": [],
+    "missing": [],
+    "outside": [],
+    "reportReturn": true
+  }
+}

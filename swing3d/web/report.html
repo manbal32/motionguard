@@ -1,32 +1,14 @@
-<!doctype html>
-<html lang="ko">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MotionGuard 스윙 리포트</title>
-<link rel="stylesheet" href="/report.css">
-<main class="sheet">
-  <header class="report-head">
-    <p class="report-brand">Motion<em>Guard</em><span>리포트</span></p>
-    <h1 id="title">스윙 리포트</h1>
-    <p id="facts"></p>
-    <div class="row" role="group" aria-label="리포트 조작"><button data-theme="light">라이트</button><button data-theme="dark">다크</button><button id="print-report" disabled>인쇄 / PDF 저장</button></div>
-    <p class="print-help">인쇄 창에서 대상을 PDF로 저장으로 선택하세요.</p>
-  </header>
-  <p id="report-status" role="status">스윙 기록을 읽는 중입니다.</p>
-  <div id="report-body" hidden>
-    <section id="report-answer"><h2>당신이 물어본 것</h2><div id="report-question"></div><h2>답</h2><div id="summary"></div></section>
-    <section id="report-comparison" hidden><h2>2D 자세 비교</h2><p>왼쪽은 원본과 측정 관절입니다. 오른쪽은 교육용 과장이며 측정값이 아닙니다.</p><div id="report-image"></div></section>
-    <section id="first-practice" hidden><h2>먼저 할 연습</h2><p></p></section>
-    <details id="report-more"><summary>나머지 개선점 · 연습 영상 · 재지 못한 것</summary>
-    <section class="report-next"><h2>판정과 다음 연습</h2><div id="report-findings"></div></section>
-    <section class="report-limits" id="report-limits"><h2>재지 못한 것</h2>
-      <dl><dt>깊이 방향 회전</dt><dd>몸통과 골반 각도는 단일 영상에서 관찰한 폭 변화로 추정합니다.</dd>
-      <dt>클럽 페이스와 그립</dt><dd>클럽을 직접 검출하지 않아 페이스 방향과 손가락 배치는 측정하지 않습니다.</dd>
-      <dt>손목 코킹</dt><dd id="wrist-limit"></dd></dl>
-    </section>
-    <section class="report-appendix"><h2>부록 · 국면별 기록</h2><div id="report-stills"></div><div class="scroller"><table id="report-angles" aria-label="국면별 각도"></table></div><p class="legend">측정값 · 회색은 교본 기준 · 호박색은 교본과 <span class="num">8<small>°</small></span> 이상 차이</p></section>
-    </details>
-  </div>
-</main>
-<script src="/reference.js"></script><script src="/findings-ui.js"></script><script src="/report.js" defer></script>
-</html>
+<!doctype html><html lang="ko"><head><link rel="icon" href="data:,"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>MotionGuard 스윙 리포트</title><link rel="stylesheet" href="/report.css"></head><body>
+<main class="sheet"><header class="masthead"><svg class="brand-arcs" viewBox="0 0 44 40" aria-hidden="true"><path d="M7 29A15 15 0 0 1 30 9M13 34A15 15 0 0 1 36 14" fill="none" stroke="currentColor" stroke-width="4"/></svg><div class="ttl"><span class="mg">Motion<em>Guard</em></span><h1>스윙 리포트</h1></div><div class="round"><b id="report-round">01회</b><span id="report-date"></span></div></header>
+<p id="report-status" role="status">기록을 읽는 중입니다.</p>
+<div id="report-body" hidden><div id="customer-body">
+<section class="scoreband"><strong id="report-total"></strong><span class="of">/ 100</span><p id="report-verdict"></p><div class="score-side"><b id="report-delta" hidden></b><div id="report-round-bars"></div></div></section><p id="report-headline"></p>
+<section class="report-intro"><span class="kk">말씀하신 고민</span><h2 id="report-question"></h2><span class="kk">영상에서 확인한 것</span><p id="report-conclusion"></p><table class="rtab" id="report-summary-table"><thead><tr><th>항목</th><th>나</th><th>교본</th><th>판정</th></tr></thead><tbody></tbody></table><p class="note" id="report-measured"></p><p class="note" id="measurement-note"></p></section>
+<section><span class="kk">잘하고 계신 것</span><p id="report-strength"></p></section>
+<section><h2>이번에 고칠 것</h2><div id="report-improvements"></div></section>
+<section id="report-strokes"><h2>예상 타수</h2><div class="strokebox"><div class="stroke-two"><div><span class="kk">지금 스윙이면</span><b id="strokes-current"></b></div><div><span class="kk">개선 포인트를 맞추면</span><b id="strokes-after"></b></div></div><p id="strokes-condition" class="note"></p><p id="strokes-missing" class="note"></p><details><summary>어떤 수치에서 나왔나요?</summary><div id="strokes-basis"></div></details></div></section>
+<section><h2>연습 영상</h2><div id="report-videos"></div></section>
+<p id="report-goal" class="note"></p><footer class="colophon"><span id="report-mode"></span><br>이 기기에서 처리한 계측과 승인한 상담 요약을 사용했습니다. 얼굴 좌표는 만들지 않았습니다.</footer>
+</div><section class="report-appendix"><h2>부록 · 전체 수치표</h2><p id="appendix-facts" class="note"></p><div id="appendix-approved"></div><h3>재지 못한 것</h3><p id="appendix-excluded" class="note"></p><table id="report-angles"><thead><tr><th>국면</th><th>항목</th><th>나</th><th>교본</th><th>점수</th><th>판정</th></tr></thead><tbody></tbody></table></section></div>
+<footer class="report-foot"><button id="print-report" disabled>PDF로 저장</button><a id="return-result">결과로 돌아가기</a><a href="/">다시 분석</a></footer></main>
+<script src="/colors.js"></script><script src="/reference.js"></script><script src="/track-core.js"></script><script src="/pose-browser.js"></script><script src="/coaching-local.js"></script><script src="/customer-ui.js"></script><script src="/drills.js"></script><script src="/report.js" defer></script></body></html>

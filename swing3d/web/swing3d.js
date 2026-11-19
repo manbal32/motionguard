@@ -9,12 +9,12 @@ window.Swing3D = (() => {
     { name: "웨지", length: 0.70, plane: -0.42, vx: -7.4, vy: 11.5, carry: 58 },
   ];
   const courses = [
-    { name: "제주 해안", sky: 0x98cedf, fog: 0.008, grass: 0x315a3a, stripe: 0x3a6542,
-      sun: 0xffedcd, intensity: 1.35, ambient: 0.8 },
-    { name: "가평 산악", sky: 0xb7c8ad, fog: 0.011, grass: 0x32533d, stripe: 0x42694b,
-      sun: 0xffd391, intensity: 1.4, ambient: 1.35 },
-    { name: "야간 레인지", sky: 0x131e35, fog: 0.013, grass: 0x263f37, stripe: 0x365449,
-      sun: 0xa5c9ff, intensity: 0, ambient: 0.42 },
+    { name: "제주 해안", sky: window.MotionColors.number('--good-bg'), fog: 0.008, grass: window.MotionColors.number('--good'), stripe: window.MotionColors.number('--good-bg'),
+      sun: window.MotionColors.number('--warn-bg'), intensity: 1.35, ambient: 0.8 },
+    { name: "가평 산악", sky: window.MotionColors.number('--good-bg'), fog: 0.011, grass: window.MotionColors.number('--good'), stripe: window.MotionColors.number('--good-bg'),
+      sun: window.MotionColors.number('--warn-bg'), intensity: 1.4, ambient: 1.35 },
+    { name: "야간 레인지", sky: window.MotionColors.number('--stage-line'), fog: 0.013, grass: window.MotionColors.number('--good'), stripe: window.MotionColors.number('--good-bg'),
+      sun: window.MotionColors.number('--stage-ink'), intensity: 0, ambient: 0.42 },
   ];
   const cameras = [
     ["정면", [0, 0.60, 5.4], [0, 1, 0]],
@@ -62,7 +62,7 @@ window.Swing3D = (() => {
     }
     const referencePose = modelReference(opts.reference ?? opts.findings?.reference ?? "model", data.events);
     const scene = new T.Scene();
-    scene.background = new T.Color(0x182830);
+    scene.background = new T.Color(window.MotionColors.number('--stage-line'));
     const camera = new T.PerspectiveCamera(30, 1, 0.1, 240);
     camera.position.set(2.7, 1.8, 5.3);
     camera.lookAt(0, 1, 0);
@@ -97,14 +97,14 @@ window.Swing3D = (() => {
 
     const figure = group(scene);
     const hips = group(figure, 0, 0.88);
-    const pelvisMesh = box(hips, 0.32, 0.19, 0.20, 0x424b54);
+    const pelvisMesh = box(hips, 0.32, 0.19, 0.20, window.MotionColors.number('--ink-2'));
     const torso = group(hips);
     const chest = group(torso, 0, 0.40);
-    const shirt = 0x56736a;
-    const trousers = 0x424b54;
-    const skin = 0xb78e74;
-    const cap = 0x454c4d;
-    const shoe = 0x373d43;
+    const shirt = window.MotionColors.number('--avatar');
+    const trousers = window.MotionColors.number('--ink-2');
+    const skin = window.MotionColors.number('--warn-bg');
+    const cap = window.MotionColors.number('--ink-2');
+    const shoe = window.MotionColors.number('--ink-2');
     const torsoMesh = mesh(torso, new T.LatheGeometry([
       new T.Vector2(0.13, 0.02), new T.Vector2(0.145, 0.11), new T.Vector2(0.17, 0.23),
       new T.Vector2(0.23, 0.37), new T.Vector2(0.195, 0.43), new T.Vector2(0.075, 0.48),
@@ -135,7 +135,7 @@ window.Swing3D = (() => {
       limb(knee, 0.39, 0.058, trousers).position.y = -0.195;
       const shoeUpper = mesh(ankle, new T.SphereGeometry(1, 16, 10), shoe, 0, -0.042, 0.052);
       shoeUpper.scale.set(0.066, 0.044, 0.125);
-      box(ankle, 0.126, 0.019, 0.23, 0x797a73, 0, -0.078, 0.051);
+      box(ankle, 0.126, 0.019, 0.23, window.MotionColors.number('--ink-3'), 0, -0.078, 0.051);
       box(ankle, 0.113, 0.028, 0.076, shoe, 0, -0.083, -0.024);
       const shoulder = new T.Vector3(side * 0.26, 0.02, 0);
       mesh(chest, new T.SphereGeometry(0.067, 16, 12), shirt).position.copy(shoulder);
@@ -154,7 +154,7 @@ window.Swing3D = (() => {
     const plane = group(chest, 0, 0, 0.17);
     const swing = group(plane);
     const wrist = group(swing, 0, -0.52);
-    const shaft = mesh(wrist, new T.CylinderGeometry(0.013, 0.009, 1, 10), 0xd8e0e6);
+    const shaft = mesh(wrist, new T.CylinderGeometry(0.013, 0.009, 1, 10), window.MotionColors.number('--line'));
     const tip = group(wrist);
     const headProfile = new T.Shape();
     headProfile.moveTo(-0.028, -0.018);
@@ -165,7 +165,7 @@ window.Swing3D = (() => {
     headProfile.lineTo(-0.028, -0.018);
     const clubHead = mesh(tip, new T.ExtrudeGeometry(headProfile, {
       depth: 0.047, bevelEnabled: true, bevelSize: 0.006, bevelThickness: 0.004, bevelSegments: 2,
-    }), 0xb9babc, 0, 0, -0.024);
+    }), window.MotionColors.number('--good-bg'), 0, 0, -0.024);
     clubHead.material.metalness = 0.64;
     clubHead.material.roughness = 0.32;
     const planeMeshes = new Set();
@@ -189,7 +189,7 @@ window.Swing3D = (() => {
       }
     });
     const ghostMaterial = new T.MeshStandardMaterial({
-      color: 0x9ac9f2, transparent: true, opacity: 0.38, depthWrite: false,
+      color: window.MotionColors.number('--avatar'), transparent: true, opacity: 0.38, depthWrite: false,
     });
     modelFigure.traverse(node => {
       modelSegments.push(node);
@@ -210,7 +210,7 @@ window.Swing3D = (() => {
     scene.add(modelFigure);
     // The scene uses metres. A 4.3 cm ball is about 2.46% of a 1.75 m golfer's height.
     const ballRadius = 0.0215;
-    const ball = mesh(scene, new T.SphereGeometry(ballRadius, 16, 12), 0xffffff);
+    const ball = mesh(scene, new T.SphereGeometry(ballRadius, 16, 12), window.MotionColors.number('--paper'));
     ball.material.roughness = 0.55;
     const shadeCanvas = document.createElement("canvas");
     shadeCanvas.width = shadeCanvas.height = 64;
@@ -241,7 +241,7 @@ window.Swing3D = (() => {
     const turfCanvas = document.createElement("canvas");
     turfCanvas.width = turfCanvas.height = 128;
     const turfContext = turfCanvas.getContext("2d");
-    turfContext.fillStyle = "#d6d8ce";
+    turfContext.fillStyle = window.MotionColors.css('--good-bg');
     turfContext.fillRect(0, 0, 128, 128);
     for (let i = 0; i < 5000; i++) {
       const brightness = 120 + Math.floor(random() * 135);
@@ -291,27 +291,27 @@ window.Swing3D = (() => {
     lane.receiveShadow = true;
     terrain.add(lane);
 
-    box(terrain, 3.8, 0.015, 4.6, 0x71815c, 0.8, -0.007, 0);
-    const tee = box(terrain, 3.64, 0.018, 4.42, 0x486747, 0.8, -0.006, 0);
+    box(terrain, 3.8, 0.015, 4.6, window.MotionColors.number('--ink-3'), 0.8, -0.007, 0);
+    const tee = box(terrain, 3.64, 0.018, 4.42, window.MotionColors.number('--ink-2'), 0.8, -0.006, 0);
     const teeTexture = turfTexture.clone();
     teeTexture.repeat.set(3, 3);
     teeTexture.needsUpdate = true;
     tee.material.map = teeTexture;
     for (const side of [-1, 1]) {
-      mesh(terrain, new T.CylinderGeometry(0.035, 0.051, 0.043, 10), side < 0 ? 0xc5bca7 : 0x604b42,
+      mesh(terrain, new T.CylinderGeometry(0.035, 0.051, 0.043, 10), side < 0 ? window.MotionColors.number('--stage-ink-2') : window.MotionColors.number('--ink-2'),
         -1.1, 0.025, side * 1.95);
     }
     for (let i = 0; i < 13; i++) {
-      const divot = mesh(terrain, new T.CircleGeometry(0.05 + random() * 0.10, 7), 0x666048,
+      const divot = mesh(terrain, new T.CircleGeometry(0.05 + random() * 0.10, 7), window.MotionColors.number('--ink-2'),
         -1.3 - random() * 3.1, 0.015, (random() - 0.5) * 3.5);
       divot.rotation.x = -Math.PI / 2;
       divot.scale.x = 1.7;
     }
     const detail = new T.Object3D();
     const trunks = new T.InstancedMesh(new T.CylinderGeometry(0.12, 0.2, 2.7, 6),
-      new T.MeshStandardMaterial({ color: 0x575044 }), 58);
+      new T.MeshStandardMaterial({ color: window.MotionColors.number('--ink-2') }), 58);
     const crowns = new T.InstancedMesh(new T.IcosahedronGeometry(1, 1),
-      new T.MeshStandardMaterial({ color: 0xffffff, roughness: 1 }), 58);
+      new T.MeshStandardMaterial({ color: window.MotionColors.number('--paper'), roughness: 1 }), 58);
     for (let i = 0; i < trunks.count; i++) {
       const distance = i < 42 ? 30 + random() * 31 : 84 + random() * 59;
       const z = (i % 2 ? 1 : -1) * (9 + random() * 10) + laneCenter(distance);
@@ -330,35 +330,35 @@ window.Swing3D = (() => {
     terrain.add(trunks, crowns);
 
     const greenZ = laneCenter(109);
-    mesh(terrain, new T.CylinderGeometry(1, 1, 0.06, 48), 0x779369, -109, 0.01, greenZ)
+    mesh(terrain, new T.CylinderGeometry(1, 1, 0.06, 48), window.MotionColors.number('--ink-3'), -109, 0.01, greenZ)
       .scale.set(7, 1, 5);
-    mesh(terrain, new T.CylinderGeometry(0.04, 0.04, 3.4, 8), 0xe6e1cc, -109, 1.72, greenZ);
-    const flag = box(terrain, 0.055, 0.65, 1.05, 0xa85944, -109, 3.09, greenZ + 0.51);
+    mesh(terrain, new T.CylinderGeometry(0.04, 0.04, 3.4, 8), window.MotionColors.number('--warn-bg'), -109, 1.72, greenZ);
+    const flag = box(terrain, 0.055, 0.65, 1.05, window.MotionColors.number('--warn'), -109, 3.09, greenZ + 0.51);
     flag.rotation.y = 0.2;
 
     // Meet the rough at z=-50; the water must not cover the land or hover above it.
-    const coastline = mesh(terrain, new T.PlaneGeometry(174, 100), 0x557d88, -74, -0.116, -100);
+    const coastline = mesh(terrain, new T.PlaneGeometry(174, 100), window.MotionColors.number('--ink-3'), -74, -0.116, -100);
     coastline.rotation.x = -Math.PI / 2;
     coastline.material.roughness = 0.5;
     const hills = group(terrain);
     for (let i = 0; i < 8; i++) {
-      const hill = mesh(hills, new T.IcosahedronGeometry(1, 1), 0x526b59,
+      const hill = mesh(hills, new T.IcosahedronGeometry(1, 1), window.MotionColors.number('--ink-2'),
         -122 - i * 3.7, 0, (i - 3.5) * 8);
       hill.scale.set(10, 7 + i % 3 * 4, 10);
     }
     const rangeMarkers = group(terrain);
     for (const distance of [18, 33, 48]) {
-      box(rangeMarkers, 0.045, 0.54, 1.5, 0xc2cbb4, -distance, 0.24, 6);
+      box(rangeMarkers, 0.045, 0.54, 1.5, window.MotionColors.number('--good-bg'), -distance, 0.24, 6);
     }
     terrain.traverse(node => { node.castShadow = false; });
-    const ambient = new T.HemisphereLight(0xf4f9ff, 0x536457);
+    const ambient = new T.HemisphereLight(window.MotionColors.number('--paper-2'), window.MotionColors.number('--ink-2'));
     const light = new T.DirectionalLight();
     light.position.set(3, 5, 4);
     light.castShadow = true;
     light.shadow.mapSize.set(1024, 1024);
     light.shadow.normalBias = 0.025;
     const floodlights = [-6, 5].flatMap(x => [-5, 5].map(z => {
-      const lamp = new T.PointLight(0xd2e4ff, 1.15, 28);
+      const lamp = new T.PointLight(window.MotionColors.number('--line'), 1.15, 28);
       lamp.position.set(x, 5, z);
       scene.add(lamp);
       return lamp;
@@ -374,7 +374,7 @@ window.Swing3D = (() => {
       const colors = laneGeometry.getAttribute("color");
       bands.forEach((band, i) => colors.setXYZ(i, tones[band].r, tones[band].g, tones[band].b));
       colors.needsUpdate = true;
-      crowns.material.color.set(index === 2 ? 0x8799b0 : 0xffffff);
+      crowns.material.color.set(index === 2 ? window.MotionColors.number('--stage-ink-2') : window.MotionColors.number('--paper'));
       coastline.visible = index === 0;
       hills.visible = index === 1;
       rangeMarkers.visible = index === 2;
@@ -464,7 +464,7 @@ window.Swing3D = (() => {
     const comparison = addElement(coaching, "div", "");
     comparison.hidden = true;
     const modeButtons = new Map();
-    for (const [value, label] of [["actual", "실제"], ["exaggerated", "과장"], ["compare", "나란히"]]) {
+    for (const [value, label] of [["actual", "실제"], ["exaggerated", "강조"], ["compare", "나란히"]]) {
       const button = addElement(comparison, "button", label);
       button.type = "button";
       button.onclick = () => {
@@ -473,17 +473,17 @@ window.Swing3D = (() => {
       };
       modeButtons.set(value, button);
     }
-    const scaleLabel = addElement(comparison, "label", "과장 배율 ");
+    const scaleLabel = addElement(comparison, "label", "강조 배율 ");
     const multiplier = addElement(scaleLabel, "input", "");
     Object.assign(multiplier, { type: "range", min: "1", max: "3", step: "0.1", value: "2.5" });
     const scaleValue = addElement(scaleLabel, "output", "2.5×");
     multiplier.oninput = () => { scaleValue.textContent = Number(multiplier.value).toFixed(1) + "×"; };
-    const warning = addElement(comparison, "p", "교육용 과장이며 측정값이 아닙니다.");
+    const warning = addElement(comparison, "p", "개선 포인트 그림이며 측정값이 아닙니다.");
     warning.className = "model-option";
     const reading = addElement(comparison, "p", "");
     const compareLabel = addElement(comparison, "p", "불투명 아바타는 실제 스윙, 반투명 아바타는 교본형 기준입니다.");
-    const highlight = new T.Color(0xd98a2b);
-    const neutral = new T.Color(0x85939a);
+    const highlight = new T.Color(window.MotionColors.number('--arc'));
+    const neutral = new T.Color(window.MotionColors.number('--stage-ink-2'));
     const modelOffset = new T.Vector3();
 
     function setMode(value) {
@@ -688,7 +688,7 @@ window.Swing3D = (() => {
       geometry.setIndex(triangles);
       return geometry;
     }
-    const flightLine = new T.Line(new T.BufferGeometry(), new T.LineBasicMaterial({ color: 0xa0a09a }));
+    const flightLine = new T.Line(new T.BufferGeometry(), new T.LineBasicMaterial({ color: window.MotionColors.number('--stage-ink-2') }));
     const launch = new T.Vector3();
     const target = new T.Vector3();
     const view = new T.Spherical();
@@ -770,16 +770,16 @@ window.Swing3D = (() => {
     const jointNodes = arms.flatMap(arm => [arm.upperMesh, arm.elbowJoint, arm.handJoint, arm.knee, arm.ankle]);
     const jointGeometry = new T.BufferGeometry().setAttribute("position",
       new T.Float32BufferAttribute(new Float32Array(jointNodes.length * 3), 3));
-    const jointDots = new T.Points(jointGeometry, new T.PointsMaterial({color:0xe9e7e0, size:0.035}));
+    const jointDots = new T.Points(jointGeometry, new T.PointsMaterial({color:window.MotionColors.number('--line'), size:0.035}));
     jointDots.frustumCulled = false;
     jointDots.visible = false;
     scene.add(jointDots);
     const planeGuide = new T.Mesh(new T.RingGeometry(1.17, 1.18, 64),
-      new T.MeshBasicMaterial({color:0xa9ada7, transparent:true, opacity:0.45, side:T.DoubleSide, depthWrite:false}));
+      new T.MeshBasicMaterial({color:window.MotionColors.number('--stage-ink-2'), transparent:true, opacity:0.45, side:T.DoubleSide, depthWrite:false}));
     planeGuide.visible = false;
     plane.add(planeGuide);
     const phaseGhosts = new T.LineSegments(new T.BufferGeometry(),
-      new T.LineBasicMaterial({color:0xe9e7e0, transparent:true, opacity:0.24, depthWrite:false}));
+      new T.LineBasicMaterial({color:window.MotionColors.number('--line'), transparent:true, opacity:0.24, depthWrite:false}));
     phaseGhosts.visible = false;
     scene.add(phaseGhosts);
     const jointWorld = new T.Vector3();
@@ -851,7 +851,7 @@ window.Swing3D = (() => {
         return degrees + (unitless.has(channel) ? "° 환산" : "°");
       };
       let text = "실제 측정값 " + format(actual);
-      if (mode === "exaggerated") text += " · 과장 표시 " + format(shown);
+      if (mode === "exaggerated") text += " · 강조 표시 " + format(shown);
       if (mode !== "actual") text += " · 교본 기준 " + format(reference(channel));
       if (indices.confidence !== undefined && measured("confidence") < 0.45) text += " · 추적 신뢰도 낮음";
       if (reading.textContent !== text) reading.textContent = text;
@@ -905,7 +905,7 @@ window.Swing3D = (() => {
       const state = {
         recorder, stream, capture, context: capture.getContext("2d"), onProgress,
         start: undefined, previousTime: time, previousPlaying: playing,
-        label: mode === "exaggerated" ? "교육용 과장" : "",
+        label: mode === "exaggerated" ? "개선 포인트 그림" : "",
         filename: "swing3d_" + (finding?.id ?? "swing") + "_" + (mode === "exaggerated" ? Number(multiplier.value).toFixed(1) : "1.0") + "x.webm",
       };
       const chunks = [];
@@ -942,12 +942,12 @@ window.Swing3D = (() => {
       const { context, capture, label, recorder, onProgress } = recording;
       context.drawImage(renderer.domElement, 0, 0, capture.width, capture.height);
       if (label) {
-        const px = Math.max(22, Math.round(capture.height * 0.048));
-        context.font = "600 " + px + 'px "IBM Plex Sans KR", sans-serif';
+        context.font = getComputedStyle(document.documentElement).getPropertyValue('--t-btn').trim();
+        const px = parseFloat(context.font.match(/[\d.]+px/)[0]);
         context.textBaseline = "top";
-        context.fillStyle = "#0b0e0d";
+        context.fillStyle = window.MotionColors.css('--stage');
         context.fillRect(14, 14, context.measureText(label).width + 24, px + 20);
-        context.fillStyle = "#e9e7e0";
+        context.fillStyle = window.MotionColors.css('--line');
         context.fillText(label, 26, 24);
       }
       onProgress?.(Math.min(100, Math.round(100 * time / fullDuration)));
