@@ -13,7 +13,7 @@ def track():
     samples = []
     for i in range(21):
         row = dict.fromkeys(CHANNELS, 0)
-        row.update(torso=math.radians(14 if i == 5 else 0), lean=math.radians(15), confidence=0.9)
+        row.update(torso=math.radians(14 if i == 5 else 0), lean=math.radians(16 if i == 5 else 15), confidence=0.9)
         samples.append([row[key] for key in CHANNELS])
     return {"channels": CHANNELS, "track": samples, "meta": {
         "source_frames": [100, 120], "phase_frames": dict(zip(coach.PHASES, (100, 105, 110, 115, 120))),

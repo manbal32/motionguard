@@ -240,17 +240,27 @@ class Handler(SimpleHTTPRequestHandler):
         key = hashlib.sha256(b"video-evidence-6\0" + f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}".encode()
                              + b"\0" + payload).hexdigest()
         target = self.tracks / (key + ".json")
-        if target.exists() and all((self.tracks / f"{key}.{phase}.jpg").is_file()
-                                   for phase in coach.PHASES):
-            return json.loads(target.read_text(encoding="utf-8"))
+        if target.exists():
+            cached = json.loads(target.read_text(encoding='utf-8'))
+            if cached['meta'].get('usable') is False or all((self.tracks / f'{key}.{p}.jpg').is_file() for p in coach.PHASES):
+                return cached
         with TemporaryDirectory() as temp:
             source = Path(temp) / "upload.mp4"
             source.write_bytes(payload)
-            frames, fps, timeline = video_pose.extract(str(source), evidence=True, progress=progress)
+            try:
+                frames, fps, timeline = video_pose.extract(str(source), evidence=True, progress=progress)
+            except video_pose.ExtractionError:
+                return {"track_id": key, "meta": {
+                    "usable": False, "unusable_reason": "tracking_failed",
+                    "guidance": swing_track.GUIDANCE["tracking_failed"],
+                    "unavailable": list(coach.CHANNELS),
+                }}
             progress("국면 검출", 88)
             result = swing_track.build_track(frames, fps)
             if result['meta'].get('usable') is False:
-                raise video_pose.ExtractionError(result['meta']['unusable_reason'])
+                result['track_id'] = key
+                self.store(target, result)
+                return result
             phases = result["meta"]["phase_frames"]
             progress("국면 스틸컷 준비", 95)
             crops, overlay_crop = video_pose.person_crops(timeline, phases)
@@ -303,8 +313,6 @@ class Handler(SimpleHTTPRequestHandler):
         if not math.isfinite(fps) or fps <= 0:
             raise ValueError("유효하지 않은 프레임 속도입니다.")
         result = swing_track.build_track(frames, fps)
-        if result['meta'].get('usable') is False:
-            raise ValueError(result['meta']['unusable_reason'])
         from video_pose import LANDMARK_NAMES
         start, end = result["meta"]["source_frames"]
         result["pose_landmarks"] = [

@@ -1,0 +1,19 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1795050192.600149    3154 task_runner.cc:85] GPU suport is not available: INTERNAL: ; RET_CHECK failure (mediapipe/gpu/gl_context_egl.cc:84) egl_initializedUnable to initialize EGL
+INFO: Created TensorFlow Lite XNNPACK delegate for CPU.
+W0000 00:00:1795050192.652729    3178 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1795050192.670200    3178 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1795050192.711356    3182 landmark_projection_calculator.cc:186] Using NORM_RECT without IMAGE_DIMENSIONS is only supported for the square ROI. Provide IMAGE_DIMENSIONS or use PROJECTION_MATRIX.
+I0000 00:00:1795050194.388375    3154 task_runner.cc:85] GPU suport is not available: INTERNAL: ; RET_CHECK failure (mediapipe/gpu/gl_context_egl.cc:84) egl_initializedUnable to initialize EGL
+W0000 00:00:1795050194.439523    3203 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1795050194.469716    3204 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+samples/golf_swing.mp4
+  usable = True | camera = oblique | 폭비 = 0.5497
+  채택 = 270 / 270 | 어깨폭 최대 = 0.11916007172493706 | crop_box = {'x': 0.4203125, 'y': 0.3416666666666667, 'w': 0.2859375, 'h': 0.5083333333333333, 'pixels': [269, 123, 183, 183], 'source_size': [640, 360], 'resized_side': 640, 'padding_per_side': 0.25, 'boundary_limited': False, 'inverse_transform': {'function': 'video_pose.crop_to_original', 'x': 'box.x + x_crop * box.w', 'y': 'box.y + y_crop * box.h', 'z': 'z_crop * box.w'}}
+  address ->top         4->  65   2.04s
+  top     ->down       65->  89   0.80s
+  down    ->impact     89-> 113   0.80s
+  impact  ->finish    113-> 132   0.63s
+Traceback (most recent call last):
+  File "<stdin>", line 15, in <module>
+TypeError: type NoneType doesn't define __round__ method

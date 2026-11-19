@@ -37,7 +37,7 @@ class PhaseCameraTests(TestCase):
     def test_camera_gates_only_unavailable_rotation_channels(self):
         original, fps = st.load_csv(str(ROOT / 'samples/golf1_export.csv'))
         for ratio, facing, missing in ((0.95, 'front', []),
-                                       (0.65, 'oblique', ['hips']),
+                                       (0.65, 'oblique', ['torso', 'hips']),
                                        (0.20, 'down_the_line', ['torso', 'hips'])):
             with self.subTest(facing=facing):
                 frames = [d.copy() for d in original]

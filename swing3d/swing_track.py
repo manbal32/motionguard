@@ -50,7 +50,13 @@ CHANNELS = [
 ]
 
 SCHEMA = "motionguard.swingtrack/2"
-TRACK_REVISION = 6
+TRACK_REVISION = 7
+GUIDANCE = {
+    'too_far': '촬영 거리가 멀어 몸의 회전을 잴 수 없습니다. 몸 전체가 화면 높이의 3분의 2를 채우도록 다시 찍어 주세요.',
+    'tracking_failed': '영상이 흔들리거나 인물이 가려져 자세를 추적하지 못했습니다. 고정된 위치에서 다시 찍어 주세요.',
+    'no_swing': '스윙 한 번이 처음부터 끝까지 담기지 않았습니다. 어드레스부터 피니시까지 한 번만 담아 주세요.',
+    'oblique': '정면이 아니어서 몸통·골반 회전은 생략했습니다. 나머지 항목은 그대로 보여 드립니다.',
+}
 OPTIONAL = ("LEFT_INDEX", "RIGHT_INDEX")
 
 REQUIRED = [
@@ -236,7 +242,7 @@ def _unusable_track(fps, hold, status, reason, extra_meta=None):
         'events': {},
         'meta': {
             **(extra_meta or {}),
-            'usable': False, 'unusable_reason': reason,
+            'usable': False, 'unusable_reason': reason, 'guidance': GUIDANCE[reason],
             'accepted_frames': sum(item['accepted'] for item in status),
             'total_frames': count, 'fps': round(fps, 2), 'hold': hold,
             'dur': round((count - 1) / fps + hold, 3), 'samples': count,
@@ -355,7 +361,7 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     frame_numbers = [item['frame'] for item in status if item['accepted']]
     if len(frame_numbers) < len(frames) / 2:
         return _unusable_track(fps, hold, status,
-                               '해부학적으로 유효한 프레임이 전체의 50% 미만이어서 이 영상으로는 측정할 수 없습니다.', diagnostics)
+                               'tracking_failed', diagnostics)
     # No rejected observation may become an interpolation anchor, a smoothing
     # input, a wrist estimate or a width maximum. Keep source indices separately.
     frames = [frames[i] for i in frame_numbers]
@@ -363,7 +369,7 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
     try:
         frames, landmark_quality = _clean_landmarks(frames, fps, channel_quality=True)
     except ValueError as error:
-        return _unusable_track(fps, hold, status, str(error), diagnostics)
+        return _unusable_track(fps, hold, status, 'tracking_failed', diagnostics)
     raw = []
     for d in frames:
         sh = _mid(d, "LEFT_SHOULDER", "RIGHT_SHOULDER")
@@ -394,8 +400,12 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
 
     shw_max, hpw_max, tln_max = max(shw), max(hpw), max(tln)
     diagnostics['shoulder_width_max'] = shw_max
+    input_side = diagnostics.get('crop_box', {}).get('resized_side')
+    diagnostics['shoulder_width_pixels'] = shw_max * input_side if input_side else None
+    if input_side and diagnostics['shoulder_width_pixels'] < 60:
+        return _unusable_track(fps, hold, status, 'too_far', diagnostics)
     if min(shw_max, hpw_max, tln_max) <= 0:
-        return _unusable_track(fps, hold, status, '채택 프레임의 랜드마크 폭이나 길이가 유효하지 않습니다.', diagnostics)
+        return _unusable_track(fps, hold, status, 'tracking_failed', diagnostics)
 
     hands = [_mid(d, "LEFT_WRIST", "RIGHT_WRIST") for d in frames]
     try:
@@ -403,15 +413,14 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
             sw, fps, hands=hands, frame_numbers=frame_numbers)
     except ValueError:
         return _unusable_track(fps, hold, status,
-                               '채택 프레임 안에서 어드레스부터 피니시까지의 스윙을 찾지 못했습니다. '
-                               '어드레스부터 한 번의 스윙이 담긴 영상으로 확인해 주세요.', diagnostics)
+                               'no_swing', diagnostics)
 
     base_sw, base_hx, base_heel = sw[start], hx[start], hr[start]
     width_ratio = shw[start] / shw_max
     if width_ratio >= 0.80:
         camera_facing, unavailable = "front", []
     elif width_ratio >= 0.45:
-        camera_facing, unavailable = "oblique", ["hips"]
+        camera_facing, unavailable = "oblique", ["torso", "hips"]
     else:
         camera_facing, unavailable = "down_the_line", ["torso", "hips"]
     crossing = max(range(down, impact + 1), key=shw.__getitem__)
@@ -420,6 +429,15 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
         camera_angle = lambda w: math.acos(max(0.0, min(1.0, w / maximum)))
         excursion = abs(camera_angle(widths[i]) - camera_angle(widths[start]))
         return excursion if i <= crossing and i < impact else -excursion
+
+    diagnostic_phases = dict(zip(('address', 'top', 'down', 'impact', 'finish'), (start, top, down, impact, end)))
+    diagnostic_angles = {p: math.degrees(rotation(shw, shw_max, i)) for p, i in diagnostic_phases.items()}
+    peak = max(range(start, impact + 1), key=lambda i: rotation(shw, shw_max, i))
+    diagnostics['torso_peak_check'] = {
+        'source': 'width_inverse_diagnostic_only', 'eligible_for_coaching': not bool(unavailable),
+        'phase_degrees': diagnostic_angles, 'max_phase': max(diagnostic_angles, key=diagnostic_angles.get),
+        'peak_frame': frame_numbers[peak], 'peak_degrees': math.degrees(rotation(shw, shw_max, peak)),
+    }
 
     dependencies = {
         "swing": REQUIRED[:2] + REQUIRED[6:8], "torso": REQUIRED[:2], "hips": REQUIRED[2:4],
@@ -491,7 +509,8 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
         "meta": {
             **diagnostics,
             "usable": True,
-            "unusable_reason": None,
+            "unusable_reason": 'oblique' if unavailable else None,
+            "guidance": GUIDANCE['oblique'] if unavailable else None,
             "accepted_frames": len(frame_numbers),
             "total_frames": len(status),
             "fps": round(fps, 2),

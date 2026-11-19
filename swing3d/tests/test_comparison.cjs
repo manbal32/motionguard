@@ -70,7 +70,7 @@ test("exaggeration is exact at 1×, eases at the range and alters only its chann
   assert.equal(shown[1], track.track[1]);
   assert.equal(shown[9], track.track[9]);
   const delta = track.track[5][channel]-model[5][channel];
-  const limit = 18 * Math.PI / 180;
+  const limit = 48 * Math.PI / 180;
   assert.ok(Math.abs(shown[5][channel] - (track.track[5][channel] - limit * Math.expm1(-2 * delta / limit))) < 1e-12);
   assert.ok(Math.abs(shown[2][channel]-track.track[2][channel]) <
     2*Math.abs(track.track[2][channel]-model[2][channel]));

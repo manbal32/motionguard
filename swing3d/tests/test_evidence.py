@@ -11,6 +11,16 @@ import video_pose
 class EvidenceTests(TestCase):
     setUp = test_track.TrackTests.setUp
 
+    def test_missing_person_returns_quality_before_coaching(self):
+        import video_pose
+        with patch.object(video_pose, "extract", side_effect=video_pose.ExtractionError("인물 없음")):
+            self.connection.request("POST", "/api/video", b"no-person", {"Accept": "application/x-ndjson"})
+            response = self.connection.getresponse()
+            event = json.loads(response.read())
+        self.assertEqual(event["type"], "result")
+        self.assertFalse(event["data"]["meta"]["usable"])
+        self.assertEqual(event["data"]["meta"]["unusable_reason"], "tracking_failed")
+
     def test_stream_exposes_original_timeline_and_exact_stills(self):
         frames, fps = swing_track.load_csv(str(ROOT / "samples/golf1_export.csv"))
         timeline = [None] + [[[0.5, 0.6, 0.75]] * 33] * (len(frames) - 1)
@@ -57,8 +67,8 @@ class EvidenceTests(TestCase):
                                     {'Accept': 'application/x-ndjson'})
             response = self.connection.getresponse()
             events = [json.loads(line) for line in response]
-        self.assertEqual(events[-1]['type'], 'error')
-        self.assertIn('50%', events[-1]['reason'])
+        self.assertEqual(events[-1]['type'], 'result')
+        self.assertEqual(events[-1]['data']['meta']['unusable_reason'], 'tracking_failed')
         stills.assert_not_called()
 
 

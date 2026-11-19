@@ -1,0 +1,290 @@
+[
+  {
+    "sample": "golf_swing.mp4",
+    "fps": 29.97,
+    "source_frames": [
+      4,
+      132
+    ],
+    "phase_frames": {
+      "address": 4,
+      "top": 65,
+      "down": 89,
+      "impact": 113,
+      "finish": 132
+    },
+    "usable": true,
+    "reason": "oblique",
+    "shoulder_width_max": 0.11916007172493706,
+    "shoulder_width_pixels": 76.26244590395972,
+    "torso_peak_check": {
+      "source": "width_inverse_diagnostic_only",
+      "eligible_for_coaching": false,
+      "phase_degrees": {
+        "address": 0.0,
+        "top": 17.087563935649342,
+        "down": 15.998512849098972,
+        "impact": -9.966477495805364,
+        "finish": -20.367748591787056
+      },
+      "max_phase": "top",
+      "peak_frame": 34,
+      "peak_degrees": 32.00905427495525
+    },
+    "accepted_frames": 270,
+    "total_frames": 270,
+    "accepted_ratio": 1.0,
+    "all_phases_accepted": true,
+    "top_to_impact_s": 1.6016016016016017,
+    "down_fraction": 0.5,
+    "hand_y_crop": {
+      "address": 0.2364160418510437,
+      "top": 0.2039470300078392,
+      "down": 0.24242649972438812,
+      "impact": 0.29450345039367676,
+      "finish": 0.4003103971481323
+    },
+    "phase_angles_rad": {
+      "address": {
+        "torso": null,
+        "hips": null
+      },
+      "top": {
+        "torso": null,
+        "hips": null
+      },
+      "down": {
+        "torso": null,
+        "hips": null
+      },
+      "impact": {
+        "torso": null,
+        "hips": null
+      },
+      "finish": {
+        "torso": null,
+        "hips": null
+      }
+    },
+    "phase_angles_degrees": {
+      "address": {
+        "torso": null,
+        "hips": null
+      },
+      "top": {
+        "torso": null,
+        "hips": null
+      },
+      "down": {
+        "torso": null,
+        "hips": null
+      },
+      "impact": {
+        "torso": null,
+        "hips": null
+      },
+      "finish": {
+        "torso": null,
+        "hips": null
+      }
+    },
+    "camera": "oblique",
+    "width_ratio": 0.5497,
+    "crop_box": {
+      "x": 0.4203125,
+      "y": 0.3416666666666667,
+      "w": 0.2859375,
+      "h": 0.5083333333333333,
+      "pixels": [
+        269,
+        123,
+        183,
+        183
+      ],
+      "source_size": [
+        640,
+        360
+      ],
+      "resized_side": 640,
+      "padding_per_side": 0.25,
+      "boundary_limited": false,
+      "inverse_transform": {
+        "function": "video_pose.crop_to_original",
+        "x": "box.x + x_crop * box.w",
+        "y": "box.y + y_crop * box.h",
+        "z": "z_crop * box.w"
+      }
+    },
+    "alignment_error_max": 0.024854133895199408,
+    "alignment_error_mean": 0.0019591352087193377,
+    "alignment_samples": 80,
+    "baseline_times": [
+      4.714047856000008,
+      4.559001953999996,
+      4.82945272100001
+    ],
+    "baseline_median_s": 4.714047856000008,
+    "two_pass_times": [
+      6.603330292999999,
+      6.98534948300005,
+      6.8162980410000955
+    ],
+    "two_pass_median_s": 6.8162980410000955,
+    "runtime_ratio": 1.4459543579567946,
+    "gates": {
+      "shoulder_width_at_least_60px": true,
+      "acceptance_at_least_70_percent": true,
+      "five_phases": true,
+      "top_to_impact_reported": true,
+      "down_at_25_to_75_percent": true,
+      "address_hands_below_top": true,
+      "cross_pass_shoulder_error_at_most_0.05": true,
+      "top_rotations_nonzero_or_null": true,
+      "runtime_at_most_1.6_baseline": true
+    }
+  },
+  {
+    "sample": "golf_swing_portrait.mp4",
+    "fps": 29.97,
+    "source_frames": [
+      3,
+      131
+    ],
+    "phase_frames": {
+      "address": 3,
+      "top": 77,
+      "down": 94,
+      "impact": 112,
+      "finish": 131
+    },
+    "usable": true,
+    "reason": "oblique",
+    "shoulder_width_max": 0.11908340737933204,
+    "shoulder_width_pixels": 76.21338072277251,
+    "torso_peak_check": {
+      "source": "width_inverse_diagnostic_only",
+      "eligible_for_coaching": false,
+      "phase_degrees": {
+        "address": 0.0,
+        "top": 17.770276906727535,
+        "down": 19.30860493011163,
+        "impact": -27.528383454204153,
+        "finish": -11.193135835550342
+      },
+      "max_phase": "down",
+      "peak_frame": 30,
+      "peak_degrees": 32.69973678160482
+    },
+    "accepted_frames": 270,
+    "total_frames": 270,
+    "accepted_ratio": 1.0,
+    "all_phases_accepted": true,
+    "top_to_impact_s": 1.1678345011678346,
+    "down_fraction": 0.4857142857142857,
+    "hand_y_crop": {
+      "address": 0.2456759214401245,
+      "top": 0.22051415592432022,
+      "down": 0.23511189222335815,
+      "impact": 0.3056824207305908,
+      "finish": 0.3991317003965378
+    },
+    "phase_angles_rad": {
+      "address": {
+        "torso": null,
+        "hips": null
+      },
+      "top": {
+        "torso": null,
+        "hips": null
+      },
+      "down": {
+        "torso": null,
+        "hips": null
+      },
+      "impact": {
+        "torso": null,
+        "hips": null
+      },
+      "finish": {
+        "torso": null,
+        "hips": null
+      }
+    },
+    "phase_angles_degrees": {
+      "address": {
+        "torso": null,
+        "hips": null
+      },
+      "top": {
+        "torso": null,
+        "hips": null
+      },
+      "down": {
+        "torso": null,
+        "hips": null
+      },
+      "impact": {
+        "torso": null,
+        "hips": null
+      },
+      "finish": {
+        "torso": null,
+        "hips": null
+      }
+    },
+    "camera": "oblique",
+    "width_ratio": 0.5752,
+    "crop_box": {
+      "x": 0.3425925925925926,
+      "y": 0.4244791666666667,
+      "w": 0.42824074074074076,
+      "h": 0.24088541666666666,
+      "pixels": [
+        148,
+        326,
+        185,
+        185
+      ],
+      "source_size": [
+        432,
+        768
+      ],
+      "resized_side": 640,
+      "padding_per_side": 0.25,
+      "boundary_limited": false,
+      "inverse_transform": {
+        "function": "video_pose.crop_to_original",
+        "x": "box.x + x_crop * box.w",
+        "y": "box.y + y_crop * box.h",
+        "z": "z_crop * box.w"
+      }
+    },
+    "alignment_error_max": 0.013550420115657122,
+    "alignment_error_mean": 0.001481195032079903,
+    "alignment_samples": 72,
+    "baseline_times": [
+      4.535268649999992,
+      4.727315236999999,
+      4.445277558000015
+    ],
+    "baseline_median_s": 4.535268649999992,
+    "two_pass_times": [
+      6.565977083000007,
+      6.210989642999948,
+      6.400421184999914
+    ],
+    "two_pass_median_s": 6.400421184999914,
+    "runtime_ratio": 1.411255138105198,
+    "gates": {
+      "shoulder_width_at_least_60px": true,
+      "acceptance_at_least_70_percent": true,
+      "five_phases": true,
+      "top_to_impact_reported": true,
+      "down_at_25_to_75_percent": true,
+      "address_hands_below_top": true,
+      "cross_pass_shoulder_error_at_most_0.05": true,
+      "top_rotations_nonzero_or_null": true,
+      "runtime_at_most_1.6_baseline": true
+    }
+  }
+]

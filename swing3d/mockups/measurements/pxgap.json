@@ -1,0 +1,42 @@
+{
+  "w03_d1_upload.png": {
+    "max_gap_px": 40,
+    "height_px": 1800,
+    "percent": 2.2222222222222223
+  },
+  "w03_d2_summary.png": {
+    "max_gap_px": 48,
+    "height_px": 1800,
+    "percent": 2.666666666666667
+  },
+  "w03_d3_compare.png": {
+    "max_gap_px": 56,
+    "height_px": 1800,
+    "percent": 3.111111111111111
+  },
+  "w03_d4_report.png": {
+    "max_gap_px": 62,
+    "height_px": 1800,
+    "percent": 3.4444444444444446
+  },
+  "w03_m1_upload.png": {
+    "max_gap_px": 44,
+    "height_px": 1688,
+    "percent": 2.6066350710900474
+  },
+  "w03_m2_summary.png": {
+    "max_gap_px": 48,
+    "height_px": 1688,
+    "percent": 2.843601895734597
+  },
+  "w03_m3_compare.png": {
+    "max_gap_px": 56,
+    "height_px": 1688,
+    "percent": 3.3175355450236967
+  },
+  "w03_m4_report.png": {
+    "max_gap_px": 61,
+    "height_px": 1688,
+    "percent": 3.6137440758293837
+  }
+}
