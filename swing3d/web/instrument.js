@@ -780,17 +780,23 @@
     const reference = comparison.reference[sample][SwingReference.channels.indexOf(channel)];
     const displayed = comparison.displayed[sample][index];
     const normalized = channel === "shiftX" || channel === "heelR";
-    const compact = value => normalized ? value.toFixed(3) : Math.round(value * 180 / Math.PI) + "°";
+    // 고객 화면에는 좌표값을 적지 않는다. 비율 채널은 교본을 100 으로 둔 값으로 적는다.
+    const percent = value => !(Math.abs(reference) > 1e-9) ? (Math.abs(value) > 1e-9 ? "교본 밖" : "0%")
+      : value * reference < 0 ? "반대 방향" : Math.round(value / reference * 100) + "%";
+    const compact = value => normalized ? percent(value) : Math.round(value * 180 / Math.PI) + "°";
     byId("mobile-values").textContent = (SwingFindings.channels[channel] ?? channel) + " " + compact(measured) + " · 교본 " + compact(reference);
-    const show = value => quantity((value * (normalized ? 1 : 180 / Math.PI)).toFixed(normalized ? 3 : 1), normalized ? "정규화" : "°");
-    const entry = (label, value, style) => {
+    const show = value => normalized ? node("span", percent(value))
+      : quantity((value * 180 / Math.PI).toFixed(1), "°");
+    const entry = (label, value, style, override) => {
       const item = node("span", label + " ", style);
-      item.append(show(value));
+      item.append(override == null ? show(value) : node("span", override));
       return item;
     };
     output.replaceChildren(node("strong", SwingFindings.channels[channel] ?? channel),
       entry("측정", measured), entry("교본", reference, "reference"),
-      entry("차이", measured - reference), entry(activeFinding.positive ? "유지 표시" : "강조 표시", displayed,
+      entry("차이", normalized ? measured : measured - reference, "", normalized
+        ? (Math.abs(reference) > 1e-9 ? Math.round((measured - reference) / reference * 100) + "%p" : "—") : null),
+      entry(activeFinding.positive ? "유지 표시" : "강조 표시", displayed,
         hasDeviation(sample) ? "delta" : ""));
     const card = [...byId("finding-options").querySelectorAll("button")].find(button => button.dataset.finding === activeFinding.id);
     if (card) card.querySelector(".finding-numbers").replaceChildren(entry("측정", measured), entry("교본", reference, "reference"));
