@@ -1,3 +1,4 @@
+from server import ROOT
 import copy
 import hashlib
 import json
@@ -18,7 +19,7 @@ class FindingsTests(unittest.TestCase):
         self.connection.request("GET", "/api/findings/golf1")
         response = self.connection.getresponse()
         self.assertEqual(response.status, 200)
-        self.assertEqual(response.getheader("X-Swing3D-Source-SHA256"), hashlib.sha256(self.csv).hexdigest())
+        self.assertEqual(response.getheader("X-Swing3D-Source-SHA256"), hashlib.sha256((ROOT / "samples/golf1_export.csv").read_bytes()).hexdigest())
         data = json.load(response)
         self.assertEqual(data["schema"], "motionguard.findings/1")
         self.assertEqual(data["findings"][0]["channel"], "torso")

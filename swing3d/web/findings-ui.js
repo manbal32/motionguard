@@ -1,7 +1,7 @@
 /* global SwingReference */
 window.SwingFindings = (() => {
   const phases = [["address","어드레스"],["top","백스윙 탑"],["down","다운스윙"],["impact","임팩트"],["finish","피니시"]];
-  const channels = {swing:"스윙각", torso:"몸통 회전", hips:"골반 회전", lean:"기울기", wrist:"손목", shiftX:"체중 이동", kneeL:"왼무릎", kneeR:"오른무릎", heelR:"오른 뒤꿈치"};
+  const channels = {swing:"스윙각", x_factor:"어깨·골반 분리", torso:"몸통 회전", hips:"골반 회전", lean:"기울기", wrist:"손목", shiftX:"체중 이동", kneeL:"왼무릎", kneeR:"오른무릎", heelR:"오른 뒤꿈치"};
   const severity = { low: 1, medium: 2, high: 3 };
 
   function node(tag, text, className) {

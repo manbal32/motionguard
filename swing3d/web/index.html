@@ -13,7 +13,7 @@
   </header>
   <nav class="stepper" aria-label="분석 단계">
     <a href="#upload">01 업로드</a><a href="#progress">02 분석</a><a href="#overlay">03 관절 오버레이</a>
-    <a href="#phases">04 국면 기록</a><a href="#findings">05 판정</a><a href="#swing-view">06 3D 과장</a><a href="#export">07 내려받기</a>
+    <a href="#phases">04 국면 기록</a><a href="#findings">05 판정</a><a href="#swing-view">06 3D 강조</a><a href="#export">07 내려받기</a>
   </nav>
   <div class="setup">
     <section id="upload">
@@ -64,6 +64,11 @@
       </div>
     </section>
   </div>
+  <section id="quality-guidance" class="flow-body" hidden>
+    <h2>촬영 위치를 확인해 주세요</h2><p id="guidance-message" role="status"></p>
+    <img src="/assets/capture-guide.svg" alt="카메라 정면에서 전신이 화면 높이의 3분의 2를 채우는 예시">
+    <button id="guidance-retry">다시 찍기</button>
+  </section>
   <section id="overlay" class="flow-body" hidden>
     <header><span class="index">03</span><h2>스윙 나란히 비교</h2><span id="compare-caption" class="caption"></span></header>
     <p id="mobile-finding"></p>
@@ -78,13 +83,15 @@
       <span id="phase-label" class="phase-label"></span>
     </div>
     </div>
-    <div><p class="pane-label" id="compare-pane-label">같은 프레임 · 교육용 과장</p><div id="compare-stage" class="video-stage compare-grid">
-      <canvas id="exaggerated" aria-label="교육용 과장 관절"></canvas>
+    <div><p class="pane-label" id="compare-pane-label">같은 프레임 · 개선 포인트 그림</p><div id="compare-stage" class="video-stage compare-grid">
+      <canvas id="exaggerated" aria-label="개선 포인트 그림 관절"></canvas>
     </div></div>
     </div>
     <p id="comparison-unavailable" class="section-body" hidden>좌표 트랙의 자세를 표시합니다. 원본 영상은 포함되어 있지 않습니다.</p>
-    <button id="mobile-toggle" type="button" aria-pressed="false">누르고 있으면 과장</button>
+    <button id="mobile-toggle" type="button" aria-pressed="false">누르고 있으면 강조</button>
     <p id="mobile-values" class="num"></p>
+    <div id="point-controls"><button id="point-play">재생</button><button id="point-mode">원본 보기</button><input id="point-seek" type="range" aria-label="스윙 구간"></div>
+    <div id="point-phases"></div>
     <details id="playback-details" open><summary>재생 도구</summary>
     <div class="transport" id="video-transport">
       <button id="play">재생</button>
@@ -99,13 +106,13 @@
     </div>
     </details>
     <div class="transport" id="factor-transport">
-      <label>과장 배율 <input id="compare-factor" type="range" min="1" max="3" step="0.1" value="1"></label>
+      <label>강조 배율 <input id="compare-factor" type="range" min="1" max="2.5" step="0.1" value="1"></label>
       <output id="compare-factor-value" class="num"></output>
       <button id="compare-reference" aria-pressed="true">교본 겹치기</button>
     </div>
     <div id="compare-values" class="compare-values num"></div>
     <p id="compare-cue" class="compare-warning"></p>
-    <p class="compare-warning" id="compare-warning">오른쪽은 교육용 과장이며 측정값이 아닙니다 · 왼쪽 수치가 실제 측정입니다</p>
+    <p class="compare-warning" id="compare-warning">오른쪽은 개선 포인트 그림이며 측정값이 아닙니다 · 왼쪽 수치가 실제 측정입니다</p>
     <details id="comparison-controls" class="section-body" open>
       <summary>비교 항목</summary>
       <div id="finding-options" class="finding-options" aria-label="비교할 결함"></div>

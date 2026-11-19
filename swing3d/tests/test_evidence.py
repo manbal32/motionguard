@@ -12,8 +12,8 @@ class EvidenceTests(TestCase):
     setUp = test_track.TrackTests.setUp
 
     def test_stream_exposes_original_timeline_and_exact_stills(self):
-        frames, fps = swing_track.load_csv(str(ROOT / "samples/golf1_export.csv"))
-        timeline = [None] + [[[0.5, 0.6, 0.75]] * 33] * (len(frames) - 1)
+        frames, fps = swing_track.load_csv(str(ROOT / "samples/swing_front_landmarks.csv"))
+        timeline = [None] + [[[0.5, 0.6, 0.75]] * 22] * (len(frames) - 1)
 
         def extract(path, *, evidence, progress):
             self.assertTrue(evidence)
@@ -21,7 +21,7 @@ class EvidenceTests(TestCase):
             return frames, fps, timeline
 
         def stills(path, indices, crops):
-            self.assertEqual(indices, {"address": 42, "top": 152, "down": 158, "impact": 164, "finish": 205})
+            self.assertEqual(indices, {"address": 81, "top": 118, "down": 141, "impact": 146, "finish": 172})
             return {phase: b"\xff\xd8" + str(frame).encode() + b"\xff\xd9" for phase, frame in indices.items()}
 
         with patch.object(video_pose, "extract", side_effect=extract), patch.object(video_pose, "phase_jpegs", side_effect=stills):
@@ -33,14 +33,14 @@ class EvidenceTests(TestCase):
         result = events[-1]["data"]["evidence"]
         self.assertIsNone(result["frames"][0])
         self.assertEqual(len(result["frames"]), len(frames))
-        self.assertEqual(len(result["landmark_names"]), 33)
-        self.assertEqual(result["phase_frames"]["top"], 152)
+        self.assertEqual(len(result["landmark_names"]), 22)
+        self.assertEqual(result["phase_frames"]["top"], 118)
         self.connection.request("GET", f'/api/still/{result["id"]}/top')
         response = self.connection.getresponse()
         self.assertEqual(response.getheader("Content-Type"), "image/jpeg")
-        self.assertEqual(response.read(), b"\xff\xd8152\xff\xd9")
+        self.assertEqual(response.read(), b"\xff\xd8118\xff\xd9")
         self.connection.request("GET", f'/api/still/{result["id"]}/finish')
-        self.assertEqual(self.connection.getresponse().read(), b"\xff\xd8205\xff\xd9")
+        self.assertEqual(self.connection.getresponse().read(), b"\xff\xd8172\xff\xd9")
 
     def test_unknown_still_returns_404(self):
         self.connection.request("GET", f"/api/still/{'a' * 64}/impact")
@@ -57,8 +57,8 @@ class EvidenceTests(TestCase):
                                     {'Accept': 'application/x-ndjson'})
             response = self.connection.getresponse()
             events = [json.loads(line) for line in response]
-        self.assertEqual(events[-1]['type'], 'error')
-        self.assertIn('50%', events[-1]['reason'])
+        self.assertEqual(events[-1]['type'], 'result')
+        self.assertEqual(events[-1]['data']['meta']['unusable_reason'], 'tracking_failed')
         stills.assert_not_called()
 
 

@@ -1,3 +1,4 @@
+@import url('./tokens.css');
 @import url("./typography.css");
 :root {
   color-scheme: dark;
@@ -394,3 +395,9 @@ h2{font-size:21px;font-weight:700;line-height:1.35}
 #result-actions { flex-direction:row; align-items:center; }
 #upload-actions,#summary-review .flow-foot { padding-inline:0; margin-inline:0; }
 #upload > .flow-body { padding-inline:0; }
+
+.instrument[data-step=guide] .setup{display:none}#quality-guidance{display:flex;flex:1;flex-direction:column;gap:var(--gap);min-height:0}#quality-guidance img{flex:1;min-height:120px;max-height:65%;object-fit:contain}#guidance-retry{min-height:var(--h-btn);background:var(--ink);color:var(--paper)}
+
+#point-controls{display:flex;gap:var(--gap);align-items:center;flex-wrap:wrap}#point-play{min-height:var(--h-play)}#point-seek{flex:1;min-width:0;min-height:var(--h-scrub)}#point-seek::-webkit-slider-thumb{width:28px;height:28px}#point-phases{display:flex;gap:4px}#point-phases button{flex:1;min-height:var(--touch);padding:4px;font-size:11px;white-space:nowrap}#comparison-panes{position:relative}#compare-stage{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto!important}#exaggerated{width:100%;height:100%;transform:none!important}#comparison-panes>:first-child{visibility:hidden}#comparison-panes[data-original=true]>:first-child{visibility:visible;z-index:2}#comparison-panes>:nth-child(2){display:contents}
+
+#guidance-retry{background:var(--good);color:var(--paper)}
