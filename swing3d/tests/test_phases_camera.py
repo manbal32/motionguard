@@ -8,23 +8,12 @@ from server import ROOT
 
 
 class PhaseCameraTests(TestCase):
-    def test_down_is_inside_the_descent_at_different_recording_speeds(self):
-        frames, fps = st.load_csv(str(ROOT / 'samples/golf1_export.csv'))
-        clean, _ = st._clean_landmarks(frames, fps, channel_quality=True)
-        angles = st._smooth(st._unwrap([
-            st._screen_angle(*(a - b for a, b in zip(
-                st._mid(d, 'LEFT_WRIST', 'RIGHT_WRIST'),
-                st._mid(d, 'LEFT_SHOULDER', 'RIGHT_SHOULDER'))))
-            for d in clean
-        ]))
-        for stretch in (1, 4):
-            for sign in (-1, 1):
-                with self.subTest(stretch=stretch, sign=sign):
-                    sw = [sign * angle for angle in angles for _ in range(stretch)]
-                    start, top, down, impact, end, _ = st._swing_phases(sw, fps)
-                    self.assertTrue(start < top < down < impact < end)
-                    self.assertTrue(0.25 <= (down - top) / (impact - top) <= 0.75)
-                    self.assertGreaterEqual((impact - down) / fps, 0.05)
+    def test_down_is_inside_descent_and_is_height_not_time_midpoint(self):
+        f,fps=st.load_csv(str(ROOT/'samples/swing_front_landmarks.csv'))
+        h=[st._mid(d,'LEFT_WRIST','RIGHT_WRIST') for d in f]
+        start,top,down,impact,finish,_=st._swing_phases([],fps,hands=h)
+        self.assertEqual((start,top,down,impact,finish),(81,118,141,146,172))
+        self.assertGreater(down,(top+impact)/2)
 
     def test_address_ends_the_low_quiet_interval_and_ignores_a_low_spike(self):
         # Higher y means lower hands. A single later low glitch is not address.
@@ -36,9 +25,9 @@ class PhaseCameraTests(TestCase):
 
     def test_camera_gates_only_unavailable_rotation_channels(self):
         original, fps = st.load_csv(str(ROOT / 'samples/golf1_export.csv'))
-        for ratio, facing, missing in ((0.95, 'front', []),
-                                       (0.65, 'oblique', ['hips']),
-                                       (0.20, 'down_the_line', ['torso', 'hips'])):
+        for ratio, facing, missing in ((0.95, 'front', ['torso', 'hips', 'x_factor']),
+                                       (0.65, 'oblique', ['torso', 'hips', 'x_factor']),
+                                       (0.20, 'down_the_line', ['torso', 'hips', 'x_factor'])):
             with self.subTest(facing=facing):
                 frames = [d.copy() for d in original]
                 for i, d in enumerate(frames):

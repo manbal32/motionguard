@@ -464,7 +464,7 @@ window.Swing3D = (() => {
     const comparison = addElement(coaching, "div", "");
     comparison.hidden = true;
     const modeButtons = new Map();
-    for (const [value, label] of [["actual", "실제"], ["exaggerated", "과장"], ["compare", "나란히"]]) {
+    for (const [value, label] of [["actual", "실제"], ["exaggerated", "강조"], ["compare", "나란히"]]) {
       const button = addElement(comparison, "button", label);
       button.type = "button";
       button.onclick = () => {
@@ -473,12 +473,12 @@ window.Swing3D = (() => {
       };
       modeButtons.set(value, button);
     }
-    const scaleLabel = addElement(comparison, "label", "과장 배율 ");
+    const scaleLabel = addElement(comparison, "label", "강조 배율 ");
     const multiplier = addElement(scaleLabel, "input", "");
     Object.assign(multiplier, { type: "range", min: "1", max: "3", step: "0.1", value: "2.5" });
     const scaleValue = addElement(scaleLabel, "output", "2.5×");
     multiplier.oninput = () => { scaleValue.textContent = Number(multiplier.value).toFixed(1) + "×"; };
-    const warning = addElement(comparison, "p", "교육용 과장이며 측정값이 아닙니다.");
+    const warning = addElement(comparison, "p", "개선 포인트 그림이며 측정값이 아닙니다.");
     warning.className = "model-option";
     const reading = addElement(comparison, "p", "");
     const compareLabel = addElement(comparison, "p", "불투명 아바타는 실제 스윙, 반투명 아바타는 교본형 기준입니다.");
@@ -851,7 +851,7 @@ window.Swing3D = (() => {
         return degrees + (unitless.has(channel) ? "° 환산" : "°");
       };
       let text = "실제 측정값 " + format(actual);
-      if (mode === "exaggerated") text += " · 과장 표시 " + format(shown);
+      if (mode === "exaggerated") text += " · 강조 표시 " + format(shown);
       if (mode !== "actual") text += " · 교본 기준 " + format(reference(channel));
       if (indices.confidence !== undefined && measured("confidence") < 0.45) text += " · 추적 신뢰도 낮음";
       if (reading.textContent !== text) reading.textContent = text;
@@ -905,7 +905,7 @@ window.Swing3D = (() => {
       const state = {
         recorder, stream, capture, context: capture.getContext("2d"), onProgress,
         start: undefined, previousTime: time, previousPlaying: playing,
-        label: mode === "exaggerated" ? "교육용 과장" : "",
+        label: mode === "exaggerated" ? "개선 포인트 그림" : "",
         filename: "swing3d_" + (finding?.id ?? "swing") + "_" + (mode === "exaggerated" ? Number(multiplier.value).toFixed(1) : "1.0") + "x.webm",
       };
       const chunks = [];

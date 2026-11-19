@@ -1,0 +1,103 @@
+127.0.0.1 - - [19/Nov/2026 15:00:58] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:58] "GET /style.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:58] "GET /exaggerate.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:58] "GET /reference.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:58] "GET /assets/capture-guide.svg HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:58] "GET /pose-avatar.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:58] "GET /findings-ui.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:58] "GET /instrument.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:58] "GET /typography.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:58] "GET /tokens.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:58] "GET /vendor/noto-sans-kr.woff2 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:58] "GET /vendor/plex-mono.woff2 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:58] "GET /api/coaching/status HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:58] "POST /api/coaching/summary HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:58] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /style.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /pose-avatar.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /assets/capture-guide.svg HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /exaggerate.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /reference.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /findings-ui.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /instrument.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /tokens.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /typography.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /vendor/noto-sans-kr.woff2 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /vendor/plex-mono.woff2 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /api/coaching/status HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "POST /api/coaching/summary HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /style.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /reference.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /assets/capture-guide.svg HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /exaggerate.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /pose-avatar.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /findings-ui.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /instrument.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /tokens.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /typography.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /api/coaching/status HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /vendor/noto-sans-kr.woff2 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:00:59] "GET /vendor/plex-mono.woff2 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] "POST /api/coaching/summary HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] "GET /style.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] "GET /assets/capture-guide.svg HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] "GET /reference.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] "GET /exaggerate.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] "GET /pose-avatar.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] "GET /instrument.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] "GET /findings-ui.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] "GET /tokens.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] "GET /typography.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] "GET /vendor/noto-sans-kr.woff2 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] "GET /vendor/plex-mono.woff2 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] "GET /api/coaching/status HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] code 404, message File not found
+127.0.0.1 - - [19/Nov/2026 15:01:00] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [19/Nov/2026 15:01:00] "POST /api/coaching/summary HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:01] "POST /api/track HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 15:01:01] "POST /api/coaching/analyze HTTP/1.1" 200 -
+{
+  "canvasCSS": [
+    356,
+    302
+  ],
+  "landmarks": 22,
+  "frame": 118,
+  "maxJointPx": 33.119763057121084,
+  "pixelDifference": 0.023792692908698565,
+  "playFrames": [
+    118,
+    133
+  ],
+  "seekFrame": 141,
+  "exact390": {
+    "canvasCSS": [
+      390,
+      302
+    ],
+    "landmarks": 22,
+    "frame": 118,
+    "maxJointPx": 33.119763057121084,
+    "pixelDifference": 0.021718458142299203
+  },
+  "errors": []
+}
+ExpectError: expect(received).toBeGreaterThanOrEqual(expected)
+
+Expected: >= 0.03
+Received:    0.021718458142299203
+    at captureRawStack (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright-core/lib/coreBundle.js:9681:17)
+    at callMatcherAsStep (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/lib/matchers/expect.js:13310:57)
+    at Object.toBeGreaterThanOrEqual (/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/lib/matchers/expect.js:13300:23)
+    at /workspace/motionguard-build/swing3d/tests/build_browser.cjs:49:43 {
+  matcherResult: {
+    message: 'expect(received).toBeGreaterThanOrEqual(expected)\n' +
+      '\n' +
+      'Expected: >= 0.03\n' +
+      'Received:    0.021718458142299203',
+    pass: false,
+    name: 'toBeGreaterThanOrEqual'
+  }
+}

@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ko">
-<head>
+<head><link rel="icon" href="data:,">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MotionGuard Swing3D</title>
@@ -9,16 +9,17 @@
 <body>
 <main class="instrument" data-step="1">
   <header class="flow-head">
-    <strong class="mark">Motion<i>Guard</i></strong><span class="step" id="flow-step">1 / 3</span>
+    <svg class="brand-arcs" viewBox="0 0 44 40" aria-hidden="true"><path d="M7 29A15 15 0 0 1 30 9M13 34A15 15 0 0 1 36 14" fill="none" stroke="currentColor" stroke-width="4"/></svg><strong class="mark">Motion<i>Guard</i></strong><span class="step" id="flow-step">1 / 5</span>
   </header>
   <nav class="stepper" aria-label="분석 단계">
     <a href="#upload">01 업로드</a><a href="#progress">02 분석</a><a href="#overlay">03 관절 오버레이</a>
-    <a href="#phases">04 국면 기록</a><a href="#findings">05 판정</a><a href="#swing-view">06 3D 과장</a><a href="#export">07 내려받기</a>
+    <a href="#phases">04 국면 기록</a><a href="#findings">05 판정</a><a href="#swing-view">06 3D 강조</a><a href="#export">07 내려받기</a>
   </nav>
   <div class="setup">
     <section id="upload">
       <header><span class="index">01</span><h2>영상 업로드</h2><span class="caption">최대 <b class="num">30</b><small>초</small> · <b class="num">150</b><small>MB</small></span></header>
       <div class="section-body flow-body">
+        <div id="preview-slot"><img id="preview-guide" src="/assets/capture-guide.svg" alt="전신이 화면에 들어오도록 카메라를 고정하고 스윙 한 번을 촬영해 주세요."><canvas id="preview-avatar" hidden aria-label="업로드한 좌표의 어드레스 자세"></canvas></div>
         <div id="drop">
           <strong>스윙 영상을 끌어다 놓으세요</strong>
           <p>MP4 또는 MOV · 골퍼의 전신이 보이는 영상</p>
@@ -27,12 +28,13 @@
         </div>
         <details><summary>좌표 CSV로 열기</summary><input id="csv" type="file" accept=".csv,text/csv" aria-label="좌표 CSV"></details>
         <video id="upload-preview" controls muted playsinline hidden aria-label="업로드한 스윙 미리보기"></video>
-        <div id="coach-panel" hidden>
-          <h3>골프 코치 상담 <span id="coach-mode" class="caption" role="status"></span></h3>
+        <div id="coach-panel">
+          <h3>어디가 고민이세요? <span id="coach-mode" class="caption" role="status"></span></h3>
           <p class="caption">영상을 먼저 선택하세요. 상담 없이 분석할 수도 있습니다.</p>
-          <p>영상은 이 컴퓨터에서 처리합니다. 동의하면 상담 텍스트와 영상 계측 수치가 Gemini로 전송됩니다. 로컬 리포트에는 상담 요약이 저장됩니다.</p>
+          <details class="privacy"><summary>영상·상담 데이터 안내</summary><p>영상은 이 기기에서 처리합니다. 동의하면 상담 텍스트와 계측 수치가 Gemini로 전송됩니다. 상담 요약은 로컬 리포트에 저장됩니다.</p></details>
           <label><input id="coach-consent" type="checkbox"> Gemini에 상담 텍스트와 계측 수치 전송 동의</label>
-          <ol id="coach-log" class="chat grow" aria-label="상담 기록" aria-live="polite"></ol>
+          <ol id="coach-log" class="chat grow" aria-label="상담 기록" aria-live="polite"><li class="coach-welcome">어디가 고민이세요? 한 줄로 적어 주셔도 됩니다.</li></ol>
+          <div id="coach-examples" aria-label="고민 예시"><button type="button">백스윙이 잘 안 돼요</button><button type="button">슬라이스가 납니다</button><button type="button">비거리가 줄었어요</button></div>
           <form id="coach-form">
             <label for="coach-message">스윙 고민이나 연습 목표</label>
             <div class="row"><textarea id="coach-message" maxlength="500" rows="2" aria-describedby="coach-keys" required></textarea><button id="coach-send" type="submit">보내기</button></div>
@@ -51,7 +53,7 @@
             <label>사용자가 추정한 원인<textarea name="hypothesis" placeholder="입력 없음" maxlength="500" rows="2" readonly></textarea></label>
             <label>연습 목표<textarea name="goal" placeholder="입력 없음" maxlength="500" rows="2" readonly></textarea></label>
           </div>
-          <div class="flow-foot"><button id="summary-approve">이대로 분석</button><button id="summary-edit">고치기</button><button id="summary-cancel">상담으로 돌아가기</button></div>
+          <div class="flow-foot"><button id="summary-approve">이대로 분석</button><div class="pair"><button id="summary-edit">고치기</button><button id="summary-cancel">상담으로</button></div></div>
         </section>
       </div>
     </section>
@@ -64,6 +66,27 @@
       </div>
     </section>
   </div>
+  <section id="results" class="flow-body" hidden aria-labelledby="results-heading">
+    <div class="result-title"><h2 id="results-heading">이번 스윙 결과</h2><button id="new-analysis">다시 찍기</button></div>
+    <section id="result-strokes" hidden aria-label="스윙에서 계산한 예상 타수">
+      <div><span>지금 스윙이면</span><strong id="result-strokes-current"></strong></div>
+      <div><span>개선 포인트를 맞추면</span><strong id="result-strokes-after"></strong></div>
+      <p id="result-strokes-condition" class="note"></p><p id="result-strokes-missing" class="note"></p>
+    </section>
+    <div class="score-line"><strong id="score-total"></strong><span>/ 100</span><span id="score-verdict"></span><b id="score-change" hidden></b></div>
+    <p id="measured-count" class="note"></p>
+    <nav id="phase-map" aria-label="국면별 개선 포인트"></nav>
+    <p id="profile-message" class="note"></p>
+    <div id="result-items"></div>
+    <p id="first-history" class="note">첫 기록입니다. 다음 분석부터 회차별로 비교해 드립니다.</p>
+    <section id="history-area" class="grow"><div class="history-heading"><h3>회차별 기록</h3><button id="delete-profile">기록 삭제</button></div><div id="history-chart" class="grow"></div><p id="history-note" class="note"></p><div id="history-comparison" hidden></div></section>
+    <footer class="flow-foot"><button id="show-points" class="primary">스윙 다시 보기</button><a id="result-report" class="button secondary">리포트 보기</a></footer>
+  </section>
+  <section id="quality-guidance" class="flow-body" hidden>
+    <h2>촬영 위치를 확인해 주세요</h2><p id="guidance-message" role="status"></p>
+    <img src="/assets/capture-guide.svg" alt="카메라 정면에서 전신이 화면 높이의 3분의 2를 채우는 예시">
+    <button id="guidance-retry">다시 찍기</button>
+  </section>
   <section id="overlay" class="flow-body" hidden>
     <header><span class="index">03</span><h2>스윙 나란히 비교</h2><span id="compare-caption" class="caption"></span></header>
     <p id="mobile-finding"></p>
@@ -78,13 +101,15 @@
       <span id="phase-label" class="phase-label"></span>
     </div>
     </div>
-    <div><p class="pane-label" id="compare-pane-label">같은 프레임 · 교육용 과장</p><div id="compare-stage" class="video-stage compare-grid">
-      <canvas id="exaggerated" aria-label="교육용 과장 관절"></canvas>
+    <div><p class="pane-label" id="compare-pane-label">같은 프레임 · 개선 포인트 그림</p><div id="compare-stage" class="video-stage compare-grid">
+      <canvas id="exaggerated" aria-label="개선 포인트 그림 관절"></canvas>
     </div></div>
     </div>
-    <p id="comparison-unavailable" class="section-body" hidden>좌표 트랙의 자세를 표시합니다. 원본 영상은 포함되어 있지 않습니다.</p>
-    <button id="mobile-toggle" type="button" aria-pressed="false">누르고 있으면 과장</button>
+    <p id="comparison-unavailable" class="note" hidden>원본 영상은 저장하지 않았습니다. 측정한 움직임을 보여 드립니다.</p>
+    <button id="mobile-toggle" type="button" aria-pressed="false">누르고 있으면 강조</button>
     <p id="mobile-values" class="num"></p>
+    <div id="point-controls"><button id="point-play">재생</button><button id="point-mode">원본 보기</button><input id="point-seek" type="range" aria-label="스윙 구간"></div>
+    <div id="point-phases"></div>
     <details id="playback-details" open><summary>재생 도구</summary>
     <div class="transport" id="video-transport">
       <button id="play">재생</button>
@@ -99,13 +124,13 @@
     </div>
     </details>
     <div class="transport" id="factor-transport">
-      <label>과장 배율 <input id="compare-factor" type="range" min="1" max="3" step="0.1" value="1"></label>
+      <label>강조 배율 <input id="compare-factor" type="range" min="1" max="2.5" step="0.1" value="1"></label>
       <output id="compare-factor-value" class="num"></output>
       <button id="compare-reference" aria-pressed="true">교본 겹치기</button>
     </div>
     <div id="compare-values" class="compare-values num"></div>
     <p id="compare-cue" class="compare-warning"></p>
-    <p class="compare-warning" id="compare-warning">오른쪽은 교육용 과장이며 측정값이 아닙니다 · 왼쪽 수치가 실제 측정입니다</p>
+    <p class="compare-warning" id="compare-warning">오른쪽은 개선 포인트 그림이며 측정값이 아닙니다 · 왼쪽 수치가 실제 측정입니다</p>
     <details id="comparison-controls" class="section-body" open>
       <summary>비교 항목</summary>
       <div id="finding-options" class="finding-options" aria-label="비교할 결함"></div>
@@ -139,13 +164,13 @@
     </div>
   </section>
   </details>
-  <footer class="flow-foot" id="result-actions" hidden><button id="flow-back">다시 상담</button><a class="button" id="open-report">리포트 보기</a></footer>
+  <footer class="flow-foot" id="result-actions" hidden><button id="flow-back" class="primary">결과 보기</button></footer>
 </main>
 <script type="importmap">{"imports":{"three":"/vendor/three/three.module.js","three/addons/":"/vendor/three/addons/"}}</script>
 <script src="/reference.js"></script>
 <script src="/exaggerate.js"></script>
 <script src="/pose-avatar.js"></script>
 <script src="/findings-ui.js"></script>
-<script src="/instrument.js" defer></script>
+<script src="/customer-ui.js"></script><script src="/instrument.js" defer></script>
 </body>
 </html>
