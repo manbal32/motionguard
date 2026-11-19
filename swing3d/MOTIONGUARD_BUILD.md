@@ -83,6 +83,23 @@
 사용자 제공 영상(실내, 정면, 60.12fps, 4.03초, 720×1280)의 **좌표만** 커밋했다.
 영상 파일과 얼굴 11점은 저장소에 넣지 않는다. 242프레임 × 22점.
 
+컬럼은 `frame_idx, timestamp, landmark, x, y, z, visibility, wx, wy, wz` 다.
+`swing_track.load_csv()` 가 그대로 읽는다 (확인함: 242프레임 60.12fps).
+**`wx/wy/wz` 가 `pose_world_landmarks` 다.** 단계 1-B 의 3D 회전을
+영상 없이 이 CSV 만으로 검증할 수 있다.
+
+```bash
+python3 -c "
+import swing_track as st
+frames, fps = st.load_csv('samples/swing_front_landmarks.csv')
+t = st.build_track(frames, fps); print(t['meta']['phase_frames'])"
+```
+
+현재 코드가 이 CSV 에서 내는 국면은
+`address 36 · top 125 · down 135 · impact 146 · finish 185` 이다.
+단계 2 의 규칙으로 다시 잡으면 `81 · 118 · 141 · 146 · 172` 가 나와야 한다
+(임팩트 146 은 이미 일치한다). **어드레스와 탑이 어긋나는 것이 핵심 차이다.**
+
 | 항목 | 값 |
 |---|---|
 | 검출률 | **242 / 242 (100%)** |
