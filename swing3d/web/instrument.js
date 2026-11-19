@@ -45,13 +45,13 @@
   const flow = document.querySelector(".instrument");
   function step(value) {
     flow.dataset.step = value;
-    byId("flow-step").textContent = value === "guide" ? "촬영 안내" : (value === "busy" ? 2 : value) + " / 5";
+    byId("flow-step").textContent = value === "guide" ? "촬영 안내" : (value === "busy" ? 2 : value === 4 ? 3 : value === 3 ? 4 : value) + " / 5";
     window.scrollTo(0, 0);
   }
   byId("flow-back").onclick = () => {video.pause();pointPlaying=false;step(3);};
-  byId("flow-back").textContent="결과로";
+  byId("flow-back").textContent="결과 보기";
   byId("new-analysis").onclick=()=>{video.pause();pointPlaying=false;step(1);};
-  byId("show-points").onclick=()=>{step(4);updateOverlay();};
+  byId("show-points").onclick=()=>enterPoint();
   const summaryFields = [...summaryPanel.querySelectorAll("textarea")];
   // 네 칸은 글이 잘리지 않을 만큼만 자란다. 넘치면 .summary-fields 가 스크롤한다.
   const fitField = field => {
@@ -360,8 +360,8 @@
       comparison.coaching=coaching;
       MotionCustomer.renderResult(coaching,track,id=>{chooseFinding(id);step(4);updateOverlay();});
       byId('results').hidden=false;
-      step(3);
-      updateOverlay();
+      saveReturnState(track,coaching);
+      enterPoint();
 
     } catch (error) {
       step(csv ? 1 : 2);
@@ -1002,49 +1002,45 @@
     byId("export").hidden = false;
     byId("record").disabled = false;
     byId("record-progress").textContent = "";
-    const reportLink = byId("open-report");
-    reportLink.href = "/report/" + encodeURIComponent(track.track_id)
-      + (coaching?.report_id ? "?coaching=" + coaching.report_id : "");
-    reportLink.onclick = async event => {
-      if (!coaching?.report_id || !evidence) return;
-      event.preventDefault();
-      video.pause();
-      if (video.seeking) await new Promise(resolve => video.addEventListener("seeked", resolve, {once: true}));
-      if (video.readyState < 2) {
-        location.assign(reportLink.href);
-        return;
-      }
-      updateOverlay();
-      const snapshot = document.createElement("canvas");
-      snapshot.width = 960;
-      const height = snapshot.height = Math.round(480 * video.videoHeight / video.videoWidth);
-      const draw = snapshot.getContext("2d");
-      const [x, y, size] = byId("zoom-person").getAttribute("aria-pressed") === "true" ? evidence.overlay_crop : [0, 0, 1];
-      const crop = [x * video.videoWidth, y * video.videoHeight, size * video.videoWidth, size * video.videoHeight];
-      draw.fillStyle = styles.getPropertyValue("--ground").trim();
-      draw.fillRect(0, 0, 960, height);
-      draw.drawImage(video, ...crop, 0, 0, 480, height);
-      draw.drawImage(canvas, ...crop, 0, 0, 480, height);
-      draw.drawImage(alternate, ...crop, 480, 0, 480, height);
-      try {
-        sessionStorage.setItem("motionguard:" + coaching.report_id, JSON.stringify({
-          image: snapshot.toDataURL("image/jpeg", 0.88), factor: Number(factor.value),
-          frame: Math.floor(video.currentTime * evidence.fps + 0.001), label: activeFinding?.label,
-          positive: !!activeFinding?.positive,
-          values: [...byId("compare-values").children].map(item => item.textContent).join(" · "),
-        }));
-      } catch {
-        // The report still has the measured phase stills if session storage is unavailable.
-      }
-      location.assign(reportLink.href);
-    };
+    // The result screen is the only route to a customer report.
+    byId('result-report').onclick=()=>{video.pause();pointPlaying=false;saveReturnState(track,coaching);};
+  }
+
+  function saveReturnState(track,coaching){
+    try{sessionStorage.setItem('motionguard:return',JSON.stringify({track,coaching}));}catch{/* Storage can be disabled or full. Report remains readable. */}
+  }
+  function enterPoint(phase){
+    if(!comparison)return;
+    step(4);
+    const t=comparison.track;
+    seekPoint(t.meta.phase_frames[phase??'address']/t.meta.fps);
+    updateOverlay();
+    if(phase)return;
+    pointOnce=true;pointPlaying=true;lastPointTick=undefined;
+    byId('point-play').textContent='멈춤';
+    if(evidence){video.muted=true;video.play().catch(()=>{pointPlaying=false;byId('point-play').textContent='재생';});}
+  }
+  async function restoreResult(){
+    const id=new URLSearchParams(location.search).get('result');if(!id)return;
+    try{
+      const saved=JSON.parse(sessionStorage.getItem('motionguard:return'));
+      if(saved?.coaching?.report_id!==id)throw Error('missing');
+      const {track,coaching}=saved;
+      // A navigation does not retain the original video. Keep its body coordinates,
+      // never present a blank original-video layer as playable media.
+      if(track.evidence){track.pose_landmarks=track.evidence.frames.slice(track.meta.source_frames[0],track.meta.source_frames[1]+1);delete track.evidence;}
+      evidence=undefined;comparison={track,reference:SwingReference.expand(track),displayed:track.track,options:[]};
+      setupStills(track);await setupFindings(track,coaching);
+      MotionCustomer.renderResult(coaching,track,id=>{chooseFinding(id);enterPoint(coaching.findings.find(i=>i.id===id)?.phase);});
+      byId('results').hidden=false;byId('result-details').hidden=byId('result-actions').hidden=false;step(3);
+    }catch{byId('file-info').textContent='이전 결과를 찾을 수 없습니다. 영상을 다시 선택해 주세요.';}
   }
 
   byId("playback-details").append(byId("result-details"));
 
   byId('guidance-retry').onclick=()=>{byId('quality-guidance').hidden=true;step(1);byId('video').click();};
 
-  let pointPlaying=false,pointTime=0,lastPointTick;
+  let pointPlaying=false,pointTime=0,lastPointTick,pointOnce=false;
   function seekPoint(seconds){
     pointPlaying=false;byId('point-play').textContent='재생';
     if(!comparison)return;
@@ -1064,6 +1060,7 @@
     byId('point-mode').disabled=!evidence;
   }
   byId('point-play').onclick=()=>{
+    pointOnce=false;
     if(evidence){if(video.paused)video.play();else video.pause();pointPlaying=!video.paused;}
     else {pointPlaying=!pointPlaying;if(pointTime>=+byId('point-seek').max)pointTime=+byId('point-seek').min;}
     byId('point-play').textContent=pointPlaying?'멈춤':'재생';lastPointTick=undefined;
@@ -1072,11 +1069,11 @@
   byId('point-mode').onclick=e=>{const original=panes.dataset.original!=='true';panes.dataset.original=String(original);e.currentTarget.textContent=original?'그림 보기':'원본 보기';};
   function pointTick(now){
     if(pointPlaying && comparison){
-      if(evidence){byId('point-seek').value=video.currentTime;}
+      if(evidence){byId('point-seek').value=video.currentTime;if(pointOnce&&video.currentTime>=+byId('point-seek').max){video.pause();pointPlaying=false;byId('point-play').textContent='재생';}}
       else{
         pointTime+=lastPointTick===undefined?0:Math.min(.05,(now-lastPointTick)/1000);
         const t=comparison.track;
-        if(pointTime>+byId('point-seek').max)pointTime=+byId('point-seek').min;
+        if(pointTime>+byId('point-seek').max){if(pointOnce){pointTime=+byId('point-seek').max;pointPlaying=false;byId('point-play').textContent='재생';}else pointTime=+byId('point-seek').min;}
         byId('point-seek').value=pointTime;
         updateValues(Math.max(0,Math.min(t.track.length-1,Math.floor(pointTime*t.meta.fps)-t.meta.source_frames[0])));paintTrackPose();
       }
@@ -1235,4 +1232,5 @@
     toggle.setAttribute("aria-pressed", String(toggle.getAttribute("aria-pressed") !== "true"));
     updateOverlay();
   });
+  restoreResult();
 })();

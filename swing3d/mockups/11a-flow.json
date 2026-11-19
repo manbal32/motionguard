@@ -1,0 +1,22 @@
+{
+  "mobile": {
+    "autoplay": [
+      81,
+      98
+    ],
+    "endFrame": 172,
+    "reportLinksOnPoint": 0,
+    "returnResult": true,
+    "errors": []
+  },
+  "desktop": {
+    "autoplay": [
+      82,
+      99
+    ],
+    "endFrame": 172,
+    "reportLinksOnPoint": 0,
+    "returnResult": true,
+    "errors": []
+  }
+}

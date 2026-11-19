@@ -27,7 +27,7 @@ const measure=c=>{
   }
   const p=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2}),errors=[];p.on('pageerror',e=>errors.push(e.message));
   await p.goto(url);await p.locator('#csv').setInputFiles(path.join(root,'samples/swing_front_landmarks.csv'));
-  await p.locator('#start').click();await p.locator('#summary-approve').click();await p.locator('#results').waitFor({state:'visible'});await p.locator('#show-points').click();await p.locator('#overlay').waitFor({state:'visible'});
+  await p.locator('#start').click();await p.locator('#summary-approve').click();await p.locator('#overlay').waitFor({state:'visible'});await p.waitForTimeout(1700);await p.locator('#point-phases [data-phase=top]').click();await p.locator('#overlay').waitFor({state:'visible'});
   await p.evaluate(()=>document.fonts.ready);await p.waitForTimeout(100);
   const c=p.locator('#exaggerated'),slider=p.locator('#compare-factor'),button=p.locator('#mobile-toggle');
   const factor=async value=>{await slider.evaluate((e,v)=>{e.value=v;e.dispatchEvent(new Event('input'))},value);};

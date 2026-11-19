@@ -15,9 +15,9 @@ const fs=require('fs'),path=require('path'),root=path.resolve(__dirname,'..'),sh
   await snap(prefix+'1_upload');let analyzeCalls=0;p.on('request',r=>{if(r.url().endsWith('/api/coaching/analyze'))analyzeCalls++});
   await p.locator('#start').click();await expect(p.locator('#summary-review')).toBeVisible();expect(analyzeCalls).toBe(0);
   await p.locator('#summary-edit').click();await p.locator('[name=concern]').fill('백스윙 탑에서 몸통 회전이 궁금합니다.');await p.locator('[name=goal]').fill('회전 순서를 천천히 연습');await snap(prefix+'2_summary');
-  await p.locator('#summary-approve').click();await expect(p.locator('#results')).toBeVisible();expect(analyzeCalls).toBe(1);await expect(p.locator('#history-comparison')).toBeHidden();await snap(prefix+'3_result');
+  await p.locator('#summary-approve').click();await expect(p.locator('#overlay')).toBeVisible();await p.locator('#flow-back').click();await expect(p.locator('#results')).toBeVisible();expect(analyzeCalls).toBe(1);await expect(p.locator('#history-comparison')).toBeHidden();await snap(prefix+'3_result');
   const firstProfile=await p.evaluate(()=>MotionProfileId),reportLink=await p.locator('#result-report').getAttribute('href');
-  await p.locator('#show-points').click();await snap(prefix+'4_point');expect(await p.locator('#exaggerated').getAttribute('data-landmark-count')).toBe('22');
+  await p.locator('#show-points').click();await p.waitForTimeout(1700);await p.locator('#point-phases [data-phase=top]').click();await snap(prefix+'4_point');expect(await p.locator('#exaggerated').getAttribute('data-landmark-count')).toBe('22');
   metrics[prefix+'point']=await p.locator('#exaggerated').evaluate(c=>({css:[c.clientWidth,c.clientHeight],frame:+c.dataset.frame,points:+c.dataset.landmarkCount}));
   if(prefix==='d'){
    await p.locator('#playback-details > summary').click();await p.locator('#result-details > summary').click();await p.locator('#swing-details > summary').click();
@@ -30,7 +30,7 @@ const fs=require('fs'),path=require('path'),root=path.resolve(__dirname,'..'),sh
   metrics.report={zeroDifferences:await r.locator('.gap-row').evaluateAll(es=>es.filter(e=>Math.abs(+e.dataset.difference)<.0001).length),curated:await r.locator('#report-videos a[data-curated=true]').count(),forbidden:body.match(/신뢰도|프레임|정규화|채널/g)??[]};
   if(prefix==='m'){
    await r.pdf({path:path.join(shots,'report.pdf'),preferCSSPageSize:true,printBackground:true});
-   await p.locator('#flow-back').click();await p.locator('#new-analysis').click();await p.locator('#start').click();await p.locator('#summary-approve').click();await expect(p.locator('#results')).toBeVisible();await expect(p.locator('#history-comparison')).toBeVisible();await snap('h1_history');expect(await p.evaluate(()=>MotionProfileId)).toBe(firstProfile);
+   await p.locator('#flow-back').click();await p.locator('#new-analysis').click();await p.locator('#start').click();await p.locator('#summary-approve').click();await expect(p.locator('#overlay')).toBeVisible();await p.locator('#flow-back').click();await expect(p.locator('#results')).toBeVisible();await expect(p.locator('#history-comparison')).toBeVisible();await snap('h1_history');expect(await p.evaluate(()=>MotionProfileId)).toBe(firstProfile);
    const secondLink=await p.locator('#result-report').getAttribute('href');await r.goto(url+secondLink);await expect(r.locator('#report-body')).toBeVisible();await expect(r.locator('#report-delta')).toBeVisible();await r.screenshot({path:path.join(shots,'h2_report_compare.png')});metrics.screens.h2_report_compare=[width,height,2];
    metrics.history={session:await r.locator('#report-round').innerText(),delta:await r.locator('#report-delta').innerText(),comparison:await p.locator('#history-comparison').innerText()};
    const profile=await(await p.request.get(url+'/api/profile/'+firstProfile)).json();metrics.profileEntries=profile.entries.length;expect(profile.entries).toHaveLength(2);
