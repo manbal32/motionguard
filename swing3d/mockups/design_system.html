@@ -152,9 +152,12 @@ h2.sec{font:700 21px var(--sans);margin:34px 0 6px;padding-top:20px;
 .field .inp{flex:1}
 .field .snd{width:50px;height:50px;border-radius:6px;background:var(--ink);
   color:var(--paper);display:flex;align-items:center;justify-content:center;font-size:19px}
+.frames{display:flex;flex-direction:column;gap:6px;flex:0 0 auto}
+.frames .fk{font-size:12.5px;color:var(--ink-3)}
 .phases{display:flex;gap:5px;flex:0 0 auto}
-.ph{flex:1;height:40px;border:2px solid var(--line);border-radius:6px;display:flex;
-  align-items:center;justify-content:center;font-size:12.5px;color:var(--ink-3)}
+.ph{flex:1 1 auto;height:42px;border:2px solid var(--line);border-radius:6px;display:flex;
+  align-items:center;justify-content:center;font-size:12.5px;color:var(--ink-3);
+  white-space:nowrap;padding:0 5px}
 .ph.on{background:var(--ink);border-color:var(--ink);color:var(--paper);font-weight:700}
 .hist{display:flex;flex-direction:column;gap:7px}
 .hist .k{font-size:12.5px;color:var(--ink-3)}
@@ -264,7 +267,8 @@ h2.sec{font:700 21px var(--sans);margin:34px 0 6px;padding-top:20px;
   <div class="cbox"><span class="k">상태 배지</span>
     <div style="display:flex;gap:7px;flex-wrap:wrap">
       <span class="badge ok">좋음</span><span class="badge warn">부족</span>
-      <span class="badge na">측정 안 됨</span></div>
+      <span class="badge warn">과다</span></div>
+    <span class="note">못 잰 항목은 배지를 만들지 않는다. 목록에서 빼고 총점에서도 뺀다.</span>
     <span class="k" style="margin-top:6px">입력</span>
     <div class="inp">메시지를 입력하세요</div></div>
   <div class="cbox"><span class="k">측정 막대</span>
@@ -342,6 +346,7 @@ h2.sec{font:700 21px var(--sans);margin:34px 0 6px;padding-top:20px;
         <div class="tr"><i class="band" style="left:62%;right:6%"></i><i class="fill warn" style="width:34%"></i></div></div>
       <div class="meter"><div class="r1"><span class="nm">손목 힌지</span><span class="st warn">부족</span></div>
         <div class="tr"><i class="band" style="left:60%;right:8%"></i><i class="fill warn" style="width:46%"></i></div></div>
+      <span class="note">이번 영상에서는 네 항목을 쟀습니다.</span>
       <div class="hist grow"><span class="k">측정 이력</span>
         <svg viewBox="0 0 330 86" role="img" aria-label="회차별 점수 54, 61, 66, 72">
           <line x1="6" y1="70" x2="324" y2="70" stroke="#DFE4E7" stroke-width="1"/>
@@ -398,8 +403,9 @@ h2.sec{font:700 21px var(--sans);margin:34px 0 6px;padding-top:20px;
                aria-label="스윙 구간">
         <span class="tm" id="mg-tm">0.6초</span>
       </div>
-      <div class="phases" id="mg-phases"><span class="ph">어드</span><span class="ph on">탑</span>
-        <span class="ph">다운</span><span class="ph">임팩</span><span class="ph">피니</span></div>
+      <div class="frames"><span class="fk">메인 프레임</span>
+        <div class="phases" id="mg-phases"><span class="ph">어드레스</span><span class="ph on">탑</span>
+          <span class="ph">다운</span><span class="ph">임팩트</span><span class="ph">피니쉬</span></div></div>
       <span class="note">백스윙 탑에서 몸통이 덜 돌아갑니다. 팔보다 등이 먼저 돌아가야 합니다.</span>
     </div>
     <div class="ft"><div class="btn2">다음 포인트</div></div>
@@ -411,6 +417,9 @@ h2.sec{font:700 21px var(--sans);margin:34px 0 6px;padding-top:20px;
     <li>총점 58px, 본문 15px. 숫자가 주인공이지만 화면을 잡아먹지는 않는다</li>
     <li>개선 포인트는 <b>움직여야 한다.</b> 누르면 스윙이 돌아가고, 멈추면 바를 끌어 원하는 순간을 본다</li>
     <li>한 화면에 항목 <b>세 개까지.</b> 나머지는 리포트로 넘긴다</li>
+    <li><b>못 잰 항목은 화면에 올리지 않는다.</b> "측정 안 됨" 줄을 보여 주는 건 우리 사정이다.
+      대신 총점 아래에 몇 개를 쟀는지 한 줄 적고, 그만큼 항목이 빠진 회차는
+      이력 그래프에서 점을 비워 둔다. 점수가 조용히 거짓말하면 안 된다</li>
     <li>주요 버튼 56px, 보조 50px, 터치 영역 44px 이상</li>
     <li>폭에 따라 다른 레이아웃을 만들지 않는다. 넓어지면 가운데 840px로 설 뿐이다</li>
     <li>어두운 색은 무대에만. 머리글과 본문은 늘 종이다</li>
@@ -434,7 +443,7 @@ h2.sec{font:700 21px var(--sans);margin:34px 0 6px;padding-top:20px;
 
   // 국면: 어드레스 · 탑 · 다운 · 임팩트 · 피니시
   var PH = [0, .38, .56, .66, 1];
-  var NAMES = ["어드레스", "백스윙 탑", "다운스윙", "임팩트", "피니시"];
+  var NAMES = ["어드레스", "백스윙 탑", "다운스윙", "임팩트", "피니쉬"];
   // 교본과 내 자세. 몸통이 덜 돌아가면 클럽도 덜 눕는다
   var C_REF = [0, -202, -86, 4, 166];
   var C_ME  = [0, -174, -70, 8, 146];
