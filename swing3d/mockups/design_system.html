@@ -116,6 +116,57 @@ h2.sec{font:700 21px var(--sans);margin:34px 0 6px;padding-top:20px;
 .vid-card .sub{font-size:12px;color:var(--ink-3)}
 .saveline{font-size:12px;color:var(--ink-3);line-height:1.5}
 
+
+/* 리포트 — 두 호가 구조가 된다 */
+.masthead{flex:0 0 auto;display:flex;align-items:flex-end;gap:9px;
+  padding-bottom:9px;border-bottom:3px solid var(--ink)}
+.masthead .ttl{display:flex;flex-direction:column;gap:1px}
+.masthead .ttl .mg{font:900 15px var(--sans);letter-spacing:-.01em}
+.masthead .ttl .mg em{font-style:normal;font-weight:400;color:var(--ink-2)}
+.masthead .ttl .doc{font:700 19px var(--sans)}
+.masthead .no{margin-left:auto;text-align:right;line-height:1.25}
+.masthead .no b{display:block;font:900 23px var(--sans)}
+.masthead .no span{font-size:11.5px;color:var(--ink-3)}
+.underline{flex:0 0 auto;height:1px;background:var(--ink);margin-top:2px}
+
+.scoreband{display:flex;align-items:center;gap:13px;padding:13px 0;
+  border-bottom:1px solid var(--line)}
+.scoreband .big{font:900 56px var(--sans);letter-spacing:-.03em;line-height:.9}
+.scoreband .of{font-size:13px;color:var(--ink-3);margin-left:-6px}
+.scoreband .rt{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.scoreband .dl{font-weight:700;font-size:15px;color:var(--good)}
+.trend{display:flex;align-items:flex-end;gap:3px;height:30px}
+.trend i{width:7px;background:var(--line);border-radius:1px}
+.trend i.now{background:var(--good)}
+.trend span{font-size:10.5px;color:var(--ink-3);margin-left:3px;align-self:center}
+
+.gap-row{display:flex;gap:11px;align-items:flex-start;padding:11px 0;
+  border-bottom:1px solid var(--line)}
+.gap-row:last-child{border-bottom:0}
+.gap-row .no{font:900 13px var(--sans);color:var(--ink-3);flex:0 0 11px;margin-top:11px}
+.gap-row svg{flex:0 0 auto;margin-top:2px}
+.gap-row .c{min-width:0;display:flex;flex-direction:column;gap:2px}
+.gap-row .nm{font-weight:700;font-size:14.5px}
+.gap-row .nm em{font-style:normal;font-weight:500;font-size:12.5px;margin-left:6px}
+.gap-row .nm em.w{color:var(--warn)} .gap-row .nm em.g{color:var(--good)}
+.gap-row .d{font-size:12.5px;color:var(--ink-2);line-height:1.5}
+.gap-row .v{font-size:12px;color:var(--ink-3)}
+
+.lede-q{font-weight:700;font-size:15px;line-height:1.5}
+.lede-a{font-size:14px;line-height:1.62;color:var(--ink-2)}
+.lede-a b{color:var(--ink)}
+.kk{font-size:11.5px;color:var(--ink-3);letter-spacing:.01em}
+.vid-card{display:flex;gap:10px;align-items:center;border:1px solid var(--line);
+  border-radius:5px;padding:9px 10px}
+.vid-card .th{width:58px;height:40px;border-radius:3px;background:var(--stage);
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  color:var(--stage-ink);font-size:14px}
+.vid-card .m{min-width:0;display:flex;flex-direction:column;gap:2px}
+.vid-card .tt{font-weight:700;font-size:13.5px;line-height:1.35}
+.vid-card .sub{font-size:12px;color:var(--ink-3)}
+.colophon{border-top:3px solid var(--ink);padding-top:9px;font-size:11px;
+  color:var(--ink-3);line-height:1.55}
+
 /* 화면 */
 .row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
 .col{flex:0 0 390px;max-width:100%;display:flex;flex-direction:column;gap:9px}
@@ -444,35 +495,47 @@ h2.sec{font:700 21px var(--sans);margin:34px 0 6px;padding-top:20px;
     <div class="ft"><div class="btn2">다음 포인트</div></div>
   </div></div></div>
 
+
   <!-- 5 -->
-  <div class="col"><span class="cap"><b>5. 리포트</b>받아서 보관하는 것. 아래로 스크롤하면 연습 영상까지 이어진다.</span>
+  <div class="col"><span class="cap"><b>5. 리포트</b>받아서 보관하는 서류. 고칠 점마다 두 호가 붙어 벌어진 폭이 그대로 차이다.</span>
   <div class="phone"><div class="scr">
-    <div class="hd"><svg width="24" height="24" viewBox="0 0 48 48" stroke="#111820" fill="#111820"><use href="#mg"/></svg>
-      <span class="wm">Motion<em>Guard</em></span><span class="dt">4회차 11.19</span></div>
-    <div class="bd" style="overflow-y:auto;gap:15px">
-      <div class="hero"><span class="num">72</span>
-        <span class="side"><span class="delta">지난번보다 +6</span>
-          <span class="txt">몸통 회전이 좋아졌습니다.<br>체중 이동이 아직 부족합니다.</span></span></div>
-      <div class="rsec"><span class="k">말씀하신 고민</span>
-        <span class="rq">백스윙이 잘 안 됨. 팔로만 드는 느낌</span></div>
-      <div class="rsec"><span class="k">영상에서 확인한 것</span>
-        <span class="ra">말씀하신 느낌이 그대로 보입니다. 백스윙 탑에서 어깨가 골반보다
+    <div class="masthead">
+      <svg width="30" height="30" viewBox="0 0 48 48" stroke="#111820" fill="#111820"><use href="#mg"/></svg>
+      <span class="ttl"><span class="mg">Motion<em>Guard</em></span><span class="doc">스윙 리포트</span></span>
+      <span class="no"><b>4회차</b><span>2026.11.19</span></span>
+    </div>
+    <div class="underline"></div>
+    <div class="bd" style="overflow-y:auto;gap:14px;padding-top:0">
+      <div class="scoreband">
+        <span class="big">72</span><span class="of">/100</span>
+        <span class="rt"><span class="dl">+6</span>
+          <span class="trend"><i style="height:13px"></i><i style="height:17px"></i>
+            <i style="height:20px"></i><i class="now" style="height:24px"></i>
+            <span>54 · 61 · 66 · 72</span></span></span>
+      </div>
+      <div class="rsec"><span class="kk">말씀하신 고민</span>
+        <span class="lede-q">백스윙이 잘 안 됨. 팔로만 드는 느낌</span></div>
+      <div class="rsec"><span class="kk">영상에서 확인한 것</span>
+        <span class="lede-a">말씀하신 느낌이 그대로 보입니다. 백스윙 탑에서 어깨가 골반보다
           <b>34도</b> 더 돌아가야 하는데 지금은 <b>21도</b>입니다. 팔은 충분히 올라가 있어서,
           팔로만 든다는 느낌이 맞습니다.</span></div>
-      <div class="rsec"><span class="k">잘하고 계신 것</span>
-        <span class="ra">어드레스 자세가 네 회차 내내 일정합니다. 기본기가 잡혀 있습니다.</span></div>
-      <div class="rsec"><span class="k">이번에 고칠 것</span>
-        <div class="fixrow"><span class="i">1</span><span class="c">
-          <span class="t">체중 이동<em>41점 · 부족</em></span>
-          <span class="d">임팩트에서 체중이 왼발로 넘어가지 않습니다. 뒷발에 남은 채로 칩니다.</span></span></div>
-        <div class="fixrow"><span class="i">2</span><span class="c">
-          <span class="t">손목 힌지<em>55점 · 부족</em></span>
-          <span class="d">탑에서 손목이 덜 꺾여 클럽이 늦게 떨어집니다.</span></span></div>
-        <div class="fixrow"><span class="i">3</span><span class="c">
-          <span class="t">몸통 회전<em>76점 · 적정</em></span>
-          <span class="d">많이 좋아졌지만 아직 교본보다 적습니다. 팔보다 등이 먼저 돌아가야 합니다.</span></span></div>
+      <div class="rsec"><span class="kk">잘하고 계신 것</span>
+        <span class="lede-a">어드레스 자세가 네 회차 내내 일정합니다. 기본기가 잡혀 있습니다.</span></div>
+      <div class="rsec"><span class="kk">이번에 고칠 것 — 벌어진 폭이 차이입니다</span>
+        <div class="gap-row"><span class="no">1</span><svg width="46" height="42" viewBox="0 0 46 42" aria-hidden="true"><path d="M6 36 A20 20 0 0 1 24 7" fill="none" stroke="#167A4B" stroke-opacity=".3" stroke-width="4" stroke-linecap="round"/><path d="M16.7 38 A20 20 0 0 1 34.7 9" fill="none" stroke="#D4552B" stroke-width="4" stroke-linecap="round"/></svg><span class="c">
+          <span class="nm">체중 이동<em class="w">41점 · 부족</em></span>
+          <span class="d">임팩트에서 체중이 왼발로 넘어가지 않습니다. 뒷발에 남은 채로 칩니다.</span>
+          <span class="v">임팩트 · 38% / 교본 75%</span></span></div>
+        <div class="gap-row"><span class="no">2</span><svg width="46" height="42" viewBox="0 0 46 42" aria-hidden="true"><path d="M6 36 A20 20 0 0 1 24 7" fill="none" stroke="#167A4B" stroke-opacity=".3" stroke-width="4" stroke-linecap="round"/><path d="M14.9 38 A20 20 0 0 1 32.9 9" fill="none" stroke="#D4552B" stroke-width="4" stroke-linecap="round"/></svg><span class="c">
+          <span class="nm">손목 힌지<em class="w">55점 · 부족</em></span>
+          <span class="d">탑에서 손목이 덜 꺾여 클럽이 늦게 떨어집니다.</span>
+          <span class="v">백스윙 탑 · 71° / 교본 95°</span></span></div>
+        <div class="gap-row"><span class="no">3</span><svg width="46" height="42" viewBox="0 0 46 42" aria-hidden="true"><path d="M6 36 A20 20 0 0 1 24 7" fill="none" stroke="#167A4B" stroke-opacity=".3" stroke-width="4" stroke-linecap="round"/><path d="M12.1 38 A20 20 0 0 1 30.1 9" fill="none" stroke="#167A4B" stroke-width="4" stroke-linecap="round"/></svg><span class="c">
+          <span class="nm">몸통 회전<em class="g">76점 · 적정</em></span>
+          <span class="d">많이 좋아졌지만 아직 교본보다 적습니다. 팔보다 등이 먼저 돌아가야 합니다.</span>
+          <span class="v">백스윙 탑 · 21° / 교본 34°</span></span></div>
       </div>
-      <div class="rsec"><span class="k">연습 영상</span>
+      <div class="rsec"><span class="kk">연습 영상</span>
         <div class="vid-card"><span class="th">▶</span><span class="m">
           <span class="tt">체중 이동 드릴 — 왼발로 밟고 치기</span>
           <span class="sub">4분 12초 · 고칠 점 1번</span></span></div>
@@ -480,8 +543,8 @@ h2.sec{font:700 21px var(--sans);margin:34px 0 6px;padding-top:20px;
           <span class="tt">손목 코킹 유지 연습</span>
           <span class="sub">6분 03초 · 고칠 점 2번</span></span></div>
       </div>
-      <span class="saveline">상세 수치는 다음 장에 있습니다. 이 리포트는 기기에 저장되며
-        링크를 아는 사람만 열 수 있습니다.</span>
+      <div class="colophon">상세 수치는 다음 장에 있습니다. 영상은 기기에서 처리했고
+        얼굴 좌표는 만들지 않았습니다. 이 리포트는 링크를 아는 사람만 열 수 있습니다.</div>
     </div>
     <div class="ft"><div class="btn">PDF로 저장</div><div class="btn2">다시 분석</div></div>
   </div></div></div>
