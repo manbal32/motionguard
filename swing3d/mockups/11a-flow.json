@@ -1,8 +1,8 @@
 {
   "mobile": {
     "autoplay": [
-      81,
-      98
+      85,
+      100
     ],
     "endFrame": 172,
     "reportLinksOnPoint": 0,
@@ -11,8 +11,8 @@
   },
   "desktop": {
     "autoplay": [
-      82,
-      99
+      86,
+      102
     ],
     "endFrame": 172,
     "reportLinksOnPoint": 0,

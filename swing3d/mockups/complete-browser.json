@@ -80,7 +80,7 @@
   "mpoint": {
     "css": [
       358,
-      296
+      409
     ],
     "frame": 118,
     "points": 22
@@ -100,10 +100,10 @@
   "dpoint": {
     "css": [
       840,
-      352
+      465
     ],
     "frame": 118,
     "points": 22
   },
-  "webmBytes": 29078
+  "webmBytes": 27208
 }
