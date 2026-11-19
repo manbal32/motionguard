@@ -1,0 +1,86 @@
+{
+  "mobile": {
+    "autoplay": [
+      84,
+      100
+    ],
+    "endFrame": 172,
+    "reportLinksOnPoint": 0,
+    "returnResult": true,
+    "result": {
+      "current": "74.3–79.3타",
+      "after": "74.2–79.2타",
+      "strokeFont": 22,
+      "scoreFont": 15,
+      "maxFont": 22,
+      "phaseLabels": [
+        "어드레스적정",
+        "백스윙 탑고칠 점 2개",
+        "다운스윙적정",
+        "임팩트적정",
+        "피니쉬고칠 점 1개"
+      ]
+    },
+    "point": {
+      "bodyHeight": 669,
+      "avatarHeight": 409,
+      "visibleControls": [
+        "finding-prev",
+        "finding-next",
+        "mobile-toggle",
+        "어드레스",
+        "백스윙 탑",
+        "다운스윙",
+        "임팩트",
+        "피니쉬",
+        "재생 도구",
+        "flow-back"
+      ],
+      "rawNumbers": [],
+      "playbackOpen": false
+    },
+    "errors": []
+  },
+  "desktop": {
+    "autoplay": [
+      84,
+      99
+    ],
+    "endFrame": 172,
+    "reportLinksOnPoint": 0,
+    "returnResult": true,
+    "result": {
+      "current": "74.3–79.3타",
+      "after": "74.2–79.2타",
+      "strokeFont": 22,
+      "scoreFont": 15,
+      "maxFont": 22,
+      "phaseLabels": [
+        "어드레스적정",
+        "백스윙 탑고칠 점 2개",
+        "다운스윙적정",
+        "임팩트적정",
+        "피니쉬고칠 점 1개"
+      ]
+    },
+    "point": {
+      "bodyHeight": 725,
+      "avatarHeight": 465,
+      "visibleControls": [
+        "finding-prev",
+        "finding-next",
+        "mobile-toggle",
+        "어드레스",
+        "백스윙 탑",
+        "다운스윙",
+        "임팩트",
+        "피니쉬",
+        "재생 도구",
+        "flow-back"
+      ],
+      "rawNumbers": [],
+      "playbackOpen": false
+    },
+    "errors": []
+  }
+}

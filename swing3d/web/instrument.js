@@ -544,7 +544,8 @@
     if(points)renderAvatar(points,comparison.track.track[sample],sample);
   }
 
-  byId("playback-details").append(byId("factor-transport"));
+  byId("playback-details").append(byId("point-controls"),byId("factor-transport"),byId("comparison-unavailable"),byId("comparison-controls"));
+  byId("comparison-controls").open=false;
   byId("playback-details").open = false;
   let swipeStart;
   const panes = byId("comparison-panes");

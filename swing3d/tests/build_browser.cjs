@@ -37,10 +37,12 @@ const measure=c=>{
   await factor(2.5);await hold();const result=await c.evaluate(measure);
   await c.screenshot({path:path.join(shots,'build_s5_canvas_25x.png')});await p.screenshot({path:path.join(shots,'build_s5_point.png')});await p.mouse.up();
   expect(await c.evaluate(c=>c.dataset.measuredPose===c.dataset.displayedPose)).toBe(true);
+  await p.locator('#playback-details > summary').click();
   await p.locator('#point-play').click();const first=await c.getAttribute('data-frame');await p.waitForTimeout(250);const second=await c.getAttribute('data-frame');
   await p.locator('#point-play').click();await p.locator('#point-seek').evaluate(e=>{e.value=141/60.116991157064994;e.dispatchEvent(new Event('input'));});
   const stopped=await c.getAttribute('data-frame');await p.waitForTimeout(180);expect(await c.getAttribute('data-frame')).toBe(stopped);expect(stopped).toBe('141');
   result.playFrames=[+first,+second];result.seekFrame=+stopped;expect(+second).not.toBe(+first);
+  await p.locator('#playback-details > summary').click();
   await p.locator('#point-phases [data-phase=top]').click();await p.setViewportSize({width:422,height:844});await p.waitForTimeout(100);
   await factor(1);await c.evaluate(c=>window.canvasBaseline=c.getContext('2d').getImageData(0,0,c.width,c.height).data);await factor(2.5);await hold();
   result.exact390=await c.evaluate(measure);
