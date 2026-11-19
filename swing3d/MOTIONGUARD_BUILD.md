@@ -737,3 +737,11 @@ h1_history  h2_report_compare                             (390×844)
 원문 테스트 명령의 Playwright 기본 실행 파일이 이 환경에 없어 최초 실행은
 49 passed / 1 failed였다. 실제 설치된 `/usr/bin/chromium`을 CHROMIUM_PATH로
 지정한 동일 pytest는 **50 passed, 13 subtests passed** (deprecation 경고 2개).
+
+## 11-B — 결과 화면
+
+예상 타수 두 범위를 맨 위에 두고 코스 조건/제외 설명을 함께 표시한다.
+국면 지도는 다섯 칸 모두 글자로 판정하며 못 잰 국면은 비활성 회색이다.
+고칠 점은 확정된 항목만 최대 세 개, 점수는 보조 사실로 작게 둔다.
+첫 회차에는 이력 영역 전체를 없애고 한 줄 안내만 보인다.
+실측은 `mockups/11ab-flow.json`, `11b_*_result.png`에 기록한다.

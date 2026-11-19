@@ -358,7 +358,7 @@
       byId("result-details").hidden = byId("result-actions").hidden = false;
       byId("result-details").open = false;
       comparison.coaching=coaching;
-      MotionCustomer.renderResult(coaching,track,id=>{chooseFinding(id);step(4);updateOverlay();});
+      MotionCustomer.renderResult(coaching,track,(id,phase)=>{if(id)chooseFinding(id);enterPoint(phase??coaching.findings.find(i=>i.id===id)?.phase);});
       byId('results').hidden=false;
       saveReturnState(track,coaching);
       enterPoint();
@@ -1031,7 +1031,7 @@
       if(track.evidence){track.pose_landmarks=track.evidence.frames.slice(track.meta.source_frames[0],track.meta.source_frames[1]+1);delete track.evidence;}
       evidence=undefined;comparison={track,reference:SwingReference.expand(track),displayed:track.track,options:[]};
       setupStills(track);await setupFindings(track,coaching);
-      MotionCustomer.renderResult(coaching,track,id=>{chooseFinding(id);enterPoint(coaching.findings.find(i=>i.id===id)?.phase);});
+      MotionCustomer.renderResult(coaching,track,(id,phase)=>{if(id)chooseFinding(id);enterPoint(phase??coaching.findings.find(i=>i.id===id)?.phase);});
       byId('results').hidden=false;byId('result-details').hidden=byId('result-actions').hidden=false;step(3);
     }catch{byId('file-info').textContent='이전 결과를 찾을 수 없습니다. 영상을 다시 선택해 주세요.';}
   }

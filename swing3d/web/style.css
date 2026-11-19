@@ -21,3 +21,6 @@ textarea,input[type=text],select{font:var(--t-body);background:var(--paper);colo
 
 /* 동의한 뒤에는 안내가 자리를 비켜 준다. 대화가 주인공이다. */
 #coach-panel:has(#coach-consent:checked)>details.privacy{display:none}
+
+/* Result: the estimate leads; measured scores remain supporting facts. */
+.result-title h2{font:var(--t-item)}#result-strokes{display:flex;flex-direction:column;gap:9px;border-bottom:1px solid var(--line);padding-bottom:var(--gap)}#result-strokes>div{display:flex;align-items:baseline;justify-content:space-between;gap:9px}#result-strokes span{font:var(--t-note)}#result-strokes strong{font:var(--t-h2);white-space:nowrap}#result-strokes>div:nth-child(2) strong{color:var(--good)}.score-line{display:flex;flex-wrap:wrap;gap:6px;align-items:baseline;font:var(--t-note)}#score-total{font:var(--t-item)}#phase-map{display:flex;gap:4px}.phase-cell{flex:1;min-width:0;padding:6px 2px;display:flex;flex-direction:column;gap:4px;font:var(--t-note)}.phase-cell b{font:var(--t-note)}.phase-cell.warn{background:var(--warn-bg);color:var(--ink)}.phase-cell.good{background:var(--good-bg);color:var(--ink)}.phase-cell.unmeasured{background:var(--field);color:var(--ink-2)}#first-history{margin-block:auto}

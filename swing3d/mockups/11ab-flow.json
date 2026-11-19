@@ -1,0 +1,50 @@
+{
+  "mobile": {
+    "autoplay": [
+      83,
+      100
+    ],
+    "endFrame": 172,
+    "reportLinksOnPoint": 0,
+    "returnResult": true,
+    "result": {
+      "current": "74.3–79.3타",
+      "after": "74.2–79.2타",
+      "strokeFont": 22,
+      "scoreFont": 15,
+      "maxFont": 22,
+      "phaseLabels": [
+        "어드레스적정",
+        "백스윙 탑고칠 점 2개",
+        "다운스윙적정",
+        "임팩트적정",
+        "피니쉬고칠 점 1개"
+      ]
+    },
+    "errors": []
+  },
+  "desktop": {
+    "autoplay": [
+      86,
+      101
+    ],
+    "endFrame": 172,
+    "reportLinksOnPoint": 0,
+    "returnResult": true,
+    "result": {
+      "current": "74.3–79.3타",
+      "after": "74.2–79.2타",
+      "strokeFont": 22,
+      "scoreFont": 15,
+      "maxFont": 22,
+      "phaseLabels": [
+        "어드레스적정",
+        "백스윙 탑고칠 점 2개",
+        "다운스윙적정",
+        "임팩트적정",
+        "피니쉬고칠 점 1개"
+      ]
+    },
+    "errors": []
+  }
+}

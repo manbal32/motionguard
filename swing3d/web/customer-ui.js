@@ -71,6 +71,20 @@ window.MotionCustomer=(()=>{
   $('score-total').textContent=score.total===null?'—':Math.round(score.total);
   $('measured-count').textContent=`이번 영상에서는 ${score.measured_count}개 항목을 쟀습니다.`;
   const items=improvements(doc),list=$('result-items');list.replaceChildren();
+  const strokes=doc.strokes;$('result-strokes').hidden=!strokes;
+  if(strokes){
+   const range=v=>v.map(n=>n.toFixed(1)).join('–')+'타';
+   $('result-strokes-current').textContent=range(strokes.current);$('result-strokes-after').textContent=range(strokes.after);
+   $('result-strokes-condition').textContent=strokes.condition;$('result-strokes-missing').textContent=strokes.missing_note;
+  }
+  $('score-verdict').textContent=score.total===null?'점수를 내지 못했습니다.':score.total>=80?'교본에 가까운 스윙입니다.':score.total>=60?'대체로 교본 안에 있습니다.':score.total>=40?'고칠 점이 몇 가지 있습니다.':'고칠 점이 뚜렷합니다.';
+  const map=$('phase-map');map.replaceChildren();
+  for(const [phase,label] of Object.entries(phases)){
+   const measured=Object.hasOwn(track.meta.main_phase_frames??track.meta.phase_frames,phase);
+   const findings=items.filter(i=>i.phase===phase),b=node('button',undefined,'phase-cell '+(!measured?'unmeasured':findings.length?'warn':'good'));
+   b.append(node('b',label),node('span',!measured?'측정 안 됨':findings.length?'고칠 점 '+findings.length+'개':'적정'));
+   b.disabled=!measured;b.dataset.phase=phase;b.onclick=()=>select(findings[0]?.id,phase);map.append(b);
+  }
   for(const item of items){
    const scoreItem=score.items.find(s=>s.id===item.id)??item;
    const meter=node('article',undefined,'meter'),button=node('button'),head=node('div',undefined,'meter-head');
@@ -81,7 +95,8 @@ window.MotionCustomer=(()=>{
   }
   if(!items.length)list.append(node('p','이번에는 뚜렷한 차이가 있는 항목을 확정하지 않았습니다.','note'));
   const profile=doc.profile??{entries:[{report_id:doc.report_id,score_total:score.total,conditions:{},item_keys:score.items.map(i=>i.id).sort()}]};
-  const entry=profile.entries.at(-1);historyChart($('history-chart'),profile.entries,entry);
+  const entry=profile.entries.at(-1);$('history-area').hidden=profile.entries.length<=1;$('first-history').hidden=profile.entries.length>1;
+  if(profile.entries.length>1)historyChart($('history-chart'),profile.entries,entry);
   $('history-note').textContent=profile.entries.length===1?'첫 기록입니다. 다음 분석부터 같은 조건의 기록을 비교합니다.':'같은 촬영 조건과 같은 항목을 기록한 회차만 이어 표시합니다.';
   $('history-comparison').hidden=!doc.comparison_history;
   $('history-comparison').textContent=doc.comparison_history?.message??'';
