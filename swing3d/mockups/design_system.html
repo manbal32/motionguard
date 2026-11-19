@@ -1,0 +1,383 @@
+<title>MotionGuard 디자인</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* 결과지 문법 + 두 호 아이콘. 토큰 → 컴포넌트 → 화면 순 */
+:root{
+  /* 종이와 잉크 */
+  --paper:#FFFFFF; --paper-2:#F4F6F7; --field:#EDEFF1;
+  --ink:#111820; --ink-2:#49535E; --ink-3:#6B7682; --line:#DFE4E7;
+  /* 판정 두 가지 */
+  --good:#167A4B; --good-bg:#CFE8DA;
+  --warn:#D4552B; --warn-bg:#F7DED3;
+  /* 영상이 올라가는 무대만 어둡다 */
+  --stage:#0D1116; --stage-line:#1A222B; --stage-ink:#F4F2ED;
+  --sans:'Noto Sans KR','Apple SD Gothic Neo',system-ui,sans-serif;
+
+  /* 이 페이지 셸 */
+  --pg:#1A1C1F; --pg-2:#25272B; --pg-rule:#383B41;
+  --pg-ink:#EFEDE8; --pg-ink-2:#A3A5AC; --pg-ink-3:#72757D;
+  color-scheme: dark;
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--pg);color:var(--pg-ink);font:15px/1.65 var(--sans)}
+.wrap{max-width:1180px;margin-inline:auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:30px 52px}
+header{display:flex;flex-direction:column;gap:10px;padding-bottom:10px}
+h1{font:700 28px/1.3 var(--sans);text-wrap:balance}
+.lede{color:var(--pg-ink-2);font-size:14.5px;max-width:64ch}
+h2.sec{font:700 21px var(--sans);margin:34px 0 6px;padding-top:20px;
+  border-top:1px solid var(--pg-rule)}
+.sub{color:var(--pg-ink-2);font-size:13.5px;margin-bottom:16px;max-width:64ch}
+
+.panel{background:var(--paper);color:var(--ink);border-radius:5px;padding:20px 18px}
+.panel.dark{background:var(--stage);color:var(--stage-ink)}
+
+/* 로고 */
+.logos{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-end}
+.lg-item{display:flex;flex-direction:column;align-items:center;gap:7px}
+.lg-item span{font-size:11px;color:var(--ink-3)}
+.lock{display:flex;align-items:center;gap:9px}
+.wm{font:900 21px var(--sans);letter-spacing:-.015em}
+.wm em{font-style:normal;font-weight:400;color:var(--ink-2)}
+
+/* 토큰 */
+.tok{display:grid;grid-template-columns:repeat(auto-fill,minmax(146px,1fr));gap:9px}
+.t{border-radius:4px;overflow:hidden;border:1px solid var(--pg-rule)}
+.t .c{height:52px}
+.t .m{padding:7px 9px;background:var(--pg-2);font-size:11.5px;line-height:1.45}
+.t .m b{display:block;color:var(--pg-ink);font-size:12.5px;font-weight:700}
+.t .m span{color:var(--pg-ink-3)}
+
+/* 글자 */
+.type{display:flex;flex-direction:column;gap:14px}
+.ty{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);padding-bottom:12px}
+.ty .spec{font-size:11.5px;color:var(--ink-3);flex:0 0 112px}
+
+/* 컴포넌트 */
+.comp{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:18px}
+.cbox{display:flex;flex-direction:column;gap:9px}
+.cbox>.k{font-size:11.5px;color:var(--ink-3)}
+.btn{height:56px;display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:17px;background:var(--ink);color:var(--paper);border-radius:6px}
+.btn2{height:50px;display:flex;align-items:center;justify-content:center;
+  font-weight:500;font-size:15px;background:var(--paper);
+  border:2px solid var(--ink);color:var(--ink);border-radius:6px}
+.btn3{height:50px;display:flex;align-items:center;justify-content:center;
+  font-weight:500;font-size:15px;color:var(--ink-3);border:2px solid var(--line);border-radius:6px}
+.badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:4px;
+  font-weight:700;font-size:13px}
+.badge.ok{background:var(--good-bg);color:var(--good)}
+.badge.warn{background:var(--warn-bg);color:var(--warn)}
+.badge.na{background:var(--field);color:var(--ink-3)}
+.meter{display:flex;flex-direction:column;gap:6px}
+.meter .r1{display:flex;align-items:baseline;gap:8px}
+.meter .nm{font-weight:700;font-size:15px}
+.meter .st{margin-left:auto;font-weight:700;font-size:14px}
+.meter .st.ok{color:var(--good)} .meter .st.warn{color:var(--warn)}
+.tr{height:22px;position:relative;overflow:hidden;background:var(--field);border-radius:3px}
+.tr i{position:absolute;top:0;bottom:0}
+.tr .band{background:var(--good-bg)}
+.tr .fill{left:0;background:var(--good);border-radius:3px}
+.tr .fill.warn{background:var(--warn)}
+.card{border:1px solid var(--line);border-radius:5px;padding:13px 14px;
+  display:flex;flex-direction:column;gap:4px}
+.card .k{font-size:12.5px;color:var(--ink-3)}
+.card .v{font-size:15px}
+.inp{height:50px;border:2px solid var(--line);border-radius:6px;display:flex;
+  align-items:center;padding:0 14px;color:var(--ink-3);font-size:15px}
+.bub{max-width:86%;font-size:14.5px;line-height:1.5;padding:11px 14px;border-radius:14px}
+.bub.me{align-self:flex-end;background:var(--ink);color:var(--paper);border-bottom-right-radius:4px}
+.bub.ai{align-self:flex-start;background:var(--field);border-bottom-left-radius:4px}
+
+/* 화면 */
+.row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.col{flex:0 0 390px;max-width:100%;display:flex;flex-direction:column;gap:9px}
+.col>.cap{font-size:13px;color:var(--pg-ink-2);padding:0 2px}
+.col>.cap b{color:var(--pg-ink);display:block;font-size:15px;margin-bottom:2px}
+.phone{width:390px;max-width:100%;height:760px;border-radius:26px;overflow:hidden;
+  border:1px solid var(--pg-rule);display:flex}
+.scr{flex:1;display:flex;flex-direction:column;min-height:0;padding:18px 18px 20px;
+  background:var(--paper);color:var(--ink)}
+.hd{display:flex;align-items:center;gap:9px;flex:0 0 auto;padding-bottom:12px;
+  border-bottom:2px solid var(--ink)}
+.hd .wm{font-size:17px}
+.hd .dt{margin-left:auto;font-size:12.5px;color:var(--ink-3)}
+.bd{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:14px;padding-top:15px}
+.ft{flex:0 0 auto;padding-top:14px;display:flex;flex-direction:column;gap:9px}
+.grow{flex:1 1 auto;min-height:0}
+.h2s{font:700 22px var(--sans)}
+.note{font-size:12.5px;color:var(--ink-3);line-height:1.5}
+.hero{display:flex;align-items:center;gap:14px}
+.hero .num{font:900 76px var(--sans);letter-spacing:-.03em;line-height:.88}
+.hero .side{display:flex;flex-direction:column;gap:3px;min-width:0}
+.hero .delta{font-weight:700;font-size:16px;color:var(--good)}
+.hero .txt{font-size:13.5px;line-height:1.45;color:var(--ink-2)}
+.stage{background:var(--stage);border-radius:5px;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center}
+.stage svg{height:84%;width:auto}
+.stage .lbl{position:absolute;left:13px;top:12px;display:flex;align-items:center;gap:7px}
+.stage .lbl .t{font-weight:700;font-size:15px;color:var(--stage-ink)}
+.stage .lbl .n{font-size:12px;color:#8C98A4}
+.stage .read{position:absolute;left:0;right:0;bottom:0;padding:11px 14px 12px;
+  background:linear-gradient(180deg,rgba(13,17,22,0),rgba(13,17,22,.95) 45%)}
+.stage .read .v{font-size:15px;color:var(--stage-ink)}
+.stage .read .v b{color:#FF8A4C} .stage .read .v s{text-decoration:none;color:#8C98A4}
+.vid{background:var(--stage);border-radius:5px;display:flex;align-items:center;
+  justify-content:center;position:relative}
+.vid svg{height:72%;width:auto}
+.vid .tag{position:absolute;left:11px;bottom:9px;font-size:11.5px;color:#8C98A4}
+.chat{display:flex;flex-direction:column;gap:8px;overflow-y:auto;min-height:0}
+.field{display:flex;gap:8px;flex:0 0 auto}
+.field .inp{flex:1}
+.field .snd{width:50px;height:50px;border-radius:6px;background:var(--ink);
+  color:var(--paper);display:flex;align-items:center;justify-content:center;font-size:19px}
+.phases{display:flex;gap:5px;flex:0 0 auto}
+.ph{flex:1;height:40px;border:2px solid var(--line);border-radius:6px;display:flex;
+  align-items:center;justify-content:center;font-size:12.5px;color:var(--ink-3)}
+.ph.on{background:var(--ink);border-color:var(--ink);color:var(--paper);font-weight:700}
+.hist{display:flex;flex-direction:column;gap:7px}
+.hist .k{font-size:12.5px;color:var(--ink-3)}
+.hist svg{display:block;width:100%;height:auto}
+
+.rule{margin-top:14px;background:var(--pg-2);border-radius:4px;padding:14px 15px;
+  font-size:13.5px;color:var(--pg-ink-2);line-height:1.65}
+.rule b{color:var(--pg-ink)}
+.rule ul{margin:7px 0 0;padding-left:17px} .rule li+li{margin-top:4px}
+</style>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+<!-- 두 호. 흐린 쪽이 교본, 진한 쪽이 나. 벌어진 폭이 고칠 양 -->
+<g id="mg">
+  <path d="M7 41 A21 21 0 0 1 24 7" stroke-width="4.5" stroke-linecap="round"
+        fill="none" opacity=".34"/>
+  <path d="M22 43 A25 25 0 0 1 43 15" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <circle cx="7" cy="41" r="3.6" stroke="none" opacity=".34"/>
+  <circle cx="22" cy="43" r="3.6" stroke="none"/>
+</g>
+<!-- 사람 -->
+<g id="fig">
+  <path d="M30 14a7 7 0 1 1 14 0 7 7 0 0 1-14 0Z"/>
+  <path d="M37 21c-7 1-11 5-12 11l-3 20c-.4 3 1 5 4 5l22 .4c3 0 4.6-2 4.2-5L49 32c-1-6-5-10-12-11Z"/>
+  <path d="M25 33c-4 4-8 9-10 14-1 2 2 4 3.4 2l9-12ZM49 33c4 4 8 9 10 14 1 2-2 4-3.4 2l-9-12Z"/>
+  <path d="M27 56l-3 24c-.3 3 4 3.4 4.6.6L33 62l3 19c.5 2.8 5 2.4 4.6-.6l-3-24Z"/>
+</g>
+</defs></svg>
+
+<div class="wrap">
+<header>
+  <h1>모션가드 디자인</h1>
+  <p class="lede">결과지 문법에 두 호 아이콘. 색과 글자부터 화면 네 장까지.
+    주 고객 30~50대, 기준 화면은 휴대폰 390.</p>
+</header>
+
+<h2 class="sec">로고</h2>
+<p class="sub">두 호가 겹쳐 있다. 흐린 쪽이 교본, 진한 쪽이 내 스윙, 벌어진 폭이 고칠 양이다.
+  20px에서 두 선이 붙어 보이던 문제가 있어 간격을 획 두께보다 넓게 벌렸다.</p>
+<div class="panel">
+  <div class="logos">
+    <div class="lg-item"><svg width="20" height="20" viewBox="0 0 48 48" stroke="#111820" fill="#111820"><use href="#mg"/></svg><span>20</span></div>
+    <div class="lg-item"><svg width="26" height="26" viewBox="0 0 48 48" stroke="#111820" fill="#111820"><use href="#mg"/></svg><span>26</span></div>
+    <div class="lg-item"><svg width="40" height="40" viewBox="0 0 48 48" stroke="#111820" fill="#111820"><use href="#mg"/></svg><span>40</span></div>
+    <div class="lg-item"><svg width="72" height="72" viewBox="0 0 48 48" stroke="#111820" fill="#111820"><use href="#mg"/></svg><span>72</span></div>
+    <div class="lg-item"><svg width="40" height="40" viewBox="0 0 48 48" stroke="#167A4B" fill="#167A4B"><use href="#mg"/></svg><span>초록</span></div>
+    <div class="lg-item"><div class="lock">
+      <svg width="26" height="26" viewBox="0 0 48 48" stroke="#111820" fill="#111820"><use href="#mg"/></svg>
+      <span class="wm">Motion<em>Guard</em></span></div><span>머리글 조합</span></div>
+  </div>
+</div>
+<div class="panel dark" style="margin-top:9px">
+  <div class="logos">
+    <div class="lg-item"><svg width="20" height="20" viewBox="0 0 48 48" stroke="#F4F2ED" fill="#F4F2ED"><use href="#mg"/></svg><span style="color:#8C98A4">20</span></div>
+    <div class="lg-item"><svg width="26" height="26" viewBox="0 0 48 48" stroke="#F4F2ED" fill="#F4F2ED"><use href="#mg"/></svg><span style="color:#8C98A4">26</span></div>
+    <div class="lg-item"><svg width="40" height="40" viewBox="0 0 48 48" stroke="#F4F2ED" fill="#F4F2ED"><use href="#mg"/></svg><span style="color:#8C98A4">40</span></div>
+    <div class="lg-item"><div class="lock">
+      <svg width="26" height="26" viewBox="0 0 48 48" stroke="#F4F2ED" fill="#F4F2ED"><use href="#mg"/></svg>
+      <span class="wm" style="color:#F4F2ED">Motion<em style="color:#8C98A4">Guard</em></span></div>
+      <span style="color:#8C98A4">무대 위</span></div>
+  </div>
+</div>
+
+<h2 class="sec">색</h2>
+<p class="sub">종이와 잉크, 판정 두 가지, 그리고 영상이 올라가는 무대. 그 외의 색은 만들지 않는다.</p>
+<div class="tok">
+  <div class="t"><div class="c" style="background:#FFFFFF"></div><div class="m"><b>종이</b><span>#FFFFFF · 화면 바탕</span></div></div>
+  <div class="t"><div class="c" style="background:#F4F6F7"></div><div class="m"><b>연한 종이</b><span>#F4F6F7 · 구역 구분</span></div></div>
+  <div class="t"><div class="c" style="background:#EDEFF1"></div><div class="m"><b>빈 칸</b><span>#EDEFF1 · 막대 바탕</span></div></div>
+  <div class="t"><div class="c" style="background:#111820"></div><div class="m"><b>잉크</b><span>#111820 · 글자·주요 버튼</span></div></div>
+  <div class="t"><div class="c" style="background:#49535E"></div><div class="m"><b>연한 잉크</b><span>#49535E · 설명문</span></div></div>
+  <div class="t"><div class="c" style="background:#6B7682"></div><div class="m"><b>흐린 잉크</b><span>#6B7682 · 주석·날짜</span></div></div>
+  <div class="t"><div class="c" style="background:#DFE4E7"></div><div class="m"><b>괘선</b><span>#DFE4E7 · 테두리</span></div></div>
+  <div class="t"><div class="c" style="background:#167A4B"></div><div class="m"><b>좋음</b><span>#167A4B · 기준 안</span></div></div>
+  <div class="t"><div class="c" style="background:#CFE8DA"></div><div class="m"><b>기준 범위</b><span>#CFE8DA · 띠</span></div></div>
+  <div class="t"><div class="c" style="background:#D4552B"></div><div class="m"><b>부족</b><span>#D4552B · 고칠 것</span></div></div>
+  <div class="t"><div class="c" style="background:#F7DED3"></div><div class="m"><b>부족 바탕</b><span>#F7DED3 · 배지</span></div></div>
+  <div class="t"><div class="c" style="background:#0D1116"></div><div class="m"><b>무대</b><span>#0D1116 · 영상·아바타</span></div></div>
+</div>
+<div class="rule"><b>색을 쓰는 규칙</b>
+  <ul>
+    <li><b>색만으로 상태를 구분하지 않는다.</b> 좋음·부족을 글자로도 쓴다.
+      남성 스무 명 중 한 명이 적록색약이고 주 고객이 30~50대 남성이다</li>
+    <li>초록은 기준 안, 주황은 고칠 것. 그 외에 뜻을 더 붙이지 않는다</li>
+    <li>어두운 색은 <b>영상과 아바타가 올라가는 무대에만</b> 쓴다. 영상이 흰 바탕에서는 떠 보이지 않는다</li>
+  </ul>
+</div>
+
+<h2 class="sec">글자</h2>
+<p class="sub">Noto Sans KR 한 벌. 총점만 크게 가고 나머지는 조용하다.</p>
+<div class="panel"><div class="type">
+  <div class="ty"><span class="spec">900 · 76px</span><span style="font:900 76px var(--sans);letter-spacing:-.03em;line-height:1">72</span></div>
+  <div class="ty"><span class="spec">700 · 22px</span><span style="font:700 22px var(--sans)">이렇게 이해했어요</span></div>
+  <div class="ty"><span class="spec">700 · 17px · 버튼</span><span style="font:700 17px var(--sans)">개선 포인트 보기</span></div>
+  <div class="ty"><span class="spec">700 · 15px · 항목</span><span style="font:700 15px var(--sans)">몸통 회전</span></div>
+  <div class="ty"><span class="spec">400 · 15px · 본문</span><span style="font:400 15px var(--sans)">백스윙 탑에서 몸통이 10도 돌아갑니다.</span></div>
+  <div class="ty"><span class="spec">400 · 13.5px · 설명</span><span style="font:400 13.5px var(--sans);color:var(--ink-2)">맞는지 확인해 주세요. 고치시면 그대로 반영됩니다.</span></div>
+  <div class="ty" style="border:0"><span class="spec">400 · 12.5px · 주석</span><span style="font:400 12.5px var(--sans);color:var(--ink-3)">영상은 이 기기에서 처리합니다.</span></div>
+</div></div>
+
+<h2 class="sec">부품</h2>
+<div class="panel"><div class="comp">
+  <div class="cbox"><span class="k">버튼</span>
+    <div class="btn">개선 포인트 보기</div>
+    <div class="btn2">리포트 저장</div>
+    <div class="btn3">건너뛰기</div></div>
+  <div class="cbox"><span class="k">상태 배지</span>
+    <div style="display:flex;gap:7px;flex-wrap:wrap">
+      <span class="badge ok">좋음</span><span class="badge warn">부족</span>
+      <span class="badge na">측정 안 됨</span></div>
+    <span class="k" style="margin-top:6px">입력</span>
+    <div class="inp">메시지를 입력하세요</div></div>
+  <div class="cbox"><span class="k">측정 막대</span>
+    <div class="meter"><div class="r1"><span class="nm">몸통 회전</span><span class="st ok">좋음</span></div>
+      <div class="tr"><i class="band" style="left:60%;right:6%"></i><i class="fill" style="width:62%"></i></div></div>
+    <div class="meter"><div class="r1"><span class="nm">체중 이동</span><span class="st warn">부족</span></div>
+      <div class="tr"><i class="band" style="left:62%;right:6%"></i><i class="fill warn" style="width:34%"></i></div></div>
+    <span class="note">연한 초록 띠가 기준 범위다. 막대가 띠에 닿으면 좋음이다.</span></div>
+  <div class="cbox"><span class="k">카드</span>
+    <div class="card"><span class="k">고민</span><span class="v">백스윙이 잘 안 됨</span></div>
+    <div class="card"><span class="k">본인이 생각한 원인</span><span class="v">팔로만 드는 느낌</span></div></div>
+  <div class="cbox"><span class="k">말풍선</span>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <span class="bub me">백스윙이 잘 안 돼</span>
+      <span class="bub ai">어느 지점이 불편하신가요? 테이크어웨이 방향인지, 몸통 회전인지요.</span></div></div>
+  <div class="cbox"><span class="k">국면 단추</span>
+    <div class="phases"><span class="ph">어드</span><span class="ph on">탑</span>
+      <span class="ph">다운</span><span class="ph">임팩</span><span class="ph">피니</span></div>
+    <span class="note">최소 높이 40px, 터치 영역은 44px 이상.</span></div>
+</div></div>
+
+<h2 class="sec">화면</h2>
+<p class="sub">390 × 760. 폭에 따른 레이아웃 분기는 없고, 넓은 화면에서는 가운데 840px로 선다.</p>
+
+<div class="row">
+
+  <!-- 1 -->
+  <div class="col"><span class="cap"><b>1. 영상과 상담</b>영상이 남는 높이를 받는다. 대화는 그 아래에서 스크롤된다.</span>
+  <div class="phone"><div class="scr">
+    <div class="hd"><svg width="24" height="24" viewBox="0 0 48 48" stroke="#111820" fill="#111820"><use href="#mg"/></svg>
+      <span class="wm">Motion<em>Guard</em></span><span class="dt">1 / 3</span></div>
+    <div class="bd">
+      <div class="vid grow"><svg viewBox="0 0 74 88" fill="#4E5C68"><use href="#fig"/></svg>
+        <span class="tag">4.0초 세로 영상</span></div>
+      <span class="h2s">어디가 고민이세요?</span>
+      <div class="chat grow">
+        <span class="bub me">백스윙이 잘 안 돼</span>
+        <span class="bub ai">어느 지점이 불편하신가요? 테이크어웨이 방향인지, 몸통 회전인지요.</span>
+        <span class="bub me">팔로만 드는 느낌이야</span></div>
+      <div class="field"><span class="inp">메시지를 입력하세요</span><span class="snd">↑</span></div>
+    </div>
+    <div class="ft"><div class="btn">분석 시작</div></div>
+  </div></div></div>
+
+  <!-- 2 -->
+  <div class="col"><span class="cap"><b>2. 요약 확인</b>빈 칸을 화면만큼 늘리지 않는다. 내용 높이만 차지한다.</span>
+  <div class="phone"><div class="scr">
+    <div class="hd"><svg width="24" height="24" viewBox="0 0 48 48" stroke="#111820" fill="#111820"><use href="#mg"/></svg>
+      <span class="wm">Motion<em>Guard</em></span><span class="dt">2 / 3</span></div>
+    <div class="bd">
+      <span class="h2s">이렇게 이해했어요</span>
+      <span class="note" style="font-size:13.5px;color:var(--ink-2)">맞는지 확인해 주세요. 고치시면 그대로 반영됩니다.</span>
+      <div class="card"><span class="k">고민</span><span class="v">백스윙이 잘 안 됨</span></div>
+      <div class="card"><span class="k">개선하고 싶은 것</span><span class="v">몸의 꼬임</span></div>
+      <div class="card"><span class="k">본인이 생각한 원인</span><span class="v">팔로만 드는 느낌이라 꼬임이 부족함</span></div>
+      <div class="card grow"><span class="k">연습 목표</span>
+        <span class="v" style="color:var(--ink-3)">눌러서 입력. 비워 두셔도 됩니다</span></div>
+      <span class="note">영상은 이 기기에서 처리합니다. 동의한 상담 내용과 계측 수치만 전송됩니다.</span>
+    </div>
+    <div class="ft"><div class="btn">이대로 분석</div><div class="btn2">고치기</div></div>
+  </div></div></div>
+
+  <!-- 3 -->
+  <div class="col"><span class="cap"><b>3. 결과</b>총점 하나, 항목 세 개, 그리고 이력. 한눈에 끝나야 하는 화면.</span>
+  <div class="phone"><div class="scr">
+    <div class="hd"><svg width="24" height="24" viewBox="0 0 48 48" stroke="#111820" fill="#111820"><use href="#mg"/></svg>
+      <span class="wm">Motion<em>Guard</em></span><span class="dt">4회차 11.19</span></div>
+    <div class="bd">
+      <div class="hero"><span class="num">72</span>
+        <span class="side"><span class="delta">지난번보다 +6</span>
+          <span class="txt">몸통 회전이 좋아졌습니다.<br>체중 이동이 아직 부족합니다.</span></span></div>
+      <div class="meter"><div class="r1"><span class="nm">몸통 회전</span><span class="st ok">좋음</span></div>
+        <div class="tr"><i class="band" style="left:60%;right:6%"></i><i class="fill" style="width:62%"></i></div></div>
+      <div class="meter"><div class="r1"><span class="nm">체중 이동</span><span class="st warn">부족</span></div>
+        <div class="tr"><i class="band" style="left:62%;right:6%"></i><i class="fill warn" style="width:34%"></i></div></div>
+      <div class="meter"><div class="r1"><span class="nm">손목 힌지</span><span class="st warn">부족</span></div>
+        <div class="tr"><i class="band" style="left:60%;right:8%"></i><i class="fill warn" style="width:46%"></i></div></div>
+      <div class="hist grow"><span class="k">측정 이력</span>
+        <svg viewBox="0 0 330 86" role="img" aria-label="회차별 점수 54, 61, 66, 72">
+          <line x1="6" y1="70" x2="324" y2="70" stroke="#DFE4E7" stroke-width="1"/>
+          <line x1="6" y1="40" x2="324" y2="40" stroke="#EDEFF1" stroke-width="1"/>
+          <line x1="6" y1="12" x2="324" y2="12" stroke="#EDEFF1" stroke-width="1"/>
+          <polyline points="40,56 134,45 228,37 310,24" fill="none" stroke="#167A4B"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="40" cy="56" r="4.5" fill="#fff" stroke="#167A4B" stroke-width="3"/>
+          <circle cx="134" cy="45" r="4.5" fill="#fff" stroke="#167A4B" stroke-width="3"/>
+          <circle cx="228" cy="37" r="4.5" fill="#fff" stroke="#167A4B" stroke-width="3"/>
+          <circle cx="310" cy="24" r="6" fill="#167A4B"/>
+          <text x="40" y="84" fill="#6B7682" font-size="12" text-anchor="middle" font-family="sans-serif">54</text>
+          <text x="134" y="84" fill="#6B7682" font-size="12" text-anchor="middle" font-family="sans-serif">61</text>
+          <text x="228" y="84" fill="#6B7682" font-size="12" text-anchor="middle" font-family="sans-serif">66</text>
+          <text x="310" y="84" fill="#167A4B" font-size="12" text-anchor="middle" font-weight="700" font-family="sans-serif">72</text>
+        </svg></div>
+    </div>
+    <div class="ft"><div class="btn">개선 포인트 보기</div><div class="btn2">리포트 저장</div></div>
+  </div></div></div>
+
+  <!-- 4 -->
+  <div class="col"><span class="cap"><b>4. 개선 포인트</b>무대만 어둡다. 교본 잔상 위에 내 자세, 그 위에 각도 호.</span>
+  <div class="phone"><div class="scr">
+    <div class="hd"><svg width="24" height="24" viewBox="0 0 48 48" stroke="#111820" fill="#111820"><use href="#mg"/></svg>
+      <span class="wm">Motion<em>Guard</em></span><span class="dt">1 / 3</span></div>
+    <div class="bd">
+      <div class="stage grow">
+        <span class="lbl"><span class="t">체중 이동</span><span class="n">임팩트</span></span>
+        <svg viewBox="0 0 128 88">
+          <g fill="#6FE3A8" opacity=".3" transform="translate(-13,0)"><use href="#fig"/></g>
+          <g fill="#6FE3A8"><use href="#fig"/></g>
+          <path d="M66 46a23 23 0 0 1 21-10" fill="none" stroke="#FF8A4C"
+            stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M87 36l-7-3.6 1 8Z" fill="#FF8A4C"/>
+        </svg>
+        <span class="read"><span class="v">임팩트에서 체중 <b>38%</b> <s>교본 75%</s></span></span>
+      </div>
+      <div class="phases"><span class="ph">어드</span><span class="ph">탑</span>
+        <span class="ph">다운</span><span class="ph on">임팩</span><span class="ph">피니</span></div>
+      <span class="note">임팩트에서 체중이 왼발로 넘어가지 않습니다. 뒷발에 남은 채로 칩니다.</span>
+    </div>
+    <div class="ft"><div class="btn2">다음 포인트</div></div>
+  </div></div></div>
+</div>
+
+<div class="rule"><b>화면이 지키는 것</b>
+  <ul>
+    <li>총점 76px, 본문 15px. 팔을 뻗고 봐도 읽힌다</li>
+    <li>한 화면에 항목 <b>세 개까지.</b> 나머지는 리포트로 넘긴다</li>
+    <li>주요 버튼 56px, 보조 50px, 터치 영역 44px 이상</li>
+    <li>폭에 따라 다른 레이아웃을 만들지 않는다. 넓어지면 가운데 840px로 설 뿐이다</li>
+    <li>어두운 색은 무대에만. 머리글과 본문은 늘 종이다</li>
+    <li>"과장"이라는 말은 화면에 쓰지 않는다. 고객에게는 <b>개선 포인트</b>다</li>
+  </ul>
+</div>
+</div>
