@@ -60,10 +60,10 @@ class Handler(SimpleHTTPRequestHandler):
                 file = self.tracks / "coaching" / (match[1] + ".json")
             if file.is_file():
                 document=json.loads(file.read_text(encoding="utf-8"))
-                if 'customer_report' not in document:
+                if document.get('customer_report',{}).get('version')!=2:
                     source=self.tracks/(document.get('track_id','')+'.json')
                     if source.is_file():
-                        track=json.loads(source.read_text());document['score']=track.get('score',scoring.compute(track))
+                        track=json.loads(source.read_text());document['score']=scoring.compute(track)
                         document['customer_report']=customer_report.build(document,track)
                         document['strokes']=profiles.strokes(document['score'],document['customer_report']['improvements'])
                 self.respond(document, headers={"Cache-Control": "no-store"})

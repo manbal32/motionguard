@@ -30,8 +30,16 @@ class WorldPoseTests(TestCase):
         for heading in (0,math.pi/3,math.pi):
             world=[dict(LEFT_SHOULDER=(0,0,0,1),RIGHT_SHOULDER=(math.cos(a+heading),0,math.sin(a+heading),1),LEFT_HIP=(0,0,0,1),RIGHT_HIP=(math.cos(heading),0,math.sin(heading),1)) for a in map(math.radians,(0,70,140,210))]
             torso,hips=st.world_rotations(world,0)
-            self.assertEqual([round(math.degrees(a)) for a in torso],[0,70,140,210])
+            self.assertEqual([round(math.degrees(a)) for a in torso],[0,70,140,-150])
             self.assertTrue(all(abs(v)<1e-9 for v in hips))
+    def test_internal_unwrap_is_continuous_but_public_relative_rotation_is_bounded(self):
+        values=st._unwrap(list(map(math.radians,(0,70,140,-150))))
+        self.assertEqual([round(math.degrees(v)) for v in values],[0,70,140,210])
+        world=[dict(LEFT_SHOULDER=(0,0,0,1),RIGHT_SHOULDER=(math.cos(a),0,math.sin(a),1),LEFT_HIP=(0,0,0,1),RIGHT_HIP=(1,0,0,1)) for a in map(math.radians,(0,70,140,210,280,350))]
+        torso,_=st.world_rotations(world,0)
+        self.assertTrue(all(-math.pi<=v<=math.pi for v in torso))
+        self.assertEqual(round(math.degrees(torso[-1])),-10)
+
     def test_missing_world_never_uses_width_instead(self):
         f,fps=st.load_csv(str(ROOT/'samples/swing_front_landmarks.csv'))
         with patch.object(st,'_swing_phases',return_value=(81,118,141,146,172,1)):

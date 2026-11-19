@@ -75,3 +75,12 @@ def test_browser_calculation_matches_python():
     import os,subprocess
     run=subprocess.run(['node',str(ROOT/'tests/test_browser_core.cjs')],env=dict(os.environ,PYTHON=__import__('sys').executable),capture_output=True,text=True)
     assert run.returncode==0,run.stdout+run.stderr
+
+
+def test_excluded_rotation_never_enters_customer_feedback(analysis):
+    doc,track=analysis;excluded=set(doc['score']['excluded'])
+    assert {'top_torso','top_hips'}<=excluded
+    assert not excluded.intersection(i['id'] for i in doc['findings'])
+    assert not excluded.intersection(i['id'] for i in doc['customer_report']['improvements'])
+    assert '-139' not in doc['customer_report']['conclusion']
+    assert '-105' not in doc['customer_report']['conclusion']

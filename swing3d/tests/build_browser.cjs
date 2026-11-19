@@ -27,8 +27,10 @@ const measure=c=>{
   }
   const p=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2}),errors=[];p.on('pageerror',e=>errors.push(e.message));
   await p.goto(url);await p.locator('#csv').setInputFiles(path.join(root,'samples/swing_front_landmarks.csv'));
-  await p.locator('#start').click();await p.locator('#summary-approve').click();await p.locator('#overlay').waitFor({state:'visible'});await p.waitForTimeout(1700);await p.locator('#point-phases [data-phase=top]').click();await p.locator('#overlay').waitFor({state:'visible'});
+  await p.locator('#start').click();await p.locator('#summary-approve').click();await p.locator('#overlay').waitFor({state:'visible'});await p.waitForTimeout(1700);await p.locator('#overlay').waitFor({state:'visible'});
   await p.evaluate(()=>document.fonts.ready);await p.waitForTimeout(100);
+  const selectedPhase=(await p.locator('#finding-options button[aria-pressed=true]').getAttribute('data-finding')).split('_')[0];
+  await p.locator('#point-phases [data-phase='+selectedPhase+']').click();
   const c=p.locator('#exaggerated'),slider=p.locator('#compare-factor'),button=p.locator('#mobile-toggle');
   const factor=async value=>{await slider.evaluate((e,v)=>{e.value=v;e.dispatchEvent(new Event('input'))},value);};
   const hold=async()=>{const b=await button.boundingBox();await p.mouse.move(b.x+b.width/2,b.y+b.height/2);await p.mouse.down();};
@@ -43,7 +45,7 @@ const measure=c=>{
   const stopped=await c.getAttribute('data-frame');await p.waitForTimeout(180);expect(await c.getAttribute('data-frame')).toBe(stopped);expect(stopped).toBe('141');
   result.playFrames=[+first,+second];result.seekFrame=+stopped;expect(+second).not.toBe(+first);
   await p.locator('#playback-details > summary').click();
-  await p.locator('#point-phases [data-phase=top]').click();await p.setViewportSize({width:422,height:844});await p.waitForTimeout(100);
+  await p.locator('#point-phases [data-phase='+selectedPhase+']').click();await p.setViewportSize({width:422,height:844});await p.waitForTimeout(100);
   await factor(1);await c.evaluate(c=>window.canvasBaseline=c.getContext('2d').getImageData(0,0,c.width,c.height).data);await factor(2.5);await hold();
   result.exact390=await c.evaluate(measure);
   result.allFrames=await p.evaluate(()=>{

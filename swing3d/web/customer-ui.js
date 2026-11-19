@@ -19,7 +19,7 @@ window.MotionCustomer=(()=>{
  };
  const pair=item=>`${cell(item.measured,item)} / 교본 ${cell(item.reference,item)}`;
  const meaningful=i=>Number.isFinite(i.measured)&&Number.isFinite(i.reference)&&Math.abs(i.measured-i.reference)>1e-9;
- function improvements(doc){return (doc.customer_report?.improvements??doc.findings??[]).filter(meaningful).slice(0,3);}
+ function improvements(doc){const allowed=doc.score?new Set(doc.score.items.map(i=>i.id)):null;return (doc.customer_report?.improvements??doc.findings??[]).filter(i=>(!allowed||allowed.has(i.id))&&meaningful(i)).slice(0,3);}
  function diagram(item){
   const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 120 90');svg.setAttribute('role','img');svg.setAttribute('aria-label',`${labels[item.channel]} · 나 ${cell(item.measured,item)}, 교본 ${cell(item.reference,item)}`);svg.dataset.diagramChannel=item.channel;
   const el=(tag,attrs)=>{const e=document.createElementNS(ns,tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);svg.append(e);return e;};

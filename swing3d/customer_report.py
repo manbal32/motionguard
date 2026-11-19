@@ -23,11 +23,11 @@ def build(document,track):
             'title':name,'drill':clean(item.get('drill') or f'{coach.PHASES[value["phase"]]}에서 천천히 멈추고 같은 동작을 반복해 보세요.'),
             'youtube':item.get('youtube',[]),
             'observation':f'{coach.PHASES[value["phase"]]}의 {name} 차이를 확인해 보세요.'}
-    improvements=[entry(i) for i in document.get('findings',[]) if meaningful({**i,**scores.get(i['id'],{})})]
+    improvements=[entry(i) for i in document.get('findings',[]) if i['id'] in scores and meaningful({**i,**scores[i['id']]})]
     rank={'high':3,'medium':2,'low':1}
     priorities={i['id']:rank.get(i.get('severity'),0) for i in document.get('findings',[])}
     improvements.sort(key=lambda i:priorities.get(i['id'],0),reverse=True)
-    positives=[entry(i) for i in document.get('positives',[]) if meaningful({**i,**scores.get(i['id'],{})})][:2]
+    positives=[entry(i) for i in document.get('positives',[]) if i['id'] in scores and meaningful({**i,**scores[i['id']]})][:2]
     concern=document['conversation_summary']['concern'] or '내 스윙을 확인하고 싶어요.'
     requested=next((p for p,words in [('top',('백스윙','탑')),('down',('다운',)),('impact',('임팩트',)),('finish',('피니쉬','피니시'))] if any(w in concern for w in words)),None)
     phase=coach.PHASES.get(requested,'이번 스윙')
@@ -49,7 +49,7 @@ def build(document,track):
             conclusion=(f"{stage}의 {name}{coach.josa(name,'은','는')} {focus['measured']:.1f}°입니다. "
                         f"교본{coach.josa('본','은','는')} {focus['reference']:.1f}°입니다.")
     else: conclusion=f'{phase} 동작에서 뚜렷한 차이를 확정하지 않았습니다.'
-    return dict(concern=concern,conclusion=conclusion,improvements=improvements[:3],positives=positives,
+    return dict(version=2,concern=concern,conclusion=conclusion,improvements=improvements[:3],positives=positives,
                 strength=(f'{positives[0]["title"]}{coach.josa(positives[0]["title"],"은","는")} 교본에 가까운 움직임입니다.' if positives else '한 번의 영상에서 유지할 동작을 확정하지 않았습니다.'),
                 issued_at=datetime.now(ZoneInfo('Asia/Seoul')).isoformat(timespec='seconds'),
                 goal=document['conversation_summary']['goal'],

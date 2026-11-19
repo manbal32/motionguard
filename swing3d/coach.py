@@ -130,6 +130,7 @@ def model():
 
 
 def evidence(track):
+    import scoring
     if track['meta'].get('usable') is False:
         raise ValueError(track['meta'].get('guidance') or track['meta']['unusable_reason'])
     channels = list(CHANNELS)
@@ -174,6 +175,9 @@ def evidence(track):
             if key == "wrist" or key in meta.get("unavailable", ()) or rows[i][columns[k]] is None:
                 continue
             if not rows[i][columns[k]] and key in {"torso", "hips"} and phase in {"down", "impact"} and "rotation_sign_source" not in meta:
+                continue
+            low,high=scoring.constants().get('plausible',{}).get(key,(-math.inf,math.inf))
+            if not low<=units(rows[i][columns[k]],key)<=high:
                 continue
             per_channel = meta.get("channel_confidence", {}).get(key)
             quality = (per_channel[i] if per_channel else

@@ -146,6 +146,7 @@ window.SwingFindings = (() => {
       const line = node("p");
       line.append(node("strong", title), " · 몸통 ");
       if (track.meta.unavailable?.includes("torso")) line.append("이 촬영 각도에서는 측정할 수 없습니다");
+      else if(torso<SwingReference.scoring.plausible.torso[0]||torso>SwingReference.scoring.plausible.torso[1])line.append("이번 영상으로는 수치 비교가 어렵습니다.");
       else line.append(number(torso), " / 교본 ", number(referenceTrack[sample][SwingReference.channels.indexOf("torso")] * 180 / Math.PI));
       const confidence = track.meta.phase_confidence?.[key];
       if (!customer && confidence !== undefined) line.append(" · 추적 신뢰도 ", number(confidence * 100, "%", 0),

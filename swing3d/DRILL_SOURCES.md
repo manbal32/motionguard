@@ -4,7 +4,7 @@
 
 | 영상 | 제작자 / 원제 | 길이 | 확인 출처 | 적용 |
 |---|---|---|---|---|
-| https://www.youtube.com/watch?v=BNByYOos_lc | Danny Maude / How to FIRE the hips in the GOLF SWING - Game Changer Move | 10:18 | https://golfvotes.com/watch/BNByYOos_lc/ ; https://golfvotes.com/coach/danny-maude/ | 골반 선행과 몸통 회전, 탑·다운·임팩트의 회전 순서 |
+| https://www.youtube.com/watch?v=BNByYOos_lc | Danny Maude / How to FIRE the hips in the GOLF SWING - Game Changer Move | 10:18 | https://golfvotes.com/watch/BNByYOos_lc/ ; https://golfvotes.com/coach/danny-maude/ | 골반 선행과 몸통 회전, 탑·다운·임팩트·피니쉬의 회전 순서 |
 | https://www.youtube.com/watch?v=g_OgxMZqimo | Danny Maude / Effortless Golf Swing - How to transfer your weight in the GOLF SWING | 9:01 | https://golfvotes.com/watch/g_OgxMZqimo/ ; https://golfvotes.com/fix/sway-and-weight-shift/ | 체중 이동·오른 뒤꿈치 |
 | https://www.youtube.com/watch?v=ZD8yCcshsqI | Golfslump / Hinge your wrist like this‼️ | 0:29 | https://golfvotes.com/watch/ZD8yCcshsqI/ ; https://golfvotes.com/coach/golfslump/ | 탑·다운 손목 힌지 |
 

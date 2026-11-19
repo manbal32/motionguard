@@ -51,7 +51,7 @@ CHANNELS = [
 ]
 
 SCHEMA = "motionguard.swingtrack/2"
-TRACK_REVISION = 10
+TRACK_REVISION = 11
 GUIDANCE = {
  'too_far':'촬영 거리가 멀어 몸의 회전을 잴 수 없습니다. 몸 전체가 화면 높이의 3분의 2를 채우도록 다시 찍어 주세요.',
  'tracking_failed':'영상이 흔들리거나 인물이 가려져 자세를 추적하지 못했습니다. 고정된 위치에서 다시 찍어 주세요.',
@@ -494,6 +494,7 @@ def build_track(frames: List[Dict], fps: float, hold: float = 0.30) -> Dict:
         "meta": {
             **diagnostics,
             "usable": True,
+            "measurement_revision": TRACK_REVISION,
             "unusable_reason": None,
             "accepted_frames": len(frame_numbers),
             "total_frames": len(status),
@@ -541,7 +542,9 @@ def world_rotations(world, address):
         if address in indices:
             unwrapped = _unwrap(angles)
             origin = unwrapped[indices.index(address)]
-            for i,value in zip(indices,unwrapped):values[i]=value-origin
+            for i,value in zip(indices,unwrapped):
+                delta=value-origin
+                values[i]=math.atan2(math.sin(delta),math.cos(delta))
         result.append(values)
     return tuple(result)
 

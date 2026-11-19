@@ -972,7 +972,8 @@
         const measured = track.track[sample][track.channels.indexOf(channel)] * 180 / Math.PI;
         const reference = comparison.reference[sample][SwingReference.channels.indexOf(channel)] * 180 / Math.PI;
         const unavailable = track.meta.unavailable?.includes(channel);
-        const isMeasured = !unavailable && (channel !== "wrist" || track.meta.wrist_source === "index");
+        const limits=SwingReference.scoring.plausible?.[channel]??[-Infinity,Infinity];
+        const isMeasured = !unavailable && limits[0]<=measured && measured<=limits[1] && (channel !== "wrist" || track.meta.wrist_source === "index");
         const heading = node("th", channelLabel);
         heading.scope = "row";
         row.append(heading);

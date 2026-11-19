@@ -23,7 +23,7 @@ def write(file,data):
 def conditions(track):
     m=track['meta']
     return {'source':'video' if track.get('evidence') else 'csv','camera':m.get('camera_facing','unknown'),
-            'fps':round(m.get('fps',0),2),'input':m.get('original_size'), 'rotation_model':m.get('rotation_model'),
+            'fps':round(m.get('fps',0),2),'input':m.get('original_size'), 'rotation_model':m.get('rotation_model'),'measurement_revision':m.get('measurement_revision',10),
             'unknown_capture':track.get('track_id') if not m.get('original_size') else None}
 
 def compare(previous,current):
