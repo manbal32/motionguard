@@ -35,13 +35,20 @@ window.MotionPose=(()=>{
  }
  async function extract(file,{signal,progress=()=>{},debug=false}={}){
   abort(signal);if(!file.size||file.size>150*1024*1024)throw Error('150MB 이하 영상을 선택해 주세요.');
-  const started=performance.now(),buffer=await file.arrayBuffer(),meta=metadata(buffer);if(meta.duration>30.5)throw Error('30초 이하 영상으로 잘라 주세요.');
+  const started=performance.now(),buffer=await file.arrayBuffer();let meta,initialPackets;
+  try{meta=metadata(buffer);}catch(error){
+   // Fragmented recordings keep timing in moof/trun rather than a populated stts.
+   initialPackets=await demux(buffer);if(!initialPackets?.samples.length)throw error;
+   const duration=initialPackets.samples.reduce((s,p)=>s+p.duration/p.timescale,0);
+   if(!(duration>0))throw error;meta={total:initialPackets.samples.length,fps:initialPackets.samples.length/duration,duration};
+  }
+  if(meta.duration>30.5)throw Error('30초 이하 영상으로 잘라 주세요.');
   const {module:m,files}=await vision();abort(signal);
   const modelURL=window.MotionStaticMode?new URL('pose_landmarker_lite.task',base):new URL('models/pose_landmarker_lite.task',base);
   const response=await fetch(modelURL,{signal});if(!response.ok)throw Error('자세 모델 파일을 읽지 못했습니다.');const model=new Uint8Array(await response.arrayBuffer());
   const video=document.createElement('video');video.muted=true;video.playsInline=true;video.preload='auto';const objectURL=URL.createObjectURL(file);video.src=objectURL;
   try{
-   await event(video,'loadeddata',signal);let packets;try{packets=await demux(buffer);}catch{packets=null;}const width=video.videoWidth,height=video.videoHeight,canvas=document.createElement('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});
+   await event(video,'loadeddata',signal);let packets;try{packets=initialPackets??await demux(buffer);}catch{packets=null;}const width=video.videoWidth,height=video.videoHeight,canvas=document.createElement('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});
    async function pass(stride,box){
     const landmarker=await m.PoseLandmarker.createFromOptions(files,{baseOptions:{modelAssetBuffer:model,delegate:'CPU'},runningMode:'VIDEO',numPoses:1,minPoseDetectionConfidence:.5,minPosePresenceConfidence:.5,minTrackingConfidence:.5,outputSegmentationMasks:false});
     const frames=new Map(),world=new Map();
@@ -69,8 +76,10 @@ window.MotionPose=(()=>{
      }
     }finally{landmarker.close();}return{frames,world};
    }
-   const first=await pass(3,null),{box,valid}=core.crop(first.frames,width,height),second=await pass(1,box);
-   if(second.frames.size<20)throw Error('크롭 영상에서 사람을 안정적으로 찾지 못했습니다.');
+   const failed=()=>{const status=Array.from({length:meta.total},(_,frame)=>({frame,accepted:false,reason:'인물 추적 실패'})),track=core.unusable(meta.fps,.30,status,'tracking_failed',{original_size:[width,height],extraction_seconds:(performance.now()-started)/1000});track.score=core.score(track);return debug?{track,frames:[],world:[],original:[],fps:meta.fps}:track;};
+   const first=await pass(3,null);let selected;try{selected=core.crop(first.frames,width,height);}catch{return failed();}
+   const {box,valid}=selected,second=await pass(1,box);
+   if(second.frames.size<20)return failed();
    let previous=second.frames.values().next().value;const frames=[],world=[],timeline=[],original=[];
    for(let i=0;i<meta.total;i++){const observed=second.frames.get(i);if(observed)previous=observed;frames.push(observed??Object.fromEntries(core.names.map(n=>[n,[...previous[n].slice(0,3),0]])));world.push(second.world.get(i)??null);
     const mapped=observed?Object.fromEntries(core.names.map(n=>[n,core.toOriginal(observed[n],box)])):null;original.push(mapped);timeline.push(mapped?core.names.map(n=>[Number(mapped[n][0].toFixed(5)),Number(mapped[n][1].toFixed(5)),Number(mapped[n][3].toFixed(5))]):null);}

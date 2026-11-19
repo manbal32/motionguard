@@ -89,7 +89,10 @@ window.MotionCustomer=(()=>{
    const scoreItem=score.items.find(s=>s.id===item.id)??item;
    const meter=node('article',undefined,'meter'),button=node('button'),head=node('div',undefined,'meter-head');
    head.append(node('b',labels[item.channel]),node('span',scoreItem.state??'확인','state'+(scoreItem.state==='적정'?' good':'')));
-   const bar=node('div',undefined,'meter-track'),fill=node('div',undefined,'meter-fill'+(scoreItem.state==='적정'?' good':''));fill.style.width=(scoreItem.score??0)+'%';bar.append(fill);
+   const bar=node('div',undefined,'meter-track'),fill=node('div',undefined,'meter-fill'+(scoreItem.state==='적정'?' good':'')),band=node('i',undefined,'meter-band');
+   const tolerance=SwingReference.scoring.tolerances[item.channel],extent=Math.max(Math.abs(item.measured-item.reference)+tolerance,2*tolerance);
+   band.style.left=(50-tolerance/(2*extent)*100)+'%';band.style.width=tolerance/extent*100+'%';
+   fill.style.width=(50+(item.measured-item.reference)/(2*extent)*100)+'%';bar.setAttribute('aria-label','측정 위치. 초록 띠는 교본의 허용 범위입니다.');bar.append(band,fill);
    button.append(head,bar,node('p',`${phases[item.phase]} · ${pair(item)}`,'meter-values'));
    button.onclick=()=>select(item.id);meter.append(button);list.append(meter);
   }
@@ -102,7 +105,7 @@ window.MotionCustomer=(()=>{
   $('history-comparison').textContent=doc.comparison_history?.message??'';
   $('score-change').hidden=!doc.comparison_history?.comparable;
   if(doc.comparison_history?.comparable)$('score-change').textContent=`지난번보다 ${(doc.comparison_history.total_delta>=0?'+':'')+doc.comparison_history.total_delta.toFixed(1)}점`;
-  $('profile-message').textContent=window.MotionProfileMessage??'';
+  $('profile-message').textContent=(window.MotionProfileMessage??'').startsWith('첫 기록')?'':window.MotionProfileMessage??'';
   $('result-report').href=new URL('report.html?'+new URLSearchParams({track:track.track_id,coaching:doc.report_id}),location.href).href;
   $('delete-profile').onclick=async()=>{if(!doc.profile_id)return;const r=await fetch('/api/profile/'+doc.profile_id,{method:'DELETE'});if(r.ok){localStorage.removeItem('motionguard:profile');location.assign(new URL('./',location.href));}};
  }

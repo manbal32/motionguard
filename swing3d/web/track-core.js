@@ -102,5 +102,5 @@ window.MotionTrack=(()=>{
  function csv(text){const lines=text.replace(/^\uFEFF/,'').trim().split(/\r?\n/),header=lines.shift().split(','),map=new Map(),world=new Map(),times=new Map();for(const line of lines){const values=line.split(','),r=Object.fromEntries(header.map((k,i)=>[k,values[i]]));if(!names.includes(r.landmark))continue;const i=+r.frame_idx;if(!map.has(i))map.set(i,{});map.get(i)[r.landmark]=[+r.x,+r.y,Number(r.z||0),Number(r.visibility||1)];if(['wx','wy','wz'].every(k=>r[k]!==undefined&&r[k]!=='')){if(!world.has(i))world.set(i,{});world.get(i)[r.landmark]=[+r.wx,+r.wy,+r.wz,Number(r.visibility||1)];}times.set(i,+r.timestamp);}
   const order=[...map.keys()].sort((a,b)=>a-b),span=times.get(order.at(-1))-times.get(order[0]);return{frames:order.map(i=>map.get(i)),world:order.map(i=>world.get(i)??null),fps:span>0?(order.length-1)/span:30};
  }
- return Object.freeze({names,required,channels,guidance,round,acceptance,personBox,crop,toOriginal,build,score,csv,worldRotations});
+ return Object.freeze({names,required,channels,guidance,round,acceptance,personBox,crop,toOriginal,build,score,csv,worldRotations,unusable});
 })();

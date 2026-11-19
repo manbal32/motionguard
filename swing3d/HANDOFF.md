@@ -1,6 +1,15 @@
 # MotionGuard — 새 세션 인수인계
 
-## 최신 실행 — 2026-11-19 (9cfee75 기준)
+## 최신 실행 — 단계 11 (2026-11-19)
+
+시작 1532363, 최종 작업 브랜치 feat/swing3d-visual-tokens.
+[VISUAL_TOKEN_RESULTS.md](VISUAL_TOKEN_RESULTS.md)와 MOTIONGUARD_BUILD.md의 단계 11을 먼저 읽는다.
+A~D/G/F·E/H 네 PR로 분리, 각 단계별 커밋. 최종 pytest 54개/하위13개 통과지만
+D 조작 수, F 좌표 대조·실제 폰/정상 영상, E 회전, G 공개 배포는 미통과/미검증이다.
+이를 “전체 통과”라고 바꾸지 않는다. 시연 shim은 제거됐고 정적 빌드는 실제 브라우저 계측이다.
+현재 원본 정상 스윙 영상은 없으며 CSV만 있다. main/Pages 설정은 변경하거나 병합하지 않았다.
+
+## 이전 실행 — 2026-11-19 (9cfee75 기준)
 
 [BUILD_COMPLETE_RESULTS.md](BUILD_COMPLETE_RESULTS.md)에 1–9단계 통과 조건 표와 실제 출력 전문을 기록했다. PR #5 구현을 이어 5단계 새 게이트·머리 잘림을 수정하고 6–9단계를 완료했다. 현재 정본 게이트 미통과 0개, 검증 한계는 결과 문서에 별도 명시했다. 새 캡처 m1–m5/d1–d5/g1–g3/h1–h2와 report.pdf가 최신이다. 이전 BUILD_RESULTS.md는 당시 3% 게이트로 중단한 역사 기록이다.
 

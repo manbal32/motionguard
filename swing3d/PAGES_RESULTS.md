@@ -26,4 +26,4 @@ PAGES_TEST_URL=http://127.0.0.1:8891/motionguard/ node swing3d/tests/pages_brows
 캡처: [모바일 2D](mockups/shots/11g_mobile_point.png), [모바일 리포트](mockups/shots/11g_mobile_report.png),
 [PC 2D](mockups/shots/11g_desktop_point.png), [PC 리포트](mockups/shots/11g_desktop_report.png).
 
-이 PR은 11-A~D PR 위에 쌓인 후속 PR이다. 앞 PR 이후의 Pages 변경만 검토할 수 있게 base를 앞 작업 브랜치로 두었다.
+이 PR은 11-A~D 커밋을 포함한 후속 브랜치이며 최종 base는 feature/swing3d다. 선행 PR 병합 후 diff가 Pages 변경으로 줄어든다.

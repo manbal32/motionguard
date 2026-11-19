@@ -3,6 +3,7 @@
   "use strict";
   const byId = id => document.getElementById(id);
   const video = byId("original");
+  byId("choose-video").onclick=()=>byId("video").click();
   const canvas = byId("joints");
   const ctx = canvas.getContext("2d");
   const alternate = byId("exaggerated");
@@ -196,7 +197,7 @@
 
   function select(file, csv = false) {
     if (request || !file) return;
-    const replacing=!!selected;
+    const replacing=!!selected;byId("upload").dataset.ready="false";
     summaryPanel.hidden = true;
     preview.pause();
     preview.removeAttribute("src");
@@ -237,7 +238,7 @@
       return;
     }
     if (csv) {
-      selected = { file, csv };
+      selected = { file, csv };byId("upload").dataset.ready="true";
       byId("start").disabled = false;
       byId("coach-panel").hidden=false;showMode();drawCSVPreview(file);
       return;
@@ -257,7 +258,7 @@
         report("영상을 30초 이하로 잘라 다시 선택해 주세요.", 0);
         return;
       }
-      selected = { file, csv };
+      selected = { file, csv };byId("upload").dataset.ready="true";
       byId("start").disabled = false;
       preview.src = candidate;
       preview.hidden = false;byId("preview-guide").hidden=true;byId("preview-avatar").hidden=true;
@@ -390,6 +391,7 @@
       enterPoint();
 
     } catch (error) {
+      byId("summary-origin").textContent=controller.signal.aborted?"분석을 취소했습니다.":error.message;
       step(csv ? 1 : 2);
       report(controller.signal.aborted ? "분석을 취소했습니다." : (error.message || "분석에 실패했습니다.")
         + " 전신이 보이는 MP4를 선택하거나 좌표 CSV로 다시 시도해 주세요.", 0);

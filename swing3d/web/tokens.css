@@ -37,6 +37,11 @@
   --t-desc:400 13.5px/1.55 var(--sans);  /* 설명 */
   --t-note:400 12.5px/1.5 var(--sans);   /* 주석 */
 
+  /* 기존 인쇄/단위 치수도 같은 출처로 관리한다. 화면용 새 크기는 추가하지 않는다. */
+  --t-print-table:400 9px/1.2 var(--sans);
+  --t-print-note:400 10px/1.5 var(--sans);
+  --t-unit:400 .76em/1 var(--sans);
+
   /* 치수 */
   --w-max:840px;        /* 본문 최대 폭. 폭 분기는 이것 하나뿐 */
   --gutter:16px;
