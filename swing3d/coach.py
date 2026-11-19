@@ -11,7 +11,7 @@ from urllib.request import Request, urlopen
 from findings_contract import SCHEMA, validate_findings
 
 PHASES = {"address": "어드레스", "top": "백스윙 탑", "down": "다운스윙",
-          "impact": "임팩트", "finish": "피니시"}
+          "impact": "임팩트", "finish": "피니쉬"}
 CHANNELS = {
     "swing": ("스윙각", "swing arc"), "torso": ("몸통 회전", "shoulder turn"),
     "hips": ("골반 회전", "hip turn"), "lean": ("상체 기울기", "spine tilt"),
@@ -22,6 +22,18 @@ CHANNELS = {
 }
 DISTANCES = {"shiftX", "heelR"}
 SUMMARY_FIELDS = ("concern", "improvement", "hypothesis", "goal")
+def josa(word, with_final, without_final):
+    """받침에 맞는 조사를 고른다. 숫자와 영문도 읽는 소리로 판정한다."""
+    if not word: return without_final
+    last = word.strip()[-1]
+    if last.isdigit():
+        return (with_final, without_final)[last in '2459']
+    code = ord(last)
+    if 0xAC00 <= code <= 0xD7A3:
+        return (without_final, with_final)[(code - 0xAC00) % 28 != 0]
+    return (with_final, without_final)['aeiou'.find(last.lower()) < 0]
+
+
 LIMITATIONS = [
     "단일 영상에서는 깊이 방향 회전, 볼 구질·스핀, 클럽 페이스를 확정할 수 없습니다.",
     "촬영 방향과 관절 가림이 수치에 영향을 줍니다. 교본은 교육용 참고 기준입니다.",
@@ -287,7 +299,8 @@ def analyze(track, summary, provider):
         improvements = []
         for item in ranked:
             if item["deviation"] and not any(prior["channel"] == item["channel"] for prior in improvements):
-                improvements.append(dict(item, drill=f"{PHASES[item['phase']]}에서 천천히 멈추고 {CHANNELS[item['channel']][0]}을 확인한 뒤 같은 각도에서 다시 촬영하세요."))
+                improvements.append(dict(item, drill=(lambda n: f"{PHASES[item['phase']]}에서 천천히 멈추고 "
+                    f"{n}{josa(n, '을', '를')} 확인한 뒤 같은 각도에서 다시 촬영하세요.")(CHANNELS[item['channel']][0])))
             if len(improvements) == 3:
                 break
     return validate_findings({"schema": SCHEMA, "reference": "model", "findings": improvements,

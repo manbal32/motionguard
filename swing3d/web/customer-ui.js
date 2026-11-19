@@ -5,11 +5,23 @@ window.MotionCustomer=(()=>{
  const labels={swing:'스윙각',torso:'몸통 회전',hips:'골반 회전',x_factor:'어깨·골반 분리',lean:'상체 기울기',wrist:'손목 힌지',shiftX:'체중 이동',kneeL:'왼무릎',kneeR:'오른무릎',heelR:'오른 뒤꿈치'};
  const phases={address:'어드레스',top:'백스윙 탑',down:'다운스윙',impact:'임팩트',finish:'피니쉬'};
  const node=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
- const value=(v,channel)=>['shiftX','heelR'].includes(channel)?Number(v).toFixed(3):Number(v).toFixed(1)+'°';
+ const RATIO=['shiftX','heelR'];
+ // 고객 화면에는 좌표값을 쓰지 않는다. 각도는 사람이 아는 단위라 그대로 쓰고,
+ // 정규화한 비율 채널은 교본을 100 으로 둔 값으로 바꾼다. 0.177 은 뜻이 없다.
+ const value=(v,channel)=>RATIO.includes(channel)?null:Number(v).toFixed(1)+'°';
+ const cell=(v,item)=>{
+  if(!RATIO.includes(item.channel))return value(v,item.channel);
+  const r=Number(item.reference),n=Number(v);
+  if(!(Math.abs(r)>1e-9))return Math.abs(n)>1e-9?'교본 밖':'0%';
+  // 교본과 반대로 움직였으면 음수 퍼센트가 아니라 그렇다고 적는다.
+  if(n*r<0)return '반대 방향';
+  return Math.round(n/r*100)+'%';
+ };
+ const pair=item=>`${cell(item.measured,item)} / 교본 ${cell(item.reference,item)}`;
  const meaningful=i=>Number.isFinite(i.measured)&&Number.isFinite(i.reference)&&Math.abs(i.measured-i.reference)>1e-9;
  function improvements(doc){return (doc.customer_report?.improvements??doc.findings??[]).filter(meaningful).slice(0,3);}
  function diagram(item){
-  const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 120 90');svg.setAttribute('role','img');svg.setAttribute('aria-label',`${labels[item.channel]} · 나 ${value(item.measured,item.channel)}, 교본 ${value(item.reference,item.channel)}`);svg.dataset.diagramChannel=item.channel;
+  const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 120 90');svg.setAttribute('role','img');svg.setAttribute('aria-label',`${labels[item.channel]} · 나 ${cell(item.measured,item)}, 교본 ${cell(item.reference,item)}`);svg.dataset.diagramChannel=item.channel;
   const el=(tag,attrs)=>{const e=document.createElementNS(ns,tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);svg.append(e);return e;};
   const line=(x1,y1,x2,y2,color,opacity=1,width=4,dash)=>el('line',{x1,y1,x2,y2,stroke:color,'stroke-width':width,'stroke-opacity':opacity,'stroke-linecap':'round',...(dash?{'stroke-dasharray':dash}:{})});
   const actual=item.state==='적정'?'var(--good)':'var(--warn)';
@@ -64,7 +76,7 @@ window.MotionCustomer=(()=>{
    const meter=node('article',undefined,'meter'),button=node('button'),head=node('div',undefined,'meter-head');
    head.append(node('b',labels[item.channel]),node('span',scoreItem.state??'확인','state'+(scoreItem.state==='적정'?' good':'')));
    const bar=node('div',undefined,'meter-track'),fill=node('div',undefined,'meter-fill'+(scoreItem.state==='적정'?' good':''));fill.style.width=(scoreItem.score??0)+'%';bar.append(fill);
-   button.append(head,bar,node('p',`${phases[item.phase]} · ${value(item.measured,item.channel)} / 교본 ${value(item.reference,item.channel)}`,'meter-values'));
+   button.append(head,bar,node('p',`${phases[item.phase]} · ${pair(item)}`,'meter-values'));
    button.onclick=()=>select(item.id);meter.append(button);list.append(meter);
   }
   if(!items.length)list.append(node('p','이번에는 뚜렷한 차이가 있는 항목을 확정하지 않았습니다.','note'));
@@ -79,5 +91,5 @@ window.MotionCustomer=(()=>{
   $('result-report').href='/report/'+track.track_id+'?coaching='+doc.report_id;
   $('delete-profile').onclick=async()=>{if(!doc.profile_id)return;const r=await fetch('/api/profile/'+doc.profile_id,{method:'DELETE'});if(r.ok){localStorage.removeItem('motionguard:profile');location.assign('/');}};
  }
- return {node,labels,phases,value,meaningful,improvements,diagram,historyChart,renderResult};
+ return {node,labels,phases,value,cell,pair,meaningful,improvements,diagram,historyChart,renderResult};
 })();

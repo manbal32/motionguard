@@ -4,6 +4,37 @@
   const distance = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
   const offset = (p, x, y) => [p[0] + x, p[1] + y];
 
+  // 사람의 비례. 몸통 길이(목→골반)의 배수다.
+  // Drillis & Contini 의 분절 길이를 몸통 길이로 나눈 값이다.
+  const SEGMENTS = {thigh: .85, shank: .85, upperArm: .65, foreArm: .51};
+  // 측정값이 교본의 이 비율보다 짧으면 여기까지만 늘린다.
+  const SHORTEST = .85;
+
+  // 관절의 방향은 측정한 그대로 두고, 너무 짧게 찍힌 분절만 사람 비례까지 늘린다.
+  // 각도가 판정의 대상이고 길이는 그림의 문제다. 카메라를 향한 팔다리는
+  // 짧게 보이는 것이 옳으므로 교본 길이를 넘겨 늘리지 않는다.
+  // 발과 손은 투영에 따라 길이가 크게 변해 널빤지가 되므로 손대지 않는다.
+  // 영상 위에 겹치는 골격(#joints, #mobile-pose)에는 쓰지 않는다.
+  function humanize(pose, h) {
+    const out = pose.map(p => p && p.slice());
+    const stretch = (from, to, target) => {
+      const a = out[from], b = out[to];
+      if (!a || !b) return;
+      const span = distance(a, b);
+      if (!(span > 1e-6)) return;
+      const length = Math.min(target, Math.max(span, target * SHORTEST));
+      out[to] = [a[0] + (b[0] - a[0]) * length / span,
+                 a[1] + (b[1] - a[1]) * length / span, b[2]];
+    };
+    for (const side of [0, 1]) {
+      stretch(12 + side, 14 + side, h * SEGMENTS.thigh);     // 엉덩이 → 무릎
+      stretch(14 + side, 16 + side, h * SEGMENTS.shank);     // 무릎 → 발목
+      stretch(0 + side, 2 + side, h * SEGMENTS.upperArm);    // 어깨 → 팔꿈치
+      stretch(2 + side, 4 + side, h * SEGMENTS.foreArm);     // 팔꿈치 → 손목
+    }
+    return out;
+  }
+
   function anatomy(pose) {
     const neck = mid(pose[0], pose[1]), pelvis = mid(pose[12], pose[13]);
     const span = distance(neck, pelvis);
@@ -13,8 +44,9 @@
     return {head, neck, pelvis, height, facing: 0, up};
   }
 
-  function paint(ctx, pose, colors, alpha = 1) {
-    const {head, neck, pelvis, height: h, facing, up} = anatomy(pose);
+  function paint(ctx, source, colors, alpha = 1) {
+    const {head, neck, pelvis, height: h, facing, up} = anatomy(source);
+    const pose = humanize(source, h);
     const side = [-up[1], up[0]];
     function finish() {
       ctx.fill();
@@ -77,8 +109,10 @@
     limb(far, colors.far);
     arm(far, colors.far);
     limb(1 - far, colors.near);
-    const shoulders = Math.max(h * .25, distance(pose[0], pose[1]) / 2 + h * .1);
-    const hips = Math.max(h * .19, distance(pose[12], pose[13]) / 2 + h * .1);
+    const span = (a, b, low, high) =>
+      Math.min(h * high, Math.max(h * low, distance(pose[a], pose[b]) / 2));
+    const shoulders = span(0, 1, .17, .45);
+    const hips = span(12, 13, .13, .30);
     const along = (p, w, u = 0) => offset(p, side[0] * w + up[0] * u, side[1] * w + up[1] * u);
     const waist = mid(neck, pelvis);
     capsule(neck, head, h * .095, h * .105, colors.skin);

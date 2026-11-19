@@ -26,6 +26,10 @@ def compute(track):
                 excluded.append(key);continue
             normalized=channel in coach.DISTANCES
             measured=actual if normalized else math.degrees(actual)
+            # 사람이 낼 수 없는 값은 측정이 아니라 계측 실패다. 적지 않고 뺀다.
+            low,high=rules.get('plausible',{}).get(channel,(-math.inf,math.inf))
+            if not low<=measured<=high:
+                excluded.append(key);continue
             baseline=address[col] if normalized else math.degrees(address[col])
             reference=baseline+model[channel][k]-model[channel][0]
             delta=measured-reference;tolerance=rules['tolerances'][channel]

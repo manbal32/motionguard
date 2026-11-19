@@ -53,6 +53,14 @@
   byId("new-analysis").onclick=()=>{video.pause();pointPlaying=false;step(1);};
   byId("show-points").onclick=()=>{step(4);updateOverlay();};
   const summaryFields = [...summaryPanel.querySelectorAll("textarea")];
+  // 네 칸은 글이 잘리지 않을 만큼만 자란다. 넘치면 .summary-fields 가 스크롤한다.
+  const fitField = field => {
+    field.style.height = "auto";
+    field.style.height = field.scrollHeight + "px";
+  };
+  const fitFields = () => summaryFields.forEach(fitField);
+  for (const field of summaryFields) field.addEventListener("input", () => fitField(field));
+  addEventListener("resize", fitFields);
   const approve = byId("summary-approve");
   const preview = byId("upload-preview");
   let messages = [];
@@ -281,6 +289,7 @@
       byId("summary-origin").textContent = result.mode === "gemini" ? "Gemini 요약 · 확인이 필요합니다"
         : "로컬 정리 · " + (result.reason ?? "사용자 입력을 확인해 주세요.");
       summaryPanel.hidden = false;
+      fitFields();
       step(2);
       byId("summary-heading").focus();
       report("상담 요약 확인 대기", 0);
@@ -294,6 +303,7 @@
 
   byId("summary-edit").onclick = () => {
     for (const input of summaryFields) input.readOnly = false;
+    fitFields();
     summaryFields[0].focus();
   };
   byId("summary-cancel").onclick = () => {
