@@ -167,6 +167,19 @@ h2.sec{font:700 21px var(--sans);margin:34px 0 6px;padding-top:20px;
 .colophon{border-top:3px solid var(--ink);padding-top:9px;font-size:11px;
   color:var(--ink-3);line-height:1.55}
 
+
+/* 결과 표 */
+.rtab{width:100%;border-collapse:collapse;font-size:13.5px;
+  font-variant-numeric:tabular-nums}
+.rtab th{font-size:11.5px;color:var(--ink-3);font-weight:500;text-align:right;
+  padding:0 0 6px;border-bottom:1px solid var(--ink)}
+.rtab th:first-child{text-align:left}
+.rtab td{padding:8px 0;border-bottom:1px solid var(--line);text-align:right;color:var(--ink)}
+.rtab td:first-child{text-align:left;font-weight:700}
+.rtab td.ref{color:var(--ink-3)}
+.rtab td.j{font-weight:700;width:52px}
+.rtab td.j.g{color:var(--good)} .rtab td.j.w{color:var(--warn)}
+
 /* 화면 */
 .row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
 .col{flex:0 0 390px;max-width:100%;display:flex;flex-direction:column;gap:9px}
@@ -516,24 +529,31 @@ h2.sec{font:700 21px var(--sans);margin:34px 0 6px;padding-top:20px;
       <div class="rsec"><span class="kk">말씀하신 고민</span>
         <span class="lede-q">백스윙이 잘 안 됨. 팔로만 드는 느낌</span></div>
       <div class="rsec"><span class="kk">영상에서 확인한 것</span>
-        <span class="lede-a">말씀하신 느낌이 그대로 보입니다. 백스윙 탑에서 어깨가 골반보다
-          <b>34도</b> 더 돌아가야 하는데 지금은 <b>21도</b>입니다. 팔은 충분히 올라가 있어서,
-          팔로만 든다는 느낌이 맞습니다.</span></div>
+        <span class="lede-a">팔은 충분히 올라가 있는데 <b>몸통이 덜 돌아갑니다.</b>
+          말씀하신 느낌이 맞습니다.</span>
+        <table class="rtab"><thead><tr>
+          <th>항목</th><th>나</th><th>교본</th><th>판정</th></tr></thead><tbody>
+          <tr><td>몸통 회전</td><td>21°</td><td class="ref">34°</td><td class="j g">적정</td></tr>
+          <tr><td>골반 회전</td><td>29°</td><td class="ref">31°</td><td class="j g">적정</td></tr>
+          <tr><td>손목 힌지</td><td>71°</td><td class="ref">95°</td><td class="j w">부족</td></tr>
+          <tr><td>체중 이동</td><td>38%</td><td class="ref">75%</td><td class="j w">부족</td></tr>
+        </tbody></table>
+        <span class="v" style="font-size:12px;color:var(--ink-3)">이번 영상에서는 네 항목을 쟀습니다.</span></div>
       <div class="rsec"><span class="kk">잘하고 계신 것</span>
-        <span class="lede-a">어드레스 자세가 네 회차 내내 일정합니다. 기본기가 잡혀 있습니다.</span></div>
-      <div class="rsec"><span class="kk">이번에 고칠 것 — 벌어진 폭이 차이입니다</span>
-        <div class="gap-row"><span class="no">1</span><svg width="46" height="42" viewBox="0 0 46 42" aria-hidden="true"><path d="M6 36 A20 20 0 0 1 24 7" fill="none" stroke="#167A4B" stroke-opacity=".3" stroke-width="4" stroke-linecap="round"/><path d="M16.7 38 A20 20 0 0 1 34.7 9" fill="none" stroke="#D4552B" stroke-width="4" stroke-linecap="round"/></svg><span class="c">
-          <span class="nm">체중 이동<em class="w">41점 · 부족</em></span>
-          <span class="d">임팩트에서 체중이 왼발로 넘어가지 않습니다. 뒷발에 남은 채로 칩니다.</span>
-          <span class="v">임팩트 · 38% / 교본 75%</span></span></div>
-        <div class="gap-row"><span class="no">2</span><svg width="46" height="42" viewBox="0 0 46 42" aria-hidden="true"><path d="M6 36 A20 20 0 0 1 24 7" fill="none" stroke="#167A4B" stroke-opacity=".3" stroke-width="4" stroke-linecap="round"/><path d="M14.9 38 A20 20 0 0 1 32.9 9" fill="none" stroke="#D4552B" stroke-width="4" stroke-linecap="round"/></svg><span class="c">
-          <span class="nm">손목 힌지<em class="w">55점 · 부족</em></span>
-          <span class="d">탑에서 손목이 덜 꺾여 클럽이 늦게 떨어집니다.</span>
-          <span class="v">백스윙 탑 · 71° / 교본 95°</span></span></div>
-        <div class="gap-row"><span class="no">3</span><svg width="46" height="42" viewBox="0 0 46 42" aria-hidden="true"><path d="M6 36 A20 20 0 0 1 24 7" fill="none" stroke="#167A4B" stroke-opacity=".3" stroke-width="4" stroke-linecap="round"/><path d="M12.1 38 A20 20 0 0 1 30.1 9" fill="none" stroke="#167A4B" stroke-width="4" stroke-linecap="round"/></svg><span class="c">
-          <span class="nm">몸통 회전<em class="g">76점 · 적정</em></span>
-          <span class="d">많이 좋아졌지만 아직 교본보다 적습니다. 팔보다 등이 먼저 돌아가야 합니다.</span>
-          <span class="v">백스윙 탑 · 21° / 교본 34°</span></span></div>
+        <span class="lede-a">어드레스 자세가 네 회차 내내 일정합니다.</span></div>
+      <div class="rsec"><span class="kk">이번에 고칠 것</span>
+        <div class="gap-row"><span class="no">1</span><svg width="50" height="44" viewBox="0 0 50 44" aria-hidden="true"><line x1="4" y1="37" x2="46" y2="37" stroke="#DFE4E7" stroke-width="2"/><rect x="6" y="30" width="11" height="6" rx="3" fill="#C8D0D6"/><rect x="33" y="30" width="11" height="6" rx="3" fill="#C8D0D6"/><circle cx="31.5" cy="19" r="6" fill="none" stroke="#167A4B" stroke-width="2" stroke-dasharray="2.6 2.4"/><circle cx="20.4" cy="19" r="6.5" fill="#D4552B"/></svg><span class="c">
+          <span class="nm">체중 이동<em class="w">부족</em></span>
+          <span class="d">뒷발에 남은 채로 칩니다.</span>
+          <span class="v">임팩트 · 38% <span style="color:var(--ink-3)">교본 75%</span></span></span></div>
+        <div class="gap-row"><span class="no">2</span><svg width="50" height="44" viewBox="0 0 50 44" aria-hidden="true"><line x1="12" y1="34" x2="42" y2="12" stroke="#C8D0D6" stroke-width="3" stroke-linecap="round"/><line x1="12" y1="34" x2="14.6" y2="4.1" stroke="#167A4B" stroke-width="2.4" stroke-linecap="round" opacity=".45"/><line x1="12" y1="34" x2="2.2" y2="5.6" stroke="#D4552B" stroke-width="3.4" stroke-linecap="round"/><circle cx="12" cy="34" r="3" fill="#111820"/></svg><span class="c">
+          <span class="nm">손목 힌지<em class="w">부족</em></span>
+          <span class="d">덜 꺾여 클럽이 늦게 떨어집니다.</span>
+          <span class="v">백스윙 탑 · 71° <span style="color:var(--ink-3)">교본 95°</span></span></span></div>
+        <div class="gap-row"><span class="no">3</span><svg width="50" height="44" viewBox="0 0 50 44" aria-hidden="true"><path d="M8 37 A20 20 0 0 1 26 8" fill="none" stroke="#167A4B" stroke-opacity=".32" stroke-width="4" stroke-linecap="round"/><path d="M13.9 39 A20 20 0 0 1 31.9 10" fill="none" stroke="#167A4B" stroke-width="4" stroke-linecap="round"/></svg><span class="c">
+          <span class="nm">몸통 회전<em class="g">적정</em></span>
+          <span class="d">팔보다 등이 먼저 돌아가야 합니다.</span>
+          <span class="v">백스윙 탑 · 21° <span style="color:var(--ink-3)">교본 34°</span></span></span></div>
       </div>
       <div class="rsec"><span class="kk">연습 영상</span>
         <div class="vid-card"><span class="th">▶</span><span class="m">
