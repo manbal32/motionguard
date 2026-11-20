@@ -8,12 +8,17 @@ window.MotionVisual=(()=>{
    const start=Math.max(ph.address+3,ph.top-Math.round(fps*.18)),end=Math.min(ph.down-2,ph.top+Math.round(fps*.3));let best=Infinity;const reliable=frames.slice(start,end+1).filter(p=>p?.[4]?.[2]>.5&&p?.[5]?.[2]>.5).length/(end-start+1);
    for(let i=start;i<=end;i++){const a=frames[i]?.[4],b=frames[i]?.[5];if(reliable>.7&&a?.[2]>.5&&b?.[2]>.5){const y=(a[1]+b[1])/2;if(y<best){best=y;ph.top=i;}}}
   }
+  if(frames&&Number.isFinite(ph.top)&&Number.isFinite(ph.finish)){
+   const hand=i=>{const p=frames[i];return p?.[4]?.[2]>.45&&p?.[5]?.[2]>.45?[(p[4][0]+p[5][0])/2,(p[4][1]+p[5][1])/2]:null;};
+   const address=hand(ph.address),gap=Math.max(3,Math.round(fps*.2)),end=ph.finish-gap;
+   if(address&&end>ph.top+gap){let best=Infinity,index=null;for(let i=ph.top+gap;i<=end;i++){const h=hand(i);if(!h)continue;const distance=Math.hypot(h[0]-address[0],h[1]-address[1]);if(distance<best){best=distance;index=i;}}if(index!==null&&best<.2){ph.impact=index;ph.down=Math.min(index-1,Math.max(ph.top+1,Math.round((ph.top+index)/2)));}}
+  }
   return ['address','top','down','impact','finish'].map((phase,i)=>({id:i+1,phase,frame:ph[phase],time:Number((ph[phase]/fps).toFixed(4))}));
  }
  async function analyze(track,summary,signal){
   if(!window.MotionVideo?.has(track.track_id))return{mode:'unavailable',reason:'원본 영상이 없는 샘플입니다. Gemini 사진 분석을 하지 않았습니다.'};
   if(!document.getElementById('photo-consent')?.checked)throw Error('사진 5장 전송 동의가 필요합니다. 영상 원본은 보내지 않습니다.');
-  const selected=samples(track);for(const s of selected){if(signal?.aborted)throw new DOMException('취소','AbortError');const c=await MotionVideo.frame(track.track_id,s.frame);if(!c)throw Error('대표사진을 추출하지 못했습니다.');s.image=c.toDataURL('image/jpeg',.85).split(',')[1];}
+  const selected=samples(track);for(const s of selected){if(signal?.aborted)throw new DOMException('취소','AbortError');const c=await MotionVideo.frame(track.track_id,s.frame);if(!c)throw Error('대표사진을 추출하지 못했습니다.');s.image=c.toDataURL('image/jpeg',.85).split(',')[1];if(selected.some(p=>p!==s&&p.image===s.image))throw Error('서로 다른 국면에서 같은 영상 장면이 추출됐습니다. 대표 장면을 구분하지 못해 분석을 중단했습니다. 영상을 다시 선택해 주세요.');}
   const r=await fetch(new URL('api/coaching/visual',location.href),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({allow_images:true,summary,samples:selected}),signal});const d=await r.json();if(!r.ok||!d.ok)throw Error(d.reason??'AI 분석 실패');return d;
  }
  const valid=i=>i.status!=='unassessable'&&i.confidence!=='낮음';

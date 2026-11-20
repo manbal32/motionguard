@@ -1,3 +1,7 @@
+# 최신: 요약형 점수/타수 결과와 대표장면 분리
+
+0-R,RESULT_DASHBOARD_RESULTS.md 참조. 요약→항목별상세,코스32회가정평균 및검색/재생진입. 임팩트후보보정/중복JPEG거절. Node54개 통과,실제모바일재캡처 미검증.
+
 # 최신: 요약 화면 복원/원본 영상 장면 로딩
 
 0-Q 및 MEDIA_LOADING_RESULTS.md 참조. 원본 오류는 video-evidence 이벤트 대기에서도 나옴. DOM부착/명시load/리스너순서/readyState/20초로 수정. 수정가능 요약→승인→사진+summary연결 유지. Node52개 통과,모바일 실파일 성공 미검증.

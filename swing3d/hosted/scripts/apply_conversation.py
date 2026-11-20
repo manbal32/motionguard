@@ -179,3 +179,7 @@ p.write_text(s)
 p=d/'overhaul.css';p.write_text(p.read_text()+"\n#conversation-file .conversation-file-name{display:none}#conversation-file .conversation-file-action{font-size:24px;color:var(--ink)}#uploaded-media[data-attached='true']>summary{display:none}#uploaded-media[data-attached='true'] #choose-video{display:inline-flex}#uploaded-media[data-attached='true']{border:1px solid var(--line);border-radius:12px;padding:10px}\n")
 
 p=d/'demo-start.js';s=p.read_text().replace("media.dataset.attached='true';", "media.dataset.attached='true';document.getElementById('choose-video').textContent='파일 다시 올리기';");p.write_text(s)
+import shutil
+shutil.copy2(r/'overrides/result-dashboard.js',d/'result-dashboard.js')
+p=d/'index.html';p.write_text(p.read_text().replace('<script src="./instrument.js" defer>', '<script src="./result-dashboard.js"></script><script src="./instrument.js" defer>'))
+p=d/'overhaul.css';p.write_text(p.read_text()+"\n.result-dashboard,.simulation-summary{padding:16px;background:var(--field);border-radius:14px;margin:12px 0}.result-dashboard>p:first-of-type{font-size:28px;font-weight:700}.result-dashboard p,.simulation-summary p{line-height:1.6;margin:8px 0}.simulation-summary strong{display:block;font-size:22px;margin:12px 0}.simulation-summary a{width:100%;margin-top:12px}.finding-disclosure{border-bottom:1px solid var(--line);padding:10px 0}.finding-disclosure>summary{font-size:17px;font-weight:700;line-height:1.6}.photo-media{max-width:360px}\n")
