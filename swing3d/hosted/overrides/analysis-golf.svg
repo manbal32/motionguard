@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 180" role="img" aria-label="작은 골퍼가 공을 치고 공을 따라 달려가는 애니메이션">
+<style>
+.analysis-golf-scene .runner,.analysis-golf-scene .ball,.analysis-golf-scene .swing,.analysis-golf-scene .leg,.analysis-golf-scene .bob{animation-duration:7s;animation-iteration-count:infinite;animation-timing-function:linear;animation-play-state:paused}.analysis-golf-scene .runner{animation-name:mg-loading-chase}.analysis-golf-scene .ball{animation-name:mg-loading-flight}.analysis-golf-scene .swing{transform-origin:70px 100px;animation-name:mg-loading-swing}.analysis-golf-scene .leg{transform-box:fill-box;transform-origin:top center}.analysis-golf-scene .leg.a{animation-name:mg-loading-run-a}.analysis-golf-scene .leg.b{animation-name:mg-loading-run-b}.analysis-golf-scene .bob{animation-name:mg-loading-bob}
+@keyframes mg-loading-swing{0%,8%{transform:rotate(0)}16%{transform:rotate(-105deg)}24%{transform:rotate(65deg)}32%,100%{transform:rotate(0)}}
+@keyframes mg-loading-flight{0%,22%{transform:translate(0,0);opacity:1}31%{transform:translate(90px,-80px);opacity:1}42%,85%{transform:translate(215px,-4px);opacity:1}91%,100%{transform:translate(215px,-4px);opacity:0}}
+@keyframes mg-loading-chase{0%,40%{transform:translateX(0);opacity:1}85%{transform:translateX(208px);opacity:1}91%{transform:translateX(215px);opacity:0}92%,100%{transform:translateX(0);opacity:0}}
+@keyframes mg-loading-run-a{0%,40%,85%,100%{transform:rotate(0)}44%,54%,64%,74%,84%{transform:rotate(-28deg)}49%,59%,69%,79%{transform:rotate(28deg)}}
+@keyframes mg-loading-run-b{0%,40%,85%,100%{transform:rotate(0)}44%,54%,64%,74%,84%{transform:rotate(28deg)}49%,59%,69%,79%{transform:rotate(-28deg)}}
+@keyframes mg-loading-bob{0%,40%,85%,100%{transform:translateY(0)}45%,55%,65%,75%{transform:translateY(-4px)}50%,60%,70%,80%{transform:translateY(0)}}
+
+</style>
+<defs><linearGradient id="golf-sky" x2="0" y2="1"><stop stop-color="#f0f8f4"/><stop offset="1" stop-color="#fff"/></linearGradient></defs>
+<rect width="360" height="180" rx="24" fill="url(#golf-sky)"/>
+<circle cx="293" cy="36" r="15" fill="#f3da8c"/>
+<path d="M0 132Q70 101 135 127T270 121T360 127V180H0Z" fill="#dcecdf"/>
+<path d="M0 150Q90 131 180 149T360 140V180H0Z" fill="#c3dfca"/>
+<ellipse cx="304" cy="145" rx="37" ry="11" fill="#8fc79d"/>
+<ellipse cx="311" cy="145" rx="5" ry="2" fill="#254d3b"/>
+<path d="M313 145V93L336 101L313 109" fill="#e89970" stroke="#446b51" stroke-width="2" stroke-linejoin="round"/>
+<g fill="#a5c9ad"><circle cx="24" cy="101" r="15"/><circle cx="345" cy="116" r="12"/></g>
+<g stroke="#83ab8d" stroke-width="3"><path d="M24 102v32M345 116v24"/></g>
+<path d="M106 72Q178 17 269 81" fill="none" stroke="#b7d5c1" stroke-width="2" stroke-dasharray="3 7" opacity=".6"/>
+<circle class="ball" cx="91" cy="145" r="4.5" fill="white" stroke="#4f8164" stroke-width="1.2"/>
+<g class="runner"><ellipse cx="64" cy="151" rx="18" ry="3" fill="#6a9f7c" opacity=".25"/>
+<g class="bob"><path class="leg a" d="M62 120L54 147H48" fill="none" stroke="#244e3e" stroke-width="7" stroke-linecap="round"/><path class="leg b" d="M69 120L77 147H83" fill="none" stroke="#244e3e" stroke-width="7" stroke-linecap="round"/>
+<path d="M55 94Q64 87 73 96L77 120Q64 125 52 119Z" fill="#27845e"/>
+<circle cx="65" cy="80" r="11" fill="#f2c9a0"/>
+<path d="M53 78Q55 64 69 69Q77 71 76 79Z" fill="#fff"/><path d="M67 78H83" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+<circle cx="70" cy="82" r="1.3" fill="#254d3b"/>
+<g class="swing"><path d="M59 99L72 109L81 112" fill="none" stroke="#f2c9a0" stroke-width="6" stroke-linecap="round"/><path d="M73 99L80 111" stroke="#f2c9a0" stroke-width="6" stroke-linecap="round"/><path d="M81 112L93 143L100 143" stroke="#536b60" stroke-width="2.5" fill="none" stroke-linecap="round"/></g></g></g>
+</svg>

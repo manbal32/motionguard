@@ -185,7 +185,8 @@ p=d/'index.html';p.write_text(p.read_text().replace('<script src="./instrument.j
 p=d/'overhaul.css';p.write_text(p.read_text()+"\n.result-dashboard,.simulation-summary{padding:16px;background:var(--field);border-radius:14px;margin:12px 0}.result-dashboard>p:first-of-type{font-size:28px;font-weight:700}.result-dashboard p,.simulation-summary p{line-height:1.6;margin:8px 0}.simulation-summary strong{display:block;font-size:22px;margin:12px 0}.simulation-summary a{width:100%;margin-top:12px}.finding-disclosure{border-bottom:1px solid var(--line);padding:10px 0}.finding-disclosure>summary{font-size:17px;font-weight:700;line-height:1.6}.photo-media{max-width:360px}\n")
 import re
 p=d/'index.html';s=p.read_text();brand=re.search(r'<svg[^>]*class="brand-arcs".*?</svg>',s,re.S);logo=brand.group(0) if brand else '<span class="loading-monogram">M</span>'
-s=s.replace('<section id="progress">','<section id="progress"><div class="analysis-motion" role="status">'+logo+'<p>분석 중</p></div>');p.write_text(s)
+golf=(r/'overrides/analysis-golf.svg').read_text().replace('<svg xmlns=', '<svg class="analysis-golf-scene" xmlns=',1)
+s=s.replace('<section id="progress">','<section id="progress"><div class="analysis-motion" role="status">'+logo+'<p>분석 중</p>'+golf+'</div>');p.write_text(s)
 p=d/'overhaul.css';p.write_text(p.read_text()+'''
 .analysis-motion{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;min-height:260px}.analysis-motion .brand-arcs{width:72px;height:72px;animation:motion-breathe 1.5s ease-in-out infinite}.analysis-motion p{font-size:22px;font-weight:700}.loading-monogram{font-size:56px;animation:motion-breathe 1.5s infinite}
 #progress>header,#progress .sequence,#progress #progress-bar,#progress #percent{display:none}
