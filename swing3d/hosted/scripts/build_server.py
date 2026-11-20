@@ -11,3 +11,5 @@ server=dist/'server';server.mkdir()
 (server/'wrangler.json').write_text(json.dumps({'name':'motionguard-runtime','main':'index.js','compatibility_date':'2026-11-20','assets':{'directory':'../client','binding':'ASSETS','run_worker_first':['/api/*']}}))
 (dist/'.openai').mkdir();shutil.copy2(root/'.openai/hosting.json',dist/'.openai/hosting.json')
 print(json.dumps({'runtime':'worker','assets':sum(p.is_file() for p in (dist/'client').rglob('*')),'entry_bytes':(server/'index.js').stat().st_size}))
+
+p=server/'index.js';p.write_text(p.read_text().replace('__MOTIONGUARD_BUILD__',json.loads((dist/'client/build-info.json').read_text())['build']))

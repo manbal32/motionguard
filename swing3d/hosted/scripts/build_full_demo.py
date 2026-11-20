@@ -21,14 +21,16 @@ subprocess.run(['python',str(ROOT/'scripts/apply_overhaul.py')],check=True)
 subprocess.run(['python',str(ROOT/'scripts/apply_courses.py')],check=True)
 subprocess.run(['python',str(ROOT/'scripts/apply_full_scenarios.py')],check=True)
 subprocess.run(['python',str(ROOT/'scripts/apply_conversation.py')],check=True)
+shutil.copy2(ROOT/'overrides/runtime-health.js',DIST/'runtime-health.js')
+subprocess.run(['python',str(ROOT/'scripts/seal_assets.py')],check=True)
 # App shell only at install. Heavy model/3D/tour assets are cached as used.
 assets=sorted('./'+str(f.relative_to(DIST)) for f in DIST.iterdir() if f.is_file() and f.suffix in ('.html','.js','.css') and f.name!='sw.js')
 digest=hashlib.sha256(b''.join((DIST/a[2:]).read_bytes() for a in assets)).hexdigest()[:16]
 worker="const CACHE='motionguard-full-"+digest+"',SHELL="+json.dumps(assets)+";\n"
 worker+="self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())));\n"
 worker+="self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('motionguard-full-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));\n"
-worker+="self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==location.origin||e.request.headers.has('range')||u.pathname.includes('/api/'))return;const shell=e.request.mode==='navigate'||/\\.(html|js|css)$/.test(u.pathname);const request=u.pathname.endsWith('/')?new URL('index.html',u).href:e.request;async function network(){const r=await fetch(e.request);if(!r.ok)throw Error('HTTP '+r.status);if(/\\.(html|js|css|wasm|task|woff2|glb|csv|png|jpg)$/.test(u.pathname)||e.request.mode==='navigate'){const c=r.clone();e.waitUntil(caches.open(CACHE).then(cache=>cache.put(request,c)));}return r;}e.respondWith(shell?network().catch(async()=>{const c=await caches.match(request);return c||Response.error();}):caches.match(request).then(c=>c||network()));});\n"
+worker+="self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==location.origin||e.request.headers.has('range')||u.pathname.includes('/api/'))return;const shell=e.request.mode==='navigate'||/\\.(html|js|css)$/.test(u.pathname);const request=u.pathname.endsWith('/')?new URL('index.html',u).href:e.request;async function network(){const r=await fetch(e.request,shell?{cache:'no-store'}:{});if(!r.ok)throw Error('HTTP '+r.status);if(/\\.(html|js|css|wasm|task|woff2|glb|csv|png|jpg)$/.test(u.pathname)||e.request.mode==='navigate'){const c=r.clone();e.waitUntil(caches.open(CACHE).then(cache=>cache.put(request,c)));}return r;}e.respondWith(shell?network().catch(async()=>{const c=await caches.match(request);return c||Response.error();}):caches.match(request).then(c=>c||network()));});\n"
 
 (DIST/'sw.js').write_text(worker)
-(DIST/'_headers').write_text('/sw.js\n  Cache-Control: no-cache\n  Service-Worker-Allowed: /\n/*.html\n  Cache-Control: no-cache\n')
+(DIST/'_headers').write_text('/sw.js\n  Cache-Control: no-cache\n  Service-Worker-Allowed: /\n/*.html\n  Cache-Control: no-store\n/*.js\n  Cache-Control: no-store\n/*.css\n  Cache-Control: no-store\n')
 print(json.dumps({'files':sum(f.is_file() for f in DIST.rglob('*')),'model_bytes':(DIST/'pose_landmarker_lite.task').stat().st_size,'shell_files':len(assets),'shell_bytes':sum((DIST/a[2:]).stat().st_size for a in assets),'existing_tour':(DIST/'tour/index.html').exists()}))

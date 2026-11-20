@@ -1,3 +1,7 @@
+# 최신: 송수신 영수증/배포파일 일치 감사
+
+0-Y 및 RUNTIME_AUDIT_RESULTS.md 참조. 최근Safari사진298606bytes/200과별도의simulation.js404관측. 앱번들buildID통일+cache무효화+필수파일누락빌드실패+manifest해시검증. 사진5장SHA256서버수신/forwarded횟수/요청ID대조,실제전송사진접힌확인. Node68개통과/실제Safari미검증.
+
 # 최신: 결과안에서 시뮬레이션 즉시재생/점수그래프
 
 0-X 및 IMMEDIATE_SIMULATION_RESULTS.md 참조. 버튼하나→내부지도/골퍼/공비행자동시작,골프장바꾸기만검색. 점수링/눈금/카드. 영상seek후프레임대기와루프시간표시. Node64개통과/실제iPad재생미검증.
