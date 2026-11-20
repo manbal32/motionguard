@@ -221,3 +221,21 @@ p=d/'visual-analysis.js';p.write_text(p.read_text().replace('if(print&&window.Mo
 p=d/'report.js';s=p.read_text().replace("$('report-body').hidden=false;", "if(doc.visual_analysis?.mode==='gemini-images'){const overview=document.createElement('section');document.querySelector('.scoreband').after(overview);MotionAIResult.render(overview,doc,true);}\n  $('report-body').hidden=false;");p.write_text(s)
 
 p=d/'overhaul.css';p.write_text(p.read_text()+"\n.report-original-grid{display:flex;flex-wrap:wrap;gap:10px;break-inside:avoid}.report-original-grid h3{width:100%;font-size:15px}.report-original-grid figure{margin:0;width:30%}.report-original-grid img{width:100%;max-height:160px}.report-original-grid figcaption{font-size:10pt;text-align:center}\n")
+shutil.copy2(r/'overrides/photo-only.js',d/'photo-only.js')
+p=d/'index.html';p.write_text(p.read_text().replace('<script src="./pose-browser.js">','<script src="./photo-only.js"></script><script src="./pose-browser.js">'))
+p=d/'client-api.js';s=p.read_text();s=s.replace("const track=await MotionPose.extract(options.body,{signal:options.signal,progress:(stage,percent)=>emit({type:'progress',stage,percent})});", "let track;try{track=await MotionPose.extract(options.body,{signal:options.signal,progress:(stage,percent)=>emit({type:'progress',stage,percent})});}catch(error){if(options.signal?.aborted)throw error;track=await MotionPhotoOnly.extract(options.body,{signal:options.signal,reason:error.message});}if(track.meta.usable===false&&!track.meta.photo_only)track=await MotionPhotoOnly.extract(options.body,{signal:options.signal,reason:track.meta.unusable_reason});")
+p.write_text(s)
+p=d/'coaching-local.js';p.write_text(p.read_text().replace('if(!track.meta.usable)throw','if(!track.meta.usable&&!track.meta.photo_only)throw'))
+p=d/'instrument.js';s=p.read_text();s=s.replace('      if(track.meta.usable===false) {','      if(track.meta.usable===false&&!track.meta.photo_only) {')
+s=s.replace('      evidence = track.evidence;','''      if(track.meta.photo_only){const coaching=await analysisWait(coachPost('analyze',{track_id:track.track_id,profile_id:window.MotionProfileId,approved:true,conversation_summary:approvedSummary},controller.signal),controller.signal);MotionCustomer.renderResult(coaching,track,()=>{});byId('show-points').hidden=true;byId('results').hidden=false;summaryPanel.hidden=true;saveReturnState(track,coaching);step(3);return;}
+      byId('show-points').hidden=false;
+      evidence = track.evidence;''',1)
+p.write_text(s)
+p=d/'visual-analysis.js';s=p.read_text();s=s.replace("if(!window.MotionVideo?.has(track.track_id))return", "if(!track.photo_samples&&!window.MotionVideo?.has(track.track_id))return")
+s=s.replace('const selected=samples(track);for(const s of selected)', 'const selected=track.photo_samples?track.photo_samples.map(s=>({...s})):samples(track);for(const s of selected)')
+s=s.replace("if(signal?.aborted)throw new DOMException('취소','AbortError');const c=", "if(signal?.aborted)throw new DOMException('취소','AbortError');if(track.photo_samples)continue;const c=")
+s=s.replace("MotionCustomer.phases[sample.phase]} 후보", "(sample.phase_unverified?'대표 장면 · 국면 미확정':MotionCustomer.phases[sample.phase])} 후보")
+s=s.replace('if(data)MotionEvidence.paint(staticCanvas,data,data.center);else staticCanvas.hidden=true;', "if(data)MotionEvidence.paint(staticCanvas,data,data.center);else{staticCanvas.hidden=true;const still=result.local_stills?.find(s=>s.id===sample.id);if(!print&&still?.image){const img=$('img');img.src=still.image;img.alt='대표 장면 · 국면 미확정';img.style.width='100%';area.append(img,$('p','좌표를 확인하지 못해 정지 2D는 제공하지 않습니다.'));}}")
+p.write_text(s)
+
+p=d/'client-api.js';s=p.read_text();s=s.replace("track=await MotionPose.extract(options.body,{signal:options.signal,progress:(stage,percent)=>emit({type:'progress',stage,percent})});", "const local=new AbortController(),stop=()=>local.abort();options.signal?.addEventListener('abort',stop,{once:true});let timer;try{track=await Promise.race([MotionPose.extract(options.body,{signal:local.signal,progress:(stage,percent)=>{if(!local.signal.aborted)emit({type:'progress',stage,percent});}}),new Promise((_,reject)=>{timer=setTimeout(()=>{local.abort();reject(Error('좌표 처리 시간 초과'));},60000);})]);}finally{clearTimeout(timer);options.signal?.removeEventListener('abort',stop);}");p.write_text(s)

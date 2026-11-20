@@ -1,3 +1,7 @@
+# 최신: golf1 영상 점검/사진 코칭 대체 경로
+
+0-V 및 GOLF1_RESULTS.md 참조. 해당파일H264/720x1280/4.011553초/258프레임,Python추적usabletrue. 실제모바일원인미확정이지만최근visual요청없음. browser추적실패/60초초과시기기사진5장대체,국면미확정/좌표0/점수null보존. Node60개통과.
+
 # 최신: 고민/가설/연습목표 공통결과 및 PDF 실출력
 
 0-U 및 UNIFIED_PDF_RESULTS.md 참조. Gemini context/목표타수 공통값,local_stills5개기기보관,PDF첫쪽공통요약. Node58개통과. 로컬실제PDF16쪽/이미지14/링크0/JS오류0/잘림0. 실제모바일다운로드는미검증.
