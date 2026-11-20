@@ -9,7 +9,7 @@
   if(doc.track_id!==id)throw Error('분석과 리포트가 일치하지 않습니다.');
   $('return-result').href=new URL('./?result='+reportId,location.href).href;
   const report=doc.customer_report,items=improvements(doc),score=doc.score;
-  MotionCourseLink.bind($('report-course'),doc);const played=MotionCourseLink.summary(doc);$('report-course-summary').textContent=played?`${played.course} · ${played.holes}홀 가상 플레이 ${played.total}타 · ${played.excluded}`:'이번 스윙을 바탕으로 클럽 거리와 편차를 가정해 재생합니다. 실제 비거리·구질은 측정하지 않았습니다.';
+  MotionCourseLink.bind($('report-course'),doc);const played=MotionCourseLink.summary(doc);$('report-course-summary').textContent=played?`${played.course} · ${played.holes}홀 가상 플레이를 다시 볼 수 있어요.`:'이번 스윙을 바탕으로 클럽 거리와 편차를 가정해 재생합니다. 실제 비거리·구질은 측정하지 않았습니다.';
   $('report-round').textContent=String(doc.session??1).padStart(2,'0')+'회';$('report-date').textContent=(report.issued_at??'').slice(0,10);
   $('report-total').textContent=score.total===null?'—':Math.round(score.total);
   // 숫자 하나로는 좋은지 나쁜지 알 수 없다. 읽으면 바로 아는 한 줄을 붙인다.
@@ -47,7 +47,10 @@
   for(const [key,label] of [['concern','고민'],['improvement','개선 희망'],['hypothesis','사용자 추정'],['goal','연습 목표']])$('appendix-approved').append(node('p',label+' · '+(doc.conversation_summary[key]||'입력 없음')));
   $('appendix-excluded').textContent=score.excluded.length?score.excluded.map(k=>{const [phase,...channel]=k.split('_');return(phases[phase]??phase)+' '+(labels[channel.join('_')]??'동작');}).join(' · '):'제외한 항목 없음';
   for(const item of score.items){const row=$('report-angles').tBodies[0].insertRow();for(const text of [phases[item.phase],labels[item.channel],cell(item.measured,item),cell(item.reference,item),item.score.toFixed(1),item.state])row.insertCell().textContent=text;}
+  try{const r=await fetch('/api/track/'+id);if(!r.ok)throw Error('missing');const track=await r.json();MotionEvidence.render($('report-visuals'),doc,track,null,true);}catch{$('report-visuals').textContent='이 기기에서 동작 좌표를 찾지 못해 이미지를 표시하지 못했습니다. 아래 측정 근거를 확인해 주세요.';}
   await MotionCourseReport.render(doc);
+  const hasCourse=!$('course-print').hidden;$('include-course-label').hidden=!hasCourse;$('course-print').hidden=true;
+  $('include-course').onchange=()=>{$('course-print').hidden=!$('include-course').checked;};
   $('report-body').hidden=false;$('report-status').hidden=true;$('print-report').disabled=false;
  }catch(error){$('report-status').textContent=error.message+' 분석 화면에서 다시 열어 주세요.';}
 })();

@@ -26,7 +26,7 @@ const fs=require('fs'),path=require('path'),root=path.resolve(__dirname,'..'),sh
    const file=await download.path();metrics.webmBytes=fs.statSync(file).size;expect(metrics.webmBytes).toBeGreaterThan(1000);
   }
   const r=await context.newPage();r.on('pageerror',e=>metrics.errors.push(e.message));await r.goto(new URL(reportLink,url).href);await expect(r.locator('#report-body')).toBeVisible();await r.evaluate(()=>document.fonts.ready);await r.screenshot({path:path.join(shots,prefix+'5_report.png')});metrics.screens[prefix+'5_report']=[width,height,2];
-  const body=await r.locator('#customer-body').innerText();expect(body).not.toMatch(/신뢰도|프레임|정규화|채널/);expect(await r.locator('.gap-row').count()).toBe(3);expect(await r.locator('#report-videos a[data-curated=true]').count()).toBe(3);expect(body).toContain('평지가 많은 코스 기준입니다.');
+  const body=await r.locator('#customer-body').innerText();expect(body).not.toMatch(/신뢰도|프레임|정규화|채널/);expect(await r.locator('.gap-row').count()).toBe(3);expect(await r.locator('#report-videos a[data-curated=true]').count()).toBe(3);await r.locator('#report-estimates > summary').click();expect(await r.locator('#strokes-condition').innerText()).toContain('평지가 많은 코스 기준입니다.');await r.locator('#report-estimates > summary').click();
   metrics.report={zeroDifferences:await r.locator('.gap-row').evaluateAll(es=>es.filter(e=>Math.abs(+e.dataset.difference)<.0001).length),curated:await r.locator('#report-videos a[data-curated=true]').count(),forbidden:body.match(/신뢰도|프레임|정규화|채널/g)??[]};
   if(prefix==='m'){
    await r.pdf({path:path.join(shots,'report.pdf'),preferCSSPageSize:true,printBackground:true});

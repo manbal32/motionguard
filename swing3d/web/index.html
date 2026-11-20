@@ -69,17 +69,19 @@
   <section id="results" class="flow-body" hidden aria-labelledby="results-heading">
     <div id="result-content" class="flow-body grow">
     <div class="result-title"><h2 id="results-heading">이번 스윙 결과</h2><button id="new-analysis">다시 찍기</button></div>
-    <section id="result-strokes" hidden aria-label="기본 조건의 예상 타수"><p class="note">기본 조건 추정 · 아래 코스별 플레이와 별도 계산</p>
-      <div><span>지금 스윙이면</span><strong id="result-strokes-current"></strong></div>
-      <div><span>개선 포인트를 맞추면</span><strong id="result-strokes-after"></strong></div>
-      <p id="result-strokes-condition" class="note"></p><p id="result-strokes-missing" class="note"></p>
-    </section>
-    <section class="course-entry" aria-label="코스 플레이"><h3>내 스윙으로 골프장에서는?</h3><a id="result-course" class="button" hidden>골프장 선택 · 공이 날아가는 코스 플레이 →</a><p id="result-course-summary" class="note" hidden></p></section>
     <div class="score-line"><strong id="score-total"></strong><span>/ 100</span><span id="score-verdict"></span><b id="score-change" hidden></b></div>
     <p id="measured-count" class="note"></p>
     <nav id="phase-map" aria-label="국면별 개선 포인트"></nav>
     <p id="profile-message" class="note"></p>
-    <div id="result-items"></div>
+    <section id="result-visuals" aria-label="이미지로 보는 스윙 분석"></section>
+    <details id="result-measurements"><summary>측정값 근거 보기</summary>    <div id="result-items"></div></details>
+    <section class="course-entry" aria-label="코스 플레이"><h3>내 스윙으로 골프장에서는?</h3><a id="result-course" class="button" hidden>골프장 선택 · 공이 날아가는 코스 플레이 →</a><p id="result-course-summary" class="note" hidden></p></section>
+<details id="result-estimates"><summary>참고 · 타수 가정 보기</summary>    <section id="result-strokes" hidden aria-label="기본 조건의 예상 타수"><p class="note">기본 조건 추정 · 아래 코스별 플레이와 별도 계산</p>
+      <div><span>지금 스윙이면</span><strong id="result-strokes-current"></strong></div>
+      <div><span>개선 포인트를 맞추면</span><strong id="result-strokes-after"></strong></div>
+      <p id="result-strokes-condition" class="note"></p><p id="result-strokes-missing" class="note"></p>
+    </section>
+</details>
     <p id="first-history" class="note">첫 기록입니다. 다음 분석부터 회차별로 비교해 드립니다.</p>
     <section id="history-area" class="grow"><div class="history-heading"><h3>회차별 기록</h3></div><div id="history-chart" class="grow"></div><p id="history-note" class="note"></p><div id="history-comparison" hidden></div></section>
     <details class="record-tools"><summary>기록 관리</summary><button id="delete-profile">기록 삭제</button></details>
@@ -173,7 +175,7 @@
 <script type="importmap">{"imports":{"three":"/vendor/three/three.module.js","three/addons/":"/vendor/three/addons/"}}</script>
 <script src="/colors.js"></script><script src="/reference.js"></script><script src="/track-core.js"></script><script src="/pose-browser.js"></script><script src="/coaching-local.js"></script>
 <script src="/exaggerate.js"></script>
-<script src="/pose-avatar.js"></script>
+<script src="/pose-avatar.js"></script><script src="/pose-project.js"></script><script src="/motion-evidence.js"></script>
 <script src="/findings-ui.js"></script>
 <script src="/course-core.js"></script><script src="/course-link.js"></script><script src="/customer-ui.js"></script><script src="/instrument.js" defer></script>
 </body>

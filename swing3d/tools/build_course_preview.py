@@ -18,6 +18,7 @@ def build(report_file,out,images=None):
     if images:
         values=['data:image/png;base64,'+base64.b64encode((Path(images)/f'valley-{i:02}.png').read_bytes()).decode() for i in range(1,10)]
         seed+='window.MotionCourseImages='+json.dumps(values)+';'
+    html=html.replace('<script src="/course-golfer.js"></script>','<script>'+ (ROOT/'web/course-golfer.js').read_text()+'</script>')
     html=html.replace('<script src="/course-ui.js" defer></script>','<script>'+seed+'</script><script>'+ (ROOT/'web/course-ui.js').read_text()+'</script>')
     # This standalone preview has no parent analysis page to navigate back to.
     html=html.replace('id="course-return" class="button"','id="course-return" class="button" hidden')
