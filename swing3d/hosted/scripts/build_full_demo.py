@@ -20,6 +20,7 @@ p=DIST/'style.css';p.write_text(p.read_text()+(ROOT/'overrides/separate-views.cs
 subprocess.run(['python',str(ROOT/'scripts/apply_overhaul.py')],check=True)
 subprocess.run(['python',str(ROOT/'scripts/apply_courses.py')],check=True)
 subprocess.run(['python',str(ROOT/'scripts/apply_full_scenarios.py')],check=True)
+subprocess.run(['python',str(ROOT/'scripts/apply_conversation.py')],check=True)
 # App shell only at install. Heavy model/3D/tour assets are cached as used.
 assets=sorted('./'+str(f.relative_to(DIST)) for f in DIST.iterdir() if f.is_file() and f.suffix in ('.html','.js','.css') and f.name!='sw.js')
 digest=hashlib.sha256(b''.join((DIST/a[2:]).read_bytes() for a in assets)).hexdigest()[:16]
