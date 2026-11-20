@@ -15,7 +15,7 @@ export function normalizeCourse(raw,entry){
  return{id:entry.id,name:entry.name,overview,tee:'지도 경로 기준 · 티 미확인',holes,source:'OpenStreetMap contributors · ODbL · '+new Date().toISOString().slice(0,10),sourceUrl:'https://www.openstreetmap.org/'+entry.id,geometrySource:'osm',reason:holes.length?'':'등록된 홀 중심 경로가 없습니다. 골프장 위치를 찾는 것과 홀 지도를 확보하는 것은 다릅니다.',grouping:'원본에 코스명이 없는 홀은 코스 구분 미확인으로 표시합니다.'};
 }
 function xmlToElements(xml){
- const attrs=s=>Object.fromEntries([...s.matchAll(/([\w:]+)="([^"]*)"/g)].map(m=>[m[1],m[2].replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&lt;/g,'<')]));const nodes=new Map();for(const m of xml.matchAll(/<node\b([^>]*)(?:\/>|>[\s\S]*?<\/node>)/g)){const a=attrs(m[1]);nodes.set(a.id,{lat:Number(a.lat),lon:Number(a.lon)});}
+ const attrs=s=>Object.fromEntries([...s.matchAll(/([\w:]+)="([^"]*)"/g)].map(m=>[m[1],m[2].replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&lt;/g,'<')]));const nodes=new Map();for(const m of xml.matchAll(/<node\b([^>]*)>/g)){const a=attrs(m[1]);nodes.set(a.id,{lat:Number(a.lat),lon:Number(a.lon)});}
  const elements=[];for(const m of xml.matchAll(/<way\b([^>]*)>([\s\S]*?)<\/way>/g)){const a=attrs(m[1]),tags=Object.fromEntries([...m[2].matchAll(/<tag\b([^>]+)\/>/g)].map(t=>{const x=attrs(t[1]);return[x.k,x.v];}));if(!tags.golf&&tags.leisure!=='golf_course')continue;const geometry=[...m[2].matchAll(/<nd\b([^>]+)\/>/g)].map(n=>nodes.get(attrs(n[1]).ref)).filter(Boolean);elements.push({type:'way',id:Number(a.id),tags,geometry});}return{elements};
 }
 export async function courses(request,env,send=fetch){
