@@ -26,3 +26,7 @@ Worker output: `dist/server/index.js`, `dist/server/wrangler.json`, assets `dist
 - Simulation now uses explicit adjustable club-distance/spread assumptions instead of silently treating posture scores as real ball carry/dispersion. It retains connected shots, curved flight, small golfer, seeded replay, per-hole sums and PDF. No OB/water penalties or forced 90–92 target.
 
 See ../PHOTO_COACH_RESULTS.md for measured checks and remaining limitations.
+
+## Feedback-specific YouTube recommendations
+
+`server/videos.mjs` retrieves public search metadata for the actual improvement title/drill. At most two source-backed watch links per eligible item are persisted with the report. Positive, unassessable and low-confidence findings are excluded. On live-search failure or no relevant metadata, an attributed nine-video index is searched by topic. This limited index is not unlimited fresh discovery. Whole-video review is explicitly false. Existing reports can refresh/save recommendations. See ../YOUTUBE_RECOMMENDATION_RESULTS.md for network limits and 25 passing tests.

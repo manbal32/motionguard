@@ -1,9 +1,11 @@
 import {coaching} from './coaching.mjs';
 import {courses} from './courses.mjs';
 import {visual} from './visual.mjs';
+import {videos} from './videos.mjs';
 export default {
  async fetch(request,env){
   const path=new URL(request.url).pathname;
+  if(path==='/api/coaching/videos')return videos(request,env);
   if(path.startsWith('/api/courses/'))return courses(request,env);
   if(path==='/api/coaching/visual')return visual(request,env);
   if(path.startsWith('/api/')){

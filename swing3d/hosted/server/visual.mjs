@@ -1,3 +1,4 @@
+import {findVideos} from './videos.mjs';
 const visualPrompt=`한국어 골프 코치입니다. 승인된 상담 요약과 같은 영상의 대표사진 5장만으로 관찰 가능한 자세를 설명하세요. 자동 국면 이름은 후보이지 정답이 아닙니다. 정면/측면을 구별하고 가림·블러·장면 선택 오류는 status='unassessable'로 따로 기록하세요. 추적/촬영 문제를 스윙 결함으로 분류하지 마세요. 임팩트/클럽페이스/구질/비거리/타수/지면반력/실제 체중 분배/통증 원인은 확정하지 마세요. 명확한 시각적 근거가 있으면 구체적인 관찰과 연습 방향을 설명하고, 없으면 개선점을 채우지 마세요. 숫자 각도와 좌표는 제공되지 않으므로 생성하지 마세요. 텍스트에서 사용자의 추정을 관측 사실로 바꾸지 마세요. 최대 잘한 점2개/개선 후보3개. 모든 항목에 sample_id(1~5), region(torso/hips/lean/wrist/kneeL/kneeR/heelR/swing), kind(positive/improvement), status(observed/tentative/unassessable), title, observation, meaning, drill, confidence(낮음/중간/높음)를 쓰세요. confidence 낮음은 개선 후보로 단정하지 마세요. JSON 형식 {summary:string,items:항목배열,withheld:문자열배열,phase_notes:문자열배열}. 모든 설명은 자연스러운 한글로 작성하세요.`;
 const vjson=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store'}});
 export function validateVisual(data){
@@ -25,6 +26,7 @@ export async function visual(request,env,send=fetch){
   if(!r.ok)return vjson({ok:false,reason:r.status===429?'Gemini 요청 한도를 초과했습니다. 잠시 후 다시 분석해 주세요.':`Gemini 분석 요청 실패 (${r.status}). 다시 시도해 주세요.`},502);
   const result=await r.json(),c=result.candidates?.[0];if(c?.finishReason!=='STOP')throw Error('incomplete');
   const analysis=validateVisual(JSON.parse(c.content.parts.filter(p=>!p.thought).map(p=>p.text??'').join(''))),usage={};for(const k of ['promptTokenCount','candidatesTokenCount','totalTokenCount','thoughtsTokenCount','cachedContentTokenCount'])if(Number.isInteger(result.usageMetadata?.[k]))usage[k]=result.usageMetadata[k];
-  return vjson({ok:true,mode:'gemini-images',analysis,usage,elapsed_ms:Date.now()-started,attempts,failed_attempt_usage:attempts>1?'첫 실패 요청의 사용량은 제공되지 않았습니다.':null,model:result.modelVersion??model,samples:d.samples.map(({id,frame,time,phase})=>({id,frame,time,phase})),input:'사진 5장 + 승인 상담 요약 · 좌표/원본 영상 미전송'});
+  let recommendations=[];try{recommendations=await findVideos(analysis.items,env,send);}catch{}
+  return vjson({ok:true,mode:'gemini-images',analysis,recommendations,usage,elapsed_ms:Date.now()-started,attempts,failed_attempt_usage:attempts>1?'첫 실패 요청의 사용량은 제공되지 않았습니다.':null,model:result.modelVersion??model,samples:d.samples.map(({id,frame,time,phase})=>({id,frame,time,phase})),input:'사진 5장 + 승인 상담 요약 · 좌표/원본 영상 미전송'});
  }catch{return vjson({ok:false,reason:'AI 분석이 완료되지 않았거나 응답 형식이 올바르지 않습니다. 다시 시도해 주세요.'},502);}
 }
