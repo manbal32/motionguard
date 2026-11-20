@@ -19,7 +19,7 @@ window.MotionVisual=(()=>{
   if(!window.MotionVideo?.has(track.track_id))return{mode:'unavailable',reason:'원본 영상이 없는 샘플입니다. Gemini 사진 분석을 하지 않았습니다.'};
   if(!document.getElementById('photo-consent')?.checked)throw Error('사진 5장 전송 동의가 필요합니다. 영상 원본은 보내지 않습니다.');
   const selected=samples(track);for(const s of selected){if(signal?.aborted)throw new DOMException('취소','AbortError');const c=await MotionVideo.frame(track.track_id,s.frame);if(!c)throw Error('대표사진을 추출하지 못했습니다.');s.image=c.toDataURL('image/jpeg',.85).split(',')[1];if(selected.some(p=>p!==s&&p.image===s.image))throw Error('서로 다른 국면에서 같은 영상 장면이 추출됐습니다. 대표 장면을 구분하지 못해 분석을 중단했습니다. 영상을 다시 선택해 주세요.');}
-  const r=await fetch(new URL('api/coaching/visual',location.href),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({allow_images:true,summary,samples:selected}),signal});const d=await r.json();if(!r.ok||!d.ok)throw Error(d.reason??'AI 분석 실패');return d;
+  const r=await fetch(new URL('api/coaching/visual',location.href),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({allow_images:true,summary,samples:selected}),signal});const d=await r.json();if(!r.ok||!d.ok)throw Error(d.reason??'AI 분석 실패');d.local_stills=selected.map(({id,phase,time,image})=>({id,phase,time,image:'data:image/jpeg;base64,'+image}));return d;
  }
  const valid=i=>i.status!=='unassessable'&&i.confidence!=='낮음';
  function render(root,doc,track,print=false){
@@ -27,6 +27,7 @@ window.MotionVisual=(()=>{
   root.append($('h2','사진으로 살펴본 내 스윙'));
   if(result.mode!=='gemini-images'){root.append($('p',result.reason??'이번에는 AI 사진 분석을 하지 않았습니다.'));return true;}
   root.append($('p',result.analysis.summary,'visual-summary'));
+  if(print&&result.local_stills?.length){const grid=$('section',undefined,'report-original-grid');grid.append($('h3','분석에 사용한 대표사진 5장'));for(const still of result.local_stills){if(!still.image?.startsWith('data:image/jpeg;base64,'))continue;const figure=$('figure'),img=$('img');img.src=still.image;img.className='report-original-still';img.alt=(MotionCustomer.phases[still.phase]??still.phase)+' 후보';figure.append(img,$('figcaption',img.alt+' · '+still.time.toFixed(2)+'초'));grid.append(figure);}root.append(grid);}
   const assessed=result.analysis.items.filter(valid).slice(0,5),uncertain=result.analysis.items.filter(i=>!valid(i));
   for(const item of assessed){const sample=result.samples.find(s=>s.id===item.sample_id);if(!sample)continue;const card=$('article',undefined,'photo-finding');card.append($('p',`${item.kind==='positive'?'잘한 점 후보':'개선 후보'} · ${MotionCustomer.phases[sample.phase]} 후보 · ${sample.time.toFixed(2)}초`,'evidence-kicker'),$('h3',item.title));
    const area=$('div',undefined,'photo-media'),staticCanvas=$('canvas'),vcanvas=$('canvas');let isVideo=false,playing=false,handle=0,start=0,busy=false;const itemForPaint={channel:item.region,positive:item.kind==='positive'};

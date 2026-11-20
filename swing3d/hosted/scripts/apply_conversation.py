@@ -211,3 +211,13 @@ s=s.replace("$('report-verdict').textContent=score.total===null?", "$('report-ve
 
 p=d/'course-ui.js';s=p.read_text().replace("(!window.MotionCoursePreview&&!(profile.measuredCount>0))","(!window.MotionCoursePreview&&!profile.aiEstimate&&!(profile.measuredCount>0))");p.write_text(s)
 p=d/'course-ui.js';s=p.read_text().replace('profile=saved.profile;else{profile.carryFactor=1;', 'profile={...saved.profile,...profile,carryFactor:saved.profile.carryFactor,spreadMeters:saved.profile.spreadMeters};else{profile.carryFactor=1;');p.write_text(s)
+p=d/'report.js';s=p.read_text().replace("$('report-measured').textContent=", "if(doc.visual_analysis?.mode==='gemini-images'){$('report-round-bars').hidden=true;$('report-delta').hidden=true;}\n  $('report-measured').textContent=").replace(' · 총점 ${score.total}', ' · 로컬 참고점수 ${score.total}');p.write_text(s)
+p=d/'report.html';s=p.read_text().replace('<script src="./report.js" defer>', '<script src="./ai-scenario.js"></script><script src="./report.js" defer>');p.write_text(s)
+
+p=d/'visual-analysis.js';p.write_text(p.read_text().replace('if(print&&window.MotionAIResult)MotionAIResult.render(root,doc);','if(print&&window.MotionAIResult)MotionAIResult.render(root,doc,true);'))
+p=d/'overhaul.css';p.write_text(p.read_text()+"\n.report-original-still{max-width:180px;max-height:240px;object-fit:contain;display:block;margin:10px auto}@media print{.simulation-summary details p{display:block}.simulation-summary{break-inside:avoid}.report-original-still{max-width:150px;max-height:200px}.photo-finding{break-inside:avoid}}\n")
+# Put the common AI overview on the PDF's first page, before long evidence.
+p=d/'visual-analysis.js';p.write_text(p.read_text().replace('if(print&&window.MotionAIResult)MotionAIResult.render(root,doc,true);',''))
+p=d/'report.js';s=p.read_text().replace("$('report-body').hidden=false;", "if(doc.visual_analysis?.mode==='gemini-images'){const overview=document.createElement('section');document.querySelector('.scoreband').after(overview);MotionAIResult.render(overview,doc,true);}\n  $('report-body').hidden=false;");p.write_text(s)
+
+p=d/'overhaul.css';p.write_text(p.read_text()+"\n.report-original-grid{display:flex;flex-wrap:wrap;gap:10px;break-inside:avoid}.report-original-grid h3{width:100%;font-size:15px}.report-original-grid figure{margin:0;width:30%}.report-original-grid img{width:100%;max-height:160px}.report-original-grid figcaption{font-size:10pt;text-align:center}\n")
