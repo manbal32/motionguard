@@ -38,8 +38,8 @@ window.MotionVisual=(()=>{
   if(!assessed.length)root.append($('p','이번 사진에서는 근거가 충분한 교정점을 정하지 못했습니다. 판단 보류 내용을 확인해 주세요.'));
   const details=$('details'),summary=$('summary','판단을 미룬 내용');details.append(summary);for(const i of uncertain)details.append($('p',i.title+' · '+i.observation+(i.caution?' · '+i.caution:'')));for(const t of [...result.analysis.withheld,...result.analysis.phase_notes])details.append($('p',t));root.append(details);
   const u=result.usage??{};if(result.failed_attempt_usage)root.append($('p',result.failed_attempt_usage,'evidence-note'));
-  root.append($('p',`Gemini · ${result.model} · 사진 5장 / 입력 ${u.promptTokenCount??'미제공'} · 출력 ${u.candidatesTokenCount??'미제공'} · 총 ${u.totalTokenCount??'미제공'} 토큰 · ${(result.elapsed_ms/1000).toFixed(2)}초`,'token-usage'));
-  const receipt=$('details',undefined,'analysis-receipt');receipt.append($('summary','이번 분석에 사용한 사진 5장'));const sent=result.input_receipt;receipt.append($('p',sent?`사진 ${sent.photo_count}장 전송·수신 확인 · ${result.model}`:'이전 분석 기록 · 사진 수신 증명 미포함'));const grid=$('div',undefined,'receipt-photos');for(const still of result.local_stills??[]){const fig=$('figure'),img=$('img');img.src=still.image;img.alt='실제 분석에 보낸 장면 '+still.id;fig.append(img,$('figcaption',still.time.toFixed(2)+'초'));grid.append(fig);}receipt.append(grid);root.append(receipt);
+  root.append($('p',`분석 사용량 · 사진 5장 / 입력 ${u.promptTokenCount??'미제공'} · 출력 ${u.candidatesTokenCount??'미제공'} · 총 ${u.totalTokenCount??'미제공'} 토큰 · ${(result.elapsed_ms/1000).toFixed(2)}초`,'token-usage'));
+  const receipt=$('details',undefined,'analysis-receipt');receipt.append($('summary','이번 분석에 사용한 사진 5장'));const sent=result.input_receipt;receipt.append($('p',sent?`원본 영상에서 선택한 사진 ${sent.photo_count}장`:'이전 분석 기록 · 사진 수신 증명 미포함'));const grid=$('div',undefined,'receipt-photos');for(const still of result.local_stills??[]){const fig=$('figure'),img=$('img');img.src=still.image;img.alt='실제 분석에 보낸 장면 '+still.id;fig.append(img,$('figcaption',still.time.toFixed(2)+'초'));grid.append(fig);}receipt.append(grid);root.append(receipt);
   return true;
  }
  return{analyze,render};

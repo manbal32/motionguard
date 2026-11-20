@@ -1,3 +1,7 @@
+# 최신: 간결한 기존 구성·홀 데이터 제외·실제 PDF 다운로드
+
+0-AI 및 PDF_FILE_DOWNLOAD_RESULTS.md 참조. 리포트동일화면보기+실제Blob PDF파일/native다운로드/PDF열기/지원시파일공유. 최근저장결과report=latest. 홀별표·경로와사진밑모델표시제거. Node95/95. 실제내보내기다운로드이벤트발생/파일746655bytes/4쪽/링크7개확인. 사용자Safari실기기검증은아님. 추가모델토큰소모없음.
+
 # 최신: 영상 길이를 너무 일찍 읽던 순서 오류
 
 0-AH 및 METADATA_READINESS_RESULTS.md 참조. register→info 동기duration조회에서NaN즉시오류. loadeddata대기ready 추가→선택await. Infinity컨테이너길이/프레임seek보완,취소처리. 등록·선택실제모듈지연이벤트통합재현3개추가. 전체90/90통과. 실제Safari재시도는미검증.

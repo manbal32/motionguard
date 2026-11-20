@@ -306,3 +306,9 @@ p=d/'video-evidence.js';s=p.read_text();s=s.replace(' return{register,frame,at:'
 p=d/'instrument.js';s=p.read_text().replace('MotionVideo.register(track.track_id,mediaUrl,evidence);','MotionVideo.register(track.track_id,mediaUrl,{...evidence,duration:track.meta.total_frames/track.meta.fps});');p.write_text(s)
 
 p=d/'video-evidence.js';s=p.read_text().replace('const at=Math.max(0,Math.min(v.duration-.0001,', "const duration=Number.isFinite(v.duration)&&v.duration>0?v.duration:source.evidence.duration;if(!Number.isFinite(duration)||duration<=0)throw Error('원본 영상 길이를 확인하지 못했습니다.');const at=Math.max(0,Math.min(duration-.0001,");p.write_text(s)
+
+# Real downloadable PDF files, also in the same-document report view.
+shutil.copy2(r/'overrides/report-pdf.js',d/'report-pdf.js')
+shutil.copytree(r/'overrides/vendor/html2canvas',d/'vendor/html2canvas',dirs_exist_ok=True)
+p=d/'index.html';p.write_text(p.read_text().replace('<script src="./report-navigation.js">','<script src="./coaching-report.js"></script><script src="./report-pdf.js"></script><script src="./report-navigation.js">'))
+p=d/'report.html';p.write_text(p.read_text().replace('<script src="./coaching-report.js">','<script src="./report-pdf.js"></script><script src="./coaching-report.js">'))
