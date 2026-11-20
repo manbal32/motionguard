@@ -1,3 +1,7 @@
+# 최신: Gemini 점수/타수 필수값과 요약 우선
+
+0-AB 및 GEMINI_SCORE_COMPLETION_RESULTS.md 참조. 이전 프롬프트의 숫자 생략 허용을 시뮬레이션 가정 기반 범위 요청으로 교체. 구조화 출력+누락1회보완+사용량합산, 빈숫자 성공차단. 잘한점/개선점/연습→점수링·항목막대→짧은설명. Node75/75통과. 실제iPad미검증.
+
 # 최신: 실제 분석 JPEG와 동일 사진 2D 연결
 
 0-AA 및 SAME_IMAGE_PAIR_RESULTS.md 참조. 기본 분석 사진은 전송한 local_stills JPEG. 2D는 같은 JPEG의 IMAGE 추론이며 저신뢰 관절은 다른 프레임으로 대체하지 않는다. 영상은 별도 선택. Node 73개 통과. 샘플 5장 모두 인물 검출, 필수 관절 visibility 기준 3/5 통과·2/5 보류. 실제 iPad 화면 재현 검증은 미완료.
