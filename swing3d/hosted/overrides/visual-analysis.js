@@ -1,10 +1,12 @@
 /* Five stills leave this browser only after explicit image consent. Coordinates stay local. */
 window.MotionVisual=(()=>{
+ let prepared=null;
  const $=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
  async function analyze(track,summary,signal){
   if(!window.MotionVideo?.has(track.track_id))return{mode:'unavailable',reason:'원본 영상이 없는 샘플입니다. Gemini 사진 분석을 하지 않았습니다.'};
   if(!document.getElementById('photo-consent')?.checked)throw Error('사진 5장 전송 동의가 필요합니다. 영상 원본은 보내지 않습니다.');
-  const selected=track.photo_samples?track.photo_samples.map(s=>({...s})):await MotionStills.extract(track,{signal});
+  const selected=prepared?.trackId===track.track_id?prepared.samples:track.photo_samples?track.photo_samples.map(s=>({...s})):await MotionStills.extract(track,{signal});
+  prepared={trackId:track.track_id,samples:selected};
   const selectedHashes=await Promise.all(selected.map(async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',Uint8Array.from(atob(s.image),c=>c.charCodeAt(0))))].map(n=>n.toString(16).padStart(2,'0')).join('')));const requestId=crypto.randomUUID();window.MotionAudit?.record('photos_ready',{request_id:requestId,count:selected.length,times:selected.map(s=>s.time)});const r=await fetch(new URL('api/coaching/visual',location.href),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({request_id:requestId,allow_images:true,summary,samples:selected}),signal});const d=await r.json();if(!r.ok||!d.ok){window.MotionAudit?.record('analysis_failed',{request_id:d.request_id??requestId,code:d.error_code??'unknown',upstream_status:d.upstream_status??null});throw Error((d.reason??'분석에 실패했습니다.')+(d.request_id?' (확인번호 '+d.request_id.slice(0,8)+')':''));}if(d.input_receipt?.request_id!==requestId||d.input_receipt?.photo_count!==5||d.input_receipt?.forwarded_images!==5||JSON.stringify(d.input_receipt?.image_sha256)!==JSON.stringify(selectedHashes))throw Error('서버에서 이번 분석 사진 5장의 수신을 확인하지 못했습니다. 최신 화면에서 다시 시도해 주세요.');window.MotionAudit?.record('ai_response',{request_id:requestId,photos:5,items:d.analysis?.items?.length??0});d.selection_audit={revision:'whole-clip-v2',times:selected.map(s=>s.time),minimum_pose_change:Math.min(...selected.map(s=>s.min_pair_change??0))};if(d.analysis?.assessment_score)d.analysis.assessment_score.rubric='photo-four-v2-keyframes';d.local_stills=selected.map(({id,phase,time,image})=>({id,phase,time,image:'data:image/jpeg;base64,'+image}));return d;
  }
  const valid=i=>i.status!=='unassessable'&&i.confidence!=='낮음';
