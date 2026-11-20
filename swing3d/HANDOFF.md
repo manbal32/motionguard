@@ -1,3 +1,7 @@
+# 최신: 영상 길이를 너무 일찍 읽던 순서 오류
+
+0-AH 및 METADATA_READINESS_RESULTS.md 참조. register→info 동기duration조회에서NaN즉시오류. loadeddata대기ready 추가→선택await. Infinity컨테이너길이/프레임seek보완,취소처리. 등록·선택실제모듈지연이벤트통합재현3개추가. 전체90/90통과. 실제Safari재시도는미검증.
+
 # 최신: 원본 전체에서 다양한5장·리포트 native 이동
 
 0-AG 및 WHOLE_CLIP_SELECTION_RESULTS.md 참조. 전역17후보+손목상하행후보+인물영역픽셀변화검사. 기존JPEG바이트만비교/늦은국면종속교체. 검은옷업로드영상에서0.10/1.91/2.33/2.43/2.91초확인,최소다른픽셀8.14%. 리포트미디어wait제거/native href,사진전용도연결. Node87/87통과. 실제Safari파일선택·클릭재현은미검증.
