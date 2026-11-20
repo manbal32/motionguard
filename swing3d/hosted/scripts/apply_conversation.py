@@ -169,3 +169,13 @@ s=s[:a]+''' const wait=(video,event)=>new Promise((resolve,reject)=>{
 ''' + s[b:]
 s=s.replace("r.video.load();}registry.clear()","r.video.load();r.video.remove();}registry.clear()")
 p.write_text(s)
+p=d/'demo-start.js';s=p.read_text();s=s.replace("title.textContent='파일 첨부됨';","title.textContent='첨부 파일';").replace("name.textContent=file.name;name.title=file.name;card.setAttribute('aria-label','첨부 파일 '+file.name+' 보기 또는 변경');","name.textContent='';name.removeAttribute('title');card.setAttribute('aria-label','첨부 파일 펼치기 또는 접기');")
+s=s.replace("action.textContent='보기·변경';", "action.textContent='▸';action.setAttribute('aria-hidden','true');")
+s=s.replace("media.addEventListener('toggle',()=>card.setAttribute('aria-expanded',String(media.open)));", "media.addEventListener('toggle',()=>{card.setAttribute('aria-expanded',String(media.open));action.textContent=media.open?'▾':'▸';});")
+s=s.replace("card.onclick=()=>{media.open=!media.open;card.setAttribute('aria-expanded',String(media.open));};", "card.onclick=()=>{media.open=!media.open;card.setAttribute('aria-expanded',String(media.open));if(media.open){media.after(card);card.after(media);} };" )
+# Keep card above expanded video; move media out of its original upper slot only when expanded.
+s=s.replace("if(media.open){media.after(card);card.after(media);}","if(media.open){card.after(media);}")
+p.write_text(s)
+p=d/'overhaul.css';p.write_text(p.read_text()+"\n#conversation-file .conversation-file-name{display:none}#conversation-file .conversation-file-action{font-size:24px;color:var(--ink)}#uploaded-media[data-attached='true']>summary{display:none}#uploaded-media[data-attached='true'] #choose-video{display:inline-flex}#uploaded-media[data-attached='true']{border:1px solid var(--line);border-radius:12px;padding:10px}\n")
+
+p=d/'demo-start.js';s=p.read_text().replace("media.dataset.attached='true';", "media.dataset.attached='true';document.getElementById('choose-video').textContent='파일 다시 올리기';");p.write_text(s)
