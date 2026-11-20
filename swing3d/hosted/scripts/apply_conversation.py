@@ -210,3 +210,4 @@ p=d/'report.js';s=p.read_text().replace("$('report-total').textContent=score.tot
 s=s.replace("$('report-verdict').textContent=score.total===null?", "$('report-verdict').textContent=doc.visual_analysis?.mode==='gemini-images'?'모션가드 코치 사진 평가':score.total===null?");p.write_text(s)
 
 p=d/'course-ui.js';s=p.read_text().replace("(!window.MotionCoursePreview&&!(profile.measuredCount>0))","(!window.MotionCoursePreview&&!profile.aiEstimate&&!(profile.measuredCount>0))");p.write_text(s)
+p=d/'course-ui.js';s=p.read_text().replace('profile=saved.profile;else{profile.carryFactor=1;', 'profile={...saved.profile,...profile,carryFactor:saved.profile.carryFactor,spreadMeters:saved.profile.spreadMeters};else{profile.carryFactor=1;');p.write_text(s)
