@@ -145,3 +145,27 @@ p=d/'overhaul.css';p.write_text(p.read_text()+'''
 #coach-panel #coach-mode{margin-bottom:0}
 #upload-actions{padding-top:10px}#upload-actions #start{min-height:52px}
 ''')
+# Latest request restores editable summary review; approved summary still accompanies five images.
+p=d/'instrument.js';s=p.read_text();s=s.replace('      clearTimeout(summaryTimeout);request=undefined;\n      await analyze(result.summary);','''      clearTimeout(summaryTimeout);
+      for(const input of summaryFields){input.value=result.summary[input.name]??'';input.readOnly=false;}
+      byId('summary-origin').textContent='대화에서 정리한 고민과 코치 제안입니다. 필요하면 수정해 주세요.';
+      byId('summary-feedback').textContent='이 내용과 선택한 장면을 함께 분석합니다.';
+      summaryPanel.hidden=false;step(2);fitFields();approve.disabled=false;''')
+p.write_text(s)
+p=d/'overhaul.css';p.write_text(p.read_text()+"\n#summary-review>label:has(#photo-consent){display:none}#summary-review .summary-fields{flex:none;overflow:visible}\n")
+p=d/'video-evidence.js';s=p.read_text();a=s.index(' const wait=');b=s.index('\n function draw(',a)
+s=s[:a]+''' const wait=(video,event)=>new Promise((resolve,reject)=>{
+  let timeout;const clean=()=>{clearTimeout(timeout);video.removeEventListener(event,done);video.removeEventListener('error',fail);};
+  const done=()=>{clean();resolve();},fail=()=>{clean();reject(Error('영상 장면을 읽지 못했습니다 ('+event+'). 영상을 다시 선택한 뒤 시도해 주세요.'));};
+  if(event==='loadeddata'&&video.readyState>=2){resolve();return;}
+  video.addEventListener(event,done,{once:true});video.addEventListener('error',fail,{once:true});timeout=setTimeout(fail,20000);
+ });
+ function register(id,url,evidence){if(!id||!url||!evidence?.fps)return;const old=registry.get(id);if(old?.url===url)return;
+  if(old?.video){old.video.pause();old.video.removeAttribute('src');old.video.load();old.video.remove();}
+  const video=document.createElement('video');video.muted=true;video.playsInline=true;video.setAttribute('playsinline','');video.preload='auto';
+  Object.assign(video.style,{position:'fixed',width:'2px',height:'2px',left:'0',bottom:'0',opacity:'0.01',pointerEvents:'none'});video.setAttribute('aria-hidden','true');document.body.append(video);
+  const ready=wait(video,'loadeddata');ready.catch(()=>{});video.src=url;video.load();registry.set(id,{url,evidence,video,ready,queue:Promise.resolve()});
+ }
+''' + s[b:]
+s=s.replace("r.video.load();}registry.clear()","r.video.load();r.video.remove();}registry.clear()")
+p.write_text(s)
