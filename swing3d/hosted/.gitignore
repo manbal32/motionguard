@@ -1,0 +1,6 @@
+dist/
+tour-source/
+.client-build/
+.env*
+!.env.example
+__pycache__/
