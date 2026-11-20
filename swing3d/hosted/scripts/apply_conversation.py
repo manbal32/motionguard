@@ -268,3 +268,8 @@ p=d/'index.html';p.write_text(p.read_text().replace('<script src="./embedded-sim
 p=d/'overhaul.css';p.write_text(p.read_text()+'''
 .direct-play{--course-action:#244d3b;--good:#21805a;--paper:#fff;background:#f0f7f1;border:1px solid #d5e6d6;border-radius:20px;padding:16px}.direct-play h2{margin:14px 0;font-size:23px}.direct-play h3{margin:10px 0;font-size:17px}.direct-map{display:block;width:100%;height:480px;max-height:65svh;background:#dfeeda;border-radius:16px}.direct-status{min-height:28px;font-size:17px;font-weight:700;color:#1b6347}.direct-controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.direct-controls button,.direct-controls select{min-height:44px;font-size:15px;padding:8px 12px}.direct-controls button[aria-pressed=true]{background:#197b54;color:white}.direct-note{font-size:14px;line-height:1.6;margin:12px 0 0;color:#476153}
 ''')
+shutil.copy2(r/'overrides/still-pose.js',d/'still-pose.js')
+for name in ['index.html','report.html']:
+ p=d/name;p.write_text(p.read_text().replace('<script src="./visual-analysis.js">','<script src="./still-pose.js"></script><script src="./visual-analysis.js">'))
+p=d/'report.js';p.write_text(p.read_text().replace('await MotionEvidence.ready();','await MotionEvidence.ready();if(window.MotionStillPose)await MotionStillPose.ready();'))
+p=d/'overhaul.css';p.write_text(p.read_text()+"\n.instrument:has(.result-detail-view:not([hidden])) #history-area,.instrument:has(.result-detail-view:not([hidden])) #history-note,.instrument:has(.result-detail-view:not([hidden])) #first-history,.instrument:has(.result-detail-view:not([hidden])) .record-tools{display:none}.photo-media img{display:block;max-height:520px;object-fit:contain}.photo-media canvas[data-source='analysis-jpeg']{height:auto}\n")

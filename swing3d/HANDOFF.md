@@ -1,3 +1,7 @@
+# 최신: 실제 분석 JPEG와 동일 사진 2D 연결
+
+0-AA 및 SAME_IMAGE_PAIR_RESULTS.md 참조. 기본 분석 사진은 전송한 local_stills JPEG. 2D는 같은 JPEG의 IMAGE 추론이며 저신뢰 관절은 다른 프레임으로 대체하지 않는다. 영상은 별도 선택. Node 73개 통과. 샘플 5장 모두 인물 검출, 필수 관절 visibility 기준 3/5 통과·2/5 보류. 실제 iPad 화면 재현 검증은 미완료.
+
 # 최신: iframe 없는 직접 골퍼·공비행
 
 0-Z,DIRECT_SVG_SIMULATION_RESULTS.md 참조. 결과내실제SVG/기존골퍼/샷엔진으로즉시재생. 검색/DB/iframe전환제거. 가상DOM에서스윙/공이동/컵도착/9홀완료/PDF시나리오저장검증. Node70개통과,실제iPad미검증.

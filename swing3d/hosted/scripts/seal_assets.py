@@ -12,6 +12,6 @@ for p in dist.glob('*.html'):
  s=re.sub(r'((?:src|href)="\./[^"?#]+\.(?:js|css))"',lambda m:m[1]+'?v='+build+'"',s)
  s=s.replace('<head>','<head><script>window.MotionBuild='+json.dumps(build)+';</script><script src="./runtime-health.js?v='+build+'"></script>',1)
  p.write_text(s)
-files={str(p.relative_to(dist)):{'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size} for p in sorted(dist.rglob('*')) if p.is_file() and p.suffix in ('.html','.js','.css','.task','.wasm','.png') and p.name!='sw.js'}
+files={str(p.relative_to(dist)):{'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size} for p in sorted(dist.rglob('*')) if p.is_file() and p.suffix in ('.html','.js','.mjs','.css','.task','.wasm','.png') and p.name!='sw.js'}
 (dist/'build-info.json').write_text(json.dumps({'build':build,'files':files},ensure_ascii=False))
 print(json.dumps({'build':build,'verified_assets':len(files)}))
