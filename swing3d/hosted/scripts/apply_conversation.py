@@ -67,3 +67,28 @@ body:has(.instrument){display:block;height:auto;min-height:100%;overflow-y:auto}
 .instrument[data-step='2'] #summary-review,.instrument[data-step='2'] .summary-fields{min-height:auto;overflow:visible;flex:none}
 @media(max-width:600px){#coach-log{min-height:300px}#coach-log li{max-width:94%}#coach-panel{gap:10px}.instrument{padding-bottom:24px}}
 ''';p.write_text(s)
+# One analysis action: summary internally, then extraction, then results; failures stay visible.
+p=d/'index.html';s=p.read_text().replace('AI 코칭 이용에 동의합니다','AI 코칭·자세 분석 이용에 동의합니다').replace('사용자가 추정한 원인','원인 가설');s=s.replace('동의하면 상담 텍스트가 외부 AI 서비스로 전송됩니다.','동의하면 상담 텍스트와 분석용 정지 이미지 5장이 외부 AI 서비스로 전송됩니다. 원본 영상과 좌표는 전송하지 않습니다.')
+s=s.replace('<div id="progress"','<div id="progress"')
+s=s.replace('<button id="cancel"', '<button id="analysis-retry" type="button" hidden>분석 다시 시도</button><button id="analysis-back" type="button" hidden>대화로 돌아가기</button><button id="cancel"')
+p.write_text(s)
+p=d/'instrument.js';s=p.read_text().replace('AI 코치','모션가드 코치')
+s=s.replace('summaryPanel.hidden=false;step(2);approve.disabled=true;','summaryPanel.hidden=true;step("busy");approve.disabled=true;byId("analysis-retry").hidden=byId("analysis-back").hidden=true;')
+a=s.index('      for (const input of summaryFields) {',s.index('  async function reviewSummary()'));b=s.index('\n    } catch (error) {',a)
+s=s[:a]+'''      clearTimeout(summaryTimeout);request=undefined;
+      await analyze(result.summary);'''+s[b:]
+s=s.replace("byId('summary-retry').hidden=false;", "byId('summary-retry').hidden=false;report('상담 정리를 완료하지 못했습니다. '+(controller.signal.aborted?'연결 시간이 초과됐습니다.':error.message),0);byId('analysis-retry').hidden=byId('analysis-back').hidden=false;")
+s=s.replace("if(!csv&&!byId('photo-consent')?.checked){byId('summary-feedback').textContent='AI 자세 분석 이용 동의를 확인해 주세요.';byId('photo-consent').focus();return;}","if(!consent.checked){step(1);coachStatus.textContent='AI 코칭·자세 분석 이용에 동의해 주세요.';consent.focus();return;}byId('photo-consent').checked=true;")
+s=s.replace('    preview.pause();\n    report(csv', '    const analysisTimeout=setTimeout(()=>controller.abort(),180000);\n    byId("analysis-retry").hidden=byId("analysis-back").hidden=true;\n    preview.pause();\n    report(csv')
+s=s.replace('      step(csv ? 1 : 2);', '      step("busy");byId("analysis-retry").hidden=byId("analysis-back").hidden=false;')
+s=s.replace('" 전신이 보이는 MP4를 선택하거나 좌표 CSV로 다시 시도해 주세요."','" 같은 영상으로 다시 시도하거나 대화로 돌아갈 수 있습니다."')
+s=s.replace('      request = undefined;\n      byId("start").disabled = byId("video")','      clearTimeout(analysisTimeout);request = undefined;\n      byId("start").disabled = byId("video")')
+s=s.replace('  byId("start").addEventListener("click", reviewSummary);','  byId("start").textContent="분석하기";\n  byId("start").addEventListener("click", reviewSummary);\n  byId("analysis-retry").onclick=reviewSummary;byId("analysis-back").onclick=()=>step(1);')
+s=s.replace("byId('start').textContent='상담 정리하고 분석하기';","byId('start').textContent='분석하기';")
+p.write_text(s)
+p=d/'overhaul.css';p.write_text(p.read_text()+"\n#progress:has(#analysis-retry:not([hidden])){justify-content:flex-start}#analysis-retry,#analysis-back{min-height:48px}#coach-mode{white-space:normal}\n")
+p=d/'instrument.js';s=p.read_text();needle='  async function analyze(approvedSummary) {';s=s.replace(needle,'''  function analysisWait(promise,signal){return new Promise((resolve,reject)=>{const stop=()=>reject(new Error('분석이 중단됐거나 처리 시간이 초과됐습니다.'));if(signal.aborted){stop();return;}signal.addEventListener('abort',stop,{once:true});Promise.resolve(promise).then(resolve,reject).finally(()=>signal.removeEventListener('abort',stop));});}
+'''+needle)
+s=s.replace('      const track = await readResponse(response);','      const track = await analysisWait(readResponse(response),controller.signal);')
+s=s.replace('        coaching = await coachPost("analyze", {','        coaching = await analysisWait(coachPost("analyze", {').replace('conversation_summary: approvedSummary}, controller.signal);','conversation_summary: approvedSummary}, controller.signal),controller.signal);')
+p.write_text(s)

@@ -1,3 +1,7 @@
+# 최신: 원클릭 분석/실패 상태
+
+0-M,DIRECT_ANALYSIS_RESULTS.md 참조. 원클릭 요약→분석→결과,모션가드 코치,제안 포함 요약. 로컬처리 무응답 제한/오류 화면 유지. Node50개 통과,모바일 실영상 E2E 미검증.
+
 # 최신: 모바일 대화 잘림/첫 화면 동선
 
 0-L 및 CHAT_LAYOUT_RESULTS.md 참조. 샘플/CSV/첫화면 코스시연 제거,대화 페이지 자연 스크롤,말풍선 높이 유지. 코스 비교는 분석 결과 이후. Node49개 통과,실제 모바일 재캡처 미검증. 현재 Site URL은 https://motionguard-mobile-play.creamhome4.chatgpt.site 이다. 이전 주소는 역사 기록이다.
