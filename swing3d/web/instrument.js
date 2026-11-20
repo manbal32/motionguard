@@ -238,6 +238,7 @@
       return;
     }
     if (csv) {
+      MotionVideo.clear();
       selected = { file, csv };byId("upload").dataset.ready="true";
       byId("start").disabled = false;
       byId("coach-panel").hidden=false;showMode();drawCSVPreview(file);
@@ -247,6 +248,7 @@
       report("MP4 또는 MOV 영상으로 다시 선택해 주세요.", 0);
       return;
     }
+    MotionVideo.clear();
     const candidate = URL.createObjectURL(file);
     mediaUrl = candidate;
     video.src = candidate;
@@ -369,6 +371,7 @@
       }
       if (controller.signal.aborted) return;
       evidence = track.evidence;
+      if(evidence)MotionVideo.register(track.track_id,mediaUrl,evidence);
       activeFinding = undefined;
       comparison = { track, reference: SwingReference.expand(track), displayed: track.track, options: [] };
       if (evidence) setupVideo();
@@ -414,6 +417,7 @@
   }
 
   function updateOverlay(mediaTime = video.currentTime) {
+    if(evidence&&video.paused&&Math.abs(mediaTime-video.currentTime)>1.5/evidence.fps)mediaTime=video.currentTime;
     if (!evidence && comparison?.track.pose_landmarks) {
       paintTrackPose();
       return;
@@ -471,14 +475,15 @@
       channel === activeFinding.channel ? comparison.reference[sample][SwingReference.channels.indexOf(channel)]
         : baseline[comparison.track.channels.indexOf(channel)]) : null;
     const show = byId("toggle-joints").getAttribute("aria-pressed") === "true";
-    if (show) paint(ctx, skeleton, reference, scale, line, diameter);
+    ctx.clearRect(0,0,width,height);
+    if(show&&activeFinding&&inFindingRange(sample))MotionVideo.draw(ctx,points,activeFinding,{width,height});
     canvas.dataset.landmarkCount="22";
     renderAvatar(measured,baseline,sample);
     mobileContext.drawImage(alternate,0,0,mobile.width,mobile.height);
   }
 
   function renderAvatar(points, baseline, sample) {
-    const stage = byId("comparison-panes");
+    const stage = byId("compare-stage");
     const w = stage.clientWidth, h = stage.clientHeight, dpr = window.devicePixelRatio || 1;
     if (!w || !h) return;
     alternate.width = Math.round(w*dpr); alternate.height = Math.round(h*dpr);
@@ -568,6 +573,17 @@
     }
   });
   panes.addEventListener("pointercancel", () => { swipeStart = undefined; });
+  let comparisonView='2d';
+  function setComparisonView(view){
+    comparisonView=evidence&&view==='video'?'video':'2d';
+    byId('overlay').dataset.view=comparisonView;byId('overlay').dataset.hasVideo=String(!!evidence);
+    panes.dataset.original=String(comparisonView==='video');
+    byId('view-original').disabled=!evidence;
+    byId('view-original').setAttribute('aria-pressed',String(comparisonView==='video'));
+    byId('view-2d').setAttribute('aria-pressed',String(comparisonView==='2d'));
+    byId('media-sync-note').textContent=evidence?'내 영상과 2D는 같은 순간·같은 반복 구간입니다. 원본 영상은 변형하지 않습니다.':'원본 영상이 없는 좌표 분석입니다. 실제 영상으로 바꾸지 않고 2D를 보여 드립니다.';
+  }
+  byId('view-original').onclick=()=>setComparisonView('video');byId('view-2d').onclick=()=>setComparisonView('2d');
   const compareToggle = byId("mobile-toggle");
   function mobileMode(exaggerated) {
     byId("overlay").dataset.mobileMode = exaggerated ? "exaggerated" : "measured";
@@ -949,6 +965,7 @@
     byId("compare-warning").classList.remove("positive-note");
     byId("compare-warning").textContent = "오른쪽은 개선 포인트 그림이며 측정값이 아닙니다 · 왼쪽 수치가 실제 측정입니다";
     setupPoint();
+    setComparisonView(evidence?'video':'2d');
     comparison.options = SwingFindings.choices(byId("finding-options"), doc, track, chooseFinding);
     factor.disabled = comparison.options.length === 0;
     if (comparison.options.length) chooseFinding((comparison.options.find(f=>["torso","swing","x_factor","hips","lean","wrist"].includes(f.channel))??comparison.options[0]).id);
@@ -966,8 +983,8 @@
     byId("record").disabled = false;
     byId("record-progress").textContent = "";
     // The result screen is the only route to a customer report.
-    byId('result-report').onclick=()=>{video.pause();pointPlaying=false;saveReturnState(track,coaching);};
-    byId('result-course').onclick=()=>{video.pause();pointPlaying=false;saveReturnState(track,coaching);};
+    byId('result-report').onclick=async event=>{event.preventDefault();video.pause();pointPlaying=false;saveReturnState(track,coaching);await MotionEvidence.ready();location.assign(byId('result-report').href);};
+    byId('result-course').onclick=async event=>{event.preventDefault();video.pause();pointPlaying=false;saveReturnState(track,coaching);await MotionEvidence.ready();location.assign(byId('result-course').href);};
   }
 
   function saveReturnState(track,coaching){
@@ -1030,7 +1047,7 @@
     byId('point-play').textContent=pointPlaying?'멈춤':'재생';lastPointTick=undefined;
   };
   byId('point-seek').oninput=e=>seekPoint(+e.target.value);
-  byId('point-mode').onclick=e=>{const original=panes.dataset.original!=='true';panes.dataset.original=String(original);e.currentTarget.textContent=original?'그림 보기':'원본 보기';};
+  byId('point-mode').onclick=e=>{setComparisonView(comparisonView==='video'?'2d':'video');e.currentTarget.textContent=comparisonView==='video'?'2D 보기':'원본 보기';};
   function pointTick(now){
     if(pointPlaying && comparison){
       if(evidence){byId('point-seek').value=video.currentTime;if(pointOnce&&video.currentTime>=+byId('point-seek').max){video.pause();pointPlaying=false;byId('point-play').textContent='재생';}}

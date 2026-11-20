@@ -10,7 +10,7 @@ def build(sample,course,pdf,out):
     # Export only analysis facts and body coordinates. Never a coaching transcript/profile.
     doc={k:data['doc'][k] for k in ('score','customer_report','positives')}
     customer=(ROOT/'web/customer-ui.js').read_text();customer=customer[customer.index('window.MotionCustomer='):]
-    scripts='\n'.join((ROOT/'web'/p).read_text() for p in ('reference.js','pose-avatar.js','pose-project.js'))+'\n'+customer+'\n'+(ROOT/'web/motion-evidence.js').read_text()
+    scripts='\n'.join((ROOT/'web'/p).read_text() for p in ('reference.js','pose-avatar.js','pose-project.js','video-evidence.js'))+'\n'+customer+'\n'+(ROOT/'web/motion-evidence.js').read_text()
     styles=(ROOT/'web/tokens.css').read_text()
     evidence=(ROOT/'web/style.css').read_text().split('/* Analysis first:')[1].split('*/',1)[1]
     pdfdata='data:application/pdf;base64,'+base64.b64encode(Path(pdf).read_bytes()).decode()

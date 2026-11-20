@@ -95,10 +95,10 @@
   </section>
   <section id="overlay" class="flow-body" hidden>
     <header><span class="index">03</span><h2>스윙 나란히 비교</h2><span id="compare-caption" class="caption"></span></header>
-    <p id="mobile-finding"></p>
+    <p id="mobile-finding"></p><div id="comparison-views" class="comparison-views"><button id="view-original" aria-pressed="false">내 영상 · 부위 표시</button><button id="view-2d" aria-pressed="true">2D 교정 비교</button></div><p id="media-sync-note" class="note">두 보기는 같은 순간과 반복 구간을 사용합니다.</p>
     <div id="finding-pager"><button id="finding-prev" aria-label="이전 비교 항목">← 이전</button><output id="finding-position"></output><button id="finding-next" aria-label="다음 비교 항목">다음 →</button></div>
     <div id="comparison-panes" class="comparison-panes stage grow">
-    <div><p class="pane-label">원본 영상 · 측정 좌표</p><div class="video-stage">
+    <div><p class="pane-label">내 영상 · 선택 부위 표시</p><div class="video-stage">
       <div id="video-layer">
       <video id="original" playsinline preload="metadata" aria-label="원본 스윙 영상"></video>
       <canvas id="joints" aria-label="관절 오버레이"></canvas>
@@ -175,7 +175,7 @@
 <script type="importmap">{"imports":{"three":"/vendor/three/three.module.js","three/addons/":"/vendor/three/addons/"}}</script>
 <script src="/colors.js"></script><script src="/reference.js"></script><script src="/track-core.js"></script><script src="/pose-browser.js"></script><script src="/coaching-local.js"></script>
 <script src="/exaggerate.js"></script>
-<script src="/pose-avatar.js"></script><script src="/pose-project.js"></script><script src="/motion-evidence.js"></script>
+<script src="/pose-avatar.js"></script><script src="/pose-project.js"></script><script src="/video-evidence.js"></script><script src="/motion-evidence.js"></script>
 <script src="/findings-ui.js"></script>
 <script src="/course-core.js"></script><script src="/course-link.js"></script><script src="/customer-ui.js"></script><script src="/instrument.js" defer></script>
 </body>

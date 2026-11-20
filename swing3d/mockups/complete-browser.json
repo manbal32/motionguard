@@ -80,7 +80,7 @@
   "mpoint": {
     "css": [
       358,
-      409
+      310
     ],
     "frame": 172,
     "points": 22
@@ -99,11 +99,11 @@
   "resetMessage": "이전 기록을 찾을 수 없습니다. 새 프로필로 시작합니다.",
   "dpoint": {
     "css": [
-      840,
-      465
+      824,
+      412
     ],
     "frame": 172,
     "points": 22
   },
-  "webmBytes": 35735
+  "webmBytes": 35544
 }

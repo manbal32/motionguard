@@ -110,7 +110,7 @@ window.MotionCustomer=(()=>{
   if(doc.comparison_history?.comparable)$('score-change').textContent=`지난번보다 ${(doc.comparison_history.total_delta>=0?'+':'')+doc.comparison_history.total_delta.toFixed(1)}점`;
   $('profile-message').textContent=(window.MotionProfileMessage??'').startsWith('첫 기록')?'':window.MotionProfileMessage??'';
   $('result-report').href=new URL('report.html?'+new URLSearchParams({track:track.track_id,coaching:doc.report_id}),location.href).href;
-  $('delete-profile').onclick=async()=>{if(!doc.profile_id)return;const r=await fetch('/api/profile/'+doc.profile_id,{method:'DELETE'});if(r.ok){localStorage.removeItem('motionguard:profile');location.assign(new URL('./',location.href));}};
+  $('delete-profile').onclick=async()=>{if(!doc.profile_id)return;const r=await fetch('/api/profile/'+doc.profile_id,{method:'DELETE'});if(r.ok){window.MotionVideo?.clear();localStorage.removeItem('motionguard:profile');location.assign(new URL('./',location.href));}};
  }
  return {node,labels,phases,value,cell,pair,meaningful,improvements,diagram,historyChart,renderResult};
 })();
