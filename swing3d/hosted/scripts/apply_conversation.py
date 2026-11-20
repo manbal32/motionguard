@@ -197,3 +197,16 @@ p=d/'overhaul.css';p.write_text(p.read_text()+'''
 #results:has(.result-dashboard) .score-line,#results:has(.result-dashboard) #measured-count,#results:has(.result-dashboard) #profile-message{display:none}
 .score-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}.score-pair>div{display:flex;flex-direction:column;gap:8px}.score-pair span{font-size:14px;color:var(--ink-2)}.score-pair strong{font-size:30px;margin:0}.simulation-summary{padding:18px}.simulation-summary>p{font-size:14px}
 ''')
+for name in ['ai-result.js','ai-scenario.js']:
+ shutil.copy2(r/'overrides'/name,d/name)
+for name in ['index.html','report.html','course.html']:
+ p=d/name;s=p.read_text().replace('<script src="./scenario-core.js"></script>','<script src="./scenario-core.js"></script><script src="./ai-result.js"></script>')
+ if name=='course.html':s=s.replace('<script src="./course-search.js"','<script src="./ai-scenario.js"></script><script src="./course-search.js"')
+ if name=='index.html':s=s.replace('<script src="./result-dashboard.js">','<script src="./ai-scenario.js"></script><script src="./result-dashboard.js">')
+ p.write_text(s)
+p=d/'course-ui.js';s=p.read_text().replace('scenarioRevision===2','scenarioRevision===3');p.write_text(s)
+p=d/'visual-analysis.js';s=p.read_text().replace("root.append($('h2','사진으로 살펴본 내 스윙'));","root.append($('h2','사진으로 살펴본 내 스윙'));if(print&&window.MotionAIResult)MotionAIResult.render(root,doc);") ;p.write_text(s)
+p=d/'report.js';s=p.read_text().replace("$('report-total').textContent=score.total===null?'—':Math.round(score.total);","$('report-total').textContent=doc.visual_analysis?.mode==='gemini-images'?(MotionAIResult.get(doc).score??'—'):(score.total===null?'—':Math.round(score.total));")
+s=s.replace("$('report-verdict').textContent=score.total===null?", "$('report-verdict').textContent=doc.visual_analysis?.mode==='gemini-images'?'모션가드 코치 사진 평가':score.total===null?");p.write_text(s)
+
+p=d/'course-ui.js';s=p.read_text().replace("(!window.MotionCoursePreview&&!(profile.measuredCount>0))","(!window.MotionCoursePreview&&!profile.aiEstimate&&!(profile.measuredCount>0))");p.write_text(s)
