@@ -94,3 +94,15 @@ s=s.replace('        coaching = await coachPost("analyze", {','        coaching 
 p.write_text(s)
 for name in ['index.html','instrument.js']:
  p=d/name;p.write_text(p.read_text().replace('AI 코칭·자세 분석','모션가드 코칭·자세 분석').replace('AI 코칭 이용','모션가드 코칭 이용'))
+p=d/'demo-start.js';s=p.read_text();s+='''
+(()=>{function ready(){const preview=document.getElementById('preview-slot'),drop=document.getElementById('drop'),form=document.getElementById('coach-form'),panel=document.getElementById('coach-panel');if(!preview||!drop||!form)return;const media=document.createElement('details');media.id='uploaded-media';media.open=true;const title=document.createElement('summary');title.textContent='내 스윙 영상';media.append(title);preview.before(media);media.append(preview,drop);const collapse=()=>{const input=document.getElementById('coach-message');if(!input?.value.trim()||!document.getElementById('coach-consent')?.checked)return;const video=document.getElementById('upload-preview');video?.pause();media.open=false;title.textContent='올린 영상 보기·변경';panel.classList.add('conversation-active');};form.addEventListener('submit',collapse,true);document.getElementById('video')?.addEventListener('change',()=>{media.open=true;title.textContent='내 스윙 영상';});}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);else ready();})();
+''';p.write_text(s)
+p=d/'overhaul.css';p.write_text(p.read_text()+'''
+#uploaded-media{flex:none;border-bottom:1px solid var(--line);padding-bottom:8px}
+#uploaded-media>summary{font-size:16px;color:var(--ink);min-height:44px}
+#uploaded-media:not([open])>:not(summary){display:none!important}
+#uploaded-media #drop{margin-top:8px}
+#coach-panel.conversation-active #coach-log{min-height:55svh;min-height:max(320px,55svh)}
+#coach-panel.conversation-active #coach-log li{height:auto;max-height:none;overflow:visible;flex-shrink:0}
+#coach-log strong{margin-bottom:5px}
+''')
