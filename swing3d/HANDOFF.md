@@ -1,3 +1,7 @@
+# 최신: 실제 공개 API 검증 및 요약502 수정
+
+MOBILE_ACCESS_RESULTS.md 참조. 비인증 모바일 UA HTTP43개200,실제 상담2턴+요약200,Node49개 통과. 실제 휴대폰/브라우저 UI E2E는 도구 부재로 미검증.
+
 # 최신: 대화 보내기·분석 전환
 
 CHAT_FLOW_RESULTS.md 참조. 적용 버전은 0-K. Node48개 통과. 실제 모바일/실제 Gemini 추가 호출은 이번 수정에서 미검증. 공개 Site 접근 유지.
