@@ -183,3 +183,17 @@ import shutil
 shutil.copy2(r/'overrides/result-dashboard.js',d/'result-dashboard.js')
 p=d/'index.html';p.write_text(p.read_text().replace('<script src="./instrument.js" defer>', '<script src="./result-dashboard.js"></script><script src="./instrument.js" defer>'))
 p=d/'overhaul.css';p.write_text(p.read_text()+"\n.result-dashboard,.simulation-summary{padding:16px;background:var(--field);border-radius:14px;margin:12px 0}.result-dashboard>p:first-of-type{font-size:28px;font-weight:700}.result-dashboard p,.simulation-summary p{line-height:1.6;margin:8px 0}.simulation-summary strong{display:block;font-size:22px;margin:12px 0}.simulation-summary a{width:100%;margin-top:12px}.finding-disclosure{border-bottom:1px solid var(--line);padding:10px 0}.finding-disclosure>summary{font-size:17px;font-weight:700;line-height:1.6}.photo-media{max-width:360px}\n")
+import re
+p=d/'index.html';s=p.read_text();brand=re.search(r'<svg[^>]*class="brand-arcs".*?</svg>',s,re.S);logo=brand.group(0) if brand else '<span class="loading-monogram">M</span>'
+s=s.replace('<section id="progress">','<section id="progress"><div class="analysis-motion" role="status">'+logo+'<p>분석 중</p></div>');p.write_text(s)
+p=d/'overhaul.css';p.write_text(p.read_text()+'''
+.analysis-motion{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;min-height:260px}.analysis-motion .brand-arcs{width:72px;height:72px;animation:motion-breathe 1.5s ease-in-out infinite}.analysis-motion p{font-size:22px;font-weight:700}.loading-monogram{font-size:56px;animation:motion-breathe 1.5s infinite}
+#progress>header,#progress .sequence,#progress #progress-bar,#progress #percent{display:none}
+#progress:not(:has(#analysis-retry:not([hidden]))) #status,#progress:not(:has(#analysis-retry:not([hidden]))) #cancel{display:none}
+#progress:has(#analysis-retry:not([hidden])) .analysis-motion{display:none}
+@keyframes motion-breathe{0%,100%{transform:scale(.92);opacity:.55}50%{transform:scale(1.08);opacity:1}}
+@media(prefers-reduced-motion:reduce){.analysis-motion .brand-arcs,.loading-monogram{animation:none}}
+.result-dashboard{background:var(--paper);border:1px solid var(--line);padding:20px}.score-hero{display:block;font-size:68px;line-height:1.1;font-weight:800;margin:12px 0;color:var(--good)}.score-hero small{font-size:20px;color:var(--ink-2);font-weight:400}.result-dashboard>h3{font-size:18px;margin:16px 0;line-height:1.5}.result-dashboard>p:first-of-type{font-size:14px;font-weight:400;color:var(--ink-2)}.result-dashboard details p{font-size:14px;font-weight:400;line-height:1.6}
+#results:has(.result-dashboard) .score-line,#results:has(.result-dashboard) #measured-count,#results:has(.result-dashboard) #profile-message{display:none}
+.score-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}.score-pair>div{display:flex;flex-direction:column;gap:8px}.score-pair span{font-size:14px;color:var(--ink-2)}.score-pair strong{font-size:30px;margin:0}.simulation-summary{padding:18px}.simulation-summary>p{font-size:14px}
+''')

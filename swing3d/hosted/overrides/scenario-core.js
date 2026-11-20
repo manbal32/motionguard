@@ -1,6 +1,6 @@
 /* Illustrative score-level priors, not measured launch data or a validated score predictor. */
 window.MotionScenario=(()=>{
- const presets={80:{carry:1.06,spread:10,miss:.06,short:.10,three:.10,one:.13},90:{carry:1,spread:17,miss:.15,short:.20,three:.19,one:.08},100:{carry:.93,spread:24,miss:.25,short:.30,three:.29,one:.04},110:{carry:.85,spread:32,miss:.37,short:.39,three:.41,one:.02}};
+ const presets={80:{carry:1.06,spread:10,miss:.06,short:.10,three:.10,one:.13},90:{carry:1,spread:17,miss:.30,short:.34,three:.32,one:.08},100:{carry:.93,spread:24,miss:.40,short:.44,three:.40,one:.04},110:{carry:.85,spread:32,miss:.50,short:.54,three:.48,one:.02}};
  const clubs=[['드라이버',205],['3번 우드',185],['5번 우드',175],['유틸리티',165],['5번 아이언',155],['6번 아이언',145],['7번 아이언',135],['8번 아이언',125],['9번 아이언',115],['PW',95],['SW',65]];
  function random(seed){let n=seed>>>0;return()=>{n+=0x6D2B79F5;let t=n;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
  function effective(profile,improved=false){
