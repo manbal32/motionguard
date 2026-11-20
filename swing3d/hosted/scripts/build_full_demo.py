@@ -24,6 +24,16 @@ subprocess.run(['python',str(ROOT/'scripts/apply_conversation.py')],check=True)
 subprocess.run(['python',str(ROOT/'scripts/apply_consultation.py')],check=True)
 subprocess.run(['python',str(ROOT/'scripts/apply_replay.py')],check=True)
 shutil.copy2(ROOT/'overrides/runtime-health.js',DIST/'runtime-health.js')
+for name in ['map-only.html','map-only.js']:
+ shutil.copy2(ROOT/'overrides'/name,DIST/('map.html' if name.endswith('.html') else name))
+map_sources=json.loads((ROOT/'data/map-sources.json').read_text())
+map_previews=[]
+for source in map_sources:
+ entry={k:source[k] for k in ['course_name','image_url','source_page','width','height']}
+ if source['course_name']=='리베라CC' and (source['width'],source['height'])==(1157,750):
+  entry.update(preview_crop={'x':155,'y':28,'width':760,'height':685},preview_label='레이크 · 밸리 · 파인힐 · 체리힐 전체 배치도')
+ map_previews.append(entry)
+(DIST/'map-preview-sources.json').write_text(json.dumps(map_previews,ensure_ascii=False))
 subprocess.run(['python',str(ROOT/'scripts/seal_assets.py')],check=True)
 # App shell only at install. Heavy model/3D/tour assets are cached as used.
 assets=sorted('./'+str(f.relative_to(DIST)) for f in DIST.iterdir() if f.is_file() and f.suffix in ('.html','.js','.css') and f.name!='sw.js')

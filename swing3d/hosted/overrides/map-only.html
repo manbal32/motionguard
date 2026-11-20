@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#174e39">
+<title>MotionGuard · 골프장 지도</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:#173a2c;background:#f2f6f3;font-size:16px}*{box-sizing:border-box}body{margin:0}main{max-width:1000px;margin:auto;padding:20px 16px calc(24px + env(safe-area-inset-bottom))}header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}.brand{font-size:17px;font-weight:750;letter-spacing:-.5px}header span{font-size:14px;color:#647b6e}h1{font-size:26px;letter-spacing:-1px;margin:0 0 16px}form{display:flex;gap:8px;margin-bottom:12px}input,button,a{font:inherit}input{min-width:0;flex:1;width:100%;height:48px;border:1px solid #c6d8cd;border-radius:12px;padding:0 14px;font-size:16px;color:#173a2c;background:white}button{min-height:44px;cursor:pointer;border:1px solid #c6d8cd;border-radius:10px;padding:9px 13px;background:white;color:#254e38;font-weight:600}button[type=submit]{background:#176a4b;color:white;border-color:#176a4b;min-width:72px}button:disabled{opacity:.5;cursor:wait}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #4c99df;outline-offset:3px}#map-status{font-size:14px;line-height:1.6;color:#526e5c;min-height:24px;margin:8px 0 14px;overflow-wrap:anywhere}.viewer{background:white;border:1px solid #d7e4dc;border-radius:20px;overflow:hidden;box-shadow:0 7px 30px #29463707}.viewer-head{padding:18px 16px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.viewer-head h2{font-size:20px;margin:0}.map-label{font-size:14px;color:#647b6e;margin:6px 0 0}.toolbar{display:flex;gap:6px;align-items:center}.toolbar button{min-width:44px}#zoom-value{font-size:14px;min-width:45px;text-align:center}#map-stage{overflow:auto;max-height:70svh;min-height:180px;background:#f8faf8;overscroll-behavior:contain}#map-canvas{position:relative;overflow:hidden;background:white;width:100%;aspect-ratio:760/685}#map-canvas img{position:absolute;display:block;max-width:none;object-fit:fill}#map-stage[aria-busy=true]{opacity:.65}.viewer-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 16px;border-top:1px solid #e4ece6}.viewer-foot p{font-size:14px;color:#647b6e;line-height:1.5;margin:0}.viewer-foot a{font-size:14px;color:#176a4b;min-height:44px;display:flex;align-items:center;text-underline-offset:4px}#map-alternatives{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}#map-alternatives:empty{display:none}#map-alternatives button[aria-pressed=true],#crop-toggle[aria-pressed=true]{background:#e4f1e8;border-color:#92bda1;color:#175736}.help{font-size:14px;line-height:1.7;color:#647b6e;margin:14px 2px}.empty{padding:40px 20px;text-align:center;color:#647b6e}@media(min-width:760px){main{padding-top:30px}.viewer-head{padding:20px 24px 16px}#map-stage{max-height:76svh}h1{font-size:30px}}@media(prefers-reduced-motion:no-preference){#map-stage{transition:opacity .2s}}
+</style>
+<script src="./map-only.js" defer></script>
+</head>
+<body><main>
+<header><div class="brand">MotionGuard</div><span>지도 미리보기</span></header>
+<h1>골프장 지도만 보기</h1>
+<form id="map-form"><input id="map-query" type="search" aria-label="골프장 이름" placeholder="골프장 이름을 입력하세요" value="리베라CC" maxlength="60" required><button id="map-search" type="submit">검색</button></form>
+<p id="map-status" role="status" aria-live="polite">리베라CC 지도를 불러오고 있습니다.</p>
+<section class="viewer" aria-label="골프장 지도">
+<div class="viewer-head"><div><h2 id="map-name">리베라CC</h2><p class="map-label" id="map-description">전체 배치도</p></div><div class="toolbar"><button type="button" id="zoom-out" aria-label="지도 축소">−</button><span id="zoom-value">100%</span><button type="button" id="zoom-in" aria-label="지도 확대">+</button><button type="button" id="zoom-reset">맞춤</button></div></div>
+<div id="map-stage" aria-busy="true"><div id="map-canvas"></div></div>
+<div class="viewer-foot"><button type="button" id="crop-toggle" aria-pressed="true">전체 이미지 보기</button><a id="map-source" target="_blank" rel="noopener noreferrer" hidden>지도 출처 보기</a></div>
+</section>
+<div id="map-alternatives" aria-label="찾은 지도 선택"></div>
+<p class="help">+ 버튼으로 확대한 뒤 지도를 옆으로 움직여 볼 수 있습니다.</p>
+</main></body></html>
