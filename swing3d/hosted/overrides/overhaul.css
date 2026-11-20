@@ -3,3 +3,4 @@
 .evidence-card[data-media-view='2d'] .evidence-actions button:first-child{display:none}#factor-transport,#mobile-toggle{display:none!important}
 
 .recommended-videos{margin-top:18px;padding:16px;border-radius:14px;background:var(--field)}.recommended-video{padding:12px 0;border-bottom:1px solid var(--line)}.recommended-video a{font-size:16px;line-height:1.6;display:block;min-height:44px;color:var(--ink);font-weight:700}.recommended-video p{font-size:14px;line-height:1.6;margin-top:6px}.video-channel{color:var(--ink-2)}.recommended-videos button{width:100%;min-height:48px;margin-top:12px}@media print{.recommended-videos{break-inside:avoid}.recommended-video a::after{content:' (' attr(href) ')';font-size:8pt;overflow-wrap:anywhere}.recommended-videos button{display:none}}
+@media print{.report-appendix{break-before:auto}.recommended-videos{padding:10px}.recommended-video{padding:8px 0}.recommended-videos>p:last-child{display:none}}
