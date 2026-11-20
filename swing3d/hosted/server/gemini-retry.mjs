@@ -1,5 +1,5 @@
 /* Bounded transient-service retries. Never retries quotas, auth errors, or invalid output. */
-export async function geminiFetch(send,url,init,{deadline,timeoutMs=30000,wait=ms=>new Promise(r=>setTimeout(r,ms)),now=Date.now,onAttempt=()=>{},onRetry=()=>{},resolveAlternate}={}){
+export async function geminiFetch(send,url,init,{deadline,timeoutMs=30000,wait=ms=>new Promise(r=>setTimeout(r,ms)),now=Date.now,onAttempt=()=>{},onRetry=()=>{},resolveAlternate,alternateOnFirstTimeout=false}={}){
  let response,currentUrl=url;
  for(let attempt=1;attempt<=3;attempt++){
   const remaining=deadline-now();if(remaining<1000)throw new DOMException('Request deadline exceeded','TimeoutError');
@@ -11,7 +11,7 @@ export async function geminiFetch(send,url,init,{deadline,timeoutMs=30000,wait=m
   const delay=Math.max(attempt===1?1000:3000,seconds===null?0:Math.ceil(seconds*1000));
   // Do not retry earlier than requested, and leave time to complete the next request.
   if(delay>8000||deadline-now()<delay+1000){if(networkError)throw networkError;return response;}
-  if(attempt===2&&!networkError&&resolveAlternate){try{const alternate=await resolveAlternate(currentUrl,response.status);if(alternate)currentUrl=alternate;}catch{/* The bounded original route remains available. */}}
+  if(resolveAlternate&&((attempt===2&&!networkError)||(attempt===1&&alternateOnFirstTimeout&&networkError?.name==='TimeoutError'))){try{const alternate=await resolveAlternate(currentUrl,response?.status??null);if(alternate)currentUrl=alternate;}catch{/* The bounded original route remains available. */}}
   if(!networkError)await response.body?.cancel().catch(()=>{});
   onRetry({attempt,status:networkError?null:response.status,delay_ms:delay});
   response=undefined;await wait(delay);

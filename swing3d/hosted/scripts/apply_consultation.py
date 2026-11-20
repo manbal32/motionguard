@@ -22,3 +22,17 @@ s=s.replace("byId('summary-origin').textContent='대화에서 정리한 고민�
 s=s.replace('    if (!approvedSummary) return;', '    if (!approvedSummary) return;\n    lastApprovedSummary={...approvedSummary};')
 s=s.replace('byId("analysis-retry").onclick=reviewSummary;', 'byId("analysis-retry").onclick=()=>{if(lastApprovedSummary)analyze({...lastApprovedSummary});else reviewSummary();};')
 p.write_text(s)
+
+# Chat/summary must get a full response before the browser aborts, with a small network margin.
+p=d/'instrument.js';s=p.read_text().replace('const chatTimeout=setTimeout(()=>controller.abort(),35000);','const chatTimeout=setTimeout(()=>controller.abort(),80000);').replace('const summaryTimeout=setTimeout(()=>controller.abort(),35000);','const summaryTimeout=setTimeout(()=>controller.abort(),80000);')
+s=s.replace('{messages}), ...data, allow_external:', '{messages,client_timeout_ms:80000}), ...data, allow_external:')
+s=s.replace('    return readResponse(response);\n  }\n\n  function chatLine', "    if(!response.ok){let error;try{error=await response.json();}catch{}throw Error((error?.reason||'코치 연결을 확인해 주세요.')+(error?.request_id?' (확인번호 '+error.request_id.slice(0,8)+')':''));}\n    return readResponse(response);\n  }\n\n  function chatLine")
+s=s.replace('    coachStatus.textContent = "답변을 기다리는 중입니다.";', '    const pendingLine=chatLine("모션가드 코치","답변을 준비하고 있어요…");pendingLine.className="coach-pending";byId("coach-retry").hidden=true;\n    coachStatus.textContent = "";')
+s=s.replace(' + " 입력한 메시지를 다시 보낼 수 있습니다.";', ';\n      byId("coach-retry").hidden=false;')
+s=s.replace('      clearTimeout(chatTimeout);','      pendingLine.remove();clearTimeout(chatTimeout);')
+s=s.replace('  function node(tag, text, className) {','  byId("coach-retry").onclick=()=>{if(message.value.trim())coachForm.requestSubmit();};\n  function node(tag, text, className) {')
+p.write_text(s)
+p=d/'index.html';p.write_text(p.read_text().replace('<p id="coach-status" role="status"></p>','<p id="coach-status" role="status"></p><button id="coach-retry" type="button" hidden>다시 보내기</button>'))
+# The controls are optional when a previously cached page loads the new script.
+p=d/'instrument.js';s=p.read_text().replace('byId("coach-retry").hidden=true;', 'if(byId("coach-retry"))byId("coach-retry").hidden=true;').replace('byId("coach-retry").hidden=false;', 'if(byId("coach-retry"))byId("coach-retry").hidden=false;').replace('  byId("coach-retry").onclick=()=>{if(message.value.trim())coachForm.requestSubmit();};', '  if(byId("coach-retry"))byId("coach-retry").onclick=()=>{if(message.value.trim())return coachForm.requestSubmit();};')
+a=s.index('  coachForm.addEventListener("submit"');b=s.index('  function node(',a);part=s[a:b].replace('if (controller.signal.aborted) return;', 'if (controller.signal.aborted) throw Error("답변 연결 시간이 초과됐습니다.");');s=s[:a]+part+s[b:];p.write_text(s)
