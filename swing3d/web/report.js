@@ -47,6 +47,7 @@
   for(const [key,label] of [['concern','고민'],['improvement','개선 희망'],['hypothesis','사용자 추정'],['goal','연습 목표']])$('appendix-approved').append(node('p',label+' · '+(doc.conversation_summary[key]||'입력 없음')));
   $('appendix-excluded').textContent=score.excluded.length?score.excluded.map(k=>{const [phase,...channel]=k.split('_');return(phases[phase]??phase)+' '+(labels[channel.join('_')]??'동작');}).join(' · '):'제외한 항목 없음';
   for(const item of score.items){const row=$('report-angles').tBodies[0].insertRow();for(const text of [phases[item.phase],labels[item.channel],cell(item.measured,item),cell(item.reference,item),item.score.toFixed(1),item.state])row.insertCell().textContent=text;}
+  await MotionCourseReport.render(doc);
   $('report-body').hidden=false;$('report-status').hidden=true;$('print-report').disabled=false;
  }catch(error){$('report-status').textContent=error.message+' 분석 화면에서 다시 열어 주세요.';}
 })();

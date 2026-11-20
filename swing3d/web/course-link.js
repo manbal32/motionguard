@@ -8,5 +8,9 @@ window.MotionCourseLink=(()=>{
   }catch{anchor.hidden=true;}
  }
  function summary(doc){try{const s=JSON.parse(sessionStorage.getItem('motionguard:course-result:'+doc.report_id));return s?.reportId===doc.report_id&&s.profileRevision===1&&s.holes===9&&Number.isFinite(s.total)?s:null;}catch{return null;}}
- return{bind,summary};
+ function snapshot(doc){
+  const saved=summary(doc);if(!saved||!Number.isInteger(saved.seed)||saved.seed<1)return null;
+  try{const profile=MotionCourse.profile(doc),round=MotionCourse.round(profile,saved.seed);if(round.total!==saved.total)return null;return{...saved,profile,round};}catch{return null;}
+ }
+ return{bind,summary,snapshot};
 })();

@@ -86,3 +86,5 @@
 
 /* 2026-11-20: user-approved course PLAY preview palette, scoped to this surface. */
 .course-app{--ink:#142C20;--ink-2:#62746A;--ink-3:#687B6E;--line:#DCE6DF;--paper-2:#EDF2EF;--course-action:#183E2B;--course-live:#153E2B;--course-live-text:#D6EADB;}
+/* PDF route markers remain legible after scaling the source diagram. */
+:root{--t-course-map-label:700 30px/1 var(--sans);}

@@ -59,3 +59,22 @@ python tools/build_course_preview.py --report-json /path/to/local/report.json --
 `mockups/course-*.txt/json`, `mockups/shots/course_*`에 측정 출력과 모바일·PC 10장 캡처를 보관한다. 원본 사용자 영상/상담 원문/키/지도 다운로드 원본은 커밋하지 않는다. 내보내는 조사용 HTML은 샘플 CSV의 수치 중 score/measured/reference만 포함하고 사용자 식별자·대화·영상은 제외한다.
 
 최종 추가 확인: 승인한 원본 이미지/초록색 PLAY를 유지한 모바일·PC 10장 재캡처. 공개 기본 빌드에서 이미지가 없을 때 로드 실패 안내/재생 비활성화 확인. 원본 안내 이미지 자동 수집 9/9 성공, 스타일 토큰 회귀 1/1 통과.
+
+## PDF 저장 결과 확장 (2026-11-20)
+
+기존 스윙 분석 PDF에 코스 결과를 실제 출력하도록 연결했다. 코스 미실행이면 이 절을 만들지 않고 기존 3페이지를 유지한다. 실행한 경우 같은 분석 수치와 저장된 seed로 재계산하며 합계가 저장된 시나리오와 다르면 출력하지 않는다.
+
+실제 Chromium PDF: A4 세로 **7페이지**. 1–2페이지 기존 스윙 분석/연습, 3페이지 코스·티·9홀 표·11클럽 거리 가정, 4–6페이지 각 3홀씩 원본 안내도 일부+곡선 경로/샷 번호/클럽/거리/방향/온·퍼트·타수, 7페이지 기존 전체 계측 부록. 텍스트 추출로 7페이지와 각 홀 묶음을 확인했고 3·4페이지를 PNG로 렌더해 잘림·가독성을 확인했다.
+
+- 실제 CSV 38항목, 첫 시나리오 **41타**, 다른 플레이 선택 시 **40타**가 각각 화면과 PDF에 동일하게 반영됨. 전달 PDF는 기존 미리보기 기본 시나리오와 같은 **41타**.
+- 코스 미실행 숨김 확인. 원본 안내도/경로 9개, 9홀 행, 11클럽 가정 확인. PDF 브라우저 JS 오류 **0**.
+- Node **13개 통과** (기존 10+PDF 시나리오 정합 3). 스타일 토큰 회귀 **1개 통과**.
+- PDF에는 실측/가정 구분, OB·해저드 벌타 미반영, 과거 기록 미사용, 수동 경로, 2023년 출처/최신 대조 미확인을 함께 기록.
+- 지도 이미지가 없으면 새 지형을 만들지 않고 지도 미연결 안내와 샷 기록을 출력. 공개 기본 빌드의 지도 자산 제약은 그대로 남음.
+
+산출물: `mockups/shots/course-report.pdf`, `course_pdf_summary.png`, `course_pdf_holes.png`, `mockups/course-pdf-*`. `tests/course_pdf_browser.cjs`에서 실제 CSV를 분석하고 재생한 시나리오의 PDF를 생성한다.
+
+```sh
+COURSE_PDF_SCENARIO=1 COURSE_PDF_OUT=/tmp/course-report.pdf node tests/course_pdf_browser.cjs
+node --test tests/test_course_core.cjs tests/test_course_pdf.cjs tests/test_browser_core.cjs tests/test_comparison.cjs
+```
