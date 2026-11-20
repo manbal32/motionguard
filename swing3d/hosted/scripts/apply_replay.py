@@ -58,3 +58,10 @@ for name in ['simulation-entry.js','course-map-workflow.js']:
 p=d/'index.html';p.write_text(p.read_text().replace('<script src="./result-dashboard.js">','<script src="./course-map-workflow.js"></script><script src="./simulation-entry.js"></script><script src="./result-dashboard.js">'))
 
 p=d/'course-core.js';s=p.read_text().replace(' function selectCourse(c)', ' const defaultCourse=JSON.parse(JSON.stringify(course));\n function selectCourse(c)').replace('const api={selectCourse,','const api={defaultCourse:()=>JSON.parse(JSON.stringify(defaultCourse)),selectCourse,');p.write_text(s)
+# Photo-coaching replay owns its exact selected JPEG rather than legacy phase frames.
+shutil.copy2(r/'overrides/photo-replay.js',d/'photo-replay.js')
+p=d/'index.html';p.write_text(p.read_text().replace('<script src="./replay-sync.js">','<script src="./photo-replay.js"></script><script src="./replay-sync.js">'))
+p=d/'video-evidence.js';s=p.read_text().replace('return{register,frame,ready,',"return{source:id=>registry.get(id)?.url??null,landmarks:(id,time)=>{const r=registry.get(id);if(!r)return null;const frame=Math.floor(time*r.evidence.fps+.001);return{frame,points:r.evidence.frames?.[frame]??null};},register,frame,ready,");p.write_text(s)
+p=d/'instrument.js';s=p.read_text().replace("byId('show-points').hidden=true;byId('results').hidden=false;", "byId('show-points').hidden=!window.MotionPhotoReplay?.scenes(coaching).length;byId('results').hidden=false;");p.write_text(s)
+
+p=d/'video-evidence.js';s=p.read_text().replace('if(old?.url===url)return;', 'if(old?.url===url){old.evidence={...old.evidence,...evidence};return;}');p.write_text(s)
