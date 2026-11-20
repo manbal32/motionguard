@@ -41,3 +41,29 @@ s=s.replace('  byId("summary-edit").onclick =', '  byId("summary-retry").onclick
 s=s.replace("if(!csv&&!byId('photo-consent')?.checked){summaryPanel.hidden=true;step(1);coachStatus.textContent='AI 사진 분석을 위해 대표사진 5장 전송에 동의해 주세요.';return;}","if(!csv&&!byId('photo-consent')?.checked){byId('summary-feedback').textContent='AI 자세 분석 이용 동의를 확인해 주세요.';byId('photo-consent').focus();return;}")
 p.write_text(s)
 p=d/'demo-start.js';s=p.read_text();s=s.replace('상담 텍스트와 별도로 동의한 대표사진 5장을 Gemini에 전송해 피드백을 받습니다. 원본 영상·관절 좌표는 기기 안에서 처리하며 분석 결과는 이 브라우저에 보관합니다.','AI 코치와 대화하고 내 스윙의 개선점을 확인하세요. 데이터 처리 내용은 이용 안내에서 확인할 수 있습니다.');s=s.replace('동의 후 Gemini AI 상담','내 스윙을 위한 AI 코칭');p.write_text(s)
+# Conversation is the primary setup UI. Keep internal import handlers but remove demo controls.
+p=d/'index.html';s=p.read_text();s=s.replace('id="csv" type="file"','id="csv" type="file" disabled');p.write_text(s)
+p=d/'demo-start.js';s=p.read_text();s=s.replace("document.getElementById('start').focus();", "document.getElementById('start').focus();")
+s += '''\n(()=>{function clean(){document.getElementById('try-sample')?.remove();document.querySelectorAll('.full-scenario-entry,.full-demo-tour,.full-demo-help').forEach(e=>e.remove());const csv=document.getElementById('csv');if(csv)csv.closest('details')?.setAttribute('hidden','');document.querySelectorAll('.site-notice').forEach(e=>e.remove());}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean);else clean();})();\n'''
+p.write_text(s)
+# The scenario entry is installed by an earlier DOMContentLoaded callback; remove it after callbacks.
+p=d/'index.html';s=p.read_text();s=s.replace('document.getElementById("drop").append(a);','/* Course entry belongs to results, not upload. */');p.write_text(s)
+p=d/'instrument.js';s=p.read_text();s=s.replace('    log.scrollTop = log.scrollHeight;','    log.scrollTop = log.scrollHeight;\n    requestAnimationFrame(()=>line.scrollIntoView?.({block:"nearest",behavior:"smooth"}));');p.write_text(s)
+p=d/'overhaul.css';s=p.read_text();s+='''
+/* Natural document flow: embedded mobile browser/keyboard must not compress messages. */
+body:has(.instrument){display:block;height:auto;min-height:100%;overflow-y:auto}
+.instrument{height:auto;min-height:100dvh}
+.instrument[data-step='1'] .setup,.instrument[data-step='1'] #upload,.instrument[data-step='1'] #upload>.section-body{flex:none;min-height:auto;overflow:visible}
+.instrument[data-step='1'] #coach-panel{flex:none;min-height:auto;overflow:visible}
+#coach-log{flex:none;min-height:260px;max-height:none;overflow:visible;padding-block:12px}
+#coach-log li{flex:0 0 auto;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65;font-size:16px}
+#coach-log li[data-role='user']{align-self:flex-end;background:var(--ink);color:var(--paper)}
+#coach-log li[data-role='assistant'],#coach-log li.coach-welcome{align-self:flex-start;background:var(--field);color:var(--ink)}
+#coach-form{position:sticky;bottom:0;z-index:4;background:var(--paper);padding:10px 0 max(10px,env(safe-area-inset-bottom));margin-top:8px}
+#coach-message{font-size:16px;min-height:52px;height:64px;max-height:160px;overflow-y:auto}
+#upload-actions{position:static;margin-top:12px}#file-info{overflow-wrap:anywhere}
+#preview-slot{max-height:150px;min-height:100px;flex:none}
+#coach-panel>.privacy{order:5}#coach-panel>.privacy:not([open]){font-size:14px}
+.instrument[data-step='2'] #summary-review,.instrument[data-step='2'] .summary-fields{min-height:auto;overflow:visible;flex:none}
+@media(max-width:600px){#coach-log{min-height:300px}#coach-log li{max-width:94%}#coach-panel{gap:10px}.instrument{padding-bottom:24px}}
+''';p.write_text(s)

@@ -1,3 +1,7 @@
+# 최신: 모바일 대화 잘림/첫 화면 동선
+
+0-L 및 CHAT_LAYOUT_RESULTS.md 참조. 샘플/CSV/첫화면 코스시연 제거,대화 페이지 자연 스크롤,말풍선 높이 유지. 코스 비교는 분석 결과 이후. Node49개 통과,실제 모바일 재캡처 미검증. 현재 Site URL은 https://motionguard-mobile-play.creamhome4.chatgpt.site 이다. 이전 주소는 역사 기록이다.
+
 # 최신: 실제 공개 API 검증 및 요약502 수정
 
 MOBILE_ACCESS_RESULTS.md 참조. 비인증 모바일 UA HTTP43개200,실제 상담2턴+요약200,Node49개 통과. 실제 휴대폰/브라우저 UI E2E는 도구 부재로 미검증.
