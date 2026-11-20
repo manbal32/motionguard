@@ -22,6 +22,7 @@ subprocess.run(['python',str(ROOT/'scripts/apply_courses.py')],check=True)
 subprocess.run(['python',str(ROOT/'scripts/apply_full_scenarios.py')],check=True)
 subprocess.run(['python',str(ROOT/'scripts/apply_conversation.py')],check=True)
 subprocess.run(['python',str(ROOT/'scripts/apply_consultation.py')],check=True)
+subprocess.run(['python',str(ROOT/'scripts/apply_replay.py')],check=True)
 shutil.copy2(ROOT/'overrides/runtime-health.js',DIST/'runtime-health.js')
 subprocess.run(['python',str(ROOT/'scripts/seal_assets.py')],check=True)
 # App shell only at install. Heavy model/3D/tour assets are cached as used.
