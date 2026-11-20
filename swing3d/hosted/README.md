@@ -1,3 +1,7 @@
+# 전체 시연 최신 확장
+
+`course.html?demo=1`은 영상 없이 수준별 샷·퍼팅 및 현재/개선 후 비교를 시연한다. 홈에는 전체 영상/LLM 분석 흐름이 있다. NAVER 공개 이미지 검색→지도 후보 분류→원본 홀 추론을 연결했으며 실패/부분 인식을 표시한다. 모든 코스 지원 완료가 아니다. `../FULL_SCENARIOS_RESULTS.md`의 실측과 미통과를 먼저 확인한다. 기본 Worker Gemini 비밀값을 유지하고 추가로 GEMINI_MAP_MODEL을 선택할 수 있다. PDF/개인 파일/연구 원본은 Git에 넣지 않는다.
+
 # Hosted MotionGuard
 
 This source builds the deployed mobile app from `swing3d/web`, adding the private Worker runtime. Existing tracking, local measurements, 3D, course animation and report remain available.
