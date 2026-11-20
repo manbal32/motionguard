@@ -1,3 +1,7 @@
+# 최신: Safari 필수항목 오류 보완
+
+0-AE 및 RESPONSE_FORMAT_FAILURE_RESULTS.md 참조. 사용자캡처의필수항목실패와Safari502두건확인. 형식검사전모델필드enum강제+format/JSON/MAX_TOKENS1회보완+한도분당/일일구분+개인정보없는오류코드기록. Node84/84통과. 원래거절된정확한필드값은이전로그에없어미확정.
+
 # 최신: 전체 여정 디자인 및 6쪽 PDF 실출력
 
 0-AD 및 COMPLETE_PROCESS_REPORT_RESULTS.md 참조. 단일 저장Gemini응답의 새최종리포트, 4코칭/5사진/영상링크/타수/9홀표·경로를 통합. 경험스타일전단계적용. 선택시뮬레이션기기기록보관,상담일시실패재시도. Node81/81, 실제PDF6쪽/이미지14/링크8/잘림0/JS오류0. 개인PDF/사진/응답은 Git과Site공개assets에없음.
