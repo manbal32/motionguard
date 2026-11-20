@@ -92,3 +92,5 @@ p=d/'instrument.js';s=p.read_text();needle='  async function analyze(approvedSum
 s=s.replace('      const track = await readResponse(response);','      const track = await analysisWait(readResponse(response),controller.signal);')
 s=s.replace('        coaching = await coachPost("analyze", {','        coaching = await analysisWait(coachPost("analyze", {').replace('conversation_summary: approvedSummary}, controller.signal);','conversation_summary: approvedSummary}, controller.signal),controller.signal);')
 p.write_text(s)
+for name in ['index.html','instrument.js']:
+ p=d/name;p.write_text(p.read_text().replace('AI 코칭·자세 분석','모션가드 코칭·자세 분석').replace('AI 코칭 이용','모션가드 코칭 이용'))
