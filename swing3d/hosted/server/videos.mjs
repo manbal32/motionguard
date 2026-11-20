@@ -11,8 +11,8 @@ export function parseYouTubeResults(html){
  if(end<0)return[];let data;try{data=JSON.parse(html.slice(start,end));}catch{return[];}const text=v=>v?.simpleText??v?.runs?.map(r=>r.text??'').join('')??'',found=[];
  const walk=(v,d=0)=>{if(!v||typeof v!=='object'||d>60)return;if(v.videoRenderer){const r=v.videoRenderer,url=videoUrl('https://www.youtube.com/watch?v='+r.videoId);if(url)found.push({id:r.videoId,url,title:text(r.title),channel:text(r.ownerText??r.longBylineText)||'채널 확인 안 됨',description:text(r.descriptionSnippet).slice(0,400),review:'search_metadata'});}for(const[k,c]of Object.entries(v))if(k!=='videoRenderer')walk(c,d+1);};walk(data);return found.slice(0,12);
 }
-export async function findVideos(items,env={},send=fetch){
- const eligible=items.map((item,index)=>({item,index})).filter(({item})=>item.kind==='improvement'&&item.status!=='unassessable'&&item.confidence!=='낮음').slice(0,3);
+export async function findVideos(items,env={},send=fetch,limit=3){
+ const eligible=items.map((item,index)=>({item,index})).filter(({item})=>item.kind==='improvement'&&item.status!=='unassessable'&&item.confidence!=='낮음').slice(0,Math.min(4,limit));
  return Promise.all(eligible.map(async({item,index})=>{
   const query=('골프 '+item.title+' 연습').slice(0,100);let candidates=[],source='checked-index',live_error=null;
   try{
