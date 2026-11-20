@@ -1,3 +1,7 @@
+# 최신: iframe 없는 직접 골퍼·공비행
+
+0-Z,DIRECT_SVG_SIMULATION_RESULTS.md 참조. 결과내실제SVG/기존골퍼/샷엔진으로즉시재생. 검색/DB/iframe전환제거. 가상DOM에서스윙/공이동/컵도착/9홀완료/PDF시나리오저장검증. Node70개통과,실제iPad미검증.
+
 # 최신: 송수신 영수증/배포파일 일치 감사
 
 0-Y 및 RUNTIME_AUDIT_RESULTS.md 참조. 최근Safari사진298606bytes/200과별도의simulation.js404관측. 앱번들buildID통일+cache무효화+필수파일누락빌드실패+manifest해시검증. 사진5장SHA256서버수신/forwarded횟수/요청ID대조,실제전송사진접힌확인. Node68개통과/실제Safari미검증.
