@@ -71,6 +71,8 @@ window.MotionCustomer=(()=>{
   $('score-total').textContent=score.total===null?'—':Math.round(score.total);
   $('measured-count').textContent=`이번 영상에서는 ${score.measured_count}개 항목을 쟀습니다.`;
   const items=improvements(doc),list=$('result-items');list.replaceChildren();
+  window.MotionCourseLink?.bind($('result-course'),doc,track);
+  const played=window.MotionCourseLink?.summary(doc);$('result-course-summary').hidden=!played;if(played)$('result-course-summary').textContent=`${played.course} ${played.holes}홀 가상 플레이 ${played.total}타 · ${played.excluded}`;
   const strokes=doc.strokes;$('result-strokes').hidden=!strokes;
   if(strokes){
    const range=v=>v.map(n=>n.toFixed(1)).join('–')+'타';

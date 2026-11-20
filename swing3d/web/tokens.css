@@ -83,3 +83,6 @@
       손목 힌지는 두 선 사이 각, 회전은 두 호.
       그림은 측정값에서 나온다. 같은 그림을 돌려 쓰지 않는다
   15. 설명은 한 줄로 끝낸다. "뒷발에 남은 채로 칩니다." 로 충분하다 */
+
+/* 2026-11-20: user-approved course PLAY preview palette, scoped to this surface. */
+.course-app{--ink:#142C20;--ink-2:#62746A;--ink-3:#687B6E;--line:#DCE6DF;--paper-2:#EDF2EF;--course-action:#183E2B;--course-live:#153E2B;--course-live-text:#D6EADB;}

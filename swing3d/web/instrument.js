@@ -1034,6 +1034,7 @@
     byId("record-progress").textContent = "";
     // The result screen is the only route to a customer report.
     byId('result-report').onclick=()=>{video.pause();pointPlaying=false;saveReturnState(track,coaching);};
+    byId('result-course').onclick=()=>{video.pause();pointPlaying=false;saveReturnState(track,coaching);};
   }
 
   function saveReturnState(track,coaching){

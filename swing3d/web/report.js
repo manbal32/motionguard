@@ -9,6 +9,7 @@
   if(doc.track_id!==id)throw Error('분석과 리포트가 일치하지 않습니다.');
   $('return-result').href=new URL('./?result='+reportId,location.href).href;
   const report=doc.customer_report,items=improvements(doc),score=doc.score;
+  MotionCourseLink.bind($('report-course'),doc);const played=MotionCourseLink.summary(doc);$('report-course-summary').textContent=played?`${played.course} · ${played.holes}홀 가상 플레이 ${played.total}타 · ${played.excluded}`:'이번 스윙을 바탕으로 클럽 거리와 편차를 가정해 재생합니다. 실제 비거리·구질은 측정하지 않았습니다.';
   $('report-round').textContent=String(doc.session??1).padStart(2,'0')+'회';$('report-date').textContent=(report.issued_at??'').slice(0,10);
   $('report-total').textContent=score.total===null?'—':Math.round(score.total);
   // 숫자 하나로는 좋은지 나쁜지 알 수 없다. 읽으면 바로 아는 한 줄을 붙인다.

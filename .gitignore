@@ -6,3 +6,6 @@ models/
 
 samples/
 outputs/
+
+# Local-only course research images; no commercial reuse permission verified.
+swing3d/web/course-images/
