@@ -5,3 +5,9 @@ test('known Naver source still gets fresh geometry extraction, not hardcoded hol
 test('unreadable maps never replace the selected course or reload as success',async()=>{const t=setup(true,true);await assert.rejects(t.run('실험CC'));assert.equal(t.store.size,0);assert.equal(t.reloaded(),false);});
 
 test('inline result search returns the extracted map and never reloads or overwrites another stored report',async()=>{const t=setup(true);let chosen;await t.run('실험CC',null,{status:{},onCourse:course=>chosen=course});assert.equal(chosen.name,'실험CC');assert.equal(chosen.holes.length,1);assert.equal(t.reloaded(),false);assert.equal(t.store.size,0);});
+
+test('unreadable archived overview falls back to other discovered hole maps',async()=>{
+ const t=setup();const calls=[],nodes={'course-search-status':{}},candidate={image_url:'https://blogfiles.naver.net/map.png',verified_map_source:true};let chosen;
+ const sandbox={window:{},URLSearchParams,document:{getElementById:k=>nodes[k]},fetch:async(url,init)=>{const body=init?.body?JSON.parse(init.body):{};calls.push({url,body});if(url.includes('/discover?'))return Response.json({ok:true,candidates:[candidate,{image_url:'https://blogfiles.naver.net/detail.png'}]});if(url.endsWith('/select-maps'))return Response.json({ok:true,indices:[1]});return Response.json({ok:true,course:{name:'실험CC',holes:body.candidate.image_url===candidate.image_url?[]:[{name:'Valley',ref:'3'}],reason:'번호 연결 경로'}});}};
+ vm.runInNewContext(fs.readFileSync('overrides/course-map-workflow.js','utf8'),sandbox);await sandbox.window.MotionMapWorkflow.run('실험CC',null,{onCourse:c=>chosen=c});assert.equal(chosen.holes[0].ref,'3');assert.equal(calls.filter(x=>x.url.endsWith('/analyze-map')).length,2);assert.equal(calls.filter(x=>x.url.endsWith('/select-maps')).length,1);
+});

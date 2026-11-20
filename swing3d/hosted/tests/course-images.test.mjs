@@ -8,3 +8,26 @@ test('invalid and reversed/missing paths are rejected',()=>{const bad={...hole,r
 test('unsupported request cannot fetch arbitrary URLs',async()=>{let called=0;const r=await courseImages(new Request('https://example.test/api/courses/image?url=http://localhost/private'),{},async()=>{called++;});assert.equal(r.status,422);assert.equal(called,0);});
 test('explicit 0–1000 coordinates normalize; low confidence requires approximate-mode opt in',()=>{const px={...hole,tee:[400,800],green:[500,200],route:[[400,800],[450,500],[500,200]],confidence:'낮음'};const a=validateMapResult({coordinate_space:'normalized_0_1000',identity:'matched',holes:[structuredClone(px)]},candidate,'실험CC');assert.equal(a.holes.length,0);const b=validateMapResult({coordinate_space:'normalized_0_1000',identity:'matched',holes:[structuredClone(px)]},candidate,'실험CC',true);assert.equal(b.holes.length,1);assert.equal(b.holes[0].unverified,true);assert.deepEqual(b.holes[0].sourceRoute[0],[.4,.8]);});
 test('similar club names do not reuse another clubs verified source',async()=>{const r=await courseImages(new Request('https://example.test/api/courses/discover?q='+encodeURIComponent('뉴코리아CC')),{},async()=>new Response('<html>no image results</html>'));const d=await r.json();assert.equal(d.candidates.length,0);});
+
+// Cloudflare Workers supports follow/manual; redirect:error throws before any request.
+test('image fetch uses edge-supported redirect mode for both display and map analysis',async()=>{
+ let imageCalls=0,modelCalls=0;
+ const send=async(url,init)=>{if(url.startsWith('https://blogfiles.naver.net/')){assert.equal(init.redirect,'manual');imageCalls++;return new Response(new Uint8Array([137,80,78,71]),{headers:{'Content-Type':'image/png'}});}modelCalls++;return Response.json({candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({identity:'matched',holes:[structuredClone(hole)]})}]}}]});};
+ const img=await courseImages(new Request('https://example.test/api/courses/image?'+new URLSearchParams({url:candidate.image_url})),{},send);assert.equal(img.status,200);assert.equal(img.headers.get('Content-Type'),'image/png');assert.equal((await img.arrayBuffer()).byteLength,4);
+ const analysis=await courseImages(new Request('https://example.test/api/courses/analyze-map',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({course_name:'실험CC',candidate,allow_approximate:true})}),{GEMINI_API_KEY:'test-only'},send);assert.equal(analysis.status,200);assert.equal((await analysis.json()).course.holes.length,1);assert.equal(imageCalls,2);assert.equal(modelCalls,1);
+});
+test('image redirects validate every destination before fetching and stop loops',async()=>{
+ const url='https://example.test/api/courses/image?'+new URLSearchParams({url:candidate.image_url});
+ let calls=[];const allowed=await courseImages(new Request(url),{},async(u,init)=>{assert.equal(init.redirect,'manual');calls.push(u);return calls.length===1?new Response(null,{status:302,headers:{Location:'https://blogfiles.pstatic.net/redirect.png'}}):new Response('png',{headers:{'Content-Type':'image/png'}});});assert.equal(allowed.status,200);assert.equal(calls.length,2);
+ for(const destination of ['http://127.0.0.1/private','https://example.evil/map.png','https://x@blogfiles.naver.net/map.png']){calls=[];const denied=await courseImages(new Request(url),{},async u=>{calls.push(u);return new Response(null,{status:302,headers:{Location:destination}});});assert.equal(denied.status,422);assert.equal(calls.length,1);}
+ calls=[];const loop=await courseImages(new Request(url),{},async u=>{calls.push(u);return new Response(null,{status:302,headers:{Location:'/again.png'}});});assert.equal(loop.status,422);assert.equal(calls.length,4);
+});
+
+test('a numbered-label chain cannot masquerade as separate playable holes',()=>{
+ const holes=Array.from({length:5},(_,i)=>({...structuredClone(hole),number:i+1,tee:[.1+i*.1,.8-i*.1],green:[.2+i*.1,.7-i*.1],route:[[.1+i*.1,.8-i*.1],[.2+i*.1,.7-i*.1]]}));const c=validateMapResult({identity:'matched',holes},candidate,'실험CC',true);assert.equal(c.holes.length,0);assert.match(c.reason,/홀 번호/);
+ const separate=holes.map((h,i)=>({...h,green:[h.green[0]+.025+i*.005,h.green[1]],route:[h.tee,[h.green[0]+.025+i*.005,h.green[1]]]}));assert.equal(validateMapResult({identity:'matched',holes:separate},candidate,'실험CC',true).holes.length,5);
+});
+
+test('translated copies of one generic path never become a full mapped course',()=>{
+ const holes=Array.from({length:9},(_,i)=>({...structuredClone(hole),number:i+1,tee:[.1+i*.07,.1],green:[.14+i*.07,.2],route:[[.1+i*.07,.1],[.12+i*.07,.15],[.14+i*.07,.2]]}));const c=validateMapResult({identity:'matched',holes},candidate,'실험CC',true);assert.equal(c.holes.length,0);assert.match(c.reason,/같은 경로/);
+});
