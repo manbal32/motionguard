@@ -106,3 +106,14 @@ p=d/'overhaul.css';p.write_text(p.read_text()+'''
 #coach-panel.conversation-active #coach-log li{height:auto;max-height:none;overflow:visible;flex-shrink:0}
 #coach-log strong{margin-bottom:5px}
 ''')
+p=d/'index.html';s=p.read_text().replace('<form id="coach-form">','<p id="attachment-status" class="attachment-status" role="status" hidden></p><form id="coach-form">');p.write_text(s)
+p=d/'demo-start.js';s=p.read_text();s+='''
+(()=>{function ready(){const file=document.getElementById('video'),status=document.getElementById('attachment-status');if(!file||!status)return;const refresh=()=>{const f=file.files?.[0];status.hidden=!f;status.textContent=f?'영상이 첨부되어 있습니다 · '+f.name+' · 고민을 입력한 뒤 보내 주세요.':'';};file.addEventListener('change',refresh);refresh();}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);else ready();})();
+''';p.write_text(s)
+p=d/'instrument.js';s=p.read_text().replace('    const line = chatLine("나", value);','''    const line = chatLine("나", value);
+    if(selected?.file&&!messages.slice(0,-1).some(m=>m.role==='user')){
+      const attachment=node('small','첨부 영상 · '+selected.file.name,'chat-attachment');line.append(attachment);
+    }''')
+s=s.replace('    if(request||chatRequest)return;\n    if(!selected)',"    if(request||chatRequest)return;\n    if(!messages.some(m=>m.role==='user')){coachStatus.textContent='먼저 고민을 입력하고 보내 주세요. 대화를 바탕으로 분석합니다.';message.focus();return;}\n    if(!selected)")
+p.write_text(s)
+p=d/'overhaul.css';p.write_text(p.read_text()+"\n.attachment-status{font-size:14px;line-height:1.5;padding:10px 12px;background:var(--field);border-radius:10px;overflow-wrap:anywhere}.chat-attachment{display:block;margin-top:10px;padding-top:8px;border-top:1px solid currentColor;font-size:14px;overflow-wrap:anywhere}\n")
