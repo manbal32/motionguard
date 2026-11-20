@@ -129,3 +129,19 @@ p=d/'overhaul.css';p.write_text(p.read_text()+'''
 .attachment-status[data-sent='true']{font-size:14px;padding:6px 0;background:transparent;color:var(--ink-2)}
 #coach-panel #coach-form{margin-top:0}
 ''')
+# A single attachment card above the conversation replaces verbose/duplicate notices.
+p=d/'demo-start.js';s=p.read_text();s+='''
+(()=>{function ready(){const input=document.getElementById('video'),log=document.getElementById('coach-log'),media=document.getElementById('uploaded-media');if(!input||!log||!media)return;const card=document.createElement('button');card.id='conversation-file';card.type='button';card.hidden=true;card.setAttribute('aria-controls','uploaded-media');const icon=document.createElement('span');icon.textContent='▤';icon.setAttribute('aria-hidden','true');const text=document.createElement('span'),title=document.createElement('strong'),name=document.createElement('span');title.textContent='파일 첨부됨';name.className='conversation-file-name';text.append(title,name);const action=document.createElement('span');action.textContent='보기·변경';action.className='conversation-file-action';card.append(icon,text,action);log.before(card);const sync=()=>{const file=input.files?.[0];card.hidden=!file;if(file){name.textContent=file.name;name.title=file.name;card.setAttribute('aria-label','첨부 파일 '+file.name+' 보기 또는 변경');media.open=false;media.dataset.attached='true';}};card.onclick=()=>{media.open=!media.open;card.setAttribute('aria-expanded',String(media.open));};media.addEventListener('toggle',()=>card.setAttribute('aria-expanded',String(media.open)));input.addEventListener('change',sync);sync();}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);else ready();})();
+''';p.write_text(s)
+p=d/'overhaul.css';p.write_text(p.read_text()+'''
+#attachment-status,#file-info,.chat-attachment{display:none!important}
+#uploaded-media[data-attached='true']:not([open]){display:none}
+#conversation-file{display:flex;align-items:center;justify-content:flex-start;gap:10px;width:100%;max-width:420px;padding:10px 12px;min-height:60px;border:1px solid var(--line);border-radius:12px;background:var(--field);text-align:left;flex:none}
+#conversation-file>span:first-child{font-size:25px;flex:none}
+#conversation-file>span:nth-child(2){display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
+#conversation-file strong{font-size:14px;font-weight:600}
+.conversation-file-name{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;color:var(--ink-2)}
+.conversation-file-action{font-size:14px;flex:none;color:var(--ink-2)}
+#coach-panel #coach-mode{margin-bottom:0}
+#upload-actions{padding-top:10px}#upload-actions #start{min-height:52px}
+''')
