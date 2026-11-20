@@ -117,3 +117,15 @@ p=d/'instrument.js';s=p.read_text().replace('    const line = chatLine("나", va
 s=s.replace('    if(request||chatRequest)return;\n    if(!selected)',"    if(request||chatRequest)return;\n    if(!messages.some(m=>m.role==='user')){coachStatus.textContent='먼저 고민을 입력하고 보내 주세요. 대화를 바탕으로 분석합니다.';message.focus();return;}\n    if(!selected)")
 p.write_text(s)
 p=d/'overhaul.css';p.write_text(p.read_text()+"\n.attachment-status{font-size:14px;line-height:1.5;padding:10px 12px;background:var(--field);border-radius:10px;overflow-wrap:anywhere}.chat-attachment{display:block;margin-top:10px;padding-top:8px;border-top:1px solid currentColor;font-size:14px;overflow-wrap:anywhere}\n")
+p=d/'instrument.js';s=p.read_text().replace("node('small','첨부 영상 · '+selected.file.name,'chat-attachment')","node('small','스윙 영상 첨부됨','chat-attachment')")
+s=s.replace('      message.value = "";','''      message.value = "";
+      const attached=byId('attachment-status');if(attached&&!attached.hidden){attached.textContent='영상 첨부됨 · 위의 영상 보기에서 확인할 수 있어요.';attached.dataset.sent='true';}''')
+p.write_text(s)
+p=d/'demo-start.js';s=p.read_text().replace("status.hidden=!f;status.textContent=", "status.hidden=!f;delete status.dataset.sent;status.textContent=");p.write_text(s)
+p=d/'overhaul.css';p.write_text(p.read_text()+'''
+.site-notice{display:none!important}
+#coach-panel.conversation-active #coach-log,#coach-log{min-height:0;justify-content:flex-start;padding-block:12px}
+#coach-panel.conversation-active{gap:10px}
+.attachment-status[data-sent='true']{font-size:14px;padding:6px 0;background:transparent;color:var(--ink-2)}
+#coach-panel #coach-form{margin-top:0}
+''')
