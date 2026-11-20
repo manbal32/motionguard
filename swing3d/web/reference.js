@@ -4,6 +4,7 @@
     swing: [0, 120, 40, 0, -135],
     torso: [0, 44, 18, -28, -65],
     hips: [0, 24, -8, -22, -55],
+    x_factor: [0, 20, 26, -6, -10],
     lean: [15, 15, 19, 15, 5],
     wrist: [0, 35, 20, 0, 5],
     shiftX: [0, 0.055, 0.025, -0.055, -0.10],
@@ -11,6 +12,11 @@
     kneeR: [14, 12, 19, 19, 9],
     heelR: [0, 0, 0.12, 0.35, 0.85],
   };
+
+  // Provisional coaching reference, not a validated handicap model. Replace with player data.
+  // plausible: 사람이 낼 수 있는 범위. 이 밖으로 나간 값은 계측이 틀린 것이므로
+  // 점수에 넣지 않고 고객에게도 보여주지 않는다. 틀린 수치를 적느니 못 쟀다고 적는다.
+  const scoring = {"tolerances":{"swing":45,"torso":45,"hips":30,"lean":12,"wrist":30,"shiftX":0.06,"kneeL":20,"kneeR":20,"heelR":0.4,"x_factor":25},"base_strokes":72,"missing_item_uncertainty":0.25,"stroke_impact":{"swing":0.18,"torso":0.18,"hips":0.18,"lean":0.12,"wrist":0.16,"shiftX":0.18,"kneeL":0.1,"kneeR":0.1,"heelR":0.12,"x_factor":0.22},"weights":{"swing":1,"torso":1,"hips":1,"lean":1,"wrist":1,"shiftX":1,"kneeL":1,"kneeR":1,"heelR":1,"x_factor":2},"plausible":{"swing":[-200,200],"torso":[-120,120],"hips":[-90,90],"lean":[-60,60],"wrist":[-150,150],"x_factor":[-90,90],"kneeL":[0,90],"kneeR":[0,90],"shiftX":[-0.6,0.6],"heelR":[-0.2,1.5]}};
 
   const channels = Object.freeze(Object.keys(model));
   const phases = ["address", "top", "down", "impact", "finish"];
@@ -35,5 +41,5 @@
     });
   }
 
-  window.SwingReference = Object.freeze({ ...model, channels, expand });
+  window.SwingReference = Object.freeze({ ...model, channels, expand, scoring });
 })();

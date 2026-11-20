@@ -1,0 +1,48 @@
+{
+  "mobile": {
+    "empty": {
+      "preview": 150,
+      "body": 754
+    },
+    "consult": {
+      "overlap": -83.5,
+      "preview": 150,
+      "body": 754,
+      "log": 203.75,
+      "fit": "contain"
+    },
+    "summary": {
+      "overlap": -29,
+      "clipped": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "errors": []
+  },
+  "desktop": {
+    "empty": {
+      "preview": 150,
+      "body": 810
+    },
+    "consult": {
+      "overlap": -83.5,
+      "preview": 150,
+      "body": 810,
+      "log": 259.75,
+      "fit": "contain"
+    },
+    "summary": {
+      "overlap": -29,
+      "clipped": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "errors": []
+  }
+}

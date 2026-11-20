@@ -11,16 +11,29 @@ from urllib.request import Request, urlopen
 from findings_contract import SCHEMA, validate_findings
 
 PHASES = {"address": "어드레스", "top": "백스윙 탑", "down": "다운스윙",
-          "impact": "임팩트", "finish": "피니시"}
+          "impact": "임팩트", "finish": "피니쉬"}
 CHANNELS = {
     "swing": ("스윙각", "swing arc"), "torso": ("몸통 회전", "shoulder turn"),
     "hips": ("골반 회전", "hip turn"), "lean": ("상체 기울기", "spine tilt"),
     "wrist": ("손목 각도", "wrist hinge"), "shiftX": ("좌우 이동", "sway"),
     "kneeL": ("왼무릎 굴곡", "lead knee flex"), "kneeR": ("오른무릎 굴곡", "trail knee flex"),
     "heelR": ("오른 뒤꿈치", "trail heel lift"),
+    "x_factor": ("어깨·골반 분리", "X factor"),
 }
 DISTANCES = {"shiftX", "heelR"}
 SUMMARY_FIELDS = ("concern", "improvement", "hypothesis", "goal")
+def josa(word, with_final, without_final):
+    """받침에 맞는 조사를 고른다. 숫자와 영문도 읽는 소리로 판정한다."""
+    if not word: return without_final
+    last = word.strip()[-1]
+    if last.isdigit():
+        return (with_final, without_final)[last in '2459']
+    code = ord(last)
+    if 0xAC00 <= code <= 0xD7A3:
+        return (without_final, with_final)[(code - 0xAC00) % 28 != 0]
+    return (with_final, without_final)['aeiou'.find(last.lower()) < 0]
+
+
 LIMITATIONS = [
     "단일 영상에서는 깊이 방향 회전, 볼 구질·스핀, 클럽 페이스를 확정할 수 없습니다.",
     "촬영 방향과 관절 가림이 수치에 영향을 줍니다. 교본은 교육용 참고 기준입니다.",
@@ -117,8 +130,9 @@ def model():
 
 
 def evidence(track):
+    import scoring
     if track['meta'].get('usable') is False:
-        raise ValueError(track['meta']['unusable_reason'])
+        raise ValueError(track['meta'].get('guidance') or track['meta']['unusable_reason'])
     channels = list(CHANNELS)
     rows, meta = track["track"], track["meta"]
     columns = [track["channels"].index(key) for key in channels]
@@ -146,6 +160,8 @@ def evidence(track):
 
     windows, references, candidates = {}, {}, {}
     for (phase, label), i in zip(PHASES.items(), knots):
+        if phase == "impact" and meta.get("impact_verified") is False:
+            continue
         # Stride 2 keeps the compact numeric payload bounded, retaining both ends and the phase frame.
         indices = sorted({max(0, min(len(rows) - 1, i + offset)) for offset in (-5, -3, -1, 0, 1, 3, 5)})
         windows[phase] = [[j + start, round(rows[j][confidence], 2),
@@ -159,6 +175,9 @@ def evidence(track):
             if key == "wrist" or key in meta.get("unavailable", ()) or rows[i][columns[k]] is None:
                 continue
             if not rows[i][columns[k]] and key in {"torso", "hips"} and phase in {"down", "impact"} and "rotation_sign_source" not in meta:
+                continue
+            low,high=scoring.constants().get('plausible',{}).get(key,(-math.inf,math.inf))
+            if not low<=units(rows[i][columns[k]],key)<=high:
                 continue
             per_channel = meta.get("channel_confidence", {}).get(key)
             quality = (per_channel[i] if per_channel else
@@ -284,18 +303,10 @@ def analyze(track, summary, provider):
         improvements = []
         for item in ranked:
             if item["deviation"] and not any(prior["channel"] == item["channel"] for prior in improvements):
-                improvements.append(dict(item, drill=f"{PHASES[item['phase']]}에서 천천히 멈추고 {CHANNELS[item['channel']][0]}을 확인한 뒤 같은 각도에서 다시 촬영하세요."))
+                improvements.append(dict(item, drill=(lambda n: f"{PHASES[item['phase']]}에서 천천히 멈추고 "
+                    f"{n}{josa(n, '을', '를')} 확인한 뒤 같은 각도에서 다시 촬영하세요.")(CHANNELS[item['channel']][0])))
             if len(improvements) == 3:
                 break
-        if not improvements and track.get("findings_id") == "sample" and "top_torso" in all_candidates:
-            # The bundled wide shot has low confidence. Its preview demonstrates the controls only.
-            improvements = [
-                dict(all_candidates[key], label="예시 비교 · 백스윙 탑 " + CHANNELS[channel][0], example_only=True,
-                     drill=f"예시 연습: 백스윙 탑에서 멈추고 {CHANNELS[channel][0]} 자세를 같은 각도에서 확인해 보세요.")
-                for key, channel in (("top_torso", "torso"), ("top_hips", "hips"))
-                if key in all_candidates
-            ]
-            synthesis = "추적 신뢰도가 낮아 개선점을 판정하지 못했습니다. 번들 영상의 비교 조작 예시를 표시합니다."
     return validate_findings({"schema": SCHEMA, "reference": "model", "findings": improvements,
                               "mode": "demo" if reason else "gemini", "reason": reason, "usage": usage,
                               "conversation_summary": summary, "summary": synthesis, "comparison": comparison,

@@ -1,0 +1,33 @@
+{
+  "screens": [
+    "course_mobile_entry.png",
+    "course_mobile_ready.png",
+    "course_mobile_flight.png",
+    "course_mobile_finish.png",
+    "course_mobile_report.png",
+    "course_desktop_entry.png",
+    "course_desktop_ready.png",
+    "course_desktop_flight.png",
+    "course_desktop_finish.png",
+    "course_desktop_report.png"
+  ],
+  "errors": [],
+  "runs": [
+    {
+      "name": "mobile",
+      "profileItems": 38,
+      "seed1Total": "41타",
+      "landings": 4,
+      "restoreResult": true,
+      "reportLink": true
+    },
+    {
+      "name": "desktop",
+      "profileItems": 38,
+      "seed1Total": "41타",
+      "landings": 4,
+      "restoreResult": true,
+      "reportLink": true
+    }
+  ]
+}

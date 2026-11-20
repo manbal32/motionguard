@@ -1,0 +1,109 @@
+{
+  "screens": {
+    "m1_upload": [
+      390,
+      844,
+      2
+    ],
+    "m2_summary": [
+      390,
+      844,
+      2
+    ],
+    "m3_result": [
+      390,
+      844,
+      2
+    ],
+    "m4_point": [
+      390,
+      844,
+      2
+    ],
+    "m5_report": [
+      390,
+      844,
+      2
+    ],
+    "h1_history": [
+      390,
+      844,
+      2
+    ],
+    "h2_report_compare": [
+      390,
+      844,
+      2
+    ],
+    "d1_upload": [
+      1440,
+      900,
+      2
+    ],
+    "d2_summary": [
+      1440,
+      900,
+      2
+    ],
+    "d3_result": [
+      1440,
+      900,
+      2
+    ],
+    "d4_point": [
+      1440,
+      900,
+      2
+    ],
+    "d5_report": [
+      1440,
+      900,
+      2
+    ],
+    "g1": [
+      390,
+      844,
+      2
+    ],
+    "g2": [
+      390,
+      844,
+      2
+    ],
+    "g3": [
+      390,
+      844,
+      2
+    ]
+  },
+  "errors": [],
+  "mpoint": {
+    "css": [
+      358,
+      409
+    ],
+    "frame": 172,
+    "points": 22
+  },
+  "report": {
+    "zeroDifferences": 0,
+    "curated": 3,
+    "forbidden": []
+  },
+  "history": {
+    "session": "02회",
+    "delta": "+0.0점",
+    "comparison": "같은 촬영 조건과 같은 항목으로 지난 기록과 비교했습니다."
+  },
+  "profileEntries": 2,
+  "resetMessage": "이전 기록을 찾을 수 없습니다. 새 프로필로 시작합니다.",
+  "dpoint": {
+    "css": [
+      840,
+      465
+    ],
+    "frame": 172,
+    "points": 22
+  },
+  "webmBytes": 34260
+}

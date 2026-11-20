@@ -87,7 +87,7 @@ class CropTests(TestCase):
         self.assertIsNone(timeline[8])
         self.assertTrue(all(p[3] == 0 for p in frames[8].values()))
         self.assertFalse(st._frame_acceptance(frames)[8]['accepted'])
-        self.assertEqual(len(timeline[7]), 33)
+        self.assertEqual(len(timeline[7]), 22)
         for i, name in enumerate(vp.LANDMARK_NAMES):
             self.assertEqual(timeline[7][i], [pose()[name][0], pose()[name][1], 0.99])
         self.assertEqual(frames[7], second[7])

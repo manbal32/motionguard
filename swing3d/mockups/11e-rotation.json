@@ -1,0 +1,97 @@
+{
+  "phases": {
+    "address": {
+      "frame": 81,
+      "raw_yaw": {
+        "SHOULDER": 170.0300578994487,
+        "HIP": 175.74538070215544
+      },
+      "before": {
+        "torso": 0.0,
+        "hips": 0.0,
+        "x_factor": 0.0
+      },
+      "after": {
+        "torso": 0.0,
+        "hips": 0.0,
+        "x_factor": 0.0
+      }
+    },
+    "top": {
+      "frame": 118,
+      "raw_yaw": {
+        "SHOULDER": 30.6898919986836,
+        "HIP": 70.0370883395011
+      },
+      "before": {
+        "torso": -139.3401659007651,
+        "hips": -105.70829236265436,
+        "x_factor": -33.63187353811074
+      },
+      "after": {
+        "torso": -139.34018450794298,
+        "hips": -105.70830677889734,
+        "x_factor": -33.631877729045655
+      }
+    },
+    "down": {
+      "frame": 141,
+      "raw_yaw": {
+        "SHOULDER": 156.4829420360641,
+        "HIP": 163.40801881721382
+      },
+      "before": {
+        "torso": -13.54711586338461,
+        "hips": -12.337361884941625,
+        "x_factor": -1.2097539784429845
+      },
+      "after": {
+        "torso": -13.54712869963221,
+        "hips": -12.33738561099299,
+        "x_factor": -1.2097430886392202
+      }
+    },
+    "impact": {
+      "frame": 146,
+      "raw_yaw": {
+        "SHOULDER": -174.4775386522481,
+        "HIP": 178.57883134719822
+      },
+      "before": {
+        "torso": 15.492403448303191,
+        "hips": 2.8334506450427788,
+        "x_factor": 12.658952803260412
+      },
+      "after": {
+        "torso": 15.492377709880868,
+        "hips": 2.83344818426046,
+        "x_factor": 12.658929525620408
+      }
+    },
+    "finish": {
+      "frame": 172,
+      "raw_yaw": {
+        "SHOULDER": -92.66923657537164,
+        "HIP": -111.35364899448786
+      },
+      "before": {
+        "torso": 97.30070552517967,
+        "hips": 72.90097030335669,
+        "x_factor": 24.39973522182298
+      },
+      "after": {
+        "torso": 97.30072409314764,
+        "hips": 72.90097261282445,
+        "x_factor": 24.399751480323186
+      }
+    }
+  },
+  "score": 31.48,
+  "excluded": [
+    "top_torso",
+    "top_hips"
+  ],
+  "method": "atan2(sin(unwrapped_yaw-address_yaw),cos(unwrapped_yaw-address_yaw))",
+  "fitted_constants": false,
+  "conclusion": "The top was already within ±180°. Wrapping does not repair lite-model world yaw."
+}
