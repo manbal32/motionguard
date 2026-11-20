@@ -11,11 +11,12 @@ for key,old,title,hint in [('concern','고민','지금의 고민','대화에서 
  new='<label class="summary-direction '+key+'"><span class="summary-direction-heading">'+icon+'<span>'+title+'</span></span><span class="summary-direction-hint">'+hint+'</span><textarea name="'+key+'"'
  assert old_text in s,key;s=s.replace(old_text,new)
 p.write_text('\n'.join(line.rstrip() for line in s.splitlines())+'\n')
-p=d/'demo-start.js';s=p.read_text().replace("title.textContent='파일 첨부됨'","title.textContent='영상 업로드 완료'").replace("card.setAttribute('aria-label','첨부 파일 '+file.name+' 보기 또는 변경')","card.setAttribute('aria-label','업로드한 영상 보기 또는 변경')")
+p=d/'demo-start.js';s=p.read_text().replace("title.textContent='첨부 파일'","title.textContent='영상 업로드 완료'").replace("title.textContent='파일 첨부됨'","title.textContent='영상 업로드 완료'").replace("card.setAttribute('aria-label','첨부 파일 펼치기 또는 접기')","card.setAttribute('aria-label','업로드한 영상 펼치기 또는 접기')")
 # Move the original checkbox node; its existing consent listeners and checked state remain intact.
 s=s.replace('log.before(card);const sync=',"log.before(card);const agreement=document.getElementById('coach-consent')?.closest('label');if(agreement){agreement.classList.add('upload-agreement');card.after(agreement);}const sync=")
+s=s.replace("'영상이 첨부되어 있습니다 · '+f.name+' · 고민을 입력한 뒤 보내 주세요.'","'영상 업로드 완료'").replace("'파일 다시 올리기'","'영상 다시 올리기'")
 p.write_text(s)
-p=d/'instrument.js';s=p.read_text();s=s.replace('  async function reviewSummary() {','  let lastApprovedSummary=null;\n  async function reviewSummary() {')
+p=d/'instrument.js';s=p.read_text().replace('스윙 영상 첨부됨','영상 업로드 완료').replace('영상 첨부됨 · 위의 영상 보기에서 확인할 수 있어요.','영상 업로드 완료');s=s.replace('  async function reviewSummary() {','  let lastApprovedSummary=null;\n  async function reviewSummary() {')
 s=s.replace('    const summaryTimeout=setTimeout(', '    lastApprovedSummary=null;\n    const summaryTimeout=setTimeout(')
 s=s.replace("byId('summary-origin').textContent='대화에서 정리한 고민과 코치 제안입니다. 필요하면 수정해 주세요.';","byId('summary-origin').textContent='내용을 바로 수정할 수 있어요. 확인 후 분석을 시작해 주세요.';")
 s=s.replace('    if (!approvedSummary) return;', '    if (!approvedSummary) return;\n    lastApprovedSummary={...approvedSummary};')
