@@ -293,9 +293,10 @@ p=d/'report.js';s=p.read_text().replace("  $('return-result').href=", "  if(doc.
 p=d/'client-api.js';s=p.read_text().replace("   if(route==='api/coaching/videos/save')", "   if(route==='api/coaching/scenario/save'){const doc=await access('reports',data.report_id),v=data.snapshot;if(!doc||v?.revision!==2||v.reportId!==data.report_id||!v.course?.holes?.length||v.course.holes.length>36||!Number.isInteger(v.seed)||!v.profile)return reply({ok:false,reason:'시뮬레이션 기록을 확인해 주세요.'},422);doc.course_scenario=v;await access('reports',data.report_id,doc);return reply({ok:true});}\n   if(route==='api/coaching/videos/save')");p.write_text(s)
 
 # Select diverse poses across the original clip, not only late detected phase candidates.
+shutil.copy2(r/'overrides/still-body.js',d/'still-body.js')
 shutil.copy2(r/'overrides/still-selection.js',d/'still-selection.js')
 shutil.copy2(r/'overrides/report-navigation.js',d/'report-navigation.js')
-p=d/'index.html';p.write_text(p.read_text().replace('<script src="./visual-analysis.js">','<script src="./still-selection.js"></script><script src="./visual-analysis.js">').replace('<script src="./instrument.js"','<script src="./report-navigation.js"></script><script src="./instrument.js"'))
+p=d/'index.html';p.write_text(p.read_text().replace('<script src="./visual-analysis.js">','<script src="./still-body.js"></script><script src="./still-selection.js"></script><script src="./visual-analysis.js">').replace('<script src="./instrument.js"','<script src="./report-navigation.js"></script><script src="./instrument.js"'))
 p=d/'video-evidence.js';s=p.read_text().replace('return c;};',"c.dataset.mediaTime=String(v.currentTime);return c;};").replace('return{register,frame,dimensions:',"return{register,frame,at:(id,time)=>frame(id,time*registry.get(id).evidence.fps-.05),info:id=>{const r=registry.get(id);return r?{duration:r.video.duration,fps:r.evidence.fps}:null;},dimensions:");p.write_text(s)
 p=d/'instrument.js';s=p.read_text().replace("saveReturnState(track,coaching);await MotionEvidence.ready();location.assign", "saveReturnState(track,coaching);location.assign");s=s.replace("const saved=JSON.parse(sessionStorage.getItem('motionguard:return'));\n      if(saved?.coaching?.report_id!==id)throw Error('missing');", "let saved;try{saved=JSON.parse(sessionStorage.getItem('motionguard:return'));}catch{}\n      if(saved?.coaching?.report_id!==id){const r=await fetch('./api/coaching/report/'+id);if(!r.ok)throw Error('missing');const coaching=await r.json(),t=await fetch('./api/track/'+coaching.track_id);if(!t.ok)throw Error('missing');saved={track:await t.json(),coaching};}");p.write_text(s)
 
@@ -313,3 +314,6 @@ shutil.copy2(r/'overrides/report-pdf.js',d/'report-pdf.js')
 shutil.copytree(r/'overrides/vendor/html2canvas',d/'vendor/html2canvas',dirs_exist_ok=True)
 p=d/'index.html';p.write_text(p.read_text().replace('<script src="./report-navigation.js">','<script src="./coaching-report.js"></script><script src="./report-pdf.js"></script><script src="./report-navigation.js">'))
 p=d/'report.html';p.write_text(p.read_text().replace('<script src="./coaching-report.js">','<script src="./report-pdf.js"></script><script src="./coaching-report.js">'))
+
+# Paused seeks use seeked plus paint ticks; absent frame callbacks do not cost 1.5s per candidate.
+p=d/'video-evidence.js';p.write_text(p.read_text().replace('resolve();},1500);callback=v.requestVideoFrameCallback','resolve();},300);callback=v.requestVideoFrameCallback'))
