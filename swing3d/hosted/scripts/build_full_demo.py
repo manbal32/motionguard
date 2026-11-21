@@ -28,11 +28,13 @@ for name in ['map-only.html','map-only.js']:
  shutil.copy2(ROOT/'overrides'/name,DIST/('map.html' if name.endswith('.html') else name))
 for name in ['rivera-game.html','rivera-game.css','rivera-game.js','rivera-game-engine.js']:
  shutil.copy2(ROOT/'overrides'/name,DIST/('game.html' if name.endswith('.html') else name))
-# Independent quick entry shares the same game and local round save as the full app.
-(DIST/'play.html').write_text((DIST/'game.html').read_text().replace('<body>','<body data-quick-play="true">'))
-p=DIST/'index.html';text=p.read_text();marker='  <nav class="stepper"';assert marker in text
-text=text.replace(marker,'  <a class="game-quick-link" href="./play"><span>리베라 18홀 게임</span><small>영상 분석 없이 바로 플레이</small></a>\n'+marker,1);p.write_text(text)
-p=DIST/'style.css';p.write_text(p.read_text()+'\n.game-quick-link{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 12px;padding:12px 16px;margin:12px 0 20px;border:1px solid #bdd7c8;border-radius:14px;background:#edf6f0;color:#17553c;text-decoration:none;min-height:48px;font-size:16px;font-weight:700}.game-quick-link small{font-size:14px;font-weight:400;color:#4e6b5a}\n')
+# Unlisted tester entry; the service exposes play only from the final simulation.
+game=(DIST/'game.html').read_text()
+(DIST/'play.html').write_text(game.replace('<body>','<body data-quick-play="true"><aside class="game-test-notice">게임 기능 테스트 · 서비스에서는 분석 후 시뮬레이션에서 플레이합니다.</aside>'))
+(DIST/'round.html').write_text(game.replace('<body>','<body data-embedded-round="true">').replace('<a class="game-brand" href="./game.html">MotionGuard <span>PLAY</span></a>','<span class="game-brand">MotionGuard <span>PLAY</span></span>'))
+shutil.copy2(ROOT/'overrides/simulation-round.js',DIST/'simulation-round.js')
+p=DIST/'index.html';p.write_text(p.read_text().replace('<script src="./simulation-entry.js">','<script src="./simulation-round.js"></script><script src="./simulation-entry.js">'))
+p=DIST/'overhaul.css';p.write_text(p.read_text()+'\n.simulation-round-actions{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.simulation-round-actions button{min-height:48px;font-size:16px}.simulation-round-frame{display:block;width:100%;height:1050px;border:0;border-radius:18px;background:#f0f5f1}.simulation-round-status{font-size:14px;color:var(--ink-2)}\n')
 shutil.copy2(ROOT/'data/rivera-game.json',DIST/'rivera-game.json')
 shutil.copytree(ROOT/'assets/rivera-game',DIST/'rivera-game')
 map_sources=json.loads((ROOT/'data/map-sources.json').read_text())
