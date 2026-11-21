@@ -30,7 +30,7 @@ window.MotionVisual=(()=>{
    if(!r.ok||!d.ok){window.MotionAudit?.record('analysis_failed',{request_id:d.request_id??requestId,code:d.error_code??'unknown',upstream_status:d.upstream_status??null});throw Error((d.reason??'분석에 실패했습니다.')+(d.request_id?' (확인번호 '+d.request_id.slice(0,8)+')':''));}
    if(d.input_receipt?.request_id!==requestId||d.input_receipt?.photo_count!==5||d.input_receipt?.forwarded_images!==5||JSON.stringify(d.input_receipt?.image_sha256)!==JSON.stringify(selectedHashes))throw Error('서버에서 이번 분석 사진 5장의 수신을 확인하지 못했습니다. 최신 화면에서 다시 시도해 주세요.');
    window.MotionAudit?.record('ai_response',{request_id:requestId,photos:5,items:d.analysis?.items?.length??0});
-   d.selection_audit={revision:'single-swing-v4',times:selected.map(s=>s.time),minimum_pose_change:Math.min(...selected.map(s=>s.min_pair_change??0)),comparison_scopes:[...new Set(selected.map(s=>s.comparison_scope??'full-frame'))],motion_area_ratio:selected[0]?.motion_area_ratio??null,selection_window:selected[0]?.selection_window??null};
+   d.selection_audit={revision:'multi-view-v5',times:selected.map(s=>s.time),minimum_pose_change:Math.min(...selected.map(s=>s.min_pair_change??0)),comparison_scopes:[...new Set(selected.map(s=>s.comparison_scope??'full-frame'))],motion_area_ratio:selected[0]?.motion_area_ratio??null,selection_window:selected[0]?.selection_window??null,sequence_method:selected[0]?.sequence_method??null};
    if(d.analysis?.assessment_score)d.analysis.assessment_score.rubric='photo-four-v2-keyframes';
    d.local_stills=selected.map(({id,phase,time,image})=>({id,phase,time,image:'data:image/jpeg;base64,'+image}));return d;
   }
