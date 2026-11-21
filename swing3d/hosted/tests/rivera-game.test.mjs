@@ -93,3 +93,23 @@ test('quick entry ignores corrupt saves while the full game keeps its course pic
  assert.equal(t.nodes.get('play-screen').hidden,false);assert.equal(JSON.parse(t.storage.get('motionguard:rivera-game:v1')).shots.length,0);
  const full=await ui(t.storage,null);assert.equal(full.nodes.get('setup-screen').hidden,false);assert.equal(full.nodes.get('play-screen').hidden,true);assert.equal(full.nodes.get('resume-game').hidden,false);
 });
+
+test('aligned green putts tolerate short and excessive power in dry, wet and windy conditions',()=>{
+ const E=engine(),h=E.holes(data,E.create(data))[0];
+ for(const remaining of [1,5,10,14])for(const aim of [-8,0,8])for(const power of [50,85,100])for(const wet of [false,true]){
+  const s=E.create(data);s.ball={x:0,y:h.distance-remaining};s.club='putter';s.aim=aim;s.power=power;
+  if(wet)E.setWeather(s,liveWind(12,90,{precipitation:10}));
+  const preview=E.aimPoint(s,h),shot=E.hit(s,h);assert.equal(shot.holed,true);assert.equal(shot.puttAssisted,true);assert.equal(shot.carry,remaining);assert.deepEqual({...preview},{...shot.end});assert.equal(shot.remaining,0);
+  E.complete(s,h);assert.equal(s.phase,'holed');assert.equal(E.total(s),1);assert.ok(E.restore(data,JSON.stringify(s)));assert.equal(E.undo(s),true);assert.equal(E.total(s),0);assert.equal(s.phase,'ready');
+ }
+});
+test('putting help does not hole badly aimed, barely tapped or off-green shots',()=>{
+ const E=engine(),h=E.holes(data,E.create(data))[0];
+ for(const [remaining,aim,power]of [[10,20,50],[10,-20,50],[10,0,5],[30,0,100]]){
+  const s=E.create(data);s.ball={x:0,y:h.distance-remaining};s.club='putter';s.aim=aim;s.power=power;const shot=E.hit(s,h);assert.equal(shot.holed,false);assert.equal(shot.puttAssisted,false);E.complete(s,h);assert.equal(s.phase,'ready');
+ }
+});
+test('the club guide uses the same range values as the playable engine',async()=>{
+ const t=await ui(),guide=t.nodes.get('club-distances');assert.equal(guide.children.length,t.engine.clubs.length*2);
+ for(const[i,club]of t.engine.clubs.entries()){assert.equal(guide.children[i*2].textContent,club.label);assert.equal(guide.children[i*2+1].textContent,club.range+'m');}
+});
