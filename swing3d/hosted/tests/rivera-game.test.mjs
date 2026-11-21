@@ -24,11 +24,12 @@ test('stroke limit, undo and storage restore preserve counts without phantom str
  const E=engine(),s=E.create(data),h=E.holes(data,s)[0];for(let i=0;i<12;i++){s.club='putter';s.power=1;E.hit(s,h);E.complete(s,h);}assert.equal(s.phase,'holed');assert.equal(E.strokeCount(s),12);E.undo(s);assert.equal(s.shots.length,11);assert.equal(s.phase,'ready');E.hit(s,h);const restored=E.restore(data,JSON.stringify(s));assert.equal(restored.phase,'ready');assert.equal(restored.shots.length,11);assert.equal(restored.pending,undefined);E.complete(s,h);assert.equal(E.strokeCount(s),12);assert.equal(E.restore(data,{...s,holeIndex:5}),null);assert.equal(E.restore(data,{...s,ball:{x:NaN,y:1}}),null);
 });
 
-async function ui(storage=new Map(),weather={mode:'live',temperature:20,windSpeed:0,windFrom:0,gust:0,precipitation:0,code:0,weatherTime:'2026-11-21T02:30:00Z'}){
+async function ui(storage=new Map(),weather={mode:'live',temperature:20,windSpeed:0,windFrom:0,gust:0,precipitation:0,code:0,weatherTime:'2026-11-21T02:30:00Z'},quickPlay=false){
  const nodes=new Map(),queue=[],calls=[],events=new Map();let document,clock=Date.now();
  class El{constructor(tag='div'){this.tagName=tag;this.children=[];this.attributes={};this.dataset={};this.style={};this.hidden=false;this._text='';this.value='';this.id='';this.classList={add(){},remove(){}};}set textContent(v){this._text=String(v);this.children=[];}get textContent(){return this._text+this.children.map(x=>x.textContent??'').join('');}append(...values){this.children.push(...values);}replaceChildren(...values){this._text='';this.children=[...values];}setAttribute(k,v){this.attributes[k]=String(v);if(k==='id'){this.id=v;nodes.set(v,this);}}getAttribute(k){return this.attributes[k];}addEventListener(){}focus(){document.activeElement=this;}}
  const html=fs.readFileSync('overrides/rivera-game.html','utf8');for(const m of html.matchAll(/<([\w-]+)\b[^>]*\bid="([^"]+)"[^>]*>/g)){const e=new El(m[1]);e.id=m[2];e.hidden=/\bhidden\b/.test(m[0]);nodes.set(m[2],e);}
  document={getElementById:id=>{assert.ok(nodes.has(id),'Missing '+id);return nodes.get(id);},createElement:t=>new El(t),createElementNS:(_,t)=>new El(t),createTextNode:text=>({textContent:text}),body:new El('body'),hidden:false,addEventListener:(name,fn)=>events.set(name,fn)};
+ document.body.dataset.quickPlay=String(quickPlay);
  const s={document,Date:class extends Date{static now(){return clock;}},URL,AbortController,structuredClone,setTimeout,clearTimeout,localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)},fetch:async u=>{calls.push(u);if(u==='./api/game/weather')return Response.json(weather?{ok:true,weather}:{ok:false,reason:'unavailable'},{status:weather?200:503});assert.equal(u,'./rivera-game.json');return Response.json(data);},requestAnimationFrame:f=>{queue.push(f);return queue.length;},cancelAnimationFrame(){},scrollTo(){},addEventListener(){},matchMedia:()=>({matches:false})};s.window=s;
  vm.createContext(s);for(const f of['overrides/rivera-game-engine.js','dist/client/course-golfer.js','overrides/rivera-game.js'])vm.runInContext(fs.readFileSync(f,'utf8'),s);await new Promise(resolve=>setImmediate(resolve));return{nodes,queue,storage,calls,events,engine:s.MotionRiveraGame,advance:ms=>clock+=ms};
 }
@@ -75,4 +76,20 @@ test('an 18-hole UI playthrough uses live wind, actual shot/putt buttons and no 
 
 test('automatic retries respect increasing backoff even when the player repeatedly returns',async()=>{
  const t=await ui(new Map(),null),weatherCalls=()=>t.calls.filter(u=>u==='./api/game/weather').length,back=async()=>{t.events.get('visibilitychange')();await new Promise(resolve=>setImmediate(resolve));};assert.equal(weatherCalls(),1);t.advance(60000);await back();assert.equal(weatherCalls(),2);t.advance(60000);await back();assert.equal(weatherCalls(),2);t.advance(60000);await back();assert.equal(weatherCalls(),3);
+});
+
+test('quick game entry starts on the map without upload or analysis and resumes the same shot count',async()=>{
+ const t=await ui(new Map(),null,true),get=id=>t.nodes.get(id);
+ assert.equal(get('setup-screen').hidden,true);assert.equal(get('play-screen').hidden,false);assert.match(get('hole-title').textContent,/1번홀/);
+ get('hit-shot').onclick();for(let i=0;i<90&&t.queue.length;i++)t.queue.shift()(i*50);
+ const before=JSON.parse(t.storage.get('motionguard:rivera-game:v1'));assert.equal(before.shots.length,1);
+ const resumed=await ui(t.storage,null,true),after=JSON.parse(resumed.storage.get('motionguard:rivera-game:v1'));
+ assert.equal(resumed.nodes.get('play-screen').hidden,false);assert.equal(after.shots.length,1);assert.deepEqual(after.ball,before.ball);assert.equal(after.seed,before.seed);
+ assert.ok(resumed.calls.every(u=>u==='./rivera-game.json'||u==='./api/game/weather'));
+ resumed.nodes.get('choose-courses').onclick();assert.equal(resumed.nodes.get('setup-screen').hidden,false);
+});
+test('quick entry ignores corrupt saves while the full game keeps its course picker',async()=>{
+ const t=await ui(new Map([['motionguard:rivera-game:v1','{broken']]),null,true);
+ assert.equal(t.nodes.get('play-screen').hidden,false);assert.equal(JSON.parse(t.storage.get('motionguard:rivera-game:v1')).shots.length,0);
+ const full=await ui(t.storage,null);assert.equal(full.nodes.get('setup-screen').hidden,false);assert.equal(full.nodes.get('play-screen').hidden,true);assert.equal(full.nodes.get('resume-game').hidden,false);
 });

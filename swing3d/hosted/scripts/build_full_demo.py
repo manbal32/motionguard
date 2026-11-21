@@ -28,6 +28,11 @@ for name in ['map-only.html','map-only.js']:
  shutil.copy2(ROOT/'overrides'/name,DIST/('map.html' if name.endswith('.html') else name))
 for name in ['rivera-game.html','rivera-game.css','rivera-game.js','rivera-game-engine.js']:
  shutil.copy2(ROOT/'overrides'/name,DIST/('game.html' if name.endswith('.html') else name))
+# Independent quick entry shares the same game and local round save as the full app.
+(DIST/'play.html').write_text((DIST/'game.html').read_text().replace('<body>','<body data-quick-play="true">'))
+p=DIST/'index.html';text=p.read_text();marker='  <nav class="stepper"';assert marker in text
+text=text.replace(marker,'  <a class="game-quick-link" href="./play"><span>리베라 18홀 게임</span><small>영상 분석 없이 바로 플레이</small></a>\n'+marker,1);p.write_text(text)
+p=DIST/'style.css';p.write_text(p.read_text()+'\n.game-quick-link{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 12px;padding:12px 16px;margin:12px 0 20px;border:1px solid #bdd7c8;border-radius:14px;background:#edf6f0;color:#17553c;text-decoration:none;min-height:48px;font-size:16px;font-weight:700}.game-quick-link small{font-size:14px;font-weight:400;color:#4e6b5a}\n')
 shutil.copy2(ROOT/'data/rivera-game.json',DIST/'rivera-game.json')
 shutil.copytree(ROOT/'assets/rivera-game',DIST/'rivera-game')
 map_sources=json.loads((ROOT/'data/map-sources.json').read_text())
