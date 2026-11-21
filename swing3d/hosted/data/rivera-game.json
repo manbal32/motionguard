@@ -1,0 +1,969 @@
+{
+  "revision": "rivera-game-v1",
+  "name": "리베라CC",
+  "sourcePage": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+  "sourcePublished": "2023-08-24",
+  "basis": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+  "courses": [
+    {
+      "id": "valley",
+      "label": "밸리",
+      "color": "#26734e",
+      "holes": [
+        {
+          "number": 1,
+          "par": 4,
+          "distance": 244,
+          "route": [
+            [
+              241,
+              477
+            ],
+            [
+              205,
+              320
+            ],
+            [
+              148,
+              184
+            ],
+            [
+              82,
+              110
+            ]
+          ],
+          "image": "./rivera-game/valley-01.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 2,
+          "par": 5,
+          "distance": 509,
+          "route": [
+            [
+              134,
+              533
+            ],
+            [
+              150,
+              362
+            ],
+            [
+              151,
+              168
+            ],
+            [
+              146,
+              62
+            ]
+          ],
+          "image": "./rivera-game/valley-02.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 3,
+          "par": 3,
+          "distance": 116,
+          "route": [
+            [
+              220,
+              507
+            ],
+            [
+              180,
+              330
+            ],
+            [
+              141,
+              205
+            ]
+          ],
+          "image": "./rivera-game/valley-03.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 4,
+          "par": 4,
+          "distance": 315,
+          "route": [
+            [
+              169,
+              504
+            ],
+            [
+              180,
+              254
+            ],
+            [
+              120,
+              110
+            ]
+          ],
+          "image": "./rivera-game/valley-04.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 5,
+          "par": 4,
+          "distance": 323,
+          "route": [
+            [
+              157,
+              535
+            ],
+            [
+              151,
+              259
+            ],
+            [
+              101,
+              120
+            ]
+          ],
+          "image": "./rivera-game/valley-05.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 6,
+          "par": 3,
+          "distance": 115,
+          "route": [
+            [
+              113,
+              361
+            ],
+            [
+              126,
+              123
+            ]
+          ],
+          "image": "./rivera-game/valley-06.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 7,
+          "par": 5,
+          "distance": 412,
+          "route": [
+            [
+              173,
+              552
+            ],
+            [
+              160,
+              310
+            ],
+            [
+              160,
+              137
+            ],
+            [
+              142,
+              75
+            ]
+          ],
+          "image": "./rivera-game/valley-07.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 8,
+          "par": 4,
+          "distance": 277,
+          "route": [
+            [
+              150,
+              514
+            ],
+            [
+              138,
+              210
+            ],
+            [
+              156,
+              80
+            ]
+          ],
+          "image": "./rivera-game/valley-08.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 9,
+          "par": 4,
+          "distance": 294,
+          "route": [
+            [
+              116,
+              541
+            ],
+            [
+              163,
+              211
+            ],
+            [
+              128,
+              75
+            ]
+          ],
+          "image": "./rivera-game/valley-09.png",
+          "width": 537,
+          "height": 797
+        }
+      ]
+    },
+    {
+      "id": "lake",
+      "label": "레이크",
+      "color": "#3a798d",
+      "holes": [
+        {
+          "number": 1,
+          "par": 4,
+          "distance": 351,
+          "route": [
+            [
+              122,
+              501
+            ],
+            [
+              115,
+              380
+            ],
+            [
+              134,
+              263
+            ],
+            [
+              134,
+              78
+            ]
+          ],
+          "image": "./rivera-game/lake-01.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 2,
+          "par": 3,
+          "distance": 134,
+          "route": [
+            [
+              212,
+              378
+            ],
+            [
+              150,
+              230
+            ],
+            [
+              82,
+              106
+            ]
+          ],
+          "image": "./rivera-game/lake-02.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 3,
+          "par": 4,
+          "distance": 289,
+          "route": [
+            [
+              104,
+              465
+            ],
+            [
+              123,
+              335
+            ],
+            [
+              166,
+              190
+            ],
+            [
+              150,
+              78
+            ]
+          ],
+          "image": "./rivera-game/lake-03.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 4,
+          "par": 5,
+          "distance": 498,
+          "route": [
+            [
+              99,
+              524
+            ],
+            [
+              86,
+              400
+            ],
+            [
+              122,
+              301
+            ],
+            [
+              221,
+              210
+            ],
+            [
+              284,
+              148
+            ],
+            [
+              361,
+              74
+            ]
+          ],
+          "image": "./rivera-game/lake-04.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 5,
+          "par": 4,
+          "distance": 328,
+          "route": [
+            [
+              163,
+              537
+            ],
+            [
+              156,
+              394
+            ],
+            [
+              171,
+              248
+            ],
+            [
+              118,
+              92
+            ]
+          ],
+          "image": "./rivera-game/lake-05.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 6,
+          "par": 4,
+          "distance": 334,
+          "route": [
+            [
+              135,
+              515
+            ],
+            [
+              139,
+              360
+            ],
+            [
+              140,
+              252
+            ],
+            [
+              151,
+              74
+            ]
+          ],
+          "image": "./rivera-game/lake-06.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 7,
+          "par": 3,
+          "distance": 154,
+          "route": [
+            [
+              143,
+              442
+            ],
+            [
+              132,
+              265
+            ],
+            [
+              121,
+              94
+            ]
+          ],
+          "image": "./rivera-game/lake-07.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 8,
+          "par": 5,
+          "distance": 448,
+          "route": [
+            [
+              129,
+              523
+            ],
+            [
+              169,
+              430
+            ],
+            [
+              182,
+              338
+            ],
+            [
+              155,
+              225
+            ],
+            [
+              139,
+              138
+            ],
+            [
+              105,
+              91
+            ]
+          ],
+          "image": "./rivera-game/lake-08.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 9,
+          "par": 4,
+          "distance": 286,
+          "route": [
+            [
+              153,
+              545
+            ],
+            [
+              162,
+              381
+            ],
+            [
+              156,
+              209
+            ],
+            [
+              139,
+              78
+            ]
+          ],
+          "image": "./rivera-game/lake-09.png",
+          "width": 537,
+          "height": 797
+        }
+      ]
+    },
+    {
+      "id": "pine",
+      "label": "파인힐",
+      "color": "#668146",
+      "holes": [
+        {
+          "number": 1,
+          "par": 5,
+          "distance": 472,
+          "route": [
+            [
+              147,
+              554
+            ],
+            [
+              158,
+              440
+            ],
+            [
+              167,
+              363
+            ],
+            [
+              158,
+              255
+            ],
+            [
+              149,
+              171
+            ],
+            [
+              151,
+              75
+            ]
+          ],
+          "image": "./rivera-game/pine-01.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 2,
+          "par": 4,
+          "distance": 314,
+          "route": [
+            [
+              140,
+              519
+            ],
+            [
+              121,
+              390
+            ],
+            [
+              129,
+              265
+            ],
+            [
+              139,
+              89
+            ]
+          ],
+          "image": "./rivera-game/pine-02.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 3,
+          "par": 3,
+          "distance": 144,
+          "route": [
+            [
+              136,
+              443
+            ],
+            [
+              139,
+              280
+            ],
+            [
+              149,
+              131
+            ]
+          ],
+          "image": "./rivera-game/pine-03.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 4,
+          "par": 4,
+          "distance": 344,
+          "route": [
+            [
+              122,
+              455
+            ],
+            [
+              130,
+              305
+            ],
+            [
+              139,
+              136
+            ]
+          ],
+          "image": "./rivera-game/pine-04.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 5,
+          "par": 4,
+          "distance": 358,
+          "route": [
+            [
+              260,
+              451
+            ],
+            [
+              245,
+              309
+            ],
+            [
+              219,
+              188
+            ],
+            [
+              79,
+              90
+            ]
+          ],
+          "image": "./rivera-game/pine-05.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 6,
+          "par": 3,
+          "distance": 134,
+          "route": [
+            [
+              138,
+              401
+            ],
+            [
+              128,
+              260
+            ],
+            [
+              122,
+              142
+            ]
+          ],
+          "image": "./rivera-game/pine-06.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 7,
+          "par": 4,
+          "distance": 331,
+          "route": [
+            [
+              139,
+              546
+            ],
+            [
+              119,
+              382
+            ],
+            [
+              122,
+              247
+            ],
+            [
+              127,
+              101
+            ]
+          ],
+          "image": "./rivera-game/pine-07.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 8,
+          "par": 4,
+          "distance": 369,
+          "route": [
+            [
+              159,
+              528
+            ],
+            [
+              176,
+              412
+            ],
+            [
+              169,
+              305
+            ],
+            [
+              140,
+              183
+            ],
+            [
+              122,
+              85
+            ]
+          ],
+          "image": "./rivera-game/pine-08.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 9,
+          "par": 5,
+          "distance": 495,
+          "route": [
+            [
+              119,
+              548
+            ],
+            [
+              104,
+              366
+            ],
+            [
+              119,
+              264
+            ],
+            [
+              146,
+              168
+            ],
+            [
+              191,
+              72
+            ]
+          ],
+          "image": "./rivera-game/pine-09.png",
+          "width": 537,
+          "height": 797
+        }
+      ]
+    },
+    {
+      "id": "cherry",
+      "label": "체리힐",
+      "color": "#a16573",
+      "holes": [
+        {
+          "number": 1,
+          "par": 4,
+          "distance": 348,
+          "route": [
+            [
+              98,
+              501
+            ],
+            [
+              104,
+              375
+            ],
+            [
+              143,
+              267
+            ],
+            [
+              169,
+              157
+            ],
+            [
+              198,
+              77
+            ]
+          ],
+          "image": "./rivera-game/cherry-01.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 2,
+          "par": 4,
+          "distance": 320,
+          "route": [
+            [
+              138,
+              510
+            ],
+            [
+              116,
+              380
+            ],
+            [
+              125,
+              274
+            ],
+            [
+              142,
+              74
+            ]
+          ],
+          "image": "./rivera-game/cherry-02.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 3,
+          "par": 3,
+          "distance": 138,
+          "route": [
+            [
+              136,
+              425
+            ],
+            [
+              136,
+              280
+            ],
+            [
+              139,
+              113
+            ]
+          ],
+          "image": "./rivera-game/cherry-03.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 4,
+          "par": 5,
+          "distance": 467,
+          "route": [
+            [
+              144,
+              520
+            ],
+            [
+              145,
+              400
+            ],
+            [
+              157,
+              383
+            ],
+            [
+              160,
+              290
+            ],
+            [
+              181,
+              202
+            ],
+            [
+              137,
+              82
+            ]
+          ],
+          "image": "./rivera-game/cherry-04.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 5,
+          "par": 4,
+          "distance": 272,
+          "route": [
+            [
+              179,
+              499
+            ],
+            [
+              170,
+              403
+            ],
+            [
+              141,
+              220
+            ],
+            [
+              136,
+              89
+            ]
+          ],
+          "image": "./rivera-game/cherry-05.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 6,
+          "par": 4,
+          "distance": 317,
+          "route": [
+            [
+              146,
+              535
+            ],
+            [
+              152,
+              400
+            ],
+            [
+              160,
+              261
+            ],
+            [
+              125,
+              87
+            ]
+          ],
+          "image": "./rivera-game/cherry-06.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 7,
+          "par": 4,
+          "distance": 329,
+          "route": [
+            [
+              119,
+              491
+            ],
+            [
+              113,
+              360
+            ],
+            [
+              141,
+              252
+            ],
+            [
+              135,
+              83
+            ]
+          ],
+          "image": "./rivera-game/cherry-07.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 8,
+          "par": 3,
+          "distance": 127,
+          "route": [
+            [
+              151,
+              444
+            ],
+            [
+              140,
+              280
+            ],
+            [
+              126,
+              110
+            ]
+          ],
+          "image": "./rivera-game/cherry-08.png",
+          "width": 537,
+          "height": 797
+        },
+        {
+          "number": 9,
+          "par": 5,
+          "distance": 473,
+          "route": [
+            [
+              130,
+              545
+            ],
+            [
+              140,
+              410
+            ],
+            [
+              122,
+              351
+            ],
+            [
+              117,
+              250
+            ],
+            [
+              112,
+              139
+            ],
+            [
+              116,
+              61
+            ]
+          ],
+          "image": "./rivera-game/cherry-09.png",
+          "width": 537,
+          "height": 797
+        }
+      ]
+    }
+  ]
+}

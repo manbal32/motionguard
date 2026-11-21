@@ -26,6 +26,10 @@ subprocess.run(['python',str(ROOT/'scripts/apply_replay.py')],check=True)
 shutil.copy2(ROOT/'overrides/runtime-health.js',DIST/'runtime-health.js')
 for name in ['map-only.html','map-only.js']:
  shutil.copy2(ROOT/'overrides'/name,DIST/('map.html' if name.endswith('.html') else name))
+for name in ['rivera-game.html','rivera-game.css','rivera-game.js','rivera-game-engine.js']:
+ shutil.copy2(ROOT/'overrides'/name,DIST/('game.html' if name.endswith('.html') else name))
+shutil.copy2(ROOT/'data/rivera-game.json',DIST/'rivera-game.json')
+shutil.copytree(ROOT/'assets/rivera-game',DIST/'rivera-game')
 map_sources=json.loads((ROOT/'data/map-sources.json').read_text())
 map_previews=[]
 for source in map_sources:

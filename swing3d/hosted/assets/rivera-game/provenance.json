@@ -1,0 +1,188 @@
+{
+  "sourcePage": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+  "sourcePublished": "2023-08-24",
+  "retrievedAt": "2026-11-21",
+  "geometry": "Game anchors placed by visual inspection; not surveyed course geometry.",
+  "files": [
+    {
+      "file": "lake-01.png",
+      "label": "리베라CC 레이크코스 1번 홀",
+      "sha256": "ba78881081402f61fdbbdc6e2d0d25d754b3dff58897c21e8f4452d5d9df912c"
+    },
+    {
+      "file": "lake-02.png",
+      "label": "리베라CC 레이크코스 2번 홀",
+      "sha256": "f9526edac995af504b6183912c9016f10cf9b28d19e619644c897d29acb29238"
+    },
+    {
+      "file": "lake-03.png",
+      "label": "리베라CC 레이크코스 3번 홀",
+      "sha256": "741d28465fcd7d0cef78e5cd9eaa9a44cef396afdeeacce15a22ec8d43a8700a"
+    },
+    {
+      "file": "lake-04.png",
+      "label": "리베라CC 레이크코스 4번 홀",
+      "sha256": "6095a282e85c156d9b73cfb8c2e77fce8093eefac0a58586e28e1f8eac8eeb5c"
+    },
+    {
+      "file": "lake-05.png",
+      "label": "리베라CC 레이크코스 5번 홀",
+      "sha256": "7a07cbd96ede9b22405e1d067b804e09ecf2bc825a6458608d9e199562baba9a"
+    },
+    {
+      "file": "lake-06.png",
+      "label": "리베라CC 레이크코스 6번 홀",
+      "sha256": "ac9e2458298ccebfe54637999ec9fe200540cbffab483e327631c2e4cb7c7288"
+    },
+    {
+      "file": "lake-07.png",
+      "label": "리베라CC 레이크코스 7번 홀",
+      "sha256": "8802c4a27d06adbc8d619a22b1d62be84c54410f3cc56498bc7c279cda2b481a"
+    },
+    {
+      "file": "lake-08.png",
+      "label": "리베라CC 레이크코스 8번 홀",
+      "sha256": "5078f1f3d5c1941fd885d20ce2b696acba8891227f3c1d085998cd04304621f5"
+    },
+    {
+      "file": "lake-09.png",
+      "label": "리베라CC 레이크코스 9번 홀",
+      "sha256": "a183faa8648513a3ca398673b1d085fef42ba3dcd78e4309428c39be1ee64466"
+    },
+    {
+      "file": "valley-01.png",
+      "label": "리베라CC 밸리코스 1번 홀",
+      "sha256": "309b8cf19076ec6d0043b029c189b6003bc1eac34810b0b2ea2651e52718fbaa"
+    },
+    {
+      "file": "valley-02.png",
+      "label": "리베라CC 밸리코스 2번 홀",
+      "sha256": "d3f3bfb6f4a881a9889877075b7704de4d4c12c383ffda65299be067a012b011"
+    },
+    {
+      "file": "valley-03.png",
+      "label": "리베라CC 밸리코스 3번 홀",
+      "sha256": "5aeebdfbf50cad78d9dd8901fce1b7f5048a6c12737b3a89c3e938738f48ce8e"
+    },
+    {
+      "file": "valley-04.png",
+      "label": "리베라CC 밸리코스 4번 홀",
+      "sha256": "c75a1b970bdf01bd5d5f109e860652849c7909cc938620fc17aff4c74a4315fa"
+    },
+    {
+      "file": "valley-05.png",
+      "label": "리베라CC 밸리코스 5번 홀",
+      "sha256": "6e035237e9ec5608c22d930b916b4262ca04623b7a646739b699b26c47c841d3"
+    },
+    {
+      "file": "valley-06.png",
+      "label": "리베라CC 밸리코스 6번 홀",
+      "sha256": "b0fb02e2b873c745e51678a3afdd70ea5dd2f8c8113f427d4c0cf27b5e57ac2b"
+    },
+    {
+      "file": "valley-07.png",
+      "label": "리베라CC 밸리코스 7번 홀",
+      "sha256": "a2bfc01cc0240dae7cb5ba3368d8636099d633698aca12fa3f9b01665b99810e"
+    },
+    {
+      "file": "valley-08.png",
+      "label": "리베라CC 밸리코스 8번 홀",
+      "sha256": "1a2813eb8476925f93bb60d10bb05f7727a47d79616067172047931d89eb731f"
+    },
+    {
+      "file": "valley-09.png",
+      "label": "리베라CC 밸리코스 9번 홀",
+      "sha256": "1144bfaa71b569399e086648abf0005c7d610d77faac8cad0dd32177965288fe"
+    },
+    {
+      "file": "pine-01.png",
+      "label": "리베라CC 파인힐코스 1번 홀",
+      "sha256": "cba2018eebf66e9c18910a768b4b7f2d2767a1bfff85b4a991881953973cd5f4"
+    },
+    {
+      "file": "pine-02.png",
+      "label": "리베라CC 파인힐코스 2번 홀",
+      "sha256": "a3ee9edb729da373b6d9530954889a4841a77f573821e552895686e71c423600"
+    },
+    {
+      "file": "pine-03.png",
+      "label": "리베라CC 파인힐코스 3번 홀",
+      "sha256": "23bd9b7fa787ab29ba4dcf1321eed2f7592011b3a0a749d935c07c55d6f87108"
+    },
+    {
+      "file": "pine-04.png",
+      "label": "리베라CC 파인힐코스 4번 홀",
+      "sha256": "a91cd5c9881e20934e36809ecfca365541e21553d31af9a0f53df487c9163058"
+    },
+    {
+      "file": "pine-05.png",
+      "label": "리베라CC 파인힐코스 5번 홀",
+      "sha256": "dbcf2f1d0fad0bc0895d46f4157a832b9b1653514f3d01da7aa616f09fa868d0"
+    },
+    {
+      "file": "pine-06.png",
+      "label": "리베라CC 파인힐코스 6번 홀",
+      "sha256": "7973d74b5a4cbae79b7d6fdda7956fc57a4d0d41f452aaf2030b4e29b9e5be65"
+    },
+    {
+      "file": "pine-07.png",
+      "label": "리베라CC 파인힐코스 7번 홀",
+      "sha256": "7b05777bb8b35d4a3157fc0844d13269cf6c196d95e747618f805e4539d9c42b"
+    },
+    {
+      "file": "pine-08.png",
+      "label": "리베라CC 파인힐코스 8번 홀",
+      "sha256": "2912174ced7be651c107e817f344f73ee4b5c3852ccaa22465052de2ceb21a10"
+    },
+    {
+      "file": "pine-09.png",
+      "label": "리베라CC 파인힐코스 9번 홀",
+      "sha256": "0d2b6b80a422ec6e2b6803c0e0a753f7fc537be5cfa980854b5674ce032ebdb0"
+    },
+    {
+      "file": "cherry-01.png",
+      "label": "리베라CC 체리힐코스 1번 홀",
+      "sha256": "69b6f9d7b7824be1a4a67b039bc5b1dc393f70f876fc3f3674b76366da9ef82a"
+    },
+    {
+      "file": "cherry-02.png",
+      "label": "리베라CC 체리힐코스 2번 홀",
+      "sha256": "29885237d6c03a15116318d17f11f87755c7860454d3a89be162899c118cba9d"
+    },
+    {
+      "file": "cherry-03.png",
+      "label": "리베라CC 체리힐코스 3번 홀",
+      "sha256": "ba29b6e43fa2f8a88eb13b9b7fb92653924db18196a5ed52b34a3444e08b08b7"
+    },
+    {
+      "file": "cherry-04.png",
+      "label": "리베라CC 체리힐코스 4번 홀",
+      "sha256": "62c39fd623b56de2d45652f453f2dd306beea015b4e0730fc52c6e90d7e45a11"
+    },
+    {
+      "file": "cherry-05.png",
+      "label": "리베라CC 체리힐코스 5번 홀",
+      "sha256": "6ad16560a03ffd268f4067ad1148845163d7cd2f4fac1a765f18c3c37eedc533"
+    },
+    {
+      "file": "cherry-06.png",
+      "label": "리베라CC 체리힐코스 6번 홀",
+      "sha256": "95a5848d549b7816bdc91143eb37adcdb344c06b553675a0c1579a83c3abc0e2"
+    },
+    {
+      "file": "cherry-07.png",
+      "label": "리베라CC 체리힐코스 7번 홀",
+      "sha256": "c306c94b5df2a29dd05e1184ebab887f217a6661e9834d7a0b1face08e9e6b1f"
+    },
+    {
+      "file": "cherry-08.png",
+      "label": "리베라CC 체리힐코스 8번 홀",
+      "sha256": "a8374ae3065fb2803010bb03a68ebfd04e56233148e3996fc8bbdd6a979e112f"
+    },
+    {
+      "file": "cherry-09.png",
+      "label": "리베라CC 체리힐코스 9번 홀",
+      "sha256": "9bfd22691b3e9a515e3b3576cdfcc2dde77a0fce70e7c2d4ca794e7c64342be5"
+    }
+  ]
+}
