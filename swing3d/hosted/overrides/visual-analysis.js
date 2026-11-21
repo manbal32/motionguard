@@ -1,13 +1,41 @@
 /* Five stills leave this browser only after explicit image consent. Coordinates stay local. */
 window.MotionVisual=(()=>{
- let prepared=null;
+ let prepared=null,preparing=null,savedAnalysis=null,pendingAnalysis=null;
+ const clone=value=>JSON.parse(JSON.stringify(value));
+ const cancelled=signal=>{if(signal?.aborted)throw new DOMException('분석을 취소했습니다.','AbortError');};
+ const reused=(result,reason,elapsed=0)=>{const copy=clone(result);copy.reused_result=true;copy.reuse_reason=reason;copy.request_elapsed_ms=elapsed;copy.request_usage={promptTokenCount:0,candidatesTokenCount:0,totalTokenCount:0};window.MotionAudit?.record('analysis_reused',{request_id:copy.input_receipt?.request_id,reason});return copy;};
  const $=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
- async function analyze(track,summary,signal){
+ async function analyze(track,summary,signal,{force=false}={}){
+  const began=Date.now();
   if(!window.MotionVideo?.has(track.track_id))return{mode:'unavailable',reason:'원본 영상이 없는 샘플입니다. Gemini 사진 분석을 하지 않았습니다.'};
   if(!document.getElementById('photo-consent')?.checked)throw Error('사진 5장 전송 동의가 필요합니다. 영상 원본은 보내지 않습니다.');
-  const selected=prepared?.trackId===track.track_id?prepared.samples:track.photo_samples?track.photo_samples.map(s=>({...s})):await MotionStills.extract(track,{signal});
-  prepared={trackId:track.track_id,samples:selected};
-  const selectedHashes=await Promise.all(selected.map(async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',Uint8Array.from(atob(s.image),c=>c.charCodeAt(0))))].map(n=>n.toString(16).padStart(2,'0')).join('')));const requestId=crypto.randomUUID();window.MotionAudit?.record('photos_ready',{request_id:requestId,count:selected.length,times:selected.map(s=>s.time)});const r=await fetch(new URL('api/coaching/visual',location.href),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({request_id:requestId,allow_images:true,summary,samples:selected}),signal});const d=await r.json();if(!r.ok||!d.ok){window.MotionAudit?.record('analysis_failed',{request_id:d.request_id??requestId,code:d.error_code??'unknown',upstream_status:d.upstream_status??null});throw Error((d.reason??'분석에 실패했습니다.')+(d.request_id?' (확인번호 '+d.request_id.slice(0,8)+')':''));}if(d.input_receipt?.request_id!==requestId||d.input_receipt?.photo_count!==5||d.input_receipt?.forwarded_images!==5||JSON.stringify(d.input_receipt?.image_sha256)!==JSON.stringify(selectedHashes))throw Error('서버에서 이번 분석 사진 5장의 수신을 확인하지 못했습니다. 최신 화면에서 다시 시도해 주세요.');window.MotionAudit?.record('ai_response',{request_id:requestId,photos:5,items:d.analysis?.items?.length??0});d.selection_audit={revision:'whole-clip-v2',times:selected.map(s=>s.time),minimum_pose_change:Math.min(...selected.map(s=>s.min_pair_change??0))};if(d.analysis?.assessment_score)d.analysis.assessment_score.rubric='photo-four-v2-keyframes';d.local_stills=selected.map(({id,phase,time,image})=>({id,phase,time,image:'data:image/jpeg;base64,'+image}));return d;
+  cancelled(signal);
+  let selected;
+  if(prepared?.trackId===track.track_id)selected=prepared.samples;
+  else{
+   let job=preparing;
+   if(!job||job.trackId!==track.track_id||job.signal!==signal){job={trackId:track.track_id,signal,promise:track.photo_samples?Promise.resolve(track.photo_samples.map(s=>({...s}))):MotionStills.extract(track,{signal})};preparing=job;}
+   try{selected=await job.promise;cancelled(signal);prepared={trackId:track.track_id,samples:selected};}finally{if(preparing===job)preparing=null;}
+  }
+  const selectedHashes=await Promise.all(selected.map(async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',Uint8Array.from(atob(s.image),c=>c.charCodeAt(0))))].map(n=>n.toString(16).padStart(2,'0')).join('')));
+  cancelled(signal);
+  const cleanSummary=Object.fromEntries(['concern','improvement','hypothesis','goal'].map(k=>[k,String(summary?.[k]??'').slice(0,500)]));
+  const key=JSON.stringify({revision:'concise-photo-v1',build:window.MotionBuild??'source',track:track.track_id,summary:cleanSummary,hashes:selectedHashes,samples:selected.map(({id,time,frame,phase,phase_unverified})=>({id,time,frame,phase,phase_unverified}))});
+  if(!force&&savedAnalysis?.key===key&&Date.now()<savedAnalysis.expires)return reused(savedAnalysis.result,'identical-input',Date.now()-began);
+  if(!force&&pendingAnalysis?.key===key&&pendingAnalysis.signal===signal){const result=await pendingAnalysis.promise;cancelled(signal);return reused(result,'shared-request',Date.now()-began);}
+  async function requestAnalysis(){
+   const requestId=crypto.randomUUID();window.MotionAudit?.record('photos_ready',{request_id:requestId,count:selected.length,times:selected.map(s=>s.time)});
+   const r=await fetch(new URL('api/coaching/visual',location.href),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({request_id:requestId,allow_images:true,summary:cleanSummary,samples:selected}),signal});
+   const d=await r.json();cancelled(signal);
+   if(!r.ok||!d.ok){window.MotionAudit?.record('analysis_failed',{request_id:d.request_id??requestId,code:d.error_code??'unknown',upstream_status:d.upstream_status??null});throw Error((d.reason??'분석에 실패했습니다.')+(d.request_id?' (확인번호 '+d.request_id.slice(0,8)+')':''));}
+   if(d.input_receipt?.request_id!==requestId||d.input_receipt?.photo_count!==5||d.input_receipt?.forwarded_images!==5||JSON.stringify(d.input_receipt?.image_sha256)!==JSON.stringify(selectedHashes))throw Error('서버에서 이번 분석 사진 5장의 수신을 확인하지 못했습니다. 최신 화면에서 다시 시도해 주세요.');
+   window.MotionAudit?.record('ai_response',{request_id:requestId,photos:5,items:d.analysis?.items?.length??0});
+   d.selection_audit={revision:'whole-clip-v2',times:selected.map(s=>s.time),minimum_pose_change:Math.min(...selected.map(s=>s.min_pair_change??0))};
+   if(d.analysis?.assessment_score)d.analysis.assessment_score.rubric='photo-four-v2-keyframes';
+   d.local_stills=selected.map(({id,phase,time,image})=>({id,phase,time,image:'data:image/jpeg;base64,'+image}));return d;
+  }
+  const job={key,signal,promise:requestAnalysis()};pendingAnalysis=job;
+  try{const result=await job.promise;cancelled(signal);savedAnalysis={key,result:clone(result),expires:Date.now()+600000};return result;}finally{if(pendingAnalysis===job)pendingAnalysis=null;}
  }
  const valid=i=>i.status!=='unassessable'&&i.confidence!=='낮음';
  function render(root,doc,track,print=false){
@@ -39,8 +67,8 @@ window.MotionVisual=(()=>{
   }
   if(!assessed.length)root.append($('p','이번 사진에서는 근거가 충분한 교정점을 정하지 못했습니다. 판단 보류 내용을 확인해 주세요.'));
   const details=$('details'),summary=$('summary','판단을 미룬 내용');details.append(summary);for(const i of uncertain)details.append($('p',i.title+' · '+i.observation+(i.caution?' · '+i.caution:'')));for(const t of [...result.analysis.withheld,...result.analysis.phase_notes])details.append($('p',t));root.append(details);
-  const u=result.usage??{};if(result.failed_attempt_usage)root.append($('p',result.failed_attempt_usage,'evidence-note'));
-  root.append($('p',`분석 사용량 · 사진 5장 / 입력 ${u.promptTokenCount??'미제공'} · 출력 ${u.candidatesTokenCount??'미제공'} · 총 ${u.totalTokenCount??'미제공'} 토큰 · ${(result.elapsed_ms/1000).toFixed(2)}초`,'token-usage'));
+  const u=result.request_usage??result.usage??{};if(result.reused_result)root.append($('p','같은 사진과 승인 내용으로 완료한 분석을 재사용했습니다. 이번 요청 사용량은 0토큰입니다.','evidence-note'));if(result.failed_attempt_usage)root.append($('p',result.failed_attempt_usage,'evidence-note'));
+  root.append($('p',`분석 사용량 · 사진 5장 / 입력 ${u.promptTokenCount??'미제공'} · 출력 ${u.candidatesTokenCount??'미제공'} · 총 ${u.totalTokenCount??'미제공'} 토큰 · ${((result.request_elapsed_ms??result.elapsed_ms)/1000).toFixed(2)}초`,'token-usage'));
   const receipt=$('details',undefined,'analysis-receipt');receipt.append($('summary','이번 분석에 사용한 사진 5장'));const sent=result.input_receipt;receipt.append($('p',sent?`원본 영상에서 선택한 사진 ${sent.photo_count}장`:'이전 분석 기록 · 사진 수신 증명 미포함'));const grid=$('div',undefined,'receipt-photos');for(const still of result.local_stills??[]){const fig=$('figure'),img=$('img');img.src=still.image;img.alt='실제 분석에 보낸 장면 '+still.id;fig.append(img,$('figcaption',still.time.toFixed(2)+'초'));grid.append(fig);}receipt.append(grid);root.append(receipt);
   return true;
  }

@@ -1,7 +1,7 @@
 """Latest consultation UI and retry recovery, applied after the shared flow patches."""
 from pathlib import Path
 r=Path(__file__).resolve().parents[1];d=r/'dist'
-p=d/'index.html';s=p.read_text();s=s.replace('<h3>어디가 고민이세요? <span id="coach-mode" class="caption" role="status"></span></h3>','<span id="coach-mode" role="status" hidden></span>')
+p=d/'index.html';s=p.read_text();s=s.replace('id="coach-message" maxlength="500"','id="coach-message" maxlength="6000"');s=s.replace('<h3>어디가 고민이세요? <span id="coach-mode" class="caption" role="status"></span></h3>','<span id="coach-mode" role="status" hidden></span>')
 s=s.replace('<h2 id="summary-heading" tabindex="-1">이렇게 이해했어요</h2>','<div class="summary-intro"><span class="summary-eyebrow">나를 위한 코칭 방향</span><h2 id="summary-heading" tabindex="-1">이렇게 이해했어요</h2><p>고민에서 연습 목표까지, 핵심만 정리했어요.</p></div>')
 s=s.replace('<p>사용자 자기보고입니다. 영상에서 확인된 사실은 분석 후 따로 표시합니다.</p>','')
 icons={'concern':'M5 5h14v10H9l-4 4V5Z','improvement':'M12 3a9 9 0 1 0 9 9M12 7a5 5 0 1 0 5 5M12 12l8-8M15 4h5v5','hypothesis':'M9 18h6M10 21h4M9 15c0-3-3-3-3-7a6 6 0 0 1 12 0c0 4-3 4-3 7Z','goal':'M5 21V3l14 4-14 5'}

@@ -5,3 +5,26 @@ test('cancelled keyframe selection sends no external request',async()=>{const t=
 test('insufficient visual diversity is rejected before Gemini',async()=>{const t=setup();t.context.MotionStills.extract=async()=>{throw Error('서로 다른 스윙 자세 5개를 구분하지 못했습니다.');};await assert.rejects(t.api.analyze({track_id:'test'},{}),/스윙 자세 5개/);assert.equal(t.getSent(),undefined);});
 
 test('manual analysis retry retains the same five selected photos and revised approved summary',async()=>{const t=setup(),real=t.context.fetch;let first=true;t.context.fetch=async(...args)=>{if(first){first=false;return Response.json({ok:false,error_code:'gemini_unavailable',upstream_status:503,reason:'잠시 후 다시 시도'},{status:503});}return real(...args);};await assert.rejects(t.api.analyze({track_id:'same-video'},{concern:'승인 고민'}),/잠시 후/);await t.api.analyze({track_id:'same-video'},{concern:'승인 고민',goal:'수정한 목표'});assert.equal(t.extracts(),1);assert.equal(t.getSent().summary.goal,'수정한 목표');await t.api.analyze({track_id:'new-video'},{goal:'다른 영상'});assert.equal(t.extracts(),2);});
+
+test('identical photos and approved summary reuse one verified response with zero new request tokens',async()=>{
+ const t=setup(),real=t.context.fetch;let calls=0;t.context.fetch=async(...args)=>{calls++;const d=await(await real(...args)).json();d.usage={promptTokenCount:100,candidatesTokenCount:20,totalTokenCount:120};d.model='fixture-model';return Response.json(d);};
+ const first=await t.api.analyze({track_id:'same-video'},{goal:'목표',concern:'고민'}),receipt=first.input_receipt.request_id;first.local_stills[0].image='mutated outside cache';
+ const second=await t.api.analyze({track_id:'same-video'},{concern:'고민',goal:'목표'});assert.equal(calls,1);assert.equal(second.reused_result,true);assert.equal(second.request_usage.totalTokenCount,0);assert.equal(second.usage.totalTokenCount,120);assert.equal(second.model,'fixture-model');assert.equal(second.input_receipt.request_id,receipt);assert.notEqual(second.local_stills[0].image,'mutated outside cache');
+});
+test('changed approved concerns, a new video and an explicit refresh each request a new Gemini analysis',async()=>{
+ const t=setup(),real=t.context.fetch;let calls=0;t.context.fetch=(...args)=>{calls++;return real(...args);};await t.api.analyze({track_id:'clip'},{concern:'원래 고민'});await t.api.analyze({track_id:'clip'},{concern:'수정한 고민'});await t.api.analyze({track_id:'clip'},{concern:'수정한 고민'},undefined,{force:true});await t.api.analyze({track_id:'other-clip'},{concern:'수정한 고민'});assert.equal(calls,4);assert.equal(t.extracts(),2);
+});
+test('simultaneous identical calls share photo selection and one verified model request',async()=>{
+ const t=setup(),real=t.context.fetch;let calls=0,release,entered;const gate=new Promise(r=>release=r),started=new Promise(r=>entered=r);t.context.fetch=async(...args)=>{calls++;entered();await gate;return real(...args);};const first=t.api.analyze({track_id:'clip'},{});await started;const second=t.api.analyze({track_id:'clip'},{});release();const results=await Promise.all([first,second]);assert.equal(calls,1);assert.equal(t.extracts(),1);assert.equal(results[1].reused_result,true);assert.equal(results[1].request_usage.totalTokenCount,0);
+});
+test('failed requests are not cached and revoked consent or cancellation cannot bypass validation',async()=>{
+ const t=setup();let calls=0;t.context.fetch=async()=>{calls++;return Response.json({ok:false,reason:'서비스 지연'},{status:503});};for(let i=0;i<2;i++)await assert.rejects(t.api.analyze({track_id:'clip'},{}),/서비스 지연/);assert.equal(calls,2);
+ const clean=setup();await clean.api.analyze({track_id:'clip'},{});clean.context.document.getElementById=()=>({checked:false});await assert.rejects(clean.api.analyze({track_id:'clip'},{}),/동의/);clean.context.document.getElementById=()=>({checked:true});const controller=new AbortController();controller.abort();await assert.rejects(clean.api.analyze({track_id:'clip'},{},controller.signal),e=>e.name==='AbortError');
+});
+test('the result cache expires and does not persist beyond the current page',async()=>{
+ const t=setup(),real=t.context.fetch;let calls=0,clock=0;t.context.Date=class extends Date{static now(){return clock;}};t.context.fetch=(...args)=>{calls++;return real(...args);};await t.api.analyze({track_id:'clip'},{});clock=600001;await t.api.analyze({track_id:'clip'},{});assert.equal(calls,2);const other=setup();await other.api.analyze({track_id:'clip'},{});assert.ok(other.getSent());
+});
+
+test('an aborted model request cannot populate the reusable result cache',async()=>{
+ const t=setup(),real=t.context.fetch;let release,entered,calls=0;const gate=new Promise(r=>release=r),started=new Promise(r=>entered=r);t.context.fetch=async(...args)=>{calls++;entered();await gate;return real(...args);};const controller=new AbortController(),pending=t.api.analyze({track_id:'clip'},{},controller.signal);await started;controller.abort();release();await assert.rejects(pending,e=>e.name==='AbortError');await t.api.analyze({track_id:'clip'},{});assert.equal(calls,2);
+});
