@@ -13,3 +13,7 @@ Node159/159. 선택컨트롤이없어도현재예보가자동적용되며이어�
 ## 실제 브라우저 한계
 
 선택환경remote_desktop은enabled이나해당턴에cua_repl.js/NodeREPL/open_in_codex도구가제공되지않았다. [Sites SKILL.md](skill://plugin_connector_1p_689987207de08191979cf68eca2941c6/sites/SKILL.md)의 “If cua_repl.js is unavailable, skip browser QA” 지침을따랐다. 실제화면에서클릭하며플레이한것/아이폰터치/육안애니메이션을검증했다고주장하지않는다. 위검증은버튼이벤트와게임상태·좌표·타수의자동조작검증이다.
+
+## 公開 배포 확인
+
+배포61 /game.html HTTP200,weather-enabled비교컨트롤과weather-refresh수동버튼이없고빌드HTML과바이트동일. /api/game/weather HTTP200/ok=true/MET Norway,자료시각2026-11-21T03:00:00Z(한국12:00). 서버/클라이언트build8817e58eb54d6645fd70일치,필수공개파일135/135해시일치.
