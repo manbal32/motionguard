@@ -1,9 +1,10 @@
 /* Local arcade rules. Every stroke is played by the user, without coaching inference. */
 ((global)=>{
  'use strict';
- const clubSpecs=[['driver','드라이버'],['wood','5번 우드'],['utility','유틸리티'],['iron5','5번 아이언'],['iron7','7번 아이언'],['iron9','9번 아이언'],['pw','PW'],['sw','SW'],['putter','퍼터']];
- const presets={male:{label:'남성',ranges:[220,190,175,160,145,125,105,70,20]},female:{label:'여성',ranges:[180,160,150,140,130,110,90,60,20]}};
- function clubsFor(state='male'){const id=typeof state==='string'?state:state.distancePreset??'male',p=presets[id];if(!p)throw Error('거리 기준을 선택해 주세요.');return clubSpecs.map(([id,label],i)=>({id,label,range:p.ranges[i]}));}
+ const clubGroups=[{id:'driver',label:'드라이버'},{id:'wood',label:'우드'},{id:'utility',label:'유틸리티'},{id:'iron',label:'아이언'},{id:'wedge',label:'웨지'},{id:'putter',label:'퍼터'}];
+ const clubSpecs=[['driver','드라이버','driver'],['wood3','3번 우드','wood'],['wood','5번 우드','wood'],['wood7','7번 우드','wood'],['utility3','3번 유틸리티','utility'],['utility','4번 유틸리티','utility'],['utility5','5번 유틸리티','utility'],['iron4','4번 아이언','iron'],['iron5','5번 아이언','iron'],['iron6','6번 아이언','iron'],['iron7','7번 아이언','iron'],['iron8','8번 아이언','iron'],['iron9','9번 아이언','iron'],['pw','PW','wedge'],['aw','AW','wedge'],['sw','SW','wedge'],['putter','퍼터','putter']];
+ const presets={male:{label:'남성',ranges:[220,205,190,175,185,175,165,170,160,152,145,135,125,105,90,70,20]},female:{label:'여성',ranges:[180,170,160,150,155,150,140,150,140,135,130,120,110,90,75,60,20]}};
+ function clubsFor(state='male'){const id=typeof state==='string'?state:state.distancePreset??'male',p=presets[id];if(!p)throw Error('거리 기준을 선택해 주세요.');return clubSpecs.map(([id,label,group],i)=>({id,label,group,range:p.ranges[i]}));}
  const clubs=clubsFor();
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n)),distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),cup=h=>({x:0,y:h.distance});
  function courses(data,front,back){const a=data.courses.find(c=>c.id===front),b=data.courses.find(c=>c.id===back);if(!a||!b||a.id===b.id||a.holes.length!==9||b.holes.length!==9)throw Error('서로 다른 9홀 코스를 골라 주세요.');return[a,b];}
@@ -22,7 +23,7 @@
   return{carry:base*factor,driftX,driftY,along,cross,weather:w};
  }
  function conditions(state,h){const{dx,dy}=vector(state,h),club=clubsFor(state).find(c=>c.id===state.club),base=club.range*clamp(Number(state.power)||1,1,100)/100;return weatherEffects(state,h,dx,dy,base);}
- function recommend(h,ball,state='male'){const remaining=distance(ball,cup(h));return remaining<=14?'putter':(clubsFor(state).find(c=>c.id!=='putter'&&c.range<=remaining+12)??clubsFor(state)[7]).id;}
+ function recommend(h,ball,state='male'){const remaining=distance(ball,cup(h));return remaining<=14?'putter':(clubsFor(state).filter(c=>c.id!=='putter').sort((a,b)=>b.range-a.range).find(c=>c.range<=remaining+12)??clubsFor(state).find(c=>c.id==='sw')).id;}
  function predict(state,h){const club=clubsFor(state).find(c=>c.id===state.club);if(!club)throw Error('클럽을 선택해 주세요.');return conditions(state,h).carry;}
  function assistedPutt(state,h,carry){const remaining=distance(state.ball,cup(h));return state.club==='putter'&&remaining<=14&&Math.abs(state.aim)<=8&&carry>=remaining*.5;}
  function hit(state,h){
@@ -46,5 +47,5 @@
  function restore(data,value){
   try{const s=typeof value==='string'?JSON.parse(value):structuredClone(value);if(s?.revision!==1||s.dataRevision!==data.revision)throw Error();const all=holes(data,s);if(!Number.isInteger(s.holeIndex)||s.holeIndex<0||s.holeIndex>18||!Array.isArray(s.completed)||s.completed.length!==s.holeIndex||!Array.isArray(s.shots)||s.shots.length>12||!['ready','holed','animating','finished'].includes(s.phase))throw Error();if((s.holeIndex===18)!==(s.phase==='finished'))throw Error();if(!Number.isFinite(s.ball?.x)||!Number.isFinite(s.ball?.y)||Math.abs(s.ball.x)>80||s.ball.y< -35||s.ball.y>(all[Math.min(17,s.holeIndex)].distance+50))throw Error();if(!Number.isFinite(s.seed)||!Number.isFinite(s.aim)||!Number.isFinite(s.power)||!clubs.some(c=>c.id===s.club))throw Error();for(const[i,r]of s.completed.entries())if(r.number!==i+1||r.par!==all[i].par||r.courseId!==all[i].courseId||!Number.isInteger(r.strokes)||r.strokes<1||r.strokes>12)throw Error();for(const shot of s.shots)for(const p of[shot.start,shot.end])if(!Number.isFinite(p?.x)||!Number.isFinite(p?.y))throw Error();if(s.concededStrokes!==undefined&&(!Number.isInteger(s.concededStrokes)||s.concededStrokes<1||s.concededStrokes>12))throw Error();if(s.distancePreset===undefined)s.distancePreset='male';clubsFor(s);s.weather=normalizeWeather(s.weather);if(s.phase==='animating'){s.phase='ready';delete s.pending;}return s;}catch{return null;}
  }
- const api={neutralWeather,normalizeWeather,setWeather,conditions,clubs,clubsFor,presets,holeResult,create,courses,holes,hit,complete,concede,undo,next,project,aimPoint,recommend,predict,distance,cup,total,strokeCount,restore};global.MotionRiveraGame=api;if(typeof module!=='undefined')module.exports=api;
+ const api={neutralWeather,normalizeWeather,setWeather,conditions,clubs,clubGroups,clubsFor,presets,holeResult,create,courses,holes,hit,complete,concede,undo,next,project,aimPoint,recommend,predict,distance,cup,total,strokeCount,restore};global.MotionRiveraGame=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
