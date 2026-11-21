@@ -1,0 +1,22 @@
+{"phases":{"address":81,"top":118,"down":141,"impact":146,"finish":172},"maxChannelDifference":0,"pythonScore":31.48,"browserScore":31.48,"excluded":["top_torso","top_hips"]}
+✔ tests/test_browser_core.cjs (385.363968ms)
+✔ deficits approach zero continuously without reversing either direction (10.817018ms)
+✔ address offsets and actual phase indices anchor all measured channels (0.242535ms)
+✔ zero stays zero and the sign and slope are continuous at the start of exaggeration (75.72229ms)
+✔ exaggeration is exact at 1×, eases at the range and alters only its channel (0.671712ms)
+✔ Only valid current measurements contribute; missing analysis is rejected (2.181096ms)
+✔ Seeded round is reproducible, changes with scenario, and totals are arithmetic (2.840379ms)
+✔ Every next shot begins at previous actual landing; both lateral directions exist (0.799555ms)
+✔ No forced target score or penalty; bounds remain finite across profiles/seeds (6.047782ms)
+✔ Driver is reserved for the tee; fairway shots select another club (0.386873ms)
+✔ No played scenario means no fabricated course PDF section (2.684154ms)
+✔ PDF reconstructs selected seed rather than default first scenario (7.2973ms)
+✔ Mismatched total or model revision is rejected instead of silently printing stale values (2.286655ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 396.619016

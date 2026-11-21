@@ -1,0 +1,16 @@
+{
+  "phases": {
+    "address": 81,
+    "top": 118,
+    "down": 141,
+    "impact": 146,
+    "finish": 172
+  },
+  "maxChannelDifference": 0,
+  "pythonScore": 31.48,
+  "browserScore": 31.48,
+  "excluded": [
+    "top_torso",
+    "top_hips"
+  ]
+}

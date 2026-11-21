@@ -37,6 +37,11 @@
   --t-desc:400 13.5px/1.55 var(--sans);  /* 설명 */
   --t-note:400 12.5px/1.5 var(--sans);   /* 주석 */
 
+  /* 기존 인쇄/단위 치수도 같은 출처로 관리한다. 화면용 새 크기는 추가하지 않는다. */
+  --t-print-table:400 9px/1.2 var(--sans);
+  --t-print-note:400 10px/1.5 var(--sans);
+  --t-unit:400 .76em/1 var(--sans);
+
   /* 치수 */
   --w-max:840px;        /* 본문 최대 폭. 폭 분기는 이것 하나뿐 */
   --gutter:16px;
@@ -78,3 +83,8 @@
       손목 힌지는 두 선 사이 각, 회전은 두 호.
       그림은 측정값에서 나온다. 같은 그림을 돌려 쓰지 않는다
   15. 설명은 한 줄로 끝낸다. "뒷발에 남은 채로 칩니다." 로 충분하다 */
+
+/* 2026-11-20: user-approved course PLAY preview palette, scoped to this surface. */
+.course-app{--ink:#142C20;--ink-2:#62746A;--ink-3:#687B6E;--line:#DCE6DF;--paper-2:#EDF2EF;--course-action:#183E2B;--course-live:#153E2B;--course-live-text:#D6EADB;}
+/* PDF route markers remain legible after scaling the source diagram. */
+:root{--t-course-map-label:700 30px/1 var(--sans);}

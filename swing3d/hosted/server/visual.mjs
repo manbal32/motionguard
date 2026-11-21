@@ -1,0 +1,78 @@
+import {geminiFetch,geminiFallback} from './gemini-retry.mjs';
+import {findVideos} from './videos.mjs';
+const visualPrompt=`한국어 모션가드 코치. 승인 상담 요약과 동일 영상에서 추출한 대표사진5장만 근거로 JSON schema에 맞춰 답하세요.
+사진의 sample_id와 실제 자세를 확인하세요. phase_unverified=true이므로 어드레스/탑/임팩트 국면을 자동 이름으로 확정하지 말고 불명확하면 스윙 장면이라 하세요. 마무리 사진을 준비 자세로 부르거나 몸의 회전을 카메라 방향 변경으로 단정하지 마세요. 가림/블러/촬영·추적 문제를 스윙 결함으로 만들지 마세요.
+사진에서 보이는 자세만 관찰하세요. 사용자의 추정은 자기보고로 구분하고, 직접 말하지 않은 원인 가설에는 [코치 제안]을 붙이세요. 임팩트·클럽페이스·실제 구질/비거리·체중 분배/지면반력·통증 원인이나 숫자 각도/좌표를 만들어 측정 사실처럼 말하지 마세요. 근거가 부족하면 withheld/phase_notes에 짧게 적으세요.
+설명은 assessment_score.dimensions의 고정4항목 setup(준비 자세),rotation(몸통 회전),balance(균형과 하체 지지),arms(팔과 클럽 정렬)에 한 번씩만 작성하세요. 각 항목의 id,label,0~100정수 value,관찰 근거 basis,잘한 점 strength,점검/유지 improvement,구체적 연습 drill,sample_id(1~5),confidence를 반환하세요. 점수는 사진 참고평가이며 근거 없는 결함이나 연습 완료율을 만들지 마세요. basis/strength/improvement/drill은 각각 자연스러운 한 문장100자 이내. items는 중복 상세 설명 대신 빈 배열로 반환하세요. summary는 우선 관찰·개선 방향만 1~2문장120자 이내, coaching_context는 고민/가설/연습목표/개선방향을 각각 간결하게 쓰세요. withheld/phase_notes 메모와 추정 가정은 필요한 것만 최대3개씩.
+골프 자세가 보이면 assessment_score.value와 현재/개선 후18홀 score_estimate를 반드시 반환하세요. 일반 파72·보통의 아마추어 퍼팅/숏게임을 가정한 시뮬레이션 참고 범위이며 실제 타수의 확정 예측이 아닙니다. 평균타수 자기보고가 있으면 참고하고, 없으면 사진 추론의 낮은 신뢰도와 퍼팅/숏게임·실전미스를 모른다는 가정을 쓰세요. 고정90타 등 임의 기본값은 금지합니다. improved는 관찰한 개선이 실제 반영됐을 때의 조건부 목표이며 향상을 보장하지 마세요. 4항목·필수점수·두 타수범위는 생략하지 마세요. 긴 도입/중복 설명 없이 자연스러운 한글로 답하세요.`;
+const scalar={type:'STRING'},rating={type:'STRING',enum:['낮음','중간','높음']};
+const object=(properties,required=Object.keys(properties))=>({type:'OBJECT',properties,required});
+const array=items=>({type:'ARRAY',items});
+const strokeRange=object({min:{type:'NUMBER'},max:{type:'NUMBER'}});
+const visualSchema=object({summary:scalar,items:array(object({sample_id:{type:'INTEGER'},region:{type:'STRING',enum:['torso','hips','lean','wrist','kneeL','kneeR','heelR','swing']},kind:{type:'STRING',enum:['positive','improvement']},status:{type:'STRING',enum:['observed','tentative','unassessable']},title:scalar,observation:scalar,meaning:scalar,drill:scalar,confidence:rating})),withheld:array(scalar),phase_notes:array(scalar),coaching_context:object({concern:scalar,hypothesis:scalar,practice_goal:scalar,improvement_focus:scalar}),assessment_score:object({value:{type:'INTEGER'},basis:scalar,confidence:rating,dimensions:array(object({id:{type:'STRING',enum:['setup','rotation','balance','arms']},label:scalar,value:{type:'INTEGER'},basis:scalar,strength:scalar,improvement:scalar,drill:scalar,sample_id:{type:'INTEGER'},confidence:rating}))}),score_estimate:object({status:{type:'STRING',enum:['estimated']},current:strokeRange,improved:strokeRange,basis:scalar,assumptions:array(scalar),confidence:rating})});
+const completeScores=a=>Number.isInteger(a.assessment_score?.value)&&a.score_estimate?.status==='estimated'&&['setup','rotation','balance','arms'].every(id=>a.assessment_score?.dimensions?.filter(d=>d.id===id&&d.strength&&d.improvement&&d.drill&&Number.isInteger(d.sample_id)&&d.sample_id>=1&&d.sample_id<=5).length===1);
+const invalidVisual=(fields)=>Object.assign(Error('format'),{fields});
+const vjson=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store'}});
+export function validateVisual(data){
+ const regions=['torso','hips','lean','wrist','kneeL','kneeR','heelR','swing'];
+ if(!data||typeof data.summary!=='string'||data.summary.length>1500||!Array.isArray(data.items)||data.items.length>8||!Array.isArray(data.withheld)||!Array.isArray(data.phase_notes))throw invalidVisual(['summary/items/notes']);
+ const str=x=>typeof x==='string'&&x.length<=1500;
+ if(!data.withheld.every(str)||!data.phase_notes.every(str))throw invalidVisual(['notes']);
+ for(const [n,i] of data.items.entries()){const fields=[];if(!i||typeof i!=='object')throw invalidVisual(['items.'+n]);if(!Number.isInteger(i.sample_id)||i.sample_id<1||i.sample_id>5)fields.push('sample_id');if(!regions.includes(i.region))fields.push('region');if(!['positive','improvement'].includes(i.kind))fields.push('kind');if(!['observed','tentative','unassessable'].includes(i.status))fields.push('status');if(!['낮음','중간','높음'].includes(i.confidence))fields.push('confidence');for(const k of ['title','observation','meaning','drill'])if(!str(i[k]))fields.push(k);if(fields.length)throw invalidVisual(fields.map(k=>'items.'+n+'.'+k));}
+ for(const i of data.items){if(/체중|지면\s*반력|비거리|구질|스코어|통증/.test(i.title)){i.status='unassessable';i.confidence='낮음';i.caution='사진만으로 실제 힘·체중·공 궤도 등을 확정할 수 없어 이 항목은 판단을 보류했습니다.';}}
+ const context=data.coaching_context;data.coaching_context=context&&['concern','hypothesis','practice_goal','improvement_focus'].every(k=>str(context[k]))?{...context,source:'gemini'}:null;
+ const score=data.assessment_score;
+ data.assessment_score=score&&((Number.isInteger(score.value)&&score.value>=0&&score.value<=100)||score.value===null)&&str(score.basis)&&['낮음','중간','높음'].includes(score.confidence)?score:{value:null,basis:'사진 기반 평가 점수가 제공되지 않았습니다.',confidence:'낮음'};
+ const dims=score?.dimensions;data.assessment_score.dimensions=Array.isArray(dims)?dims.filter(x=>str(x?.label)&&str(x?.basis)&&Number.isInteger(x.value)&&x.value>=0&&x.value<=100).slice(0,4):[];
+ const e=data.score_estimate,range=r=>r&&Number.isFinite(r.min)&&Number.isFinite(r.max)&&r.min>=54&&r.max<=200&&r.min<=r.max;
+ data.score_estimate=e&&e.status==='estimated'&&range(e.current)&&range(e.improved)&&str(e.basis)&&Array.isArray(e.assumptions)&&e.assumptions.length<=10&&e.assumptions.every(str)&&['낮음','중간','높음'].includes(e.confidence)?{...e,holes:18,source:'gemini'}:{status:'insufficient',holes:18,source:'gemini',current:null,improved:null,basis:typeof e?.basis==='string'?e.basis.slice(0,1500):'타수 추정 근거가 부족하거나 응답 범위를 확인하지 못했습니다.',assumptions:[],confidence:'낮음'};
+ return data;
+}
+export async function visual(request,env,send=fetch,retryOptions={}){
+ if(request.method!=='POST')return vjson({ok:false,reason:'POST 요청이 필요합니다.'},405);
+ if(request.headers.get('origin')&&request.headers.get('origin')!==new URL(request.url).origin)return vjson({ok:false,reason:'허용되지 않은 요청입니다.'},403);
+ let d;try{const raw=await request.text();if(raw.length>4500000)return vjson({ok:false,reason:'사진 용량을 줄여 주세요.'},413);d=JSON.parse(raw);}catch{return vjson({ok:false,reason:'요청을 읽지 못했습니다.'},400);}
+ if(d.allow_images!==true)return vjson({ok:false,reason:'대표사진 5장 전송에 동의해 주세요.'},403);
+ if(!env.GEMINI_API_KEY)return vjson({ok:false,reason:'Gemini 비밀 설정이 없습니다.'},503);
+ if(!Array.isArray(d.samples)||d.samples.length!==5||d.samples.some((s,i)=>s.id!==i+1||!Number.isInteger(s.frame)||s.frame<0||!Number.isFinite(s.time)||s.time<0||s.time>31||!['address','top','down','impact','finish'].includes(s.phase)||typeof s.image!=='string'||!/^\/9j\/[A-Za-z0-9+/=\r\n]+$/.test(s.image)||s.image.length>800000))return vjson({ok:false,reason:'대표사진 5장과 시간을 확인해 주세요.'},422);
+ const summary={};for(const k of ['concern','improvement','hypothesis','goal'])summary[k]=String(d.summary?.[k]??'').slice(0,500);
+ const parts=[{text:visualPrompt},{text:'승인한 사용자 자기보고: '+JSON.stringify(summary)}];
+ for(const s of d.samples)parts.push({text:`sample_id=${s.id} frame=${s.frame} time=${s.time} phase_unverified=true`},{inlineData:{mimeType:'image/jpeg',data:s.image}});
+ const requestId=typeof d.request_id==='string'&&/^[a-zA-Z0-9-]{1,64}$/.test(d.request_id)?d.request_id:crypto.randomUUID();
+ const hashes=await Promise.all(d.samples.map(async s=>{const bytes=Uint8Array.from(atob(s.image.replace(/\s/g,'')),c=>c.charCodeAt(0));return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(n=>n.toString(16).padStart(2,'0')).join('');}));
+ const receipt={request_id:requestId,photo_count:d.samples.length,image_sha256:hashes,samples:d.samples.map(({id,time,frame,phase_unverified})=>({id,time,frame,phase_unverified:phase_unverified===true})),forwarded_images:parts.filter(p=>p.inlineData).length};
+ const model=env.GEMINI_MODEL||'gemini-flash-lite-latest';if(!/^[\w.-]+$/.test(model))return vjson({ok:false,reason:'모델 설정 오류'},503);
+ const started=Date.now();let attempts=0,modelRoutes=[];let selectedModel=model;try{
+  let scoreCompletionAttempts=0,modelVersion=model,analysis,repairReason=null;const usage={};
+  async function generate(extra=[]){
+   const r=await geminiFetch(send,`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':env.GEMINI_API_KEY},body:JSON.stringify({contents:[{role:'user',parts:[...parts,...extra]}],generationConfig:{temperature:0,maxOutputTokens:8000,responseMimeType:'application/json',responseSchema:visualSchema}})},{deadline:started+90000,...retryOptions,resolveAlternate:async()=>{if(selectedModel!==model)return null;try{const alternate=await geminiFallback(model,env,send,{deadline:started+90000});if(!alternate)return null;selectedModel=alternate;console.warn(JSON.stringify({event:'visual_model_fallback',request_id:requestId,from:model,to:alternate}));return 'https://generativelanguage.googleapis.com/v1beta/models/'+alternate+':generateContent';}catch{return null;}},onAttempt:(n,url)=>{attempts++;const name=new URL(url).pathname.split('/models/')[1]?.split(':')[0];if(name&&!modelRoutes.includes(name))modelRoutes.push(name);},onRetry:entry=>console.warn(JSON.stringify({event:'visual_retry',request_id:requestId,...entry}))});
+   if(!r.ok){let errorBody;try{errorBody=await r.json();}catch{}const details=errorBody?.error?.details??[],quotas=details.flatMap(d=>d.violations??[]).map(v=>String(v.quotaMetric??'')+' '+String(v.quotaId??''));const quotaScope=quotas.some(x=>/per.?day|daily/i.test(x))?'daily':quotas.some(x=>/per.?minute/i.test(x))?'minute':'unknown';const retryRaw=details.find(d=>d.retryDelay)?.retryDelay;throw Object.assign(Error('http:'+r.status),{upstreamStatus:r.status,quotaScope,freeTier:quotas.some(x=>/free.?tier/i.test(x)),retrySeconds:typeof retryRaw==='string'&&/^\d+(?:\.\d+)?s$/.test(retryRaw)?Math.ceil(parseFloat(retryRaw)):null});}
+   const result=await r.json(),c=result.candidates?.[0];
+   for(const k of ['promptTokenCount','candidatesTokenCount','totalTokenCount','thoughtsTokenCount','cachedContentTokenCount'])if(Number.isInteger(result.usageMetadata?.[k]))usage[k]=(usage[k]??0)+result.usageMetadata[k];
+   modelVersion=result.modelVersion??selectedModel;
+   if(c?.finishReason!=='STOP')throw Error('incomplete:'+String(c?.finishReason??'empty'));
+   return validateVisual(JSON.parse(c.content.parts.filter(p=>!p.thought).map(p=>p.text??'').join('')));
+  }
+  try{analysis=await generate();}catch(error){if(error.message==='format'||error instanceof SyntaxError||/^incomplete:(MAX_TOKENS|empty)$/.test(error.message)){repairReason=error.message==='format'?'response_format':error instanceof SyntaxError?'invalid_json':'incomplete_response';console.warn(JSON.stringify({event:'visual_repair',request_id:requestId,code:repairReason,fields:error.fields??[]}));}else throw error;}
+  if(repairReason||!completeScores(analysis)){
+   scoreCompletionAttempts=1;repairReason??='scores_missing';
+   analysis=await generate([{text:'이전 응답 형식 또는 필수 점수 항목을 확인하지 못했습니다. 같은 사진 5장과 승인 상담으로 전체 JSON을 간결하게 다시 작성하세요. region/kind/status는 지정된 enum 값만 사용하세요. 0~100 참고평가, setup/rotation/balance/arms 고정4항목과 잘한점/점검점/연습/sample_id, 현재·개선 후 18홀 시뮬레이션 범위가 필수입니다.'+' 전체 이전 응답을 반복하지 말고 누락된 필수 항목을 확인해 모든 점수를 반환하세요.'}]);
+   if(!completeScores(analysis))throw Error('scores-missing');
+  }
+  if(!analysis.coaching_context)analysis.coaching_context={concern:summary.concern,hypothesis:summary.hypothesis,practice_goal:summary.goal,improvement_focus:summary.improvement,source:'approved-summary'};
+  let recommendations=[],dimensionRecommendations=[];try{[recommendations,dimensionRecommendations]=await Promise.all([findVideos(analysis.items,env,send),findVideos(analysis.assessment_score.dimensions.map(d=>({sample_id:d.sample_id,kind:'improvement',status:'tentative',confidence:d.confidence??'중간',title:d.improvement,drill:d.drill})),env,send,4)]);}catch{}
+  analysis.assessment_score.rubric='photo-four-v1';for(const r of dimensionRecommendations)r.dimension_id=analysis.assessment_score.dimensions[r.item_index]?.id;
+  return vjson({ok:true,input_receipt:receipt,mode:'gemini-images',analysis,recommendations,dimension_recommendations:dimensionRecommendations,usage,elapsed_ms:Date.now()-started,attempts,score_completion_attempts:scoreCompletionAttempts,response_repair_reason:repairReason,failed_attempt_usage:attempts>scoreCompletionAttempts+1?'첫 실패 요청의 사용량은 제공되지 않았습니다.':null,optimization_revision:'concise-photo-v1',model:modelVersion,model_route:modelRoutes,fallback_used:modelRoutes.length>1,samples:d.samples.map(({id,frame,time,phase,phase_unverified})=>({id,frame,time,phase,phase_unverified:phase_unverified===true})),input:'사진 5장 + 승인 상담 요약 · 좌표/원본 영상 미전송'});
+ }catch(error){const reason=String(error?.message??''),code=reason==='http:429'?'gemini_quota':reason==='format'?'response_format':error instanceof SyntaxError?'invalid_json':reason==='scores-missing'?'scores_missing':reason.startsWith('incomplete:')?'incomplete_response':['http:502','http:503','http:504'].includes(reason)?'gemini_unavailable':reason.startsWith('http:')?'gemini_http':error?.name==='TimeoutError'?'gemini_timeout':'analysis_error';let message;
+  if(code==='gemini_quota')message=error.quotaScope==='daily'?'제미나이의 오늘 일일 사용 한도에 도달했습니다. 한도 초기화 또는 API 요금제 확인이 필요합니다.':error.quotaScope==='minute'?'제미나이의 분당 요청·토큰 한도에 도달했습니다. '+(error.retrySeconds??60)+'초 뒤 다시 분석해 주세요.':'제미나이 사용 한도에 도달했습니다. 분당·일일 한도와 API 요금제를 확인해 주세요.';
+  else if(code==='response_format'||code==='invalid_json')message='제미나이 응답 형식을 다시 요청했지만 처리하지 못했습니다. 같은 영상으로 다시 분석해 주세요.';
+  else if(code==='scores_missing')message='제미나이에서 점수와 예상 타수를 받지 못했습니다. 다시 분석해 주세요.';
+  else if(code==='incomplete_response')message='제미나이 분석 응답이 끝나지 않았습니다. 다시 분석해 주세요.';
+  else if(code==='gemini_timeout')message='제미나이 분석 응답 시간이 초과됐습니다. 다시 분석해 주세요.';
+  else if(code==='gemini_unavailable')message='분석 서버가 일시적으로 혼잡합니다. 사진과 상담 내용은 유지됩니다. 잠시 후 다시 시도해 주세요.';
+  else if(code==='gemini_http')message='제미나이 서버 연결에 실패했습니다 ('+(error.upstreamStatus??'오류')+'). 잠시 후 다시 분석해 주세요.';
+  else message='분석 응답을 처리하지 못했습니다. 같은 영상으로 다시 시도해 주세요.';
+  const diagnostic={event:'visual_failure',request_id:requestId,code,upstream_status:error.upstreamStatus??null,quota_scope:error.quotaScope??null,free_tier:error.freeTier??null,retry_seconds:error.retrySeconds??(code==='gemini_unavailable'?8:null),attempts,model_route:modelRoutes,fields:error.fields??[]};console.error(JSON.stringify(diagnostic));
+  return vjson({ok:false,reason:message,request_id:requestId,error_code:code,upstream_status:diagnostic.upstream_status,quota_scope:diagnostic.quota_scope,retry_after_seconds:diagnostic.retry_seconds,attempts,model_route:modelRoutes,fallback_attempted:modelRoutes.length>1},code==='gemini_quota'?429:code==='gemini_unavailable'?503:502);
+ }
+}

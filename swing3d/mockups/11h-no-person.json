@@ -1,0 +1,13 @@
+{
+  "usable": false,
+  "reason": "tracking_failed",
+  "accepted": 0,
+  "total": 30,
+  "bytes": 2617,
+  "fragmented": {
+    "usable": false,
+    "reason": "tracking_failed",
+    "accepted": 0,
+    "total": 29
+  }
+}

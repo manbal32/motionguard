@@ -1,0 +1,18 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {normalizeGameWeather} from '../server/game-weather.mjs';
+const now=Date.parse('2026-11-21T02:30:00Z');
+const raw=()=>({properties:{meta:{updated_at:'2026-11-21T01:21:06Z',units:{air_temperature:'celsius',wind_speed:'m/s',wind_from_direction:'degrees',precipitation_amount:'mm'}},timeseries:[{time:'2026-11-21T02:00:00Z',data:{instant:{details:{air_temperature:3.5,wind_speed:4,wind_from_direction:315}},next_1_hours:{summary:{symbol_code:'rain'},details:{precipitation_amount:.2}}}}]}});
+let instance=0;const fresh=()=>import('../server/game-weather.mjs?instance='+(instance++));
+test('forecast units and current-hour timestamps are validated before entering the game',()=>{
+ const w=normalizeGameWeather(raw(),now);assert.equal(w.windSpeed,4);assert.equal(w.windFrom,315);assert.equal(w.weatherTime,'2026-11-21T02:00:00.000Z');assert.equal(w.reference,'screen-north');assert.equal(w.gustAvailable,false);assert.equal(w.precipitationPeriod,'next-hour');const wrong=raw();wrong.properties.meta.units.wind_speed='km/h';assert.throws(()=>normalizeGameWeather(wrong,now));assert.throws(()=>normalizeGameWeather(raw(),now+4*3600000));const invalid=raw();invalid.properties.timeseries[0].data.instant.details.wind_from_direction=NaN;assert.throws(()=>normalizeGameWeather(invalid,now));
+});
+test('the public endpoint fetches only the fixed Rivera location, ignoring arbitrary URL or coordinates',async()=>{
+ const {gameWeather}=await fresh();let calls=0;const response=await gameWeather(new Request('https://example.test/api/game/weather?latitude=0&url=http://localhost'),{},async(url,init)=>{calls++;const u=new URL(url);assert.equal(u.hostname,'api.met.no');assert.equal(u.searchParams.get('lat'),'37.1902');assert.equal(u.searchParams.get('lon'),'127.1077');assert.match(init.headers['User-Agent'],/MotionGuardGolf/);assert.ok(!init.headers['x-goog-api-key']);return Response.json(raw());},{now:()=>now});assert.equal(response.status,200);const d=await response.json();assert.equal(d.ok,true);assert.equal(d.weather.source,'MET Norway');assert.equal(calls,1);
+});
+test('provider failures never produce fabricated live weather; short cached conditions remain marked as stale',async()=>{
+ const {gameWeather}=await fresh(),request=new Request('https://example.test/api/game/weather');let calls=0;const success=async()=>{calls++;return Response.json(raw());};await gameWeather(request,{},success,{now:()=>now});const cached=await gameWeather(request,{},success,{now:()=>now+60000});assert.equal((await cached.json()).cached,true);assert.equal(calls,1);const failure=async()=>{throw Error('network');};const stale=await gameWeather(request,{},failure,{now:()=>now+11*60000});const d=await stale.json();assert.equal(d.stale,true);assert.equal(d.weather.retrievedAt,new Date(now).toISOString());const old=await gameWeather(request,{},failure,{now:()=>now+70*60000});assert.equal(old.status,503);assert.equal((await old.json()).ok,false);
+});
+test('missing or stale current measurements fail explicitly and do not block game assets',async()=>{
+ const {gameWeather}=await fresh(),request=new Request('https://example.test/api/game/weather');const bad=raw();delete bad.properties.timeseries[0].data.instant.details.wind_from_direction;const response=await gameWeather(request,{},async()=>Response.json(bad),{now:()=>now});assert.equal(response.status,503);assert.equal((await response.json()).code,'weather_unavailable');const post=await gameWeather(new Request(request.url,{method:'POST'}),{});assert.equal(post.status,405);
+});

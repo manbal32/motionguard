@@ -1,0 +1,36 @@
+{
+  "canvasCSS": [
+    358,
+    296
+  ],
+  "landmarks": 22,
+  "frame": 118,
+  "maxJointPx": 22.476295832780945,
+  "exclusivePixels": 4917,
+  "avatarUnionPixels": 32391,
+  "exclusiveRatio": 0.1518014263221265,
+  "top8AvatarPixels": 0,
+  "playFrames": [
+    118,
+    132
+  ],
+  "seekFrame": 141,
+  "exact390": {
+    "canvasCSS": [
+      390,
+      296
+    ],
+    "landmarks": 22,
+    "frame": 118,
+    "maxJointPx": 22.476295832780945,
+    "exclusivePixels": 4917,
+    "avatarUnionPixels": 32391,
+    "exclusiveRatio": 0.1518014263221265,
+    "top8AvatarPixels": 0
+  },
+  "allFrames": {
+    "frames": 92,
+    "maximumAvatarPixelsInOuter8": 0
+  },
+  "errors": []
+}

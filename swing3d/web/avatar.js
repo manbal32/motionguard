@@ -2,12 +2,12 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
 
 const T = window.THREE;
-const skin = new T.Color(0xb28b73);
-const shirt = new T.Color(0x586f66);
-const trousers = new T.Color(0x283849);
-const shoes = new T.Color(0x5b5a53);
-const highlight = new T.Color(0xd19142);
-const iris = new T.Color(0x484543);
+const skin = new T.Color(window.MotionColors.number('--warn-bg'));
+const shirt = new T.Color(window.MotionColors.number('--avatar'));
+const trousers = new T.Color(window.MotionColors.number('--ink-2'));
+const shoes = new T.Color(window.MotionColors.number('--ink-2'));
+const highlight = new T.Color(window.MotionColors.number('--arc'));
+const iris = new T.Color(window.MotionColors.number('--ink-2'));
 
 export async function loadAvatars(url) {
   const response = await fetch(url);
@@ -85,7 +85,7 @@ function bind(source, config, ghost) {
   }
 
   const material = new T.MeshStandardMaterial(ghost
-    ? { color: 0xb1b4ad, transparent: true, opacity: 0.38, depthWrite: false, roughness: 0.8 }
+    ? { color: window.MotionColors.number('--stage-ink-2'), transparent: true, opacity: 0.38, depthWrite: false, roughness: 0.8 }
     : { vertexColors: true, roughness: 0.8, metalness: 0 });
   if (!ghost) {
     material.onBeforeCompile = shader => {
@@ -180,8 +180,8 @@ function bind(source, config, ghost) {
     // Follow the existing head bone. The shell is only a visual accessory.
     const geometry = new T.SphereGeometry(1, 24, 12, 0, Math.PI * 2, 0, Math.PI * 0.53);
     const hairMaterial = new T.MeshStandardMaterial(ghost
-      ? {color: 0xa6aaa4, transparent: true, opacity: 0.38, depthWrite: false, roughness: 0.95}
-      : {color: 0x332b26, roughness: 0.95});
+      ? {color: window.MotionColors.number('--stage-ink-2'), transparent: true, opacity: 0.38, depthWrite: false, roughness: 0.95}
+      : {color: window.MotionColors.number('--stage-line'), roughness: 0.95});
     hair = new T.Mesh(geometry, hairMaterial);
     hair.name = "Golfer hair";
     hair.position.copy(root.worldToLocal(point.set(center.x, headBounds.max.y - size.y * 0.25, center.z - size.z * 0.075)));

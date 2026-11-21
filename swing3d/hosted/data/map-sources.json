@@ -1,0 +1,74 @@
+[
+  {
+    "course_name": "리베라CC",
+    "aliases": [
+      "리베라CC",
+      "리베라 CC",
+      "Rivera CC",
+      "Riviera CC"
+    ],
+    "image_url": "https://blogfiles.naver.net/MjAyMzA5MDFfMTU4/MDAxNjkzNTYyOTI5MzE0.7Fpqv8IXaLfoMNKc_yZrFUhvbv_eA-03xyTtphn3zpUg.YodqFWBLU2WS7PrJ2vH9Nuo8Hv82ieEYtKULmbSTd6Yg.PNG.edia73/image.png",
+    "source_page": "https://blog.naver.com/golfato3/223199907557",
+    "title": "화성 리베라CC 후기 레이크 밸리 코스 라운딩 그린피!",
+    "width": 1157,
+    "height": 750,
+    "known_groups": [
+      "Valley Course",
+      "Lake Course",
+      "Pinehill Course",
+      "Cherryhill Course"
+    ],
+    "source_date": "2023-09-01",
+    "naver_query": "리베라CC 밸리코스 1번홀",
+    "discovery": "NAVER public image-search JSON metadata; source image retrieved over HTTPS and visually inspected",
+    "retrieved_at": "2026-11-20",
+    "limitations": [
+      "Archive blog image, not current official course verification.",
+      "Four named/color-coded course legends each show1–9; overall map contains36 numbered labels, not all label positions guarantee tee locations.",
+      "No par, exact tee distance or scale in this image. Do not infer factual metres from pixels.",
+      "Routes/tee/green recognition must be model output with uncertainty; no manual route anchors supplied.",
+      "Commercial image reuse permission is unverified."
+    ],
+    "visual_summary": "Whole-club illustrated layout. Black Lake circles, white Valley circles, ochre Pinehill circles, teal Cherryhill circles."
+  },
+  {
+    "course_name": "코리아CC",
+    "aliases": [
+      "코리아CC",
+      "코리아 CC",
+      "Korea CC",
+      "KOREA CC"
+    ],
+    "image_url": "https://blogfiles.naver.net/MjAyMjA1MjVfMjQx/MDAxNjUzNDc0NzgxOTcx.6ZQaOnBs0Tv9ZIhJP-LxfF4GK5NGSh9he4nEVZHVjyQg.HKzXTjm34vaMsrFPp16CdwXZw20ui1T0EZnEXACtu1og.JPEG.gmarket78/1653474779488.jpg",
+    "source_page": "https://blog.naver.com/gmarket78/222746939529",
+    "title": "용인 코리아CC 챌린지 크리크 코스공략도 와 라운딩 후기",
+    "width": 900,
+    "height": 740,
+    "known_groups": [
+      "Challenge Course"
+    ],
+    "source_date": "2022-05-26",
+    "naver_query": "코리아CC 레이크 1번홀 공략도",
+    "discovery": "NAVER public image-search JSON metadata; source image retrieved over HTTPS and visually inspected",
+    "retrieved_at": "2026-11-20",
+    "limitations": [
+      "This is ONE mapped hole: Challenge9, not Lake1 despite the search query.",
+      "Right-hand1–9 buttons for Lake/Challenge/Creek are navigation controls, not mapped hole locations.",
+      "Archive blog screenshot, current official alignment unverified.",
+      "Commercial image reuse permission unverified."
+    ],
+    "known_holes": [
+      {
+        "number": 9,
+        "group": "Challenge Course",
+        "par": 4,
+        "tee_distances_m": {
+          "BLUE": 365,
+          "WHITE": 350,
+          "RED": 320
+        },
+        "evidence": "Image itself explicitly shows9 Challenge Course, PAR4 and tee-distance table."
+      }
+    ]
+  }
+]

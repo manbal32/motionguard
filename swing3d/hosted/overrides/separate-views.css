@@ -1,0 +1,11 @@
+/* All sizes: one media type at a time, with independent playback. */
+.evidence-card[data-has-original=true] .evidence-media{display:block}
+.evidence-card[data-media-view='2d'] .evidence-original{display:none!important}
+.evidence-card[data-media-view=video] .evidence-pair{display:none!important}
+.evidence-card[data-media-view='2d'] .evidence-pair{display:grid!important;grid-template-columns:1fr 1fr}
+.evidence-card[data-media-view='2d'] .evidence-pair figure:first-child{display:block}
+.evidence-card[data-media-view=video] .evidence-original{display:block}
+@media print{.evidence-original,.evidence-view-tabs{display:none!important}.evidence-pair{display:grid!important;grid-template-columns:1fr 1fr}}
+#overlay #comparison-views{display:flex}
+#overlay[data-view=video] #comparison-panes>:nth-child(2){visibility:hidden}
+@media(min-width:840px){#overlay #comparison-panes{grid-template-columns:1fr}#overlay[data-view='2d'] #comparison-panes>:first-child{display:none;visibility:hidden}#overlay[data-view=video] #comparison-panes>:nth-child(2){display:none}#overlay[data-view='2d'] #comparison-panes>:nth-child(2){display:flex;visibility:visible}}

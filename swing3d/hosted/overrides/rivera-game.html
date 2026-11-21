@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#174e39">
+<title>MotionGuard · 리베라 18홀 플레이</title>
+<link rel="stylesheet" href="./rivera-game.css">
+<script src="./rivera-game-engine.js" defer></script><script src="./course-golfer.js" defer></script><script src="./rivera-game-sound.js" defer></script><script src="./rivera-game.js" defer></script>
+</head>
+<body>
+<main class="game-app">
+<header class="game-header"><a class="game-brand" href="./game.html">MotionGuard <span>PLAY</span></a><span class="club-name">리베라CC</span><button id="toggle-sound" type="button" aria-pressed="true" aria-label="홀인 효과음 끄기">소리 켜짐</button><button id="open-score" type="button" hidden>스코어카드</button></header>
+<details id="weather-panel" class="weather-panel"><summary><span id="weather-icon" aria-hidden="true">☀</span><span id="weather-summary">리베라 날씨 확인 중</span><span id="weather-wind"></span></summary><div class="weather-body"><p id="weather-effect">날씨는 자동으로 불러와 샷에 반영합니다.</p><p id="weather-status" role="status"></p><p id="weather-time"></p><div class="weather-actions"><a id="weather-source" href="https://api.met.no/" target="_blank" rel="noopener noreferrer">예보: MET Norway</a></div></div></details>
+<p class="weather-reference">게임 북쪽은 화면 위쪽으로 가정합니다.</p>
+<section id="setup-screen" class="setup-screen">
+<div class="setup-intro"><span class="eyebrow">나만의 18홀</span><h1>오늘은 어떤 코스로<br>플레이할까요?</h1><p>9홀 코스 두 개를 골라 직접 공을 쳐 보세요.</p></div>
+<fieldset class="preset-picker"><legend>거리 기준 선택</legend><div class="preset-options"><button id="preset-male" type="button" aria-pressed="true"><strong>남성</strong><span>드라이버 220m · 7번 145m</span></button><button id="preset-female" type="button" aria-pressed="false"><strong>여성</strong><span>드라이버 180m · 7번 130m</span></button></div><p>편하게 즐기는 게임용 거리 프리셋이에요.</p></fieldset>
+<div class="course-pickers"><fieldset><legend><span>전반</span> 먼저 플레이할 9홀</legend><div id="front-courses" class="course-options"></div></fieldset><fieldset><legend><span>후반</span> 이어서 플레이할 9홀</legend><div id="back-courses" class="course-options"></div></fieldset></div>
+<div class="round-preview"><div><span id="pair-label">밸리 · 레이크</span><strong>18홀 <small>PAR 72</small></strong></div><span id="round-distance"></span></div>
+<button id="start-game" class="primary start-game" type="button" disabled>18홀 시작하기</button><button id="resume-game" class="resume-game" type="button" hidden>하던 라운드 이어하기</button>
+<p id="setup-status" class="setup-status" role="status">코스를 준비하고 있습니다.</p><button id="retry-data" type="button" hidden>코스 다시 불러오기</button>
+<div class="how-to"><span><b>1</b> 방향 정하기</span><span><b>2</b> 힘 조절하기</span><span><b>3</b> 샷!</span></div>
+<p class="game-note">공개 홀 안내도 기반 게임입니다. OB·해저드 벌타 없이 플레이하며, 한 홀은 최대 12타로 마무리합니다.</p>
+</section>
+<section id="play-screen" class="play-screen" hidden>
+<div class="round-top"><div><span id="leg-label" class="eyebrow"></span><h1 id="hole-title"></h1></div><div class="total-badge"><span>현재 총 타수</span><strong id="total-strokes">0<small>타</small></strong></div></div>
+<div id="round-progress" class="round-progress" aria-label="18홀 진행"></div>
+<div class="play-layout"><div class="board-wrap"><div class="board-meta"><span id="lie-label" class="lie-label">티샷</span><span class="remaining-label">남은 거리 <strong id="remaining-distance"></strong></span></div>
+<svg id="game-map" class="game-map" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="홀 지도 위의 골퍼와 골프공"></svg>
+<p id="play-status" class="play-status" role="status" aria-live="polite"></p>
+<div id="hole-finish" class="hole-finish" hidden><div id="finish-card" class="finish-card"><span id="finish-result-tag" class="finish-result-tag"></span><span id="finish-kicker"></span><strong id="finish-title"></strong><p id="finish-description"></p><button id="next-hole" class="primary" type="button">다음 홀</button></div></div>
+</div>
+<section class="shot-panel" aria-label="샷 조절"><p id="distance-preset-label" class="distance-preset-label">남성 거리 기준</p><div class="club-row"><label for="open-clubs">클럽</label><input id="club-choice" type="hidden" value="driver"><button id="open-clubs" class="club-picker-button" type="button" aria-haspopup="dialog" aria-controls="club-overlay" aria-expanded="false"><span id="selected-club-name">드라이버</span><small id="selected-club-range">기준 220m</small><span class="club-picker-label">클럽 선택</span></button><div class="carry-preview"><span id="carry-label">날씨·힘 반영</span><strong id="carry-distance"></strong></div></div>
+<label class="slider-label" for="aim"><span>방향</span><strong id="aim-value">중앙</strong></label><div class="slider-row"><span>왼쪽</span><input type="range" id="aim" min="-60" max="60" value="0" step="1"><span>오른쪽</span></div>
+<label class="slider-label" for="power"><span>힘</span><strong id="power-value">100%</strong></label><input type="range" id="power" min="1" max="100" value="100" step="1">
+<p id="putting-help" class="putting-help" hidden>쉬운 퍼팅 · 홀 방향을 맞추면 힘을 넉넉하게 보정해 줘요.</p><button id="hit-shot" class="primary hit-shot" type="button">샷!</button><div class="minor-actions"><button id="undo-shot" type="button">한 샷 되돌리기</button><button id="concede-hole" type="button">홀 마무리</button><button id="choose-courses" type="button">코스 선택</button></div><details class="club-guide"><summary>클럽별 기준 거리</summary><p>힘 100%·기본 날씨에서의 게임 설정입니다. 개인 스윙에서 측정한 거리는 아니며, 힘과 날씨에 따라 달라져요.</p><dl id="club-distances"></dl></details><p id="save-status" class="save-status"></p>
+</section></div>
+</section>
+<section id="result-screen" class="result-screen" hidden><span class="eyebrow">18홀 라운드 완료</span><h1>나이스 라운드!</h1><div class="final-score"><strong id="final-total"></strong><span id="final-to-par"></span></div><p id="final-pair"></p><div class="result-splits"><div><span>전반 9홀</span><strong id="front-total"></strong></div><div><span>후반 9홀</span><strong id="back-total"></strong></div></div><button id="result-score" type="button">스코어카드 보기</button><button id="play-again" class="primary" type="button">다른 코스로 다시 플레이</button></section>
+<div id="club-overlay" class="club-overlay" role="dialog" aria-modal="true" aria-labelledby="club-title" hidden><section id="club-sheet" class="club-sheet"><div class="club-sheet-heading"><div><h2 id="club-title">클럽 선택</h2><p id="club-sheet-preset">남성 거리 기준 · 힘 100%</p></div><button id="close-clubs" type="button" aria-label="클럽 선택 닫기">닫기</button></div><p class="club-sheet-note">기본 거리로 고르고, 현재 날씨와 힘에 맞게 조절하세요.</p><div id="club-list" class="club-list"></div></section></div>
+<div id="score-overlay" class="score-overlay" role="dialog" aria-modal="true" aria-labelledby="score-title" hidden><section class="score-sheet"><div class="score-heading"><h2 id="score-title">스코어카드</h2><button id="close-score" type="button" aria-label="스코어카드 닫기">닫기</button></div><div id="score-content"></div><p class="game-note">‘마무리’로 표시된 홀은 직접 홀을 마무리했거나 12타에 도달한 홀입니다.</p></section></div>
+</main></body></html>
