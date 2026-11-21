@@ -26,7 +26,7 @@ subprocess.run(['python',str(ROOT/'scripts/apply_replay.py')],check=True)
 shutil.copy2(ROOT/'overrides/runtime-health.js',DIST/'runtime-health.js')
 for name in ['map-only.html','map-only.js']:
  shutil.copy2(ROOT/'overrides'/name,DIST/('map.html' if name.endswith('.html') else name))
-for name in ['rivera-game.html','rivera-game.css','rivera-game.js','rivera-game-engine.js']:
+for name in ['rivera-game.html','rivera-game.css','rivera-game.js','rivera-game-engine.js','rivera-game-sound.js']:
  shutil.copy2(ROOT/'overrides'/name,DIST/('game.html' if name.endswith('.html') else name))
 # Unlisted tester entry; the service exposes play only from the final simulation.
 game=(DIST/'game.html').read_text()
