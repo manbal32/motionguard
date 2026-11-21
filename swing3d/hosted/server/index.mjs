@@ -3,10 +3,12 @@ import {courses} from './courses.mjs';
 import {visual} from './visual.mjs';
 import {videos} from './videos.mjs';
 import {courseImages} from './course-images.mjs';
+import {gameWeather} from './game-weather.mjs';
 export default {
  async fetch(request,env){
   const path=new URL(request.url).pathname;
   if(path==='/api/build')return Response.json({build:'__MOTIONGUARD_BUILD__'},{headers:{'Cache-Control':'no-store'}});
+  if(path==='/api/game/weather')return gameWeather(request,env);
   if(path==='/api/coaching/videos')return videos(request,env);
   if(['/api/courses/discover','/api/courses/select-maps','/api/courses/analyze-map','/api/courses/image'].includes(path))return courseImages(request,env);
   if(path.startsWith('/api/courses/'))return courses(request,env);

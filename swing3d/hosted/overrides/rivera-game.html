@@ -9,6 +9,8 @@
 <body>
 <main class="game-app">
 <header class="game-header"><a class="game-brand" href="./game.html">MotionGuard <span>PLAY</span></a><span class="club-name">리베라CC</span><button id="open-score" type="button" hidden>스코어카드</button></header>
+<details id="weather-panel" class="weather-panel"><summary><span id="weather-icon" aria-hidden="true">☀</span><span id="weather-summary">리베라 날씨 확인 중</span><span id="weather-wind"></span></summary><div class="weather-body"><label class="weather-toggle"><input id="weather-enabled" type="checkbox" checked>오늘 날씨를 게임에 반영</label><p id="weather-effect">날씨를 불러오기 전에는 기본 조건으로 플레이합니다.</p><p id="weather-status" role="status"></p><p id="weather-time"></p><div class="weather-actions"><button id="weather-refresh" type="button">날씨 새로고침</button><a id="weather-source" href="https://api.met.no/" target="_blank" rel="noopener noreferrer">예보: MET Norway</a></div></div></details>
+<p class="weather-reference">게임 북쪽은 화면 위쪽으로 가정합니다.</p>
 <section id="setup-screen" class="setup-screen">
 <div class="setup-intro"><span class="eyebrow">나만의 18홀</span><h1>오늘은 어떤 코스로<br>플레이할까요?</h1><p>9홀 코스 두 개를 골라 직접 공을 쳐 보세요.</p></div>
 <div class="course-pickers"><fieldset><legend><span>전반</span> 먼저 플레이할 9홀</legend><div id="front-courses" class="course-options"></div></fieldset><fieldset><legend><span>후반</span> 이어서 플레이할 9홀</legend><div id="back-courses" class="course-options"></div></fieldset></div>
