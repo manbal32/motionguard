@@ -3,7 +3,7 @@ window.MotionSimulationRound={open(root,doc){
  const old=root.querySelector('.embedded-simulation');old?._dispose?.();old?.remove();
  const make=(tag,text)=>{const e=document.createElement(tag);if(text)e.textContent=text;return e;};
  const summary=root.querySelector('.result-summary-view'),panel=make('section');panel.className='embedded-simulation simulation-round';
- const back=make('button','분석 결과로'),heading=make('h2','내 스윙 시뮬레이션'),actions=make('div'),watch=make('button','현재·개선 후 재생'),reload=make('button','플레이 다시 불러오기'),status=make('p','리베라 코스를 준비하고 있어요.'),frame=make('iframe');
+ const back=make('button','분석 결과로'),heading=make('h2','리베라 18홀 게임'),actions=make('div'),watch=make('button','현재·개선 후 재생'),reload=make('button','플레이 다시 불러오기'),status=make('p','리베라 코스를 준비하고 있어요.'),frame=make('iframe');
  actions.className='simulation-round-actions';status.className='simulation-round-status';status.setAttribute('role','status');frame.className='simulation-round-frame';frame.title='리베라 18홀 직접 플레이';frame.src='./round';frame.setAttribute('loading','eager');
  let observer,disposed=false;
  function fit(){if(disposed)return;try{const body=frame.contentDocument?.body;if(body){frame.style.height=Math.max(600,Math.ceil(body.scrollHeight+24))+'px';}}catch{}}
