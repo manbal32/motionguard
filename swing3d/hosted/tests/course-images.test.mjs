@@ -31,3 +31,14 @@ test('a numbered-label chain cannot masquerade as separate playable holes',()=>{
 test('translated copies of one generic path never become a full mapped course',()=>{
  const holes=Array.from({length:9},(_,i)=>({...structuredClone(hole),number:i+1,tee:[.1+i*.07,.1],green:[.14+i*.07,.2],route:[[.1+i*.07,.1],[.12+i*.07,.15],[.14+i*.07,.2]]}));const c=validateMapResult({identity:'matched',holes},candidate,'실험CC',true);assert.equal(c.holes.length,0);assert.match(c.reason,/같은 경로/);
 });
+
+test('discovery interleaves multiple queries before the first twenty candidates and tolerates one failed query',async()=>{
+ const calls=[];const fixture=(label,n)=>({type:'image',originalUrl:'https://blogfiles.naver.net/'+label+n+'.png',viewerThumb:candidate.image_url,orgWidth:1000,orgHeight:1000,title:label+n,link:candidate.source_page});
+ const r=await courseImages(new Request('https://example.test/api/courses/discover?q='+encodeURIComponent('실험CC')),{},async url=>{const q=new URL(url).searchParams.get('query');calls.push(q);if(q.endsWith('공략도'))return new Response('unavailable',{status:503});const label=q.endsWith('코스맵')?'map':'general';return new Response('items:'+JSON.stringify(Array.from({length:30},(_,i)=>fixture(label,i))));});
+ const d=await r.json();assert.equal(r.status,200);assert.equal(calls.length,3);assert.equal(d.queries.length,3);assert.equal(d.candidates[0].title,'general0');assert.equal(d.candidates[1].title,'map0');assert.ok(d.candidates.slice(0,20).some(c=>c.title==='map9'));assert.equal(d.search_errors.length,1);assert.equal(d.candidates.length,40);
+});
+test('table-only classifications cannot become map candidates',async()=>{
+ const input=[{...candidate,thumbnail_url:candidate.image_url},{...candidate,thumbnail_url:candidate.image_url,image_url:'https://blogfiles.naver.net/hole.png'}];let prompt='';
+ const r=await courseImages(new Request('https://example.test/api/courses/select-maps',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({course_name:'실험CC',candidates:input})}),{GEMINI_API_KEY:'test-map-only'},async(url,init)=>{if(url.startsWith('https://blogfiles.naver.net/'))return new Response('png',{headers:{'Content-Type':'image/png'}});prompt=JSON.parse(init.body).contents[0].parts[0].text;return Response.json({candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify({maps:[{index:0,type:'scorecard'},{index:1,type:'single-hole'},{index:19,type:'overview'}],reason:'지도만 선택'})}]}}]});});
+ const d=await r.json();assert.equal(r.status,200);assert.deepEqual(d.indices,[1]);assert.match(prompt,/스코어카드/);assert.match(prompt,/페어웨이/);
+});
