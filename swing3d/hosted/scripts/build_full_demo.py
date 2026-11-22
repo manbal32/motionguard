@@ -54,6 +54,7 @@ for name in ['prepared-courses.js','prepared-courses.css','prepared-tester.js','
  shutil.copy2(ROOT/'overrides'/name,DIST/('courses.html' if name=='prepared-tester.html' else name))
 shutil.copy2(ROOT/'data/prepared-courses.json',DIST/'prepared-courses.json')
 shutil.copytree(ROOT/'data/prepared-courses',DIST/'prepared-courses')
+shutil.copytree(ROOT/'assets/prepared-course-images',DIST/'prepared-course-images')
 p=DIST/'index.html';text=p.read_text().replace('<script src="./simulation-entry.js">','<script src="./prepared-courses.js"></script><script src="./simulation-entry.js">');text=text.replace('</head>','<link rel="stylesheet" href="./prepared-courses.css"></head>');p.write_text(text)
 subprocess.run(['python',str(ROOT/'scripts/seal_assets.py')],check=True)
 # App shell only at install. Heavy model/3D/tour assets are cached as used.

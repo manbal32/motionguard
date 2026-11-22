@@ -1,0 +1,1258 @@
+{
+  "revision": 1,
+  "id": "88-west",
+  "clubName": "88CC",
+  "groupName": "서코스",
+  "name": "88CC · 서코스",
+  "tee": "REGULAR · m",
+  "holes": [
+    {
+      "number": 1,
+      "par": 4,
+      "distance": 358,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.42,
+          0.89
+        ],
+        [
+          0.48,
+          0.73
+        ],
+        [
+          0.54,
+          0.58
+        ],
+        [
+          0.63,
+          0.42
+        ],
+        [
+          0.7,
+          0.25
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b1.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_01.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -57.38616455231352,
+          "y": -34.04230275023565,
+          "width": 459.6181509862741,
+          "height": 673.7584258776063,
+          "transform": "rotate(-16.61771347505963 200 350)"
+        }
+      },
+      "sourceNumber": 1,
+      "sourceCourse": "서코스",
+      "ref": "1",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          195.59578,
+          463.81444
+        ],
+        [
+          193.11841,
+          359.08506
+        ],
+        [
+          201.92685,
+          243.95618
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 2,
+      "par": 4,
+      "distance": 347,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.3,
+          0.87
+        ],
+        [
+          0.4,
+          0.71
+        ],
+        [
+          0.5,
+          0.52
+        ],
+        [
+          0.64,
+          0.36
+        ],
+        [
+          0.73,
+          0.29
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b2.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_02.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -43.23602815323136,
+          "y": -51.564863778128256,
+          "width": 472.30296728782787,
+          "height": 692.3532134105659,
+          "transform": "rotate(-26.827874010314503 200 350)"
+        }
+      },
+      "sourceNumber": 2,
+      "sourceCourse": "서코스",
+      "ref": "2",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          192.15199,
+          454.83118
+        ],
+        [
+          174.92996,
+          316.12737
+        ],
+        [
+          183.94064,
+          187.43232
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 3,
+      "par": 3,
+      "distance": 151,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.24,
+          0.87
+        ],
+        [
+          0.44,
+          0.72
+        ],
+        [
+          0.65,
+          0.57
+        ],
+        [
+          0.74,
+          0.33
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b3.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_03.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -35.507019273432036,
+          "y": -72.73291492958344,
+          "width": 480.62656994577964,
+          "height": 704.5548582159724,
+          "transform": "rotate(-32.27811990914117 200 350)"
+        }
+      },
+      "sourceNumber": 3,
+      "sourceCourse": "서코스",
+      "ref": "3",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          224.8327,
+          434.31469
+        ],
+        [
+          253.72894,
+          291.06268
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 4,
+      "par": 5,
+      "distance": 551,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.36,
+          0.9
+        ],
+        [
+          0.4,
+          0.72
+        ],
+        [
+          0.43,
+          0.58
+        ],
+        [
+          0.58,
+          0.43
+        ],
+        [
+          0.72,
+          0.24
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b4.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_04.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -35.39525561445737,
+          "y": -14.23849211555239,
+          "width": 435.9171400267729,
+          "height": 639.0148984483376,
+          "transform": "rotate(-20.40988283380398 200 350)"
+        }
+      },
+      "sourceNumber": 4,
+      "sourceCourse": "서코스",
+      "ref": "4",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          176.22976,
+          461.11747
+        ],
+        [
+          157.28784,
+          372.71108
+        ],
+        [
+          185.1436,
+          260.07342
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 5,
+      "par": 4,
+      "distance": 350,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.46,
+          0.88
+        ],
+        [
+          0.51,
+          0.73
+        ],
+        [
+          0.49,
+          0.58
+        ],
+        [
+          0.62,
+          0.42
+        ],
+        [
+          0.74,
+          0.27
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b5.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_05.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -88.14830462360385,
+          "y": -54.79925180787524,
+          "width": 480.24717437267304,
+          "height": 703.9986987963048,
+          "transform": "rotate(-17.386771236625094 200 350)"
+        }
+      },
+      "sourceNumber": 5,
+      "sourceCourse": "서코스",
+      "ref": "5",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          191.35984,
+          467.04974
+        ],
+        [
+          150.63837,
+          369.14501
+        ],
+        [
+          176.55886,
+          242.9958
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 6,
+      "par": 4,
+      "distance": 290,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.37,
+          0.91
+        ],
+        [
+          0.43,
+          0.72
+        ],
+        [
+          0.5,
+          0.55
+        ],
+        [
+          0.59,
+          0.39
+        ],
+        [
+          0.61,
+          0.27
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b6.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_06.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -27.696798421544116,
+          "y": -51.901746935615165,
+          "width": 464.687343717437,
+          "height": 681.1894015857883,
+          "transform": "rotate(-14.349332042947122 200 350)"
+        }
+      },
+      "sourceNumber": 6,
+      "sourceCourse": "서코스",
+      "ref": "6",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          194.93536,
+          442.70186
+        ],
+        [
+          197.74905,
+          322.45082
+        ],
+        [
+          211.25476,
+          206.49588
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 7,
+      "par": 3,
+      "distance": 142,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.4,
+          0.9
+        ],
+        [
+          0.43,
+          0.73
+        ],
+        [
+          0.46,
+          0.56
+        ],
+        [
+          0.56,
+          0.44
+        ],
+        [
+          0.73,
+          0.36
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b7.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_07.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -96.45914373873046,
+          "y": -134.57833088589348,
+          "width": 524.7064490950982,
+          "height": 769.1719537871326,
+          "transform": "rotate(-22.63037664915409 200 350)"
+        }
+      },
+      "sourceNumber": 7,
+      "sourceCourse": "서코스",
+      "ref": "7",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          164.21507,
+          448.25143
+        ],
+        [
+          128.43013,
+          321.50286
+        ],
+        [
+          141.34499,
+          216.11888
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 8,
+      "par": 5,
+      "distance": 412,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.18,
+          0.87
+        ],
+        [
+          0.35,
+          0.73
+        ],
+        [
+          0.5,
+          0.57
+        ],
+        [
+          0.66,
+          0.45
+        ],
+        [
+          0.72,
+          0.29
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b8.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_08.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -1.0489964373382747,
+          "y": -29.86075538994072,
+          "width": 446.77554763852953,
+          "height": 654.932336879208,
+          "transform": "rotate(-32.42062233088804 200 350)"
+        }
+      },
+      "sourceNumber": 8,
+      "sourceCourse": "서코스",
+      "ref": "8",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          214.95551,
+          456.8807
+        ],
+        [
+          215.34565,
+          332.49498
+        ],
+        [
+          233.55236,
+          227.82801
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 9,
+      "par": 4,
+      "distance": 356,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.35,
+          0.89
+        ],
+        [
+          0.38,
+          0.72
+        ],
+        [
+          0.46,
+          0.54
+        ],
+        [
+          0.57,
+          0.39
+        ],
+        [
+          0.71,
+          0.28
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b9.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_09.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -47.41918351124497,
+          "y": -50.33209013027664,
+          "width": 466.82864813442444,
+          "height": 684.328359197054,
+          "transform": "rotate(-21.929343633981475 200 350)"
+        }
+      },
+      "sourceNumber": 9,
+      "sourceCourse": "서코스",
+      "ref": "9",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          169.54442,
+          461.85135
+        ],
+        [
+          158.1857,
+          333.6374
+        ],
+        [
+          167.48566,
+          219.23757
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 10,
+      "par": 5,
+      "distance": 479,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.19,
+          0.87
+        ],
+        [
+          0.35,
+          0.76
+        ],
+        [
+          0.48,
+          0.63
+        ],
+        [
+          0.64,
+          0.43
+        ],
+        [
+          0.75,
+          0.26
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b10.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_10.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -0.45801604699380505,
+          "y": -3.2490933168555216,
+          "width": 426.5064171212634,
+          "height": 625.2196341891248,
+          "transform": "rotate(-32.057058764689415 200 350)"
+        }
+      },
+      "sourceNumber": 10,
+      "sourceCourse": "서코스",
+      "ref": "10",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          221.33281,
+          480.49268
+        ],
+        [
+          225.18457,
+          382.17886
+        ],
+        [
+          216.65145,
+          239.98179
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 11,
+      "par": 4,
+      "distance": 360,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.87,
+          0.92
+        ],
+        [
+          0.72,
+          0.78
+        ],
+        [
+          0.54,
+          0.62
+        ],
+        [
+          0.36,
+          0.53
+        ],
+        [
+          0.2,
+          0.42
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b11.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_11.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -42.438110929842,
+          "y": -95.07064417302979,
+          "width": 453.15534753241496,
+          "height": 664.2845435418355,
+          "transform": "rotate(42.430699601495206 200 350)"
+        }
+      },
+      "sourceNumber": 11,
+      "sourceCourse": "서코스",
+      "ref": "11",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          212.57612,
+          460.49594
+        ],
+        [
+          224.08193,
+          327.0135
+        ],
+        [
+          204.21434,
+          227.85236
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 12,
+      "par": 4,
+      "distance": 310,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.26,
+          0.92
+        ],
+        [
+          0.32,
+          0.76
+        ],
+        [
+          0.44,
+          0.61
+        ],
+        [
+          0.6,
+          0.46
+        ],
+        [
+          0.7,
+          0.32
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b12.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_12.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -19.631971932465376,
+          "y": -65.86565140053455,
+          "width": 457.5666081926362,
+          "height": 670.7510506460235,
+          "transform": "rotate(-26.576894041628865 200 350)"
+        }
+      },
+      "sourceNumber": 12,
+      "sourceCourse": "서코스",
+      "ref": "12",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          176.53818,
+          466.73697
+        ],
+        [
+          180.63036,
+          352.18982
+        ],
+        [
+          201.09125,
+          229.45409
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 13,
+      "par": 3,
+      "distance": 141,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.87,
+          0.89
+        ],
+        [
+          0.71,
+          0.75
+        ],
+        [
+          0.56,
+          0.64
+        ],
+        [
+          0.39,
+          0.56
+        ],
+        [
+          0.25,
+          0.51
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b13.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_13.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -102.34445243293555,
+          "y": -204.01185175921432,
+          "width": 539.9008079159563,
+          "height": 791.4455025131633,
+          "transform": "rotate(48.06156072938638 200 350)"
+        }
+      },
+      "sourceNumber": 13,
+      "sourceCourse": "서코스",
+      "ref": "13",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          224.68856,
+          436.68927
+        ],
+        [
+          235.32364,
+          318.26311
+        ],
+        [
+          221.08024,
+          207.67315
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 14,
+      "par": 4,
+      "distance": 353,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.2,
+          0.87
+        ],
+        [
+          0.4,
+          0.76
+        ],
+        [
+          0.58,
+          0.63
+        ],
+        [
+          0.72,
+          0.49
+        ],
+        [
+          0.74,
+          0.28
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b14.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_14.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -7.429872169207357,
+          "y": -22.004612382760115,
+          "width": 441.34015355150507,
+          "height": 646.9645432743654,
+          "transform": "rotate(-31.978985239520743 200 350)"
+        }
+      },
+      "sourceNumber": 14,
+      "sourceCourse": "서코스",
+      "ref": "14",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          237.18254,
+          467.88643
+        ],
+        [
+          260.02505,
+          354.47194
+        ],
+        [
+          264.46665,
+          244.91913
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 15,
+      "par": 3,
+      "distance": 179,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.84,
+          0.88
+        ],
+        [
+          0.68,
+          0.71
+        ],
+        [
+          0.46,
+          0.56
+        ],
+        [
+          0.22,
+          0.54
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b15.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_15.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -99.81348323578806,
+          "y": -238.7632274778265,
+          "width": 565.6858174260152,
+          "height": 829.243982363136,
+          "transform": "rotate(51.20469867730635 200 350)"
+        }
+      },
+      "sourceNumber": 15,
+      "sourceCourse": "서코스",
+      "ref": "15",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          253.16371,
+          416.13343
+        ],
+        [
+          272.13586,
+          241.20457
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 16,
+      "par": 4,
+      "distance": 366,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.3,
+          0.88
+        ],
+        [
+          0.3,
+          0.73
+        ],
+        [
+          0.31,
+          0.56
+        ],
+        [
+          0.5,
+          0.43
+        ],
+        [
+          0.75,
+          0.34
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b16.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_16.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -59.45624312763482,
+          "y": -91.91800371674424,
+          "width": 494.20236786216157,
+          "height": 724.4557437979414,
+          "transform": "rotate(-29.617167316178097 200 350)"
+        }
+      },
+      "sourceNumber": 16,
+      "sourceCourse": "서코스",
+      "ref": "16",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          146.29584,
+          480.5295
+        ],
+        [
+          89.72745,
+          371.02057
+        ],
+        [
+          124.81417,
+          242.7413
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 17,
+      "par": 4,
+      "distance": 299,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.84,
+          0.91
+        ],
+        [
+          0.66,
+          0.77
+        ],
+        [
+          0.51,
+          0.65
+        ],
+        [
+          0.33,
+          0.55
+        ],
+        [
+          0.17,
+          0.45
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b17.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_17.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -39.064217386054,
+          "y": -121.8882346783227,
+          "width": 473.39448987337425,
+          "height": 693.9532862916509,
+          "transform": "rotate(44.81595670893887 200 350)"
+        }
+      },
+      "sourceNumber": 17,
+      "sourceCourse": "서코스",
+      "ref": "17",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          208.03033,
+          446.02239
+        ],
+        [
+          216.35268,
+          336.90014
+        ],
+        [
+          204.8182,
+          227.61343
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 18,
+      "par": 5,
+      "distance": 479,
+      "distanceAssumed": false,
+      "distanceSource": "공식 홀 지도 Regular 거리(m)",
+      "sourceRoute": [
+        [
+          0.14,
+          0.87
+        ],
+        [
+          0.33,
+          0.69
+        ],
+        [
+          0.46,
+          0.53
+        ],
+        [
+          0.64,
+          0.4
+        ],
+        [
+          0.77,
+          0.27
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.88countryclub.co.kr/images/course/b18.png",
+        "source_page": "https://www.88countryclub.co.kr/Course/cb_18.aspx",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": 10.749008671197402,
+          "y": 2.4569082815470438,
+          "width": 415.93624467868705,
+          "height": 609.7247223130753,
+          "transform": "rotate(-35.61323262226297 200 350)"
+        }
+      },
+      "sourceNumber": 18,
+      "sourceCourse": "서코스",
+      "ref": "18",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          200.33814,
+          439.7578
+        ],
+        [
+          187.48874,
+          328.96155
+        ],
+        [
+          202.19792,
+          220.92567
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    }
+  ],
+  "sourceUrl": "https://www.88countryclub.co.kr/Course/cb_01.aspx",
+  "geometrySource": "prepared-guide",
+  "preparedAt": "2026-11-22",
+  "notice": "공개 홀 안내도 위 근사 경로를 이용한 가상 재생입니다."
+}

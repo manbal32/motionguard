@@ -1,0 +1,717 @@
+{
+  "revision": 1,
+  "id": "giheung-west",
+  "clubName": "기흥CC",
+  "groupName": "서코스",
+  "name": "기흥CC · 서코스",
+  "tee": "WHITE · m",
+  "holes": [
+    {
+      "number": 1,
+      "par": 4,
+      "distance": 345,
+      "distanceAssumed": false,
+      "distanceSource": "기흥CC 공식 모바일 홀 페이지 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.4529262086513995,
+          0.8818897637795275
+        ],
+        [
+          0.361323155216285,
+          0.7165354330708661
+        ],
+        [
+          0.27735368956743,
+          0.5531496062992126
+        ],
+        [
+          0.19974554707379136,
+          0.4153543307086614
+        ],
+        [
+          0.08524173027989822,
+          0.17519685039370078
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.ghcc.kr/mobile/images/course/west01.jpg",
+        "source_page": "https://www.ghcc.kr/mobile/course/course_west01.html",
+        "width": 786,
+        "height": 508,
+        "display": {
+          "x": -6.511187770725314,
+          "y": 87.83331481588783,
+          "width": 767.4600169635465,
+          "height": 496.0174155438698,
+          "transform": "rotate(38.83454916118603 200 350)"
+        },
+        "asset": "./prepared-course-images/giheung-west-01.jpg"
+      },
+      "sourceNumber": 1,
+      "sourceCourse": "서코스",
+      "ref": "1",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          196.66952,
+          467.02644
+        ],
+        [
+          197.29028,
+          363.48716
+        ],
+        [
+          193.7543,
+          272.89691
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 2,
+      "par": 3,
+      "distance": 176,
+      "distanceAssumed": false,
+      "distanceSource": "기흥CC 공식 모바일 홀 페이지 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.44656488549618323,
+          0.8661417322834646
+        ],
+        [
+          0.3702290076335878,
+          0.7244094488188977
+        ],
+        [
+          0.2926208651399491,
+          0.5748031496062992
+        ],
+        [
+          0.22391857506361323,
+          0.43503937007874016
+        ],
+        [
+          0.15394402035623408,
+          0.20275590551181102
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.ghcc.kr/mobile/images/course/west02.jpg",
+        "source_page": "https://www.ghcc.kr/mobile/course/course_west02.html",
+        "width": 786,
+        "height": 508,
+        "display": {
+          "x": -60.290208569810204,
+          "y": 50.55596768345998,
+          "width": 866.8987454909781,
+          "height": 560.2857031926424,
+          "transform": "rotate(34.31324653513775 200 350)"
+        },
+        "asset": "./prepared-course-images/giheung-west-02.jpg"
+      },
+      "sourceNumber": 2,
+      "sourceCourse": "서코스",
+      "ref": "2",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          190.10627,
+          472.10517
+        ],
+        [
+          181.7885,
+          364.94467
+        ],
+        [
+          176.73891,
+          266.69125
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 3,
+      "par": 5,
+      "distance": 491,
+      "distanceAssumed": false,
+      "distanceSource": "기흥CC 공식 모바일 홀 페이지 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.4669211195928753,
+          0.8720472440944882
+        ],
+        [
+          0.43638676844783714,
+          0.6909448818897638
+        ],
+        [
+          0.40966921119592875,
+          0.5196850393700787
+        ],
+        [
+          0.3549618320610687,
+          0.40551181102362205
+        ],
+        [
+          0.2480916030534351,
+          0.30708661417322836
+        ],
+        [
+          0.13104325699745548,
+          0.2440944881889764
+        ],
+        [
+          0.061068702290076333,
+          0.22440944881889763
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.ghcc.kr/mobile/images/course/west03.jpg",
+        "source_page": "https://www.ghcc.kr/mobile/course/course_west03.html",
+        "width": 786,
+        "height": 508,
+        "display": {
+          "x": -3.7599847245265323,
+          "y": 76.51973134563548,
+          "width": 771.8330023782065,
+          "height": 498.84372163884086,
+          "transform": "rotate(44.11587605186457 200 350)"
+        },
+        "asset": "./prepared-course-images/giheung-west-03.jpg"
+      },
+      "sourceNumber": 3,
+      "sourceCourse": "서코스",
+      "ref": "3",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          245.96813,
+          493.73506
+        ],
+        [
+          290.63342,
+          418.04578
+        ],
+        [
+          299.96548,
+          347.76288
+        ],
+        [
+          274.92429,
+          255.09376
+        ],
+        [
+          231.93898,
+          169.646
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 4,
+      "par": 3,
+      "distance": 180,
+      "distanceAssumed": false,
+      "distanceSource": "기흥CC 공식 모바일 홀 페이지 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.44274809160305345,
+          0.8523622047244095
+        ],
+        [
+          0.35368956743002544,
+          0.702755905511811
+        ],
+        [
+          0.2582697201017812,
+          0.5590551181102362
+        ],
+        [
+          0.18193384223918574,
+          0.39763779527559057
+        ],
+        [
+          0.1272264631043257,
+          0.21850393700787402
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.ghcc.kr/mobile/images/course/west04.jpg",
+        "source_page": "https://www.ghcc.kr/mobile/course/course_west04.html",
+        "width": 786,
+        "height": 508,
+        "display": {
+          "x": -48.01119481187919,
+          "y": 48.843549157003906,
+          "width": 870.2535675095403,
+          "height": 562.4539596626546,
+          "transform": "rotate(37.60297293049939 200 350)"
+        },
+        "asset": "./prepared-course-images/giheung-west-04.jpg"
+      },
+      "sourceNumber": 4,
+      "sourceCourse": "서코스",
+      "ref": "4",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          189.94237,
+          461.04257
+        ],
+        [
+          173.47204,
+          346.33872
+        ],
+        [
+          176.2398,
+          233.87413
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 5,
+      "par": 4,
+      "distance": 261,
+      "distanceAssumed": false,
+      "distanceSource": "기흥CC 공식 모바일 홀 페이지 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.4707379134860051,
+          0.860236220472441
+        ],
+        [
+          0.3982188295165394,
+          0.7381889763779528
+        ],
+        [
+          0.3256997455470738,
+          0.6161417322834646
+        ],
+        [
+          0.25190839694656486,
+          0.4625984251968504
+        ],
+        [
+          0.19338422391857507,
+          0.3248031496062992
+        ],
+        [
+          0.1272264631043257,
+          0.19094488188976377
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.ghcc.kr/mobile/images/course/west05.jpg",
+        "source_page": "https://www.ghcc.kr/mobile/course/course_west05.html",
+        "width": 786,
+        "height": 508,
+        "display": {
+          "x": -43.57050624395464,
+          "y": 73.26244609729406,
+          "width": 814.6656081180781,
+          "height": 526.5268815826764,
+          "transform": "rotate(38.45370921670598 200 350)"
+        },
+        "asset": "./prepared-course-images/giheung-west-05.jpg"
+      },
+      "sourceNumber": 5,
+      "sourceCourse": "서코스",
+      "ref": "5",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          193.69761,
+          487.93634
+        ],
+        [
+          187.39523,
+          400.87268
+        ],
+        [
+          190.59416,
+          300.17772
+        ],
+        [
+          198.37666,
+          213.71088
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 6,
+      "par": 5,
+      "distance": 467,
+      "distanceAssumed": false,
+      "distanceSource": "기흥CC 공식 모바일 홀 페이지 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.48854961832061067,
+          0.8681102362204725
+        ],
+        [
+          0.3753180661577608,
+          0.7854330708661418
+        ],
+        [
+          0.26208651399491095,
+          0.7066929133858267
+        ],
+        [
+          0.20229007633587787,
+          0.6003937007874016
+        ],
+        [
+          0.15521628498727735,
+          0.4311023622047244
+        ],
+        [
+          0.11577608142493638,
+          0.25984251968503935
+        ],
+        [
+          0.11577608142493638,
+          0.18110236220472442
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.ghcc.kr/mobile/images/course/west06.jpg",
+        "source_page": "https://www.ghcc.kr/mobile/course/course_west06.html",
+        "width": 786,
+        "height": 508,
+        "display": {
+          "x": -34.53634886841084,
+          "y": 86.82552853292009,
+          "width": 776.1918745708249,
+          "height": 501.66090621116933,
+          "transform": "rotate(40.01485511054205 200 350)"
+        },
+        "asset": "./prepared-course-images/giheung-west-06.jpg"
+      },
+      "sourceNumber": 6,
+      "sourceCourse": "서코스",
+      "ref": "6",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          159.35589,
+          486.72285
+        ],
+        [
+          117.44185,
+          399.95834
+        ],
+        [
+          116.18276,
+          329.27378
+        ],
+        [
+          142.80568,
+          240.73658
+        ],
+        [
+          174.60149,
+          155.25283
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 7,
+      "par": 4,
+      "distance": 391,
+      "distanceAssumed": false,
+      "distanceSource": "기흥CC 공식 모바일 홀 페이지 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.4491094147582697,
+          0.8622047244094488
+        ],
+        [
+          0.3638676844783715,
+          0.6909448818897638
+        ],
+        [
+          0.2913486005089059,
+          0.5492125984251969
+        ],
+        [
+          0.2099236641221374,
+          0.39960629921259844
+        ],
+        [
+          0.13104325699745548,
+          0.29133858267716534
+        ],
+        [
+          0.07633587786259542,
+          0.17519685039370078
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.ghcc.kr/mobile/images/course/west07.jpg",
+        "source_page": "https://www.ghcc.kr/mobile/course/course_west07.html",
+        "width": 786,
+        "height": 508,
+        "display": {
+          "x": -3.923183331902493,
+          "y": 89.78809293967896,
+          "width": 776.1918745708249,
+          "height": 501.66090621116933,
+          "transform": "rotate(40.01485511054205 200 350)"
+        },
+        "asset": "./prepared-course-images/giheung-west-07.jpg"
+      },
+      "sourceNumber": 7,
+      "sourceCourse": "서코스",
+      "ref": "7",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          204.56826,
+          466.6576
+        ],
+        [
+          207.17529,
+          376.00963
+        ],
+        [
+          207.02793,
+          277.89164
+        ],
+        [
+          195.05899,
+          196.92632
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 8,
+      "par": 4,
+      "distance": 310,
+      "distanceAssumed": false,
+      "distanceSource": "기흥CC 공식 모바일 홀 페이지 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.45038167938931295,
+          0.8622047244094488
+        ],
+        [
+          0.37150127226463103,
+          0.7381889763779528
+        ],
+        [
+          0.2951653944020356,
+          0.6122047244094488
+        ],
+        [
+          0.2506361323155216,
+          0.4625984251968504
+        ],
+        [
+          0.18193384223918574,
+          0.30708661417322836
+        ],
+        [
+          0.12086513994910941,
+          0.18700787401574803
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.ghcc.kr/mobile/images/course/west08.jpg",
+        "source_page": "https://www.ghcc.kr/mobile/course/course_west08.html",
+        "width": 786,
+        "height": 508,
+        "display": {
+          "x": -35.04993963921319,
+          "y": 70.97635227683605,
+          "width": 822.9365369996506,
+          "height": 531.8724692058811,
+          "transform": "rotate(37.05652818940958 200 350)"
+        },
+        "asset": "./prepared-course-images/giheung-west-08.jpg"
+      },
+      "sourceNumber": 8,
+      "sourceCourse": "서코스",
+      "ref": "8",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          187.9443,
+          483.24365
+        ],
+        [
+          178.1906,
+          391.9136
+        ],
+        [
+          196.89655,
+          306.33005
+        ],
+        [
+          201.61993,
+          206.25237
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 9,
+      "par": 4,
+      "distance": 355,
+      "distanceAssumed": false,
+      "distanceSource": "기흥CC 공식 모바일 홀 페이지 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.4707379134860051,
+          0.8622047244094488
+        ],
+        [
+          0.37786259541984735,
+          0.7381889763779528
+        ],
+        [
+          0.2951653944020356,
+          0.6023622047244095
+        ],
+        [
+          0.227735368956743,
+          0.4566929133858268
+        ],
+        [
+          0.17557251908396945,
+          0.3090551181102362
+        ],
+        [
+          0.11704834605597965,
+          0.17913385826771652
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.ghcc.kr/mobile/images/course/west09.jpg",
+        "source_page": "https://www.ghcc.kr/mobile/course/course_west09.html",
+        "width": 786,
+        "height": 508,
+        "display": {
+          "x": -33.7915701594745,
+          "y": 82.30359174380516,
+          "width": 795.4985893737963,
+          "height": 514.1390374069829,
+          "transform": "rotate(38.70005818039003 200 350)"
+        },
+        "asset": "./prepared-course-images/giheung-west-09.jpg"
+      },
+      "sourceNumber": 9,
+      "sourceCourse": "서코스",
+      "ref": "9",
+      "name": "서코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          182.2065,
+          479.0444
+        ],
+        [
+          174.52869,
+          383.41203
+        ],
+        [
+          179.4932,
+          291.42395
+        ],
+        [
+          194.56885,
+          206.2396
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    }
+  ],
+  "sourceUrl": "https://www.ghcc.kr/mobile/course/course_west01.html",
+  "geometrySource": "prepared-guide",
+  "preparedAt": "2026-11-22",
+  "notice": "공개 홀 안내도 위 근사 경로를 이용한 가상 재생입니다."
+}

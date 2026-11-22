@@ -1,0 +1,588 @@
+{
+  "revision": 1,
+  "id": "rivera-lake",
+  "clubName": "리베라CC",
+  "groupName": "레이크",
+  "name": "리베라CC · 레이크",
+  "tee": "WHITE · 공개 안내도",
+  "holes": [
+    {
+      "number": 1,
+      "par": 4,
+      "distance": 351,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.2271880819366853,
+          0.6286072772898369
+        ],
+        [
+          0.21415270018621974,
+          0.4767879548306148
+        ],
+        [
+          0.24953445065176907,
+          0.3299874529485571
+        ],
+        [
+          0.24953445065176907,
+          0.09786700125470514
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/lake-01.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 67.60645517562995,
+          "y": 42.14513070959731,
+          "width": 571.0468559894516,
+          "height": 847.5313672692606,
+          "transform": "rotate(-1.62497635752476 200 350)"
+        }
+      },
+      "sourceNumber": 1,
+      "sourceCourse": "레이크",
+      "ref": "1",
+      "name": "레이크",
+      "route": [
+        [
+          203.72041,
+          574.89446
+        ],
+        [
+          192.6308,
+          446.48565
+        ],
+        [
+          209.29914,
+          321.54471
+        ],
+        [
+          203.72041,
+          124.89446
+        ]
+      ]
+    },
+    {
+      "number": 2,
+      "par": 3,
+      "distance": 134,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.3947858472998138,
+          0.4742785445420326
+        ],
+        [
+          0.27932960893854747,
+          0.28858218318695106
+        ],
+        [
+          0.1527001862197393,
+          0.1329987452948557
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/lake-02.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": -19.425012623405053,
+          "y": -11.230292890231453,
+          "width": 801.573005297745,
+          "height": 1189.6716670806381,
+          "transform": "rotate(25.545056044001836 200 350)"
+        }
+      },
+      "sourceNumber": 2,
+      "sourceCourse": "레이크",
+      "ref": "2",
+      "name": "레이크",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          211.76445,
+          335.76977
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 3,
+      "par": 4,
+      "distance": 289,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.19366852886405958,
+          0.5834378920953576
+        ],
+        [
+          0.22905027932960895,
+          0.4203262233375157
+        ],
+        [
+          0.3091247672253259,
+          0.2383939774153074
+        ],
+        [
+          0.27932960893854747,
+          0.09786700125470514
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/lake-03.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 44.1205590677755,
+          "y": 36.509124347415195,
+          "width": 620.0537761526264,
+          "height": 920.2660327628364,
+          "transform": "rotate(-6.778547048556628 200 350)"
+        }
+      },
+      "sourceNumber": 3,
+      "sourceCourse": "레이크",
+      "ref": "3",
+      "name": "레이크",
+      "route": [
+        [
+          190.82727,
+          576.0903
+        ],
+        [
+          194.89515,
+          424.44399
+        ],
+        [
+          224.43691,
+          252.32791
+        ],
+        [
+          190.82727,
+          126.0903
+        ]
+      ]
+    },
+    {
+      "number": 4,
+      "par": 5,
+      "distance": 498,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.18435754189944134,
+          0.657465495608532
+        ],
+        [
+          0.1601489757914339,
+          0.5018820577164367
+        ],
+        [
+          0.2271880819366853,
+          0.37766624843161856
+        ],
+        [
+          0.41154562383612664,
+          0.26348808030112925
+        ],
+        [
+          0.5288640595903166,
+          0.18569636135508155
+        ],
+        [
+          0.6722532588454376,
+          0.09284818067754078
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/lake-04.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 6.852077185693787,
+          "y": 91.60523972493263,
+          "width": 464.07353266793035,
+          "height": 688.7646285592932,
+          "transform": "rotate(-30.20891510128882 200 350)"
+        }
+      },
+      "sourceNumber": 4,
+      "sourceCourse": "레이크",
+      "ref": "4",
+      "name": "레이크",
+      "route": [
+        [
+          204.85443,
+          572.17364
+        ],
+        [
+          141.22736,
+          485.21874
+        ],
+        [
+          125.06583,
+          395.62834
+        ],
+        [
+          159.43355,
+          284.61869
+        ],
+        [
+          179.52509,
+          210.92095
+        ],
+        [
+          204.85443,
+          122.17364
+        ]
+      ]
+    },
+    {
+      "number": 5,
+      "par": 4,
+      "distance": 328,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.30353817504655495,
+          0.6737766624843162
+        ],
+        [
+          0.2905027932960894,
+          0.49435382685069007
+        ],
+        [
+          0.31843575418994413,
+          0.3111668757841907
+        ],
+        [
+          0.21973929236499068,
+          0.11543287327478043
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/lake-05.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 54.617851395995615,
+          "y": 33.5800295089316,
+          "width": 540.2782961961963,
+          "height": 801.8655531999411,
+          "transform": "rotate(5.774325902663275 200 350)"
+        }
+      },
+      "sourceNumber": 5,
+      "sourceCourse": "레이크",
+      "ref": "5",
+      "name": "레이크",
+      "route": [
+        [
+          195.996,
+          574.5951
+        ],
+        [
+          203.46413,
+          430.74356
+        ],
+        [
+          233.25794,
+          286.11597
+        ],
+        [
+          195.996,
+          124.5951
+        ]
+      ]
+    },
+    {
+      "number": 6,
+      "par": 4,
+      "distance": 334,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.25139664804469275,
+          0.6461731493099122
+        ],
+        [
+          0.25884543761638734,
+          0.451693851944793
+        ],
+        [
+          0.260707635009311,
+          0.3161856963613551
+        ],
+        [
+          0.2811918063314711,
+          0.09284818067754078
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/lake-06.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 54.17757586572941,
+          "y": 49.687385261939255,
+          "width": 547.5988934272958,
+          "height": 812.7305736714242,
+          "transform": "rotate(-2.0778470535700913 200 350)"
+        }
+      },
+      "sourceNumber": 6,
+      "sourceCourse": "레이크",
+      "ref": "6",
+      "name": "레이크",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          198.34546,
+          416.89676
+        ],
+        [
+          195.37145,
+          306.80058
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 7,
+      "par": 3,
+      "distance": 154,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.26629422718808193,
+          0.5545796737766625
+        ],
+        [
+          0.24581005586592178,
+          0.3324968632371393
+        ],
+        [
+          0.22532588454376165,
+          0.11794228356336262
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/lake-07.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 29.650411986424075,
+          "y": 4.1387152451640645,
+          "width": 693.013096691593,
+          "height": 1028.5501639910606,
+          "transform": "rotate(3.6173331368821606 200 350)"
+        }
+      },
+      "sourceNumber": 7,
+      "sourceCourse": "레이크",
+      "ref": "7",
+      "name": "레이크",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          200.24427,
+          346.13613
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 8,
+      "par": 5,
+      "distance": 448,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.24022346368715083,
+          0.6562107904642409
+        ],
+        [
+          0.31471135940409684,
+          0.5395232120451694
+        ],
+        [
+          0.33891992551210426,
+          0.424090338770389
+        ],
+        [
+          0.2886405959031657,
+          0.2823086574654956
+        ],
+        [
+          0.25884543761638734,
+          0.17314930991217065
+        ],
+        [
+          0.19553072625698323,
+          0.11417816813048934
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/lake-08.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 50.75097845314929,
+          "y": 30.70069954785248,
+          "width": 558.5137600742776,
+          "height": 828.9301057340767,
+          "transform": "rotate(3.1798301198642362 200 350)"
+        }
+      },
+      "sourceNumber": 8,
+      "sourceCourse": "레이크",
+      "ref": "8",
+      "name": "레이크",
+      "route": [
+        [
+          172.48077,
+          573.47115
+        ],
+        [
+          219.38462,
+          479.20192
+        ],
+        [
+          238.19231,
+          384.41346
+        ],
+        [
+          216.67308,
+          265.50962
+        ],
+        [
+          205.07692,
+          174.24038
+        ],
+        [
+          172.48077,
+          123.47115
+        ]
+      ]
+    },
+    {
+      "number": 9,
+      "par": 4,
+      "distance": 286,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.2849162011173184,
+          0.6838143036386449
+        ],
+        [
+          0.3016759776536313,
+          0.4780426599749059
+        ],
+        [
+          0.2905027932960894,
+          0.26223337515683814
+        ],
+        [
+          0.25884543761638734,
+          0.09786700125470514
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/lake-09.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 55.04370933973357,
+          "y": 49.97418909851831,
+          "width": 517.2194557113826,
+          "height": 767.6422834301152,
+          "transform": "rotate(1.7171322137237486 200 350)"
+        }
+      },
+      "sourceNumber": 9,
+      "sourceCourse": "레이크",
+      "ref": "9",
+      "name": "레이크",
+      "route": [
+        [
+          195.66771,
+          574.87012
+        ],
+        [
+          209.06556,
+          417.24179
+        ],
+        [
+          208.25332,
+          251.47869
+        ],
+        [
+          195.66771,
+          124.87012
+        ]
+      ]
+    }
+  ],
+  "sourceUrl": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+  "geometrySource": "prepared-guide",
+  "preparedAt": "2026-11-22",
+  "notice": "공개 홀 안내도 위 근사 경로를 이용한 가상 재생입니다."
+}

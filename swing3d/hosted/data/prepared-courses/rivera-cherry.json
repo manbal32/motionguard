@@ -1,0 +1,596 @@
+{
+  "revision": 1,
+  "id": "rivera-cherry",
+  "clubName": "리베라CC",
+  "groupName": "체리힐",
+  "name": "리베라CC · 체리힐",
+  "tee": "WHITE · 공개 안내도",
+  "holes": [
+    {
+      "number": 1,
+      "par": 4,
+      "distance": 348,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.1824953445065177,
+          0.6286072772898369
+        ],
+        [
+          0.19366852886405958,
+          0.47051442910915936
+        ],
+        [
+          0.26629422718808193,
+          0.33500627352572143
+        ],
+        [
+          0.31471135940409684,
+          0.19698870765370138
+        ],
+        [
+          0.3687150837988827,
+          0.09661229611041405
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/cherry-01.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 47.118975324185556,
+          "y": 51.46880992357859,
+          "width": 554.7102043980565,
+          "height": 823.28497747719,
+          "transform": "rotate(-13.270643876403673 200 350)"
+        }
+      },
+      "sourceNumber": 1,
+      "sourceCourse": "체리힐",
+      "ref": "1",
+      "name": "체리힐",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          176.15505,
+          446.89739
+        ],
+        [
+          189.75634,
+          329.0669
+        ],
+        [
+          189.81325,
+          212.30819
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 2,
+      "par": 4,
+      "distance": 320,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.2569832402234637,
+          0.6398996235884568
+        ],
+        [
+          0.21601489757914338,
+          0.4767879548306148
+        ],
+        [
+          0.23277467411545624,
+          0.3437892095357591
+        ],
+        [
+          0.2644320297951583,
+          0.09284818067754078
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/cherry-02.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 66.86340096783476,
+          "y": 48.63653552409107,
+          "width": 554.2197959711065,
+          "height": 822.5571273537649,
+          "transform": "rotate(-0.5256346064576133 200 350)"
+        }
+      },
+      "sourceNumber": 2,
+      "sourceCourse": "체리힐",
+      "ref": "2",
+      "name": "체리힐",
+      "route": [
+        [
+          211.35226,
+          574.89585
+        ],
+        [
+          187.41689,
+          440.94113
+        ],
+        [
+          195.70148,
+          331.46145
+        ],
+        [
+          211.35226,
+          124.89585
+        ]
+      ]
+    },
+    {
+      "number": 3,
+      "par": 3,
+      "distance": 138,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.2532588454376164,
+          0.533249686323714
+        ],
+        [
+          0.2532588454376164,
+          0.35131744040150564
+        ],
+        [
+          0.25884543761638734,
+          0.14178168130489335
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/cherry-03.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 1.6918594469808568,
+          "y": -37.9628349728157,
+          "width": 774.4834289234276,
+          "height": 1149.4660946964093,
+          "transform": "rotate(-0.5509039792185645 200 350)"
+        }
+      },
+      "sourceNumber": 3,
+      "sourceCourse": "체리힐",
+      "ref": "3",
+      "name": "체리힐",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          197.98928,
+          365.88472
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 4,
+      "par": 5,
+      "distance": 467,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.2681564245810056,
+          0.6524466750313677
+        ],
+        [
+          0.27001862197392923,
+          0.5018820577164367
+        ],
+        [
+          0.29236499068901306,
+          0.48055207026348806
+        ],
+        [
+          0.297951582867784,
+          0.36386449184441655
+        ],
+        [
+          0.3370577281191806,
+          0.2534504391468005
+        ],
+        [
+          0.25512104283054005,
+          0.1028858218318695
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/cherry-04.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 36.66469349844951,
+          "y": 40.79291033354275,
+          "width": 551.6418842222178,
+          "height": 818.7310646650046,
+          "transform": "rotate(0.9156080256587749 200 350)"
+        }
+      },
+      "sourceNumber": 4,
+      "sourceCourse": "체리힐",
+      "ref": "4",
+      "name": "체리힐",
+      "route": [
+        [
+          180.998,
+          574.69632
+        ],
+        [
+          183.99499,
+          451.45654
+        ],
+        [
+          196.59967,
+          434.19223
+        ],
+        [
+          201.2077,
+          338.71793
+        ],
+        [
+          224.22209,
+          248.67478
+        ],
+        [
+          180.998,
+          124.69632
+        ]
+      ]
+    },
+    {
+      "number": 5,
+      "par": 4,
+      "distance": 272,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.3333333333333333,
+          0.6260978670012547
+        ],
+        [
+          0.3165735567970205,
+          0.5056461731493099
+        ],
+        [
+          0.26256983240223464,
+          0.27603513174404015
+        ],
+        [
+          0.2532588454376164,
+          0.11166875784190715
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/cherry-05.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 28.077085383883627,
+          "y": 29.077226049916078,
+          "width": 586.1752707863777,
+          "height": 869.9845266606015,
+          "transform": "rotate(5.987181766251976 200 350)"
+        }
+      },
+      "sourceNumber": 5,
+      "sourceCourse": "체리힐",
+      "ref": "5",
+      "name": "체리힐",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          201.15976,
+          469.75578
+        ],
+        [
+          190.51274,
+          267.78548
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 6,
+      "par": 4,
+      "distance": 317,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.2718808193668529,
+          0.671267252195734
+        ],
+        [
+          0.28305400372439476,
+          0.5018820577164367
+        ],
+        [
+          0.297951582867784,
+          0.32747804265997493
+        ],
+        [
+          0.23277467411545624,
+          0.10915934755332497
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/cherry-06.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 57.020834695388686,
+          "y": 37.95424273870793,
+          "width": 538.8056966215879,
+          "height": 799.6799631422823,
+          "transform": "rotate(2.6837751594689934 200 350)"
+        }
+      },
+      "sourceNumber": 6,
+      "sourceCourse": "체리힐",
+      "ref": "6",
+      "name": "체리힐",
+      "route": [
+        [
+          192.98417,
+          574.67113
+        ],
+        [
+          205.34018,
+          439.64764
+        ],
+        [
+          219.88864,
+          300.70907
+        ],
+        [
+          192.98417,
+          124.67113
+        ]
+      ]
+    },
+    {
+      "number": 7,
+      "par": 4,
+      "distance": 329,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.22160148975791433,
+          0.616060225846926
+        ],
+        [
+          0.21042830540037244,
+          0.451693851944793
+        ],
+        [
+          0.26256983240223464,
+          0.3161856963613551
+        ],
+        [
+          0.25139664804469275,
+          0.10414052697616061
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/cherry-07.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 60.03405396003026,
+          "y": 33.69900383093449,
+          "width": 591.8245119957776,
+          "height": 878.3689684555582,
+          "transform": "rotate(-2.245742565895073 200 350)"
+        }
+      },
+      "sourceNumber": 7,
+      "sourceCourse": "체리힐",
+      "ref": "7",
+      "name": "체리힐",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          187.73512,
+          430.99568
+        ],
+        [
+          213.90595,
+          310.85173
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 8,
+      "par": 3,
+      "distance": 127,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.2811918063314711,
+          0.5570890840652447
+        ],
+        [
+          0.260707635009311,
+          0.35131744040150564
+        ],
+        [
+          0.2346368715083799,
+          0.13801756587202008
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/cherry-08.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 13.918741911169917,
+          "y": -22.162516177660223,
+          "width": 721.4847335285325,
+          "height": 1070.806950879405,
+          "transform": "rotate(4.280623998102265 200 350)"
+        }
+      },
+      "sourceNumber": 8,
+      "sourceCourse": "체리힐",
+      "ref": "8",
+      "name": "체리힐",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          201.70885,
+          354.16982
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 9,
+      "par": 5,
+      "distance": 473,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.24208566108007448,
+          0.6838143036386449
+        ],
+        [
+          0.260707635009311,
+          0.5144291091593476
+        ],
+        [
+          0.2271880819366853,
+          0.44040150564617314
+        ],
+        [
+          0.21787709497206703,
+          0.3136762860727729
+        ],
+        [
+          0.2085661080074488,
+          0.17440401505646172
+        ],
+        [
+          0.21601489757914338,
+          0.07653701380175659
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/cherry-09.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 82.90021762198263,
+          "y": 68.40290428143442,
+          "width": 499.0681201348836,
+          "height": 740.7025917085701,
+          "transform": "rotate(1.6568539475225033 200 350)"
+        }
+      },
+      "sourceNumber": 9,
+      "sourceCourse": "체리힐",
+      "ref": "9",
+      "name": "체리힐",
+      "route": [
+        [
+          197.21308,
+          574.91939
+        ],
+        [
+          210.13043,
+          449.7765
+        ],
+        [
+          194.99428,
+          394.48331
+        ],
+        [
+          193.0634,
+          300.5225
+        ],
+        [
+          191.40122,
+          197.27194
+        ],
+        [
+          197.21308,
+          124.91939
+        ]
+      ]
+    }
+  ],
+  "sourceUrl": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+  "geometrySource": "prepared-guide",
+  "preparedAt": "2026-11-22",
+  "notice": "공개 홀 안내도 위 근사 경로를 이용한 가상 재생입니다."
+}

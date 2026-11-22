@@ -1,0 +1,628 @@
+{
+  "revision": 1,
+  "id": "korea-lake",
+  "clubName": "코리아CC",
+  "groupName": "레이크",
+  "name": "코리아CC · 레이크",
+  "tee": "WHITE · m",
+  "holes": [
+    {
+      "number": 1,
+      "par": 5,
+      "distance": 490,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.92,
+          0.82
+        ],
+        [
+          0.75,
+          0.69
+        ],
+        [
+          0.57,
+          0.53
+        ],
+        [
+          0.36,
+          0.36
+        ],
+        [
+          0.11,
+          0.35
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/la_01.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/lakeCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -73.57789298860177,
+          "y": 186.03902797955146,
+          "width": 531.2192096866054,
+          "height": 280.2751658469206,
+          "transform": "rotate(72.97842171840527 200 350)"
+        }
+      },
+      "sourceNumber": 1,
+      "sourceCourse": "레이크",
+      "ref": "1",
+      "name": "레이크",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          208.40388,
+          477.98277
+        ],
+        [
+          223.29263,
+          373.42469
+        ],
+        [
+          236.19622,
+          252.80769
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 2,
+      "par": 4,
+      "distance": 390,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.92,
+          0.82
+        ],
+        [
+          0.72,
+          0.62
+        ],
+        [
+          0.49,
+          0.37
+        ],
+        [
+          0.29,
+          0.29
+        ],
+        [
+          0.12,
+          0.3
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/la_02.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/lakeCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -76.68174889042137,
+          "y": 194.1951406967932,
+          "width": 532.0802863277333,
+          "height": 280.7294762219943,
+          "transform": "rotate(71.07086236118491 200 350)"
+        }
+      },
+      "sourceNumber": 2,
+      "sourceCourse": "레이크",
+      "ref": "2",
+      "name": "레이크",
+      "route": [
+        [
+          198.67226,
+          575.45534
+        ],
+        [
+          217.2606,
+          456.58057
+        ],
+        [
+          243.94816,
+          318.05321
+        ],
+        [
+          230.67077,
+          210.10662
+        ],
+        [
+          198.67226,
+          125.45534
+        ]
+      ]
+    },
+    {
+      "number": 3,
+      "par": 3,
+      "distance": 150,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.76,
+          0.72
+        ],
+        [
+          0.58,
+          0.57
+        ],
+        [
+          0.4,
+          0.49
+        ],
+        [
+          0.23,
+          0.51
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/la_03.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/lakeCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -211.38971879701376,
+          "y": 84.71392366600202,
+          "width": 831.0903410040683,
+          "height": 438.4893823702445,
+          "transform": "rotate(78.19225445373351 200 350)"
+        }
+      },
+      "sourceNumber": 3,
+      "sourceCourse": "레이크",
+      "ref": "3",
+      "name": "레이크",
+      "route": [
+        [
+          195.70789,
+          575.89727
+        ],
+        [
+          229.47788,
+          416.0074
+        ],
+        [
+          233.2031,
+          262.39845
+        ],
+        [
+          195.70789,
+          125.89727
+        ]
+      ]
+    },
+    {
+      "number": 4,
+      "par": 4,
+      "distance": 345,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.91,
+          0.79
+        ],
+        [
+          0.78,
+          0.54
+        ],
+        [
+          0.55,
+          0.4
+        ],
+        [
+          0.3,
+          0.33
+        ],
+        [
+          0.16,
+          0.31
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/la_04.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/lakeCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -104.1294717062371,
+          "y": 185.04014664635037,
+          "width": 568.4663022546488,
+          "height": 299.92700609754473,
+          "transform": "rotate(71.34178370087346 200 350)"
+        }
+      },
+      "sourceNumber": 4,
+      "sourceCourse": "레이크",
+      "ref": "4",
+      "name": "레이크",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          247.39855,
+          480.99499
+        ],
+        [
+          245.35257,
+          343.68585
+        ],
+        [
+          219.77781,
+          202.32165
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 5,
+      "par": 4,
+      "distance": 315,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.94,
+          0.79
+        ],
+        [
+          0.76,
+          0.59
+        ],
+        [
+          0.62,
+          0.37
+        ],
+        [
+          0.47,
+          0.25
+        ],
+        [
+          0.17,
+          0.25
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/la_05.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/lakeCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -104.19507225433836,
+          "y": 199.62578200172428,
+          "width": 548.0992292870961,
+          "height": 289.1811884582225,
+          "transform": "rotate(69.6950042979463 200 350)"
+        }
+      },
+      "sourceNumber": 5,
+      "sourceCourse": "레이크",
+      "ref": "5",
+      "name": "레이크",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          220.00622,
+          462.40269
+        ],
+        [
+          253.04466,
+          368.35994
+        ],
+        [
+          257.06,
+          279.21189
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 6,
+      "par": 4,
+      "distance": 335,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.92,
+          0.76
+        ],
+        [
+          0.72,
+          0.56
+        ],
+        [
+          0.49,
+          0.38
+        ],
+        [
+          0.28,
+          0.27
+        ],
+        [
+          0.13,
+          0.29
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/la_06.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/lakeCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -85.32445787217927,
+          "y": 202.3281304217491,
+          "width": 543.47515785177,
+          "height": 286.7414943267007,
+          "transform": "rotate(72.5732926615896 200 350)"
+        }
+      },
+      "sourceNumber": 6,
+      "sourceCourse": "레이크",
+      "ref": "6",
+      "name": "레이크",
+      "route": [
+        [
+          197.2642,
+          575.85875
+        ],
+        [
+          219.42766,
+          454.97774
+        ],
+        [
+          231.23664,
+          320.25833
+        ],
+        [
+          227.15025,
+          201.92077
+        ],
+        [
+          197.2642,
+          125.85875
+        ]
+      ]
+    },
+    {
+      "number": 7,
+      "par": 5,
+      "distance": 470,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.9,
+          0.82
+        ],
+        [
+          0.74,
+          0.58
+        ],
+        [
+          0.55,
+          0.46
+        ],
+        [
+          0.35,
+          0.28
+        ],
+        [
+          0.12,
+          0.25
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/la_07.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/lakeCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -74.53208610387208,
+          "y": 198.0545978390575,
+          "width": 538.298208046808,
+          "height": 284.0100974970889,
+          "transform": "rotate(68.91539457865447 200 350)"
+        }
+      },
+      "sourceNumber": 7,
+      "sourceCourse": "레이크",
+      "ref": "7",
+      "name": "레이크",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          232.61485,
+          470.11735
+        ],
+        [
+          227.6207,
+          362.42751
+        ],
+        [
+          236.58979,
+          243.58478
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 8,
+      "par": 3,
+      "distance": 125,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.78,
+          0.48
+        ],
+        [
+          0.66,
+          0.46
+        ],
+        [
+          0.56,
+          0.46
+        ],
+        [
+          0.53,
+          0.47
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/la_08.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/lakeCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -848.0,
+          "y": -46.76073619631893,
+          "width": 1600.0,
+          "height": 844.1717791411043,
+          "transform": "rotate(88.7909924692554 200 350)"
+        }
+      },
+      "sourceNumber": 8,
+      "sourceCourse": "레이크",
+      "ref": "8",
+      "name": "레이크",
+      "route": [
+        [
+          195.78008,
+          550.13359
+        ],
+        [
+          208.60864,
+          357.8201
+        ],
+        [
+          205.2327,
+          197.85572
+        ],
+        [
+          195.78008,
+          150.04452
+        ]
+      ]
+    },
+    {
+      "number": 9,
+      "par": 4,
+      "distance": 320,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.91,
+          0.78
+        ],
+        [
+          0.73,
+          0.59
+        ],
+        [
+          0.53,
+          0.4
+        ],
+        [
+          0.32,
+          0.24
+        ],
+        [
+          0.15,
+          0.27
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/la_09.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/lakeCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -95.8219512684575,
+          "y": 199.8118904660893,
+          "width": 558.1546250348255,
+          "height": 294.48648928217784,
+          "transform": "rotate(70.50337366085694 200 350)"
+        }
+      },
+      "sourceNumber": 9,
+      "sourceCourse": "레이크",
+      "ref": "9",
+      "name": "레이크",
+      "route": [
+        [
+          195.83599,
+          576.47428
+        ],
+        [
+          215.04889,
+          463.09296
+        ],
+        [
+          230.53611,
+          339.18862
+        ],
+        [
+          235.83244,
+          212.97134
+        ],
+        [
+          195.83599,
+          126.47428
+        ]
+      ]
+    }
+  ],
+  "sourceUrl": "https://www.gakorea.com/korea/course/lakeCouse.asp",
+  "geometrySource": "prepared-guide",
+  "preparedAt": "2026-11-22",
+  "notice": "공개 홀 안내도 위 근사 경로를 이용한 가상 재생입니다."
+}

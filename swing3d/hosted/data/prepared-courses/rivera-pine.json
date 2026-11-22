@@ -1,0 +1,580 @@
+{
+  "revision": 1,
+  "id": "rivera-pine",
+  "clubName": "리베라CC",
+  "groupName": "파인힐",
+  "name": "리베라CC · 파인힐",
+  "tee": "WHITE · 공개 안내도",
+  "holes": [
+    {
+      "number": 1,
+      "par": 5,
+      "distance": 472,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.2737430167597765,
+          0.6951066499372648
+        ],
+        [
+          0.2942271880819367,
+          0.5520702634880803
+        ],
+        [
+          0.31098696461824954,
+          0.45545796737766625
+        ],
+        [
+          0.2942271880819367,
+          0.3199498117942284
+        ],
+        [
+          0.2774674115456238,
+          0.21455457967377667
+        ],
+        [
+          0.2811918063314711,
+          0.09410288582183186
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/pine-01.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 52.510361690094186,
+          "y": 54.5510111562715,
+          "width": 504.4709284867479,
+          "height": 748.7212849235345,
+          "transform": "rotate(-0.47845050299858977 200 350)"
+        }
+      },
+      "sourceNumber": 1,
+      "sourceCourse": "파인힐",
+      "ref": "1",
+      "name": "파인힐",
+      "route": [
+        [
+          192.48487,
+          575.06276
+        ],
+        [
+          201.92389,
+          467.88581
+        ],
+        [
+          209.77438,
+          395.48205
+        ],
+        [
+          200.47264,
+          294.09835
+        ],
+        [
+          191.35917,
+          215.26005
+        ],
+        [
+          192.48487,
+          125.06276
+        ]
+      ]
+    },
+    {
+      "number": 2,
+      "par": 4,
+      "distance": 314,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.260707635009311,
+          0.6511919698870765
+        ],
+        [
+          0.22532588454376165,
+          0.4893350062735257
+        ],
+        [
+          0.24022346368715083,
+          0.3324968632371393
+        ],
+        [
+          0.25884543761638734,
+          0.11166875784190715
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/pine-02.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 63.430601863746574,
+          "y": 31.861325414398152,
+          "width": 561.975224514698,
+          "height": 834.0675119892259,
+          "transform": "rotate(0.133245758655684 200 350)"
+        }
+      },
+      "sourceNumber": 2,
+      "sourceCourse": "파인힐",
+      "ref": "2",
+      "name": "파인힐",
+      "route": [
+        [
+          209.41855,
+          575.0219
+        ],
+        [
+          189.84889,
+          439.97639
+        ],
+        [
+          198.52516,
+          309.18262
+        ],
+        [
+          209.41855,
+          125.0219
+        ]
+      ]
+    },
+    {
+      "number": 3,
+      "par": 3,
+      "distance": 144,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.2532588454376164,
+          0.5558343789209536
+        ],
+        [
+          0.25884543761638734,
+          0.35131744040150564
+        ],
+        [
+          0.2774674115456238,
+          0.164366373902133
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/pine-03.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": -5.350667666817515,
+          "y": -63.58344996755534,
+          "width": 773.8477792075861,
+          "height": 1148.522681617218,
+          "transform": "rotate(-2.38594403038881 200 350)"
+        }
+      },
+      "sourceNumber": 3,
+      "sourceCourse": "파인힐",
+      "ref": "3",
+      "name": "파인힐",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          194.54073,
+          340.13132
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 4,
+      "par": 4,
+      "distance": 344,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.2271880819366853,
+          0.5708908406524467
+        ],
+        [
+          0.24208566108007448,
+          0.38268506900878296
+        ],
+        [
+          0.25884543761638734,
+          0.17063989962358847
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/pine-04.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 16.169943396282406,
+          "y": -66.25886380382025,
+          "width": 756.4501179785161,
+          "height": 1122.7015717483748,
+          "transform": "rotate(-3.0504944941414025 200 350)"
+        }
+      },
+      "sourceNumber": 4,
+      "sourceCourse": "파인힐",
+      "ref": "4",
+      "name": "파인힐",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          200.00882,
+          363.40078
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 5,
+      "par": 4,
+      "distance": 358,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.48417132216014896,
+          0.5658720200752823
+        ],
+        [
+          0.45623836126629425,
+          0.3877038895859473
+        ],
+        [
+          0.40782122905027934,
+          0.23588456712672523
+        ],
+        [
+          0.14711359404096835,
+          0.11292346298619825
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/pine-05.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 11.122945292644829,
+          "y": 48.576735703011366,
+          "width": 598.3892529666651,
+          "height": 888.1121687419592,
+          "transform": "rotate(26.62850162679117 200 350)"
+        }
+      },
+      "sourceNumber": 5,
+      "sourceCourse": "파인힐",
+      "ref": "5",
+      "name": "파인힐",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          255.97889,
+          426.05867
+        ],
+        [
+          290.51213,
+          292.5421
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 6,
+      "par": 3,
+      "distance": 134,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.2569832402234637,
+          0.5031367628607277
+        ],
+        [
+          0.2383612662942272,
+          0.32622333751568383
+        ],
+        [
+          0.2271880819366853,
+          0.178168130489335
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/pine-06.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": -25.43896618649697,
+          "y": -120.82061015103017,
+          "width": 931.2363449396066,
+          "height": 1382.1142773126005,
+          "transform": "rotate(3.5350153103959467 200 350)"
+        }
+      },
+      "sourceNumber": 6,
+      "sourceCourse": "파인힐",
+      "ref": "6",
+      "name": "파인힐",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          197.76794,
+          329.88142
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 7,
+      "par": 4,
+      "distance": 331,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.25884543761638734,
+          0.685069008782936
+        ],
+        [
+          0.22160148975791433,
+          0.479297365119197
+        ],
+        [
+          0.2271880819366853,
+          0.3099121706398996
+        ],
+        [
+          0.23649906890130354,
+          0.12672521957340024
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/pine-07.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 69.59796611637057,
+          "y": 22.98404681120843,
+          "width": 542.8363736085969,
+          "height": 805.6621783352919,
+          "transform": "rotate(1.5446803803251437 200 350)"
+        }
+      },
+      "sourceNumber": 7,
+      "sourceCourse": "파인힐",
+      "ref": "7",
+      "name": "파인힐",
+      "route": [
+        [
+          204.042,
+          575.109
+        ],
+        [
+          188.30089,
+          408.84182
+        ],
+        [
+          195.01108,
+          272.50592
+        ],
+        [
+          204.042,
+          125.109
+        ]
+      ]
+    },
+    {
+      "number": 8,
+      "par": 4,
+      "distance": 369,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.29608938547486036,
+          0.6624843161856964
+        ],
+        [
+          0.32774674115456237,
+          0.5169385194479298
+        ],
+        [
+          0.31471135940409684,
+          0.38268506900878296
+        ],
+        [
+          0.260707635009311,
+          0.22961104140526975
+        ],
+        [
+          0.2271880819366853,
+          0.10664993726474278
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/pine-08.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 49.1707636055047,
+          "y": 39.73717479924295,
+          "width": 543.5926170727784,
+          "height": 806.784573197401,
+          "transform": "rotate(4.774345180142687 200 350)"
+        }
+      },
+      "sourceNumber": 8,
+      "sourceCourse": "파인힐",
+      "ref": "8",
+      "name": "파인힐",
+      "route": [
+        [
+          191.4255,
+          574.28385
+        ],
+        [
+          218.3479,
+          458.69949
+        ],
+        [
+          220.30167,
+          350.17192
+        ],
+        [
+          201.32642,
+          224.65932
+        ],
+        [
+          191.4255,
+          124.28385
+        ]
+      ]
+    },
+    {
+      "number": 9,
+      "par": 5,
+      "distance": 495,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.22160148975791433,
+          0.6875784190715182
+        ],
+        [
+          0.19366852886405958,
+          0.4592220828105395
+        ],
+        [
+          0.22160148975791433,
+          0.3312421580928482
+        ],
+        [
+          0.2718808193668529,
+          0.2107904642409034
+        ],
+        [
+          0.35567970204841715,
+          0.0903387703889586
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/pine-09.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 62.12507379771773,
+          "y": 60.22896865961019,
+          "width": 501.95820590254624,
+          "height": 744.9919741235184,
+          "transform": "rotate(-8.601384858714894 200 350)"
+        }
+      },
+      "sourceNumber": 9,
+      "sourceCourse": "파인힐",
+      "ref": "9",
+      "name": "파인힐",
+      "route": [
+        [
+          206.93174,
+          573.9515
+        ],
+        [
+          167.6247,
+          407.83828
+        ],
+        [
+          167.2286,
+          311.46962
+        ],
+        [
+          178.76208,
+          218.96876
+        ],
+        [
+          206.93174,
+          123.9515
+        ]
+      ]
+    }
+  ],
+  "sourceUrl": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+  "geometrySource": "prepared-guide",
+  "preparedAt": "2026-11-22",
+  "notice": "공개 홀 안내도 위 근사 경로를 이용한 가상 재생입니다."
+}

@@ -4,14 +4,14 @@
   "name": "코리아CC · 크리크",
   "clubName": "코리아CC",
   "groupName": "크리크",
-  "tee": "거리 미표시 · 홀별 재생 가정",
+  "tee": "WHITE · 공식 표기 m",
   "holes": [
     {
       "number": 1,
       "par": 5,
-      "distance": 480,
-      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
-      "distanceAssumed": true,
+      "distance": 520,
+      "distanceSource": "공식 White 거리(m)",
+      "distanceAssumed": false,
       "sourceRoute": [
         [
           0.820408,
@@ -92,14 +92,15 @@
           200.0,
           125.0
         ]
-      ]
+      ],
+      "distanceSourceUrl": "https://www.gakorea.com/korea/course/creekCouse.asp"
     },
     {
       "number": 2,
       "par": 4,
-      "distance": 330,
-      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
-      "distanceAssumed": true,
+      "distance": 295,
+      "distanceSource": "공식 White 거리(m)",
+      "distanceAssumed": false,
       "sourceRoute": [
         [
           0.811359,
@@ -172,14 +173,15 @@
           200.0,
           125.0
         ]
-      ]
+      ],
+      "distanceSourceUrl": "https://www.gakorea.com/korea/course/creekCouse.asp"
     },
     {
       "number": 3,
       "par": 4,
-      "distance": 330,
-      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
-      "distanceAssumed": true,
+      "distance": 310,
+      "distanceSource": "공식 White 거리(m)",
+      "distanceAssumed": false,
       "sourceRoute": [
         [
           0.828221,
@@ -260,14 +262,15 @@
           200.0,
           125.0
         ]
-      ]
+      ],
+      "distanceSourceUrl": "https://www.gakorea.com/korea/course/creekCouse.asp"
     },
     {
       "number": 4,
       "par": 3,
       "distance": 150,
-      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
-      "distanceAssumed": true,
+      "distanceSource": "공식 White 거리(m)",
+      "distanceAssumed": false,
       "sourceRoute": [
         [
           0.803279,
@@ -308,14 +311,15 @@
           200.0,
           125.0
         ]
-      ]
+      ],
+      "distanceSourceUrl": "https://www.gakorea.com/korea/course/creekCouse.asp"
     },
     {
       "number": 5,
       "par": 4,
-      "distance": 330,
-      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
-      "distanceAssumed": true,
+      "distance": 320,
+      "distanceSource": "공식 White 거리(m)",
+      "distanceAssumed": false,
       "sourceRoute": [
         [
           0.847561,
@@ -396,14 +400,15 @@
           186.74427,
           130.13125
         ]
-      ]
+      ],
+      "distanceSourceUrl": "https://www.gakorea.com/korea/course/creekCouse.asp"
     },
     {
       "number": 6,
       "par": 3,
-      "distance": 150,
-      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
-      "distanceAssumed": true,
+      "distance": 135,
+      "distanceSource": "공식 White 거리(m)",
+      "distanceAssumed": false,
       "sourceRoute": [
         [
           0.720165,
@@ -460,14 +465,15 @@
           200.0,
           125.0
         ]
-      ]
+      ],
+      "distanceSourceUrl": "https://www.gakorea.com/korea/course/creekCouse.asp"
     },
     {
       "number": 7,
       "par": 5,
-      "distance": 480,
-      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
-      "distanceAssumed": true,
+      "distance": 450,
+      "distanceSource": "공식 White 거리(m)",
+      "distanceAssumed": false,
       "sourceRoute": [
         [
           0.831276,
@@ -564,14 +570,15 @@
           200.0,
           125.0
         ]
-      ]
+      ],
+      "distanceSourceUrl": "https://www.gakorea.com/korea/course/creekCouse.asp"
     },
     {
       "number": 8,
       "par": 4,
-      "distance": 330,
-      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
-      "distanceAssumed": true,
+      "distance": 350,
+      "distanceSource": "공식 White 거리(m)",
+      "distanceAssumed": false,
       "sourceRoute": [
         [
           0.834711,
@@ -652,14 +659,15 @@
           198.69695,
           125.36648
         ]
-      ]
+      ],
+      "distanceSourceUrl": "https://www.gakorea.com/korea/course/creekCouse.asp"
     },
     {
       "number": 9,
       "par": 4,
-      "distance": 330,
-      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
-      "distanceAssumed": true,
+      "distance": 340,
+      "distanceSource": "공식 White 거리(m)",
+      "distanceAssumed": false,
       "sourceRoute": [
         [
           0.835671,
@@ -740,12 +748,13 @@
           198.06549,
           125.45002
         ]
-      ]
+      ],
+      "distanceSourceUrl": "https://www.gakorea.com/korea/course/creekCouse.asp"
     }
   ],
   "geometrySource": "prepared-guide",
   "source": "공개 홀 안내도 · 경로 후보 대조 · 2026-11-22",
-  "sourceUrl": "https://m.blog.naver.com/sesp486/223041916683",
+  "sourceUrl": "https://www.gakorea.com/korea/course/creekCouse.asp",
   "preparedAt": "2026-11-22",
   "notice": "홀 안내도 기반의 가상 재생입니다. 원문 작성 시점·티·사용 그린에 따라 현재 코스와 차이가 있을 수 있습니다."
 }

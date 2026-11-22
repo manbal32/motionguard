@@ -1,36 +1,26 @@
-/* Published hole-guide snapshots: selecting a prepared club needs no new AI request. */
+/* Complete public guide catalog. A round is two distinct nines from one club. */
 window.MotionPreparedCourses=(()=>{
  let pending;
  const norm=s=>String(s??'').toLowerCase().replace(/[\s·._-]/g,'');
- async function list(){
-  if(!pending)pending=fetch('./prepared-courses.json').then(async r=>{if(!r.ok)throw Error('골프장 목록을 불러오지 못했습니다.');const d=await r.json();if(d.revision!==1||!Array.isArray(d.clubs))throw Error('골프장 목록을 확인해 주세요.');return d.clubs;}).catch(e=>{pending=null;throw e;});
-  return pending;
+ async function list(){if(!pending)pending=fetch('./prepared-courses.json').then(async r=>{if(!r.ok)throw Error('골프장 목록을 불러오지 못했습니다.');const d=await r.json();if(d.revision!==1||!Array.isArray(d.clubs))throw Error('골프장 목록을 확인해 주세요.');return d.clubs;}).catch(e=>{pending=null;throw e;});return pending;}
+ async function find(name,group){const club=(await list()).find(c=>[c.name,...c.aliases].some(n=>norm(n)===norm(name)));if(!club)return null;return {...club,selected:club.groups.find(g=>norm(g.name)===norm(group)||g.id===group)};}
+ async function load(id){const group=(await list()).flatMap(c=>c.groups).find(g=>g.id===id);if(!group||!/^[a-z0-9-]+$/.test(id))throw Error('목록에서 코스를 선택해 주세요.');const r=await fetch('./prepared-courses/'+id+'.json');if(!r.ok)throw Error('선택한 코스의 지도를 불러오지 못했습니다.');const c=await r.json();if(c.id!==id||c.holes?.length!==group.holes||!c.holes.every(h=>(h.mapImage?.image_url||/^\.\/(?:rivera-game\/(?:valley|lake|pine|cherry)-0[1-9]\.png|prepared-course-images\/giheung-(?:south|west|north)-0[1-9]\.jpg)$/.test(h.mapImage?.asset))&&h.route?.length>=2&&h.route.every(p=>p.length===2&&p.every(Number.isFinite))))throw Error('선택한 코스의 홀 정보를 확인해 주세요.');return c;}
+ function initialNines(club,selected){const saved=selected?.roundSelection;if(saved&&club.nines.some(n=>n.id===saved.front)&&club.nines.some(n=>n.id===saved.back)&&saved.front!==saved.back)return [saved.front,saved.back];const same=club.nines.filter(n=>n.groupId===selected?.id);return same.length===2?same.map(n=>n.id):[...club.defaultRound];}
+ async function loadRound(clubId,front,back){const club=(await list()).find(c=>c.id===clubId);if(!club)throw Error('골프장을 선택해 주세요.');[front,back]=front&&back?[front,back]:club.defaultRound;const nines=[front,back].map(id=>club.nines.find(n=>n.id===id));if(front===back||nines.some(n=>!n||n.holeNumbers.length!==9))throw Error('전반과 후반에 서로 다른 9홀을 선택해 주세요.');const ids=[...new Set(nines.map(n=>n.groupId))],groups=await Promise.all(ids.map(load)),seen=new Set(),holes=[];
+  for(const nine of nines){const group=groups.find(g=>g.id===nine.groupId);for(const number of nine.holeNumbers){const original=group.holes.find(h=>h.number===number),key=nine.groupId+':'+number;if(!original||seen.has(key))throw Error('18홀 구성에 중복되거나 빠진 홀이 있습니다.');seen.add(key);holes.push({...original,number:holes.length+1,sourceNumber:number,sourceCourse:group.groupName,sourceGroupId:group.id,tee:group.tee,ref:String(number)});}}
+  return {revision:1,id:'round-'+club.id+'-'+front+'-'+back,clubId:club.id,clubName:club.name,name:club.name+' · '+nines.map(n=>n.label).join(' + '),roundSelection:{front,back},holes,tee:groups.map(g=>g.tee).filter((v,i,a)=>a.indexOf(v)===i).join(' / '),geometrySource:'prepared-guide',sourceUrl:groups[0].sourceUrl,notice:'선택한 두 9홀을 연결한 18홀 가상 라운드입니다.'};
  }
- async function find(name,group){
-  const clubs=await list(),key=norm(name);
-  const club=clubs.find(c=>[c.name,...c.aliases].some(n=>norm(n)===key));
-  if(!club)return null;
-  return {...club,selected:club.groups.find(g=>norm(g.name)===norm(group)||g.id===group)??club.groups[0]};
- }
- async function load(id){
-  const clubs=await list(),group=clubs.flatMap(c=>c.groups).find(g=>g.id===id);
-  if(!group)throw Error('목록에서 코스를 선택해 주세요.');
-  if(id==='rivera-valley')return MotionCourse.defaultCourse();
-  if(!/^[a-z0-9-]+$/.test(id))throw Error('코스 정보를 확인해 주세요.');
-  const r=await fetch('./prepared-courses/'+id+'.json');if(!r.ok)throw Error('선택한 코스의 지도를 불러오지 못했습니다.');const course=await r.json();
-  if(course.id!==id||course.holes?.length!==group.holes||!course.holes.every(h=>h.mapImage?.image_url&&h.route?.length>=2&&h.route.every(p=>p.length===2&&p.every(Number.isFinite))))throw Error('선택한 코스의 홀 정보를 확인해 주세요.');
-  return course;
- }
+ async function loadDefault(club){const pair=initialNines(club,club.selected);return loadRound(club.id,...pair);}
  async function mount(host,{selected,onSelect,status,onBusy=()=>{}}){
-  const make=(tag,text)=>{const e=document.createElement(tag);if(text)e.textContent=text;return e;},box=make('div'),clubLabel=make('label','골프장'),groupLabel=make('label','코스'),clubSelect=make('select'),groupSelect=make('select');box.className='prepared-course-picker';clubSelect.setAttribute('aria-label','준비된 골프장 선택');groupSelect.setAttribute('aria-label','준비된 코스 선택');clubLabel.append(clubSelect);groupLabel.append(groupSelect);box.append(clubLabel,groupLabel);host.append(box);
-  let generation=0;const clubs=await list();
-  for(const c of clubs){const o=make('option',c.name);o.value=c.id;clubSelect.append(o);}
-  const initial=clubs.find(c=>c.groups.some(g=>g.id===selected?.id))??clubs[0];clubSelect.value=initial.id;
-  function groups(id){groupSelect.replaceChildren();const club=clubs.find(c=>c.id===id);for(const g of club.groups){const o=make('option',g.name+' · '+g.holes+'홀');o.value=g.id;groupSelect.append(o);}groupSelect.value=club.groups[0].id;return club;}
-  groups(initial.id);if(initial.groups.some(g=>g.id===selected?.id))groupSelect.value=selected.id;
-  async function choose(){const ticket=++generation,id=groupSelect.value;onBusy(true);status.textContent='코스 지도를 불러오고 있습니다.';try{const course=await load(id);if(ticket!==generation)return;await onSelect(course);status.textContent=course.name+' · '+course.holes.length+'홀 준비 완료';}catch(e){if(ticket===generation)status.textContent=e.message+' 현재 선택한 코스는 유지됩니다.';}finally{if(ticket===generation)onBusy(false);}}
-  clubSelect.onchange=()=>{groups(clubSelect.value);return choose();};groupSelect.onchange=choose;
-  return {box,clubSelect,groupSelect,choose};
+  const make=(tag,text)=>{const e=document.createElement(tag);if(text)e.textContent=text;return e;},box=make('div'),clubLabel=make('label','골프장'),clubSelect=make('select'),frontLabel=make('label','전반 9홀'),backLabel=make('label','후반 9홀'),frontSelect=make('select'),backSelect=make('select');box.className='prepared-course-picker';clubLabel.className='prepared-club-label';clubSelect.setAttribute('aria-label','준비된 골프장 선택');frontSelect.setAttribute('aria-label','전반 9홀 선택');backSelect.setAttribute('aria-label','후반 9홀 선택');clubLabel.append(clubSelect);frontLabel.append(frontSelect);backLabel.append(backSelect);box.append(clubLabel,frontLabel,backLabel);host.append(box);let generation=0;const clubs=await list();
+  for(const c of clubs){const o=make('option',c.name+' · 전체 '+c.totalHoles+'홀');o.value=c.id;clubSelect.append(o);}
+  const initial=clubs.find(c=>c.id===selected?.clubId||c.groups.some(g=>g.id===selected?.id))??clubs[0];clubSelect.value=initial.id;
+  function fill(club,pair){for(const select of [frontSelect,backSelect]){select.replaceChildren();for(const n of club.nines){const o=make('option',n.label);o.value=n.id;select.append(o);}}[frontSelect.value,backSelect.value]=pair;}
+  fill(initial,initialNines(initial,selected));
+  async function choose(){const ticket=++generation,id=clubSelect.value,front=frontSelect.value,back=backSelect.value;onBusy(true);status.textContent='선택한 18홀 지도를 불러오고 있습니다.';try{const c=await loadRound(id,front,back);if(ticket!==generation)return;await onSelect(c);status.textContent=c.name+' · 18홀 준비 완료';}catch(e){if(ticket===generation)status.textContent=e.message+' 현재 선택한 라운드는 유지됩니다.';}finally{if(ticket===generation)onBusy(false);}}
+  clubSelect.onchange=()=>{const c=clubs.find(c=>c.id===clubSelect.value);fill(c,c.defaultRound);return choose();};frontSelect.onchange=()=>{if(frontSelect.value===backSelect.value)backSelect.value=clubs.find(c=>c.id===clubSelect.value).nines.find(n=>n.id!==frontSelect.value).id;return choose();};backSelect.onchange=()=>{if(backSelect.value===frontSelect.value)frontSelect.value=clubs.find(c=>c.id===clubSelect.value).nines.find(n=>n.id!==backSelect.value).id;return choose();};
+  const known=selected?.roundSelection||clubs.some(c=>c.groups.some(g=>g.id===selected?.id));if(!selected||known)await choose();else onBusy(false);
+  return {box,clubSelect,frontSelect,backSelect,choose};
  }
- return {list,find,load,mount};
+ return {list,find,load,loadRound,loadDefault,mount};
 })();

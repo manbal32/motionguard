@@ -1,0 +1,628 @@
+{
+  "revision": 1,
+  "id": "korea-challenge",
+  "clubName": "코리아CC",
+  "groupName": "챌린지",
+  "name": "코리아CC · 챌린지",
+  "tee": "WHITE · m",
+  "holes": [
+    {
+      "number": 1,
+      "par": 4,
+      "distance": 350,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.89,
+          0.78
+        ],
+        [
+          0.72,
+          0.58
+        ],
+        [
+          0.57,
+          0.45
+        ],
+        [
+          0.37,
+          0.32
+        ],
+        [
+          0.11,
+          0.27
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/ch_01.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/challCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -72.69143419566643,
+          "y": 198.93229136276884,
+          "width": 545.3828683913329,
+          "height": 287.74801645186886,
+          "transform": "rotate(70.9668946239593 200 350)"
+        }
+      },
+      "sourceNumber": 1,
+      "sourceCourse": "챌린지",
+      "ref": "1",
+      "name": "챌린지",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          224.16766,
+          468.58586
+        ],
+        [
+          232.85127,
+          379.05178
+        ],
+        [
+          232.64203,
+          263.73935
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 2,
+      "par": 3,
+      "distance": 135,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.76,
+          0.72
+        ],
+        [
+          0.56,
+          0.57
+        ],
+        [
+          0.38,
+          0.5
+        ],
+        [
+          0.22,
+          0.51
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/ch_02.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/challCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -200.00030689974358,
+          "y": 87.27286715962754,
+          "width": 816.3271569382522,
+          "height": 430.70021777110236,
+          "transform": "rotate(78.40494158978619 200 350)"
+        }
+      },
+      "sourceNumber": 2,
+      "sourceCourse": "챌린지",
+      "ref": "2",
+      "name": "챌린지",
+      "route": [
+        [
+          197.89045,
+          575.43284
+        ],
+        [
+          228.36178,
+          402.51405
+        ],
+        [
+          228.36178,
+          252.51405
+        ],
+        [
+          197.89045,
+          125.43284
+        ]
+      ]
+    },
+    {
+      "number": 3,
+      "par": 5,
+      "distance": 455,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.89,
+          0.68
+        ],
+        [
+          0.72,
+          0.52
+        ],
+        [
+          0.5,
+          0.46
+        ],
+        [
+          0.29,
+          0.34
+        ],
+        [
+          0.15,
+          0.28
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/ch_03.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/challCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -104.09128847808483,
+          "y": 201.9007976831602,
+          "width": 584.7909393809324,
+          "height": 308.5400048267496,
+          "transform": "rotate(74.0822122873447 200 350)"
+        }
+      },
+      "sourceNumber": 3,
+      "sourceCourse": "챌린지",
+      "ref": "3",
+      "name": "챌린지",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          220.20832,
+          465.85835
+        ],
+        [
+          202.72652,
+          337.06025
+        ],
+        [
+          204.65112,
+          208.80867
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 4,
+      "par": 4,
+      "distance": 380,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.88,
+          0.75
+        ],
+        [
+          0.68,
+          0.58
+        ],
+        [
+          0.51,
+          0.4
+        ],
+        [
+          0.31,
+          0.35
+        ],
+        [
+          0.12,
+          0.35
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/ch_04.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/challCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -85.25860972781135,
+          "y": 184.44500318864442,
+          "width": 570.5172194556227,
+          "height": 301.0090851115555,
+          "transform": "rotate(74.48065999376806 200 350)"
+        }
+      },
+      "sourceNumber": 4,
+      "sourceCourse": "챌린지",
+      "ref": "4",
+      "name": "챌린지",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          218.77591,
+          451.3651
+        ],
+        [
+          245.03165,
+          343.4163
+        ],
+        [
+          229.00344,
+          229.44609
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 5,
+      "par": 5,
+      "distance": 510,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.91,
+          0.66
+        ],
+        [
+          0.73,
+          0.6
+        ],
+        [
+          0.49,
+          0.66
+        ],
+        [
+          0.34,
+          0.44
+        ],
+        [
+          0.12,
+          0.2
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/ch_05.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/challCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -80.41964789750102,
+          "y": 226.46770410090437,
+          "width": 544.5041706747593,
+          "height": 287.2844090676644,
+          "transform": "rotate(72.92228760657746 200 350)"
+        }
+      },
+      "sourceNumber": 5,
+      "sourceCourse": "챌린지",
+      "ref": "5",
+      "name": "챌린지",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          187.69437,
+          476.24882
+        ],
+        [
+          132.84043,
+          356.39188
+        ],
+        [
+          169.27068,
+          259.75695
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 6,
+      "par": 3,
+      "distance": 185,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.86,
+          0.77
+        ],
+        [
+          0.67,
+          0.62
+        ],
+        [
+          0.45,
+          0.4
+        ],
+        [
+          0.17,
+          0.3
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/ch_06.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/challCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -116.07737748504076,
+          "y": 176.75894766708288,
+          "width": 613.7424805534772,
+          "height": 323.8150510895647,
+          "transform": "rotate(70.23233786444051 200 350)"
+        }
+      },
+      "sourceNumber": 6,
+      "sourceCourse": "챌린지",
+      "ref": "6",
+      "name": "챌린지",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          206.27132,
+          448.83314
+        ],
+        [
+          227.64681,
+          297.67285
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 7,
+      "par": 4,
+      "distance": 350,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.91,
+          0.76
+        ],
+        [
+          0.73,
+          0.54
+        ],
+        [
+          0.49,
+          0.56
+        ],
+        [
+          0.29,
+          0.48
+        ],
+        [
+          0.14,
+          0.37
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/ch_07.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/challCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -96.41685620614265,
+          "y": 181.6927251760856,
+          "width": 564.603535630748,
+          "height": 297.88898198922897,
+          "transform": "rotate(75.03846916678756 200 350)"
+        }
+      },
+      "sourceNumber": 7,
+      "sourceCourse": "챌린지",
+      "ref": "7",
+      "name": "챌린지",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          237.07637,
+          459.89729
+        ],
+        [
+          196.33721,
+          330.52426
+        ],
+        [
+          190.20765,
+          215.27914
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 8,
+      "par": 4,
+      "distance": 360,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.9,
+          0.8
+        ],
+        [
+          0.73,
+          0.57
+        ],
+        [
+          0.51,
+          0.43
+        ],
+        [
+          0.32,
+          0.27
+        ],
+        [
+          0.14,
+          0.28
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/ch_08.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/challCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -89.60238112227108,
+          "y": 192.79606470698803,
+          "width": 556.9276560043675,
+          "height": 293.83913138880735,
+          "transform": "rotate(70.15069588039748 200 350)"
+        }
+      },
+      "sourceNumber": 8,
+      "sourceCourse": "챌린지",
+      "ref": "8",
+      "name": "챌린지",
+      "route": [
+        [
+          198.61809,
+          575.49886
+        ],
+        [
+          230.03834,
+          463.49843
+        ],
+        [
+          227.12906,
+          334.28551
+        ],
+        [
+          235.42051,
+          218.79234
+        ],
+        [
+          198.61809,
+          125.49886
+        ]
+      ]
+    },
+    {
+      "number": 9,
+      "par": 4,
+      "distance": 350,
+      "distanceAssumed": false,
+      "distanceSource": "공식 White 거리(m)",
+      "sourceRoute": [
+        [
+          0.9,
+          0.79
+        ],
+        [
+          0.74,
+          0.59
+        ],
+        [
+          0.54,
+          0.42
+        ],
+        [
+          0.34,
+          0.33
+        ],
+        [
+          0.14,
+          0.27
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "image_url": "https://www.gakorea.com/korea/images/course/ch_09.jpg",
+        "source_page": "https://www.gakorea.com/korea/course/challCouse.asp",
+        "width": 489,
+        "height": 258,
+        "display": {
+          "x": -89.60238112227108,
+          "y": 194.26526036393207,
+          "width": 556.9276560043675,
+          "height": 293.83913138880735,
+          "transform": "rotate(70.15069588039748 200 350)"
+        }
+      },
+      "sourceNumber": 9,
+      "sourceCourse": "챌린지",
+      "ref": "9",
+      "name": "챌린지",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          225.01983,
+          471.23114
+        ],
+        [
+          234.18407,
+          349.50184
+        ],
+        [
+          221.23776,
+          235.75434
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    }
+  ],
+  "sourceUrl": "https://www.gakorea.com/korea/course/challCouse.asp",
+  "geometrySource": "prepared-guide",
+  "preparedAt": "2026-11-22",
+  "notice": "공개 홀 안내도 위 근사 경로를 이용한 가상 재생입니다."
+}

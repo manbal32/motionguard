@@ -1,0 +1,516 @@
+{
+  "revision": 1,
+  "id": "rivera-valley",
+  "clubName": "리베라CC",
+  "groupName": "밸리",
+  "name": "리베라CC · 밸리",
+  "tee": "WHITE · 공개 안내도",
+  "holes": [
+    {
+      "number": 1,
+      "par": 4,
+      "distance": 244,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.44878957169459965,
+          0.5984943538268507
+        ],
+        [
+          0.3817504655493482,
+          0.4015056461731493
+        ],
+        [
+          0.2756052141527002,
+          0.23086574654956085
+        ],
+        [
+          0.1527001862197393,
+          0.13801756587202008
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/valley-01.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 18.295464401206516,
+          "y": 19.781540568136847,
+          "width": 604.1816446845332,
+          "height": 896.709070416337,
+          "transform": "rotate(23.424311392564213 200 350)"
+        }
+      },
+      "sourceNumber": 1,
+      "sourceCourse": "밸리",
+      "ref": "1",
+      "name": "밸리",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          233.05589,
+          396.8144
+        ],
+        [
+          235.03907,
+          230.91611
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 2,
+      "par": 5,
+      "distance": 509,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.24953445065176907,
+          0.6687578419071518
+        ],
+        [
+          0.27932960893854747,
+          0.45420326223337515
+        ],
+        [
+          0.2811918063314711,
+          0.2107904642409034
+        ],
+        [
+          0.2718808193668529,
+          0.07779171894604768
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/valley-02.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 63.89766895265393,
+          "y": 65.85653693624238,
+          "width": 512.8908896310516,
+          "height": 761.2179497876128,
+          "transform": "rotate(-1.4594493549922625 200 350)"
+        }
+      },
+      "sourceNumber": 2,
+      "sourceCourse": "밸리",
+      "ref": "2",
+      "name": "밸리",
+      "route": [
+        [
+          197.61301,
+          575.06081
+        ],
+        [
+          208.72998,
+          411.40178
+        ],
+        [
+          204.96554,
+          226.14737
+        ],
+        [
+          197.61301,
+          125.06081
+        ]
+      ]
+    },
+    {
+      "number": 3,
+      "par": 3,
+      "distance": 116,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.409683426443203,
+          0.6361355081555834
+        ],
+        [
+          0.33519553072625696,
+          0.41405269761606023
+        ],
+        [
+          0.26256983240223464,
+          0.2572145545796738
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/valley-03.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": -60.201586400219014,
+          "y": -163.19537262314668,
+          "width": 774.1177390410949,
+          "height": 1148.923348260247,
+          "transform": "rotate(14.659482998632205 200 350)"
+        }
+      },
+      "sourceNumber": 3,
+      "sourceCourse": "밸리",
+      "ref": "3",
+      "name": "밸리",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          208.78803,
+          313.55713
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 4,
+      "par": 4,
+      "distance": 315,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.31471135940409684,
+          0.6323713927227101
+        ],
+        [
+          0.33519553072625696,
+          0.3186951066499373
+        ],
+        [
+          0.22346368715083798,
+          0.13801756587202008
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/valley-04.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 29.989911969055868,
+          "y": 2.0460198300010006,
+          "width": 608.63611515078,
+          "height": 903.3202677377499,
+          "transform": "rotate(7.08921767845048 200 350)"
+        }
+      },
+      "sourceNumber": 4,
+      "sourceCourse": "밸리",
+      "ref": "4",
+      "name": "밸리",
+      "route": [
+        [
+          193.81395,
+          574.23067
+        ],
+        [
+          241.15563,
+          294.58534
+        ],
+        [
+          193.81395,
+          124.23067
+        ]
+      ]
+    },
+    {
+      "number": 5,
+      "par": 4,
+      "distance": 323,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.29236499068901306,
+          0.671267252195734
+        ],
+        [
+          0.2811918063314711,
+          0.32496863237139273
+        ],
+        [
+          0.18808193668528864,
+          0.15056461731493098
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/valley-05.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 61.376864657928365,
+          "y": -1.9308280971198428,
+          "width": 577.0590982844378,
+          "height": 856.4545648653574,
+          "transform": "rotate(7.685057968487324 200 350)"
+        }
+      },
+      "sourceNumber": 5,
+      "sourceCourse": "밸리",
+      "ref": "5",
+      "name": "밸리",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          233.27251,
+          280.21268
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 6,
+      "par": 3,
+      "distance": 115,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.21042830540037244,
+          0.45294855708908405
+        ],
+        [
+          0.2346368715083799,
+          0.15432873274780426
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/valley-06.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": -25.609071249620484,
+          "y": -106.88196855571687,
+          "width": 1013.8248641091733,
+          "height": 1504.689789003745,
+          "transform": "rotate(-3.1264945248320055 200 350)"
+        }
+      },
+      "sourceNumber": 6,
+      "sourceCourse": "밸리",
+      "ref": "6",
+      "name": "밸리",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 7,
+      "par": 5,
+      "distance": 412,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.3221601489757914,
+          0.6925972396486826
+        ],
+        [
+          0.297951582867784,
+          0.3889585947302384
+        ],
+        [
+          0.297951582867784,
+          0.17189460476787954
+        ],
+        [
+          0.2644320297951583,
+          0.09410288582183186
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/valley-07.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 51.72788822593765,
+          "y": 54.86789180210451,
+          "width": 505.5372953820411,
+          "height": 750.3039560884297,
+          "transform": "rotate(3.718395914855995 200 350)"
+        }
+      },
+      "sourceNumber": 7,
+      "sourceCourse": "밸리",
+      "ref": "7",
+      "name": "밸리",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          202.56226,
+          346.86463
+        ],
+        [
+          213.12443,
+          184.34352
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 8,
+      "par": 4,
+      "distance": 277,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.27932960893854747,
+          0.644918444165621
+        ],
+        [
+          0.2569832402234637,
+          0.26348808030112925
+        ],
+        [
+          0.2905027932960894,
+          0.10037641154328733
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/valley-08.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 47.59520883419796,
+          "y": 42.08011580786933,
+          "width": 556.7440330342564,
+          "height": 826.303527613226,
+          "transform": "rotate(-0.7920570921623916 200 350)"
+        }
+      },
+      "sourceNumber": 8,
+      "sourceCourse": "밸리",
+      "ref": "8",
+      "name": "밸리",
+      "route": [
+        [
+          206.22001,
+          574.91401
+        ],
+        [
+          189.42312,
+          259.93885
+        ],
+        [
+          206.22001,
+          124.91401
+        ]
+      ]
+    },
+    {
+      "number": 9,
+      "par": 4,
+      "distance": 294,
+      "distanceAssumed": false,
+      "distanceSource": "공개 홀 안내도 화이트 티 표기 · 게임용 수동 경로 · 실제 구질/벌타/경사 미반영",
+      "sourceRoute": [
+        [
+          0.21601489757914338,
+          0.6787954830614805
+        ],
+        [
+          0.30353817504655495,
+          0.26474278544542035
+        ],
+        [
+          0.2383612662942272,
+          0.09410288582183186
+        ]
+      ],
+      "geometryMethod": "manual-guide-trace",
+      "geometryApproximate": true,
+      "mapImage": {
+        "asset": "./rivera-game/valley-09.png",
+        "source_page": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+        "width": 537,
+        "height": 797,
+        "display": {
+          "x": 65.33434176601227,
+          "y": 52.67367214288009,
+          "width": 518.3903833093291,
+          "height": 769.3801405913134,
+          "transform": "rotate(-1.4751018008569665 200 350)"
+        }
+      },
+      "sourceNumber": 9,
+      "sourceCourse": "밸리",
+      "ref": "9",
+      "name": "밸리",
+      "route": [
+        [
+          183.11206,
+          575.43488
+        ],
+        [
+          220.2676,
+          255.80856
+        ],
+        [
+          183.11206,
+          125.43488
+        ]
+      ]
+    }
+  ],
+  "sourceUrl": "https://kaypen.tistory.com/entry/리베라CC-골프코스-소개-및-공략법",
+  "geometrySource": "prepared-guide",
+  "preparedAt": "2026-11-22",
+  "notice": "공개 홀 안내도 위 근사 경로를 이용한 가상 재생입니다."
+}
