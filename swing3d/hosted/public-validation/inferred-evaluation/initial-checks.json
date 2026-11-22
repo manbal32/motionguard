@@ -1,0 +1,39 @@
+{
+  "source_commit": "7965ddfad65940bd3563ab931fa036ba5cf5d033",
+  "site_version": 115,
+  "build": "8006f45f5ea826f1f232",
+  "public_build": {
+    "/build-info.json": {
+      "status": 200,
+      "build": "8006f45f5ea826f1f232",
+      "matches_local": true
+    },
+    "/api/build": {
+      "status": 200,
+      "build": "8006f45f5ea826f1f232",
+      "matches_local": true
+    }
+  },
+  "status": 200,
+  "ok": true,
+  "model": "gemini-3.5-flash-lite",
+  "attempts": 2,
+  "elapsed_seconds": 9.13,
+  "photo_count": 5,
+  "forwarded_images": 5,
+  "unique_uploaded_photos": 5,
+  "overall_present": true,
+  "overall_source": "gemini",
+  "dimensions_count": 4,
+  "score_estimate_present": true,
+  "usage": {
+    "promptTokenCount": 7203,
+    "candidatesTokenCount": 1303,
+    "totalTokenCount": 8506
+  },
+  "test_count": 327,
+  "test_pass_count": 327,
+  "actual_safari_visual_touch_verified": false,
+  "private_media_and_response_excluded": true,
+  "review": "Initial real-model output remained vague; strengthened concrete photo evidence instruction in v116"
+}

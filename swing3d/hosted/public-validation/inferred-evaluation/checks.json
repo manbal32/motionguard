@@ -1,0 +1,53 @@
+{
+  "source_commit": "43c5feac0ceaf1cc4378926682ee42fc7b5343df",
+  "site_version": 116,
+  "build": "d45d39dd171b9bfdbc34",
+  "public_build": {
+    "/build-info.json": {
+      "status": 200,
+      "build": "d45d39dd171b9bfdbc34",
+      "matches_local": true
+    },
+    "/api/build": {
+      "status": 200,
+      "build": "d45d39dd171b9bfdbc34",
+      "matches_local": true
+    }
+  },
+  "status": 200,
+  "ok": true,
+  "model": "gemini-3.5-flash-lite",
+  "attempts": 1,
+  "elapsed_seconds": 8.93,
+  "photo_count": 5,
+  "forwarded_images": 5,
+  "unique_uploaded_photos": 5,
+  "overall_present": true,
+  "overall_source": "gemini",
+  "dimensions_count": 4,
+  "score_estimate_present": true,
+  "usage": {
+    "promptTokenCount": 7361,
+    "candidatesTokenCount": 1251,
+    "totalTokenCount": 8612
+  },
+  "test_count": 37,
+  "test_pass_count": 37,
+  "actual_safari_visual_touch_verified": false,
+  "private_media_and_response_excluded": true,
+  "initial_full_suite": {
+    "tests": 327,
+    "passed": 327
+  },
+  "final_related_mirror_suite": {
+    "tests": 37,
+    "passed": 37
+  },
+  "manual_response_review": {
+    "concrete_scene_reference_in_evaluation": true,
+    "inferred_effect_qualified": true,
+    "bracketed_coach_prefix_in_overall": false,
+    "clinical_or_instrument_accuracy_verified": false
+  },
+  "scope": "New photo analysis prompt and field descriptions; stored analyses and result/PDF wiring unchanged"
+}
