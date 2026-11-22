@@ -1,0 +1,9 @@
+{
+  "single_model_payload": true,
+  "photo_count": 5,
+  "recent_round_score_included": true,
+  "approved_inquiry_summary_included": true,
+  "existing_assessment_and_estimates_preserved": true,
+  "injected_model_response": true,
+  "live_model_called": false
+}

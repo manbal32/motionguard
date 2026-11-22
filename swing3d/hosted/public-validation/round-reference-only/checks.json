@@ -1,0 +1,22 @@
+{
+  "version": 108,
+  "source": "e9c68a046d464e90db9c95ec003d65c0894f876a",
+  "build": "16a2609c71ae4597b9a9",
+  "public_build_matches": true,
+  "api_build_matches": true,
+  "upload_record_input_kept": true,
+  "review_record_label_removed": true,
+  "assets": {
+    "ai-result.js": true,
+    "coaching-report.js": true,
+    "experience.css": true,
+    "instrument.js": true
+  },
+  "ai-result.js_reference_label_removed": true,
+  "coaching-report.js_reference_label_removed": true,
+  "instrument.js_reference_label_removed": true,
+  "tests_passed": 92,
+  "mirror_tests_passed": 92,
+  "new_live_model_requests": 0,
+  "physical_safari_visual_touch_verified": false
+}
