@@ -1,0 +1,24 @@
+{
+  "fixture": "non-personal synthetic analysis; no images or original video",
+  "status": 200,
+  "seconds": 18.26,
+  "ok": true,
+  "holes": 18,
+  "courseId": "round-creek-korea-lake-korea-challenge",
+  "totals": {
+    "current": 96,
+    "improved": 90,
+    "par": 72
+  },
+  "sumsMatch": true,
+  "ordered18": true,
+  "source": "gemini",
+  "model": "gemini-2.5-flash",
+  "usage": {
+    "promptTokenCount": 3816,
+    "candidatesTokenCount": 3539,
+    "totalTokenCount": 8168
+  },
+  "attempts": 2,
+  "repairs": 1
+}

@@ -50,12 +50,12 @@ for source in map_sources:
  map_previews.append(entry)
 (DIST/'map-preview-sources.json').write_text(json.dumps(map_previews,ensure_ascii=False))
 # Prepared guide snapshots are shared by the result picker and the standalone map tester.
-for name in ['course-prediction.js','prepared-courses.js','prepared-courses.css','prepared-tester.js','prepared-tester.html']:
+for name in ['hole-scene.js','course-prediction.js','prepared-courses.js','prepared-courses.css','prepared-tester.js','prepared-tester.html']:
  shutil.copy2(ROOT/'overrides'/name,DIST/('courses.html' if name=='prepared-tester.html' else name))
 shutil.copy2(ROOT/'data/prepared-courses.json',DIST/'prepared-courses.json')
 shutil.copytree(ROOT/'data/prepared-courses',DIST/'prepared-courses')
 shutil.copytree(ROOT/'assets/prepared-course-images',DIST/'prepared-course-images')
-p=DIST/'index.html';text=p.read_text().replace('<script src="./simulation-entry.js">','<script src="./prepared-courses.js"></script><script src="./course-prediction.js"></script><script src="./simulation-entry.js">');text=text.replace('</head>','<link rel="stylesheet" href="./prepared-courses.css"></head>');p.write_text(text)
+p=DIST/'index.html';text=p.read_text().replace('<script src="./embedded-simulation.js">','<script src="./hole-scene.js"></script><script src="./embedded-simulation.js">').replace('<script src="./simulation-entry.js">','<script src="./prepared-courses.js"></script><script src="./course-prediction.js"></script><script src="./simulation-entry.js">');text=text.replace('</head>','<link rel="stylesheet" href="./prepared-courses.css"></head>');p.write_text(text)
 subprocess.run(['python',str(ROOT/'scripts/seal_assets.py')],check=True)
 # App shell only at install. Heavy model/3D/tour assets are cached as used.
 assets=sorted('./'+str(f.relative_to(DIST)) for f in DIST.iterdir() if f.is_file() and f.suffix in ('.html','.js','.css') and f.name!='sw.js')

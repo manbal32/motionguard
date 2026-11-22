@@ -1,0 +1,127 @@
+{
+  "clubs": 6,
+  "groups": 16,
+  "holes": 189,
+  "localScenes": 189,
+  "uniformAspect": true,
+  "routes": {
+    "/": 200,
+    "/courses?course=giheung-east&hole=3": 200,
+    "/courses?course=korea-lake": 200,
+    "/play?club=creek": 200
+  },
+  "rows": [
+    {
+      "group": "rivera-valley",
+      "status": 200,
+      "holes": 9,
+      "scenes": 9,
+      "ratioConsistent": true
+    },
+    {
+      "group": "rivera-lake",
+      "status": 200,
+      "holes": 9,
+      "scenes": 9,
+      "ratioConsistent": true
+    },
+    {
+      "group": "rivera-pine",
+      "status": 200,
+      "holes": 9,
+      "scenes": 9,
+      "ratioConsistent": true
+    },
+    {
+      "group": "rivera-cherry",
+      "status": 200,
+      "holes": 9,
+      "scenes": 9,
+      "ratioConsistent": true
+    },
+    {
+      "group": "korea-lake",
+      "status": 200,
+      "holes": 9,
+      "scenes": 9,
+      "ratioConsistent": true
+    },
+    {
+      "group": "korea-challenge",
+      "status": 200,
+      "holes": 9,
+      "scenes": 9,
+      "ratioConsistent": true
+    },
+    {
+      "group": "korea-creek",
+      "status": 200,
+      "holes": 9,
+      "scenes": 9,
+      "ratioConsistent": true
+    },
+    {
+      "group": "gold-champion",
+      "status": 200,
+      "holes": 18,
+      "scenes": 18,
+      "ratioConsistent": true
+    },
+    {
+      "group": "gold-master",
+      "status": 200,
+      "holes": 18,
+      "scenes": 18,
+      "ratioConsistent": true
+    },
+    {
+      "group": "namseoul-18",
+      "status": 200,
+      "holes": 18,
+      "scenes": 18,
+      "ratioConsistent": true
+    },
+    {
+      "group": "88-east",
+      "status": 200,
+      "holes": 18,
+      "scenes": 18,
+      "ratioConsistent": true
+    },
+    {
+      "group": "88-west",
+      "status": 200,
+      "holes": 18,
+      "scenes": 18,
+      "ratioConsistent": true
+    },
+    {
+      "group": "giheung-east",
+      "status": 200,
+      "holes": 9,
+      "scenes": 9,
+      "ratioConsistent": true
+    },
+    {
+      "group": "giheung-south",
+      "status": 200,
+      "holes": 9,
+      "scenes": 9,
+      "ratioConsistent": true
+    },
+    {
+      "group": "giheung-west",
+      "status": 200,
+      "holes": 9,
+      "scenes": 9,
+      "ratioConsistent": true
+    },
+    {
+      "group": "giheung-north",
+      "status": 200,
+      "holes": 9,
+      "scenes": 9,
+      "ratioConsistent": true
+    }
+  ]
+}

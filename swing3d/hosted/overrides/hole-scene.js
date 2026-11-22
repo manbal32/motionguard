@@ -1,0 +1,21 @@
+/* Local SVG geometry read from public hole guides; no raster request is needed to play. */
+window.MotionHoleScene=(()=>{
+ let serial=0;const ns='http://www.w3.org/2000/svg';
+ function valid(h){const s=h?.holeScene;return s?.revision==='guide-scene-v1'&&Array.isArray(s.viewBox)&&s.viewBox.length===4&&s.viewBox.every(Number.isFinite)&&s.features?.some(f=>f.type==='fairway'&&f.points?.length>=4)&&s.features.every(f=>['rough','fairway','water','bunker','green'].includes(f.type)&&f.points?.length>=4&&f.points.length<1000&&f.points.every(p=>p.length===2&&p.every(Number.isFinite)));}
+ const path=points=>{const p=points.slice(0,-1),mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2].join(' ');let d='M'+mid(p.at(-1),p[0]);for(let i=0;i<p.length;i++)d+=' Q'+p[i].join(' ')+' '+mid(p[i],p[(i+1)%p.length]);return d+' Z';};
+ function draw(svg,h){if(!valid(h))return false;const scene=h.holeScene,unit=scene.viewBox[2]/400,uid='hole-scene-'+(++serial),add=(tag,attrs,parent=svg)=>{const e=document.createElementNS(ns,tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);parent.append(e);return e;},defs=add('defs',{}),[x,y,w,ht]=scene.viewBox;
+  const grass=add('pattern',{id:uid+'-grass',width:42*unit,height:42*unit,patternUnits:'userSpaceOnUse',patternTransform:'rotate(24)'},defs);add('rect',{width:42*unit,height:42*unit,fill:'#90bf69'},grass);add('rect',{width:21*unit,height:42*unit,fill:'#a2ca7b'},grass);
+  const water=add('linearGradient',{id:uid+'-water',x1:0,y1:0,x2:1,y2:1},defs);add('stop',{offset:'0%', 'stop-color':'#88cddd'},water);add('stop',{offset:'100%','stop-color':'#4d9fca'},water);
+  const terrain=add('g',{'data-hole-scene':'guide-scene-v1','data-source':scene.sourceSha256});add('rect',{x,y,width:w,height:ht,rx:18*unit,fill:'#dce9ce'},terrain);
+  for(const f of scene.features.filter(f=>f.type==='rough')){add('path',{d:path(f.points),fill:'#224d32',opacity:.13,transform:'translate(0 '+6*unit+')'},terrain);add('path',{d:path(f.points),fill:'#5c9551',stroke:'#4b8446','stroke-width':1.5*unit,'stroke-linejoin':'round'},terrain);}
+  for(const f of scene.features.filter(f=>f.type==='fairway'))add('path',{'data-terrain':'fairway',d:path(f.points),fill:'url(#'+uid+'-grass) #98c16f',stroke:'#78a958','stroke-width':1.1*unit,'stroke-linejoin':'round'},terrain);
+  for(const f of scene.features.filter(f=>f.type==='water')){add('path',{d:path(f.points),fill:'#bfdcba',stroke:'#bfdcba','stroke-width':6*unit,'stroke-linejoin':'round'},terrain);add('path',{'data-terrain':'water',d:path(f.points),fill:'url(#'+uid+'-water) #69b8d0',stroke:'#559fb9','stroke-width':1.2*unit,'stroke-linejoin':'round'},terrain);}
+  for(const f of scene.features.filter(f=>f.type==='bunker')){add('path',{'data-terrain':'bunker',d:path(f.points),fill:'#eeddb0',stroke:'#cfb98a','stroke-width':1.8*unit,'stroke-linejoin':'round'},terrain);}
+  for(const f of scene.features.filter(f=>f.type==='green'))add('path',{'data-terrain':'green',d:path(f.points),fill:'#69b77b',stroke:'#4c9d63','stroke-width':1.2*unit,'stroke-linejoin':'round'},terrain);
+  for(const p of scene.trees??[]){const t=add('g',{'data-terrain':'tree'},terrain);add('ellipse',{cx:p[0]+3*unit,cy:p[1]+5*unit,rx:8*unit,ry:5*unit,fill:'#274f34',opacity:.18},t);add('circle',{cx:p[0],cy:p[1],r:8*unit,fill:'#327044'},t);add('circle',{cx:p[0]-3*unit,cy:p[1]-3*unit,r:5*unit,fill:'#438b50'},t);add('circle',{cx:p[0]+3*unit,cy:p[1]-2*unit,r:4*unit,fill:'#52995b'},t);}
+  const tee=scene.tee;add('rect',{'data-terrain':'tee',x:tee[0]-12*unit,y:tee[1]-7*unit,width:24*unit,height:14*unit,rx:4*unit,fill:'#5a9d58',stroke:'#d4e8bd','stroke-width':2*unit},terrain);for(const dx of[-8,8])add('circle',{cx:tee[0]+dx*unit,cy:tee[1]+3*unit,r:1.8*unit,fill:'#f8faf2'},terrain);
+  return {viewBox:scene.viewBox,terrain};
+ }
+ function originalURL(h){const m=h?.mapImage;if(m?.asset&&/^\.\/(?:rivera-game\/(?:valley|lake|pine|cherry)-0[1-9]\.png|prepared-course-images\/giheung-(?:south|west|north)-0[1-9]\.jpg)$/.test(m.asset))return m.asset;return m?.image_url?'./api/courses/image?'+new URLSearchParams({url:m.image_url}):h?.image;}
+ return {valid,draw,originalURL};
+})();
