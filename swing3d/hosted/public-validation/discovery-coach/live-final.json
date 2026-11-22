@@ -1,0 +1,62 @@
+[
+  {
+    "tested_version": 113,
+    "fixture": "initial",
+    "http_status": 200,
+    "reply": "백스윙을 할 때 어깨가 막히는 느낌이 드는 구체적인 시점이 언제인가요?",
+    "reply_characters": 39,
+    "no_early_drill": true,
+    "asks_missing_experience_or_proceeds": true,
+    "model": "gemini-3.5-flash-lite",
+    "usage": {
+      "promptTokenCount": 476,
+      "candidatesTokenCount": 25,
+      "totalTokenCount": 501
+    },
+    "attempts": 1,
+    "elapsed_seconds": 0.67,
+    "error_code": null,
+    "reason": null,
+    "non_personal_fixture": true
+  },
+  {
+    "tested_version": 113,
+    "fixture": "recover_from_early_advice",
+    "http_status": 200,
+    "reply": "그 느낌이 백스윙의 어느 지점에서 시작되나요?",
+    "reply_characters": 25,
+    "no_early_drill": true,
+    "asks_missing_experience_or_proceeds": true,
+    "model": "gemini-3.5-flash-lite",
+    "usage": {
+      "promptTokenCount": 522,
+      "candidatesTokenCount": 14,
+      "totalTokenCount": 536
+    },
+    "attempts": 1,
+    "elapsed_seconds": 2.51,
+    "error_code": null,
+    "reason": null,
+    "non_personal_fixture": true
+  },
+  {
+    "tested_version": 113,
+    "fixture": "sufficient_experience",
+    "http_status": 200,
+    "reply": "백스윙 시작 후 손이 허리 높이에 오를 때, 몸통과 팔이 따로 움직이는 느낌이 드는 그 장면서 구체적으로 어떤 느낌이 드시는지 확인해 사진 분석을 진행해 보겠습니다.",
+    "reply_characters": 92,
+    "no_early_drill": true,
+    "asks_missing_experience_or_proceeds": true,
+    "model": "gemini-3.5-flash-lite",
+    "usage": {
+      "promptTokenCount": 513,
+      "candidatesTokenCount": 48,
+      "totalTokenCount": 561
+    },
+    "attempts": 1,
+    "elapsed_seconds": 2.12,
+    "error_code": null,
+    "reason": null,
+    "non_personal_fixture": true
+  }
+]

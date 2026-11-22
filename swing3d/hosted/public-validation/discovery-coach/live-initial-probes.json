@@ -1,0 +1,62 @@
+[
+  {
+    "fixture": "initial",
+    "http_status": 200,
+    "reply": "백스윙할 때 어깨가 막히는 느낌이 드는 정확한 구간이 언제인가요?",
+    "reply_characters": 36,
+    "no_early_drill": true,
+    "asks_experience_or_proceeds": true,
+    "model": "gemini-3.5-flash-lite",
+    "usage": {
+      "promptTokenCount": 334,
+      "candidatesTokenCount": 23,
+      "totalTokenCount": 357
+    },
+    "attempts": 1,
+    "elapsed_seconds": 2.78,
+    "error_code": null,
+    "reason": null,
+    "non_personal_fixture": true,
+    "tested_version": 112
+  },
+  {
+    "fixture": "recover_from_early_advice",
+    "http_status": 200,
+    "reply": "그립을 잡을 때 손이나 팔 중 어느 쪽에 더 힘이 실리시나요?",
+    "reply_characters": 34,
+    "no_early_drill": true,
+    "asks_experience_or_proceeds": true,
+    "model": "gemini-3.5-flash-lite",
+    "usage": {
+      "promptTokenCount": 380,
+      "candidatesTokenCount": 21,
+      "totalTokenCount": 401
+    },
+    "attempts": 1,
+    "elapsed_seconds": 1.93,
+    "error_code": null,
+    "reason": null,
+    "non_personal_fixture": true,
+    "tested_version": 112
+  },
+  {
+    "fixture": "sufficient_experience",
+    "http_status": 200,
+    "reply": "손이 허리 높이를 지날 때 가슴과 어깨의 회전은 어떻게 느껴지시나요?",
+    "reply_characters": 38,
+    "no_early_drill": true,
+    "asks_experience_or_proceeds": false,
+    "model": "gemini-3.5-flash-lite",
+    "usage": {
+      "promptTokenCount": 371,
+      "candidatesTokenCount": 24,
+      "totalTokenCount": 395
+    },
+    "attempts": 1,
+    "elapsed_seconds": 4.56,
+    "error_code": null,
+    "reason": null,
+    "non_personal_fixture": true,
+    "tested_version": 112
+  }
+]
