@@ -1,3 +1,11 @@
+# 최신: 번호 사진5장 종합평가로 이동
+
+0-CP 우선. renderPhotos 공통helper로 종합평가 제목 아래/평가문 위 사진5장 표시. 실제 sample/still.id 번호 배지, 원본 순서/이미지 보존·누락사진 번호 재할당 안함. 기존 확대/이전다음/키보드/스와이프 유지. 타수 하단 사진카드와 제목/확대안내/※문구 제거. PDF 사진도 종합평가로 옮겨 중복갤러리 제거. 원래 모델입력·점수/타수/근거·상담·기존서비스 유지.
+
+관련20/20·mirror20/20·직전 실제응답/사진 로컬DOM QA로 번호/이미지매핑/위치/중복제거/데이터불변/PDF 이동 확인. 공개build/API/4자산SHA일치. 새모델요청/미디어전송 없음·개인자료 미커밋·실기Safari/PDF 시각·터치 미검증.
+
+Sitesv122/sourcebe8568cc5f4943298a2516306eee6737cc00a7e7/buildaac7befa3dee964318a1. hosted/public-validation/assessment-photos/checks.json 참고.
+
 # 최신: 결과 하단 상담 재표시 제거
 
 0-CO 우선. 결과의 내 고민과 연습 목표 details/네 카드는 생성하지 않음. print/PDF와 저장상담·모델 입력 보존. 점수/평가/연습·사진/타수·기존 서비스 그대로. 관련12/12·mirror12/12, 결과 DOM 부재/print 카드 유지·사진viewer/원본불변/PDF 내용 확인. 공개 build/API/자산SHA 일치. 새 모델 요청/미디어 전송 없음·실기Safari 미검증.
