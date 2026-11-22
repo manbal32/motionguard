@@ -1,0 +1,25 @@
+{
+  "tests": 274,
+  "passed": 274,
+  "entry": "previous courses links route to the existing full play page with same18hole pair",
+  "retained": [
+    "17 clubs and preset distances",
+    "male female distance presets",
+    "aim and power",
+    "wind temperature rain model",
+    "easy putting and hole-in sound",
+    "green map labels",
+    "game records and scoreboard",
+    "analysis forecasts and PDF"
+  ],
+  "weatherCoverage": {
+    "rivera": "existing live forecast; public HTTP200 verified",
+    "other5": "explicit baseline; not connected to live weather"
+  },
+  "newGeminiRequests": 0,
+  "source": "92ac36711776095985c38889c95d0b3bee0b3674",
+  "build": "7a72ca7c72b47dc5238c",
+  "siteVersion": 87,
+  "actualMobileBrowserVerified": false,
+  "imageEvidence": "shared SVG static rendering; not a browser screenshot"
+}

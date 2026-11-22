@@ -1,0 +1,10 @@
+{
+  "status": 200,
+  "ok": true,
+  "source": "MET Norway",
+  "weatherTime": "2026-11-22T04:00:00.000Z",
+  "temperature": 3.4,
+  "windSpeed": 2.2,
+  "windFrom": 279.4,
+  "stale": false
+}

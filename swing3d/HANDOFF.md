@@ -1,3 +1,7 @@
+# 최신: 기존 게임 기능 유지·부분 지도 링크 연결 수정
+
+0-BO 및 GAME_PRESERVATION_RESULTS.md 우선. /courses 기본은 같은18홀의 기존전체 /play로 이동; 명시적mode=map만 지도점검. 클럽17개거리/남녀프리셋·방향/힘·날씨·쉬운퍼팅·골퍼·스코어 유지. 시작전거리표/스코어 열람,그린표시/범례,자동재생 샷정보 추가. 미플레이점수/날씨를만들지않는다. 리베라 실시간예보HTTP200확인,나머지5곳기본조건 유지. Node274/274, Sitesv87/source92ac36711776095985c38889c95d0b3bee0b3674/build7a72ca7c72b47dc5238c. 실제Safari/iPhone시각·터치미검증,추가Gemini요청없음.
+
 # 최신: 원래 작은 골퍼 표시 복원
 
 0-BN 및 GOLFER_VISIBILITY_RESULTS.md 우선. 기존 모자/얼굴/녹색상의 실루엣과 스윙·퍼팅·공 따라 걷기를 필수 유지. 자체 색상·약56px 표시·SVG 맞춤 비율/퍼팅 확대·회전 대응·클리핑 방지. 실제 공/물리/점수/지도 유지. web/course-golfer.js와 hosted/overrides/course-golfer.js 동일. Node271/271, Sitesv86/source8f9ae25d9fbc0b5f7cc5e794d9205af1258ea50b/build5294cc8a16ad8bbb8444. 정적 SVG 그림 검토이며 실제 Safari/iPhone 시각·터치 미검증. 추가 Gemini 호출 없음.
