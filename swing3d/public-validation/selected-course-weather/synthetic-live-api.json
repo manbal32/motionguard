@@ -1,0 +1,28 @@
+{
+  "fixture": "non-personal synthetic analysis; no images or original video",
+  "status": 200,
+  "seconds": 5.18,
+  "ok": true,
+  "holes": 18,
+  "courseId": "round-creek-korea-lake-korea-challenge",
+  "totals": {
+    "current": 90,
+    "improved": 85,
+    "par": 72
+  },
+  "sumsMatch": true,
+  "ordered18": true,
+  "revision": "course-score-v3-weather",
+  "weatherClub": "creek",
+  "weatherTime": "2026-11-22T05:00:00.000Z",
+  "weatherWind": 2.7,
+  "source": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "promptTokenCount": 2215,
+    "candidatesTokenCount": 1550,
+    "totalTokenCount": 3765
+  },
+  "attempts": 1,
+  "repairs": 0
+}

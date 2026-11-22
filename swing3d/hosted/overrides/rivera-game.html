@@ -9,8 +9,8 @@
 <body>
 <main class="game-app">
 <header class="game-header"><a class="game-brand" href="./game.html">MotionGuard <span>PLAY</span></a><span id="game-club-name" class="club-name">리베라CC</span><button id="toggle-sound" type="button" aria-pressed="true" aria-label="홀인 효과음 끄기">소리 켜짐</button><button id="open-score" type="button" disabled>스코어보드</button></header>
-<details id="weather-panel" class="weather-panel"><summary><span id="weather-icon" aria-hidden="true">☀</span><span id="weather-summary">리베라 날씨 확인 중</span><span id="weather-wind"></span></summary><div class="weather-body"><p id="weather-effect">날씨는 자동으로 불러와 샷에 반영합니다.</p><p id="weather-status" role="status"></p><p id="weather-time"></p><div class="weather-actions"><a id="weather-source" href="https://api.met.no/" target="_blank" rel="noopener noreferrer">예보: MET Norway</a></div></div></details>
-<p class="weather-reference">게임 북쪽은 화면 위쪽으로 가정합니다.</p>
+<details id="weather-panel" class="weather-panel"><summary><span id="weather-icon" aria-hidden="true">☀</span><span id="weather-summary">선택한 골프장 날씨 확인 중</span><span id="weather-wind"></span></summary><div class="weather-body"><p id="weather-effect">날씨는 자동으로 불러와 샷에 반영합니다.</p><p id="weather-status" role="status"></p><p id="weather-time"></p><div class="weather-actions"><a id="weather-source" href="https://api.met.no/" target="_blank" rel="noopener noreferrer">예보: MET Norway</a></div></div></details>
+<p class="weather-reference">홀 안내도 원본 위쪽을 북쪽으로 가정한 참고 효과입니다.</p>
 <section id="setup-screen" class="setup-screen">
 <div class="setup-intro"><span class="eyebrow">나만의 18홀</span><h1>오늘은 어떤 코스로<br>플레이할까요?</h1><p>9홀 코스 두 개를 골라 직접 공을 쳐 보세요.</p></div>
 <label class="game-club-picker" for="game-club">골프장 선택<select id="game-club" aria-label="게임할 골프장 선택"></select></label><fieldset class="preset-picker"><legend>거리 기준 선택</legend><div class="preset-options"><button id="preset-male" type="button" aria-pressed="true"><strong>남성</strong><span>드라이버 220m · 7번 145m</span></button><button id="preset-female" type="button" aria-pressed="false"><strong>여성</strong><span>드라이버 180m · 7번 130m</span></button></div><p>편하게 즐기는 게임용 거리 프리셋이에요.</p></fieldset>

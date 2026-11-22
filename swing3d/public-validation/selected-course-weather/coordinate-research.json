@@ -1,0 +1,68 @@
+{
+  "checked_on": "2026-11-22",
+  "purpose": "Club-level weather lookup representative coordinates; not surveyed geometric course centroids or per-hole wind observations.",
+  "courses": [
+    {
+      "clubId": "gold",
+      "name": "골드CC",
+      "identity": "용인 골드컨트리클럽 · 챔피온18 + 마스터18 · 36홀",
+      "address": "경기도 용인시 기흥구 기흥단지로 398 (고매동)",
+      "latitude": 37.2174837025,
+      "longitude": 127.1386051932,
+      "coordinateType": "public-tourism-POI",
+      "source": "한국관광공사 데이터 재게시 페이지",
+      "source_url": "https://kor.clubrichtour.co.kr/bbs/board.php?bo_table=datagokr_Kor&wr_id=16386",
+      "identity_evidence": "Page identifies 36 holes, Champion and Master, address398, and explicitly prints latitude/longitude.",
+      "corroboration": [
+        {
+          "source_url": "https://mapcarta.com/25497330",
+          "latitude": 37.2175,
+          "longitude": 127.13722,
+          "sourceType": "GeoNames-based representative point",
+          "limitations": "Approximate alternate point; not OSM feature centroid."
+        },
+        {
+          "source_url": "https://findby.co.kr/details/17087-414633204016-st-652c0f81f27008be2c5f8679",
+          "latitude": 37.2169108,
+          "longitude": 127.1369536,
+          "sourceType": "clubhouse address geocode"
+        }
+      ],
+      "osm_feature_id": null,
+      "osm_status": "No verified OSM feature ID; Mapcarta entry is GeoNames based.",
+      "limitations": [
+        "Use club-scale weather grid only; precise centroid not verified."
+      ]
+    },
+    {
+      "clubId": "88",
+      "name": "88CC",
+      "identity": "용인 88컨트리클럽 · 동18 + 서18 · 36홀",
+      "address": "경기도 용인시 기흥구 석성로521번길 169 (청덕동80-2)",
+      "latitude": 37.30278,
+      "longitude": 127.16667,
+      "coordinateType": "GeoNames representative golf-course POI",
+      "source": "Mapcarta/GeoNames",
+      "source_url": "https://mapcarta.com/25493324",
+      "geonames_id": 6573823,
+      "identity_evidence": "Mapcarta explicitly names 88컨트리클럽; Yongin tourism indexed page describes 36 holes east/west. Address geocode is within about400m.",
+      "identity_source_url": "https://www.yongin.go.kr/tour/exTrv/exTrvLeisu/exTrvLeisu01/exTrvLeisu01_10.jsp",
+      "identity_source_status": "Search index readable; live page returned404 in web open.",
+      "corroboration": [
+        {
+          "source_url": "https://findby.co.kr/details/16893-414634412158-st-652c0fadf27008be2c60145e",
+          "latitude": 37.3025708,
+          "longitude": 127.162336,
+          "sourceType": "clubhouse/site address geocode",
+          "evidence": "Explicit coordinate line and exact 88컨트리클럽 street/parcel address."
+        }
+      ],
+      "osm_feature_id": null,
+      "osm_status": "Overpass bbox lookup attempted; endpoint returned406. No verified OSM feature ID.",
+      "limitations": [
+        "Representative course point, not surveyed geometric centroid.",
+        "Published coordinates differ from clubhouse address point by about400m; suitable for club-scale weather grid."
+      ]
+    }
+  ]
+}
