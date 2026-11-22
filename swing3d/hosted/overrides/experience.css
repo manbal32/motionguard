@@ -74,7 +74,17 @@ body.viewing-report{display:block;height:auto;overflow:auto;background:#eef3ef}b
 
 .assessment-photos{margin:16px 0 18px}.comparison-photo-strip>figure{position:relative}.comparison-photo-number{position:absolute;left:4px;top:4px;display:grid;place-items:center;min-width:22px;height:22px;padding:0 3px;box-sizing:border-box;border-radius:6px;background:#f6fcf8;color:#164d36;font-size:13px;font-weight:700;line-height:1;box-shadow:0 1px 4px #102b3d38;pointer-events:none}.swing-assessment .comparison-photo-thumb{border-color:#6e9e87}.swing-assessment .comparison-photo-thumb:focus-visible{outline-color:#c9efdb}.report-assessment .report-photo-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:0}.report-assessment .comparison-photo-number{background:#fff;color:#164d36}
 
-#upload #drop, #upload #preview-guide { cursor: pointer; }
+#upload #preview-guide {
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+#upload #preview-guide:focus-visible { outline: 2px solid #176548; outline-offset: -3px; }
+#upload #preview-guide[hidden],
+#upload:not([data-ready="true"]) #choose-video { display: none; }
+#upload:not([data-ready="true"]) #uploaded-media #drop { margin-top: 0; }
 #upload #recent-round-hint {
   grid-column: 1 / -1;
   margin: 0 0 4px;

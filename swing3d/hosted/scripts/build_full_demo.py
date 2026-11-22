@@ -62,14 +62,39 @@ for filename in ['index.html', 'instrument.js']:
  p=DIST/filename
  s=p.read_text().replace('어디가 고민이세요? 한 줄로 적어 주셔도 됩니다.', '무엇이 고민이세요?')
  p.write_text(s)
-p=DIST/'instrument.js';s=p.read_text();marker='  const drop = byId("drop");';assert marker in s
-p.write_text(s.replace(marker,marker+'''
-  // The existing button remains the keyboard entry point for the file picker.
-  drop.addEventListener("click", event => {
-    if (!event.target.closest("button, input, a, label")) byId("choose-video").click();
-  });
-  byId("preview-guide").addEventListener("click", () => byId("choose-video").click());
-''',1))
+p=DIST/'index.html';s=p.read_text()
+guide='<div id="preview-guide" class="capture-illustration" role="img" aria-label="전신이 보이도록 촬영해 주세요.">전신이 보이도록 촬영해 주세요.</div>'
+assert guide in s
+s=s.replace(guide,'<button id="preview-guide" class="capture-illustration" type="button" aria-label="사진 보관함에서 스윙 영상 선택">전신이 보이도록 촬영해 주세요.</button>',1)
+s=s.replace('id="choose-video" type="button">파일 선택','id="choose-video" type="button">영상 다시 올리기',1)
+s=s.replace('accept="video/mp4,video/quicktime,.mp4,.mov"','accept="video/*,.mp4,.mov"',1)
+p.write_text(s)
+p=DIST/'demo-start.js';s=p.read_text();p.write_text(s.replace("choose.textContent='내 영상 올리기';",'',1))
+
+p=DIST/'instrument.js';s=p.read_text()
+picker='  byId("choose-video").onclick=()=>byId("video").click();'
+assert picker in s
+s=s.replace(picker,'''  const openVideoPicker = () => byId("video").click();
+  byId("preview-guide").addEventListener("click", openVideoPicker);
+  byId("choose-video").onclick = openVideoPicker;''',1)
+s=s.replace("byId('choose-video').focus();return;", "byId('preview-guide').focus();return;",1)
+# Both the illustrated entry and the replacement controls accept a dropped file.
+start=s.index('  const drop = byId("drop");')
+end=s.index('  byId("start").textContent=',start)
+s=s[:start]+'''  for (const area of [byId("preview-slot"), byId("drop")]) {
+    area.addEventListener("dragover", event => {
+      event.preventDefault();
+      area.dataset.dragging = "";
+    });
+    area.addEventListener("dragleave", () => { delete area.dataset.dragging; });
+    area.addEventListener("drop", event => {
+      event.preventDefault();
+      delete area.dataset.dragging;
+      select(event.dataTransfer.files[0]);
+    });
+  }
+'''+s[end:]
+p.write_text(s)
 # Keep the new model review remote; persist only its result into the existing local report.
 p=DIST/'client-api.js';s=p.read_text().replace("if(route==='api/coaching/visual'||", "if(route==='api/coaching/overall'||route==='api/coaching/visual'||")
 s=s.replace("   if(route==='api/coaching/videos/save')", "   if(route==='api/coaching/overall/save'){const doc=await access('reports',data.report_id),r=data.review,o=r?.overall_assessment;if(!doc?.visual_analysis||r?.mode!=='gemini-overall'||o?.revision!=='separated-v2'||!['strength','weakness','improvement_plan'].every(k=>typeof o[k]==='string'&&o[k].trim()&&o[k].length<=1500))return reply({ok:false,reason:'종합평가 저장 내용을 확인해 주세요.'},422);doc.visual_analysis.overall_review=r;await access('reports',data.report_id,doc);return reply({ok:true});}\n   if(route==='api/coaching/videos/save')")
