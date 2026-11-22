@@ -1,0 +1,56 @@
+[
+  {
+    "fixture": "backswing",
+    "http_status": 200,
+    "summary": {
+      "concern": "백스윙 동작이 매끄럽지 않고 어깨 회전이 부족한 느낌이 듭니다.",
+      "improvement": "[코치 제안] 상체와 하체의 회전 차이를 늘려 백스윙 탑에서 충분한 공간을 확보하는 방향으로 개선합니다.",
+      "hypothesis": "[코치 제안] 어드레스 시 상체 긴장으로 인해 백스윙 초기 어깨 회전이 제한될 수 있습니다.",
+      "goal": "막힘없이 원활하게 회전되며 충분히 꼬임이 느껴지는 백스윙 만들기"
+    },
+    "model": "gemini-3.5-flash-lite",
+    "usage": {
+      "promptTokenCount": 532,
+      "candidatesTokenCount": 133,
+      "totalTokenCount": 665
+    },
+    "attempts": 1,
+    "elapsed_seconds": 1.37,
+    "no_drill_instruction": true,
+    "proposed_goal_marked": false,
+    "on_topic": true,
+    "input_round_score_not_echoed": true,
+    "non_personal_fixture": true,
+    "live_model_called": true,
+    "error_code": null,
+    "reason": null,
+    "tested_version": 110
+  },
+  {
+    "fixture": "driver",
+    "http_status": 200,
+    "summary": {
+      "concern": "드라이버가 정타가 잘 안 나고 비거리도 들쭉날쭉해요.",
+      "improvement": "[코치 제안] 어드레스 시 체중 분산과 백스윙 탑에서의 상하체 회전 각도를 점검합니다.",
+      "hypothesis": "[코치 제안] 백스윙 시 중심 축이 흔들려 임팩트 타이밍이 일정하지 않을 수 있습니다.",
+      "goal": "일관된 임팩트로 정타 확률을 높이고 안정적인 비거리를 만드는 드라이버 스윙 완성"
+    },
+    "model": "gemini-3.5-flash-lite",
+    "usage": {
+      "promptTokenCount": 419,
+      "candidatesTokenCount": 129,
+      "totalTokenCount": 548
+    },
+    "attempts": 1,
+    "elapsed_seconds": 1.15,
+    "no_drill_instruction": true,
+    "proposed_goal_marked": false,
+    "on_topic": true,
+    "input_round_score_not_echoed": true,
+    "non_personal_fixture": true,
+    "live_model_called": true,
+    "error_code": null,
+    "reason": null,
+    "tested_version": 110
+  }
+]

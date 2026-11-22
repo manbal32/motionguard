@@ -1,0 +1,17 @@
+{
+  "version": 111,
+  "source": "fc72c0ea11a7dcb6e306d2dc82d619be9c84921f",
+  "build": "98ed2e087daca72d3226",
+  "public_build_matches": true,
+  "api_build_matches": true,
+  "goal_proposal_badge_present": true,
+  "assets": {
+    "instrument.js": true,
+    "experience.css": true
+  },
+  "tests_passed": 58,
+  "mirror_tests_passed": 58,
+  "physical_safari_visual_touch_verified": false,
+  "live_example_requests": 3,
+  "live_model_attempts": 4
+}
