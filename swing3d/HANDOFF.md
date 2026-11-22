@@ -1,3 +1,11 @@
+# 최신: 게임 파3 아이언·후속샷 드라이버 자동추천 제외
+
+0-CR 우선. 파3티는 남녀별 거리 맞는 iron/wedge, 파4/5티 driver. 후속샷은 driver 제외 남은거리 가까운 우드/유틸/아이언/웨지, 기존14m이하퍼터. create/complete/next/undo 연동, 힘100/기존거리·수동선택·바람/퍼팅·코스·스코어 유지. 자동추천rev2로 legacy 잘못된 driver만 한번교정, 새수동선택 및 원래공/샷/완료홀/타수 복원 유지.
+
+관련54/54·mirror54/54, 새엔진3/DOM흐름1. 공개엔진 직접실행 남145/여130 파3 iron7, 첫샷 후628/632m 남아도 wood3 확인. 공개build/API/2자산SHA일치·새모델/날씨요청 없음·실기Safari 미검증.
+
+Sitesv124/source4e547050b26e2971c4682faed555505b3002ce46/build9c22de3088e1c694eea5. hosted/public-validation/automatic-game-clubs/checks.json 참고.
+
 # 최신: 바람 방향 화살표
 
 0-CQ 우선. 시뮬레이션 날씨 text에 실제 흘러가는 방향 화살표. 남동135→북서↖, 북풍↓/서풍→, 무풍○. 날씨줄 title로 from→to 설명, 기존 원본안내도 북쪽가정 상세 유지. 기존 날씨/물리·코스·타수·스코어 불변. OB/해저드 질문에는 기능유보+작은 미반영 안내 추천 의견만 전달, 기능/안내문 변경 없음.

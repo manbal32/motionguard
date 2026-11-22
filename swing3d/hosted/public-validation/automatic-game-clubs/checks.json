@@ -1,0 +1,63 @@
+{
+  "source_commit": "4e547050b26e2971c4682faed555505b3002ce46",
+  "site_version": 124,
+  "build": "9c22de3088e1c694eea5",
+  "public_build_assets": {
+    "/build-info.json": {
+      "status": 200,
+      "matches_local": true
+    },
+    "/api/build": {
+      "status": 200,
+      "matches_local": true
+    },
+    "rivera-game-engine.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    },
+    "rivera-game.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    }
+  },
+  "related_tests": 54,
+  "passed": 54,
+  "mirror_related_tests": 54,
+  "mirror_passed": 54,
+  "new_engine_tests": 3,
+  "new_game_control_test": 1,
+  "distance_presets_and_manual_club_selection_preserved": true,
+  "saved_strokes_ball_and_completed_holes_preserved": true,
+  "new_weather_requests": 0,
+  "new_model_requests": 0,
+  "actual_safari_visual_touch_verified": false,
+  "validation_scope": "Engine state transitions and actual game DOM button/animation/storage tests, plus published source asset hashes; no browser paint verification",
+  "published_engine_examples": [
+    {
+      "preset": "male",
+      "par": 3,
+      "distance": 145,
+      "club": "iron7"
+    },
+    {
+      "preset": "male",
+      "after_first_shot": true,
+      "remaining": 628,
+      "club": "wood3",
+      "power": 100
+    },
+    {
+      "preset": "female",
+      "par": 3,
+      "distance": 130,
+      "club": "iron7"
+    },
+    {
+      "preset": "female",
+      "after_first_shot": true,
+      "remaining": 632,
+      "club": "wood3",
+      "power": 100
+    }
+  ]
+}
