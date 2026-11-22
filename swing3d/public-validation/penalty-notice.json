@@ -1,0 +1,27 @@
+{
+  "siteVersion": 88,
+  "source": "c68603ae3228883016de80195ad863df18b34a81",
+  "build": "27430bf0c1011600849a",
+  "copy": "이 게임에는 OB·해저드 벌타가 반영되지 않아, 실제 라운드 타수는 더 높을 수 있어요.",
+  "scope": "direct game scoreboard and final game result; Gemini predictions unchanged",
+  "publicHTML": [
+    {
+      "path": "/game",
+      "status": 200,
+      "notices": 2
+    },
+    {
+      "path": "/play?club=rivera",
+      "status": 200,
+      "notices": 2
+    },
+    {
+      "path": "/round",
+      "status": 200,
+      "notices": 2
+    }
+  ],
+  "existingChecksPassed": 33,
+  "newGeminiRequests": 0,
+  "actualMobileBrowserVerified": false
+}
