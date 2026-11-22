@@ -11,6 +11,13 @@ strength: 사진에서 유지되는 좋은 정렬/연결을 평가하는 1문장
 weakness: 사진에서 부족한 부위의 정렬/연결과 사진 근거를 평가하는 1~2문장120자 이내. 교정 지시나 칭찬을 넣지 말고 무엇이 부족한지 판단하세요. 여러 사진의 상대적 부위 변화로 합리적으로 유추하되 원인·실제 동작순서·샷 영향을 측정 사실처럼 확정하지 마세요.
 improvement_plan: weakness에서 지적한 같은 문제를 어떻게 바꿀지 1~2문장120자 이내. 강점은 유지하고 우선 바꿀 동작/관계를 특정하세요. weakness를 그대로 복사하거나 단순히 점검하세요/조금 더 넓혀보세요로 대신하지 마세요. 세 필드의 역할과 문장이 서로 달라야 합니다. priority_dimension은 부족한 점과 개선할 점이 공통으로 다루는 setup/rotation/balance/arms 중 하나입니다.
 국면 이름은 미확인이므로 사진 번호와 보이는 자세 관계로 근거를 쓰세요. 실제 힘·체중 분배·근육 활성·정확한 각도·클럽 스피드·실제 구질/비거리를 만들지 마세요. 뚜렷한 결함이 없으면 확인된 유지 과제와 더 확인할 관계를 평가하고 결함을 꾸미지 마세요. 상담의 느낌은 자기보고이며 사진과 대조하세요. recent_round_score는 내부 참고만 하고 숫자를 문장에 인용하지 마세요. [코치 제안] 같은 접두어 없이 전문적인 평가 어투로 쓰세요.`;
+const swingClubGuidance = {
+ driver: '드라이버. 티가 보이면 셋업에서 공과 몸의 상대 위치를 보고, 회전과 균형을 확인하세요.',
+ iron: '아이언. 공과 지면이 보이면 준비 자세의 공 위치와 타격 전후 팔·몸의 정렬을 확인하세요.',
+ hybrid: '유틸. 티샷인지 지면에서 치는 샷인지 보이는 단서를 먼저 살피고, 균형과 클럽 정렬을 확인하세요.',
+ wood: '우드. 티샷인지 지면에서 치는 샷인지 보이는 단서를 먼저 살피고, 긴 클럽의 준비 자세와 몸통 회전 연결을 확인하세요.',
+ wedge: '웨지. 풀샷과 짧은 어프로치에서 스윙 크기가 다를 수 있으므로 보이는 동작 범위와 자세 유지에 맞춰 평가하세요.'
+};
 const scalar={type:'STRING'},rating={type:'STRING',enum:['낮음','중간','높음']};
 const object=(properties,required=Object.keys(properties))=>({type:'OBJECT',properties,required});
 const array=items=>({type:'ARRAY',items});
@@ -46,12 +53,19 @@ export async function visual(request,env,send=fetch,retryOptions={}){
  if(!Array.isArray(d.samples)||d.samples.length!==5||d.samples.some((s,i)=>s.id!==i+1||!Number.isInteger(s.frame)||s.frame<0||!Number.isFinite(s.time)||s.time<0||s.time>31||!['address','top','down','impact','finish'].includes(s.phase)||typeof s.image!=='string'||!/^\/9j\/[A-Za-z0-9+/=\r\n]+$/.test(s.image)||s.image.length>800000))return vjson({ok:false,reason:'대표사진 5장과 시간을 확인해 주세요.'},422);
  const summary={};for(const k of ['concern','improvement','hypothesis','goal'])summary[k]=String(d.summary?.[k]??'').slice(0,500);
  let recentScore;try{recentScore=readRecentRoundScore(d.summary?.recent_round_score);}catch(error){return vjson({ok:false,reason:error.message},422);}if(recentScore!==undefined)summary.recent_round_score=recentScore;
+ const swingClub = d.summary?.swing_club;
+ if (swingClub != null && (typeof swingClub !== 'string' || !Object.hasOwn(swingClubGuidance, swingClub))) {
+  return vjson({ok:false,reason:'클럽 종류를 확인해 주세요.'},422);
+ }
  const overallOnly=new URL(request.url).pathname==='/api/coaching/overall';
  const parts=[{text:overallOnly?overallReviewPrompt:visualPrompt},{text:'승인한 사용자 자기보고: '+JSON.stringify(summary)}];
+ if (swingClub) {
+  parts.push({text:'사용자가 선택한 클럽: '+swingClubGuidance[swingClub]+' 사진에 보이는 근거와 상담 고민에 맞춰 코칭의 우선순위를 정하세요. 클럽 선택만으로 샷 조건이나 결함을 단정하지 말고, 기존 네 가지 평가 기준을 적용하세요. 최근 라운드 타수는 예상 타수에만 참고하세요.'});
+ }
  for(const s of d.samples)parts.push({text:`sample_id=${s.id} frame=${s.frame} time=${s.time} phase_unverified=true`},{inlineData:{mimeType:'image/jpeg',data:s.image}});
  const requestId=typeof d.request_id==='string'&&/^[a-zA-Z0-9-]{1,64}$/.test(d.request_id)?d.request_id:crypto.randomUUID();
  const hashes=await Promise.all(d.samples.map(async s=>{const bytes=Uint8Array.from(atob(s.image.replace(/\s/g,'')),c=>c.charCodeAt(0));return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(n=>n.toString(16).padStart(2,'0')).join('');}));
- const receipt={request_id:requestId,photo_count:d.samples.length,image_sha256:hashes,samples:d.samples.map(({id,time,frame,phase_unverified})=>({id,time,frame,phase_unverified:phase_unverified===true})),...(recentScore!==undefined?{recent_round_score:recentScore}:{}),forwarded_images:parts.filter(p=>p.inlineData).length};
+ const receipt={request_id:requestId,photo_count:d.samples.length,image_sha256:hashes,samples:d.samples.map(({id,time,frame,phase_unverified})=>({id,time,frame,phase_unverified:phase_unverified===true})),...(recentScore!==undefined?{recent_round_score:recentScore}:{}),...(swingClub?{swing_club:swingClub}:{}),forwarded_images:parts.filter(p=>p.inlineData).length};
  const model=env.GEMINI_MODEL||'gemini-flash-lite-latest';if(!/^[\w.-]+$/.test(model))return vjson({ok:false,reason:'모델 설정 오류'},503);
  const started=Date.now();let attempts=0,modelRoutes=[];let selectedModel=model;try{
   let scoreCompletionAttempts=0,modelVersion=model,analysis,repairReason=null;const usage={};

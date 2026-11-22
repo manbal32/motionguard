@@ -30,3 +30,31 @@ test('format completion keeps five photos and approved concern without resending
 });
 
 test('photo model receives an explicit recent 18-hole self-report with five photos and preserves its returned estimates',async()=>{let sent;const returned={...analysis,overall_assessment:{evaluation:'종합 평가 근거',improvement_plan:'종합 개선 방향',priority_dimension:'arms'},score_estimate:{...analysis.score_estimate,current:{min:102,max:112},improved:{min:100,max:110}}};const r=await visual(req({allow_images:true,samples,summary:{recent_round_score:105},other_record:'DO_NOT_FORWARD'}),{GEMINI_API_KEY:'x'},async(url,opts)=>{if(!url.startsWith('https://generativelanguage.googleapis.com/'))throw Error('no search');sent=JSON.parse(opts.body);return Response.json({candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify(returned)}]}}]});});const result=await r.json();assert.equal(r.status,200);assert.match(sent.contents[0].parts[1].text,/"recent_round_score":105/);assert.equal(sent.contents[0].parts.filter(p=>p.inlineData).length,5);assert.equal(result.input_receipt.recent_round_score,105);assert.equal(sent.generationConfig.responseSchema.required.includes('overall_assessment'),true);assert.equal(result.analysis.overall_assessment.evaluation,'종합 평가 근거');assert.equal(result.analysis.overall_assessment.improvement_plan,'종합 개선 방향');assert.equal(result.analysis.overall_assessment.priority_dimension,'arms');assert.deepEqual(result.analysis.score_estimate.current,{min:102,max:112});assert.equal(JSON.stringify(sent).includes('DO_NOT_FORWARD'),false);let calls=0;assert.equal((await visual(req({allow_images:true,samples,summary:{recent_round_score:'105'}}),{GEMINI_API_KEY:'x'},async()=>{calls++;})).status,422);assert.equal(calls,0);});
+
+test('the five optional club choices tailor photo guidance, without changing image evidence or score rubric', async () => {
+ const replies = new Map();
+ for (const [club, label] of [['driver', '드라이버'], ['iron', '아이언'], ['hybrid', '유틸'], ['wood', '우드'], ['wedge', '웨지'], [undefined, undefined]]) {
+  const r = await visual(req({allow_images: true, samples, summary: {swing_club: club}}), {GEMINI_API_KEY: 'x'}, async (url, options) => {
+   if (!url.startsWith('https://generativelanguage.googleapis.com/')) throw Error('search unavailable');
+   const parts = JSON.parse(options.body).contents[0].parts;
+   assert.deepEqual(parts.filter(part => part.inlineData).map(part => part.inlineData.data), samples.map(sample => sample.image));
+   const clubPart = parts.find(part => part.text?.startsWith('사용자가 선택한 클럽: '));
+   if (label) {
+    assert.ok(clubPart?.text.startsWith('사용자가 선택한 클럽: ' + label + '.'));
+    replies.set(club, clubPart.text);
+   } else assert.equal(clubPart, undefined);
+   return Response.json({candidates: [{finishReason: 'STOP', content: {parts: [{text: JSON.stringify(analysis)}]}}]});
+  });
+  assert.equal(r.status, 200);
+  const result = await r.json();
+  assert.equal(result.input_receipt.swing_club, club);
+  assert.deepEqual(result.analysis.assessment_score.dimensions.map(d => d.id), ['setup', 'rotation', 'balance', 'arms']);
+ }
+ assert.equal(new Set(replies.values()).size, 5);
+ let requests = 0;
+ for (const swing_club of ['__proto__', ['driver'], 'putter']) {
+  const r = await visual(req({allow_images: true, samples, summary: {swing_club}}), {GEMINI_API_KEY: 'x'}, async () => { requests++; });
+  assert.equal(r.status, 422);
+ }
+ assert.equal(requests, 0);
+});

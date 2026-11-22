@@ -30,3 +30,19 @@ test('an aborted model request cannot populate the reusable result cache',async(
 });
 
 test('recent round participates in the verified photo request and reuse key; clearing it does not reuse the old score',async()=>{const t=setup(),send=t.context.fetch;let calls=0;t.context.fetch=async(...args)=>{calls++;return send(...args);};await t.api.analyze({track_id:'round'},{goal:'practice',recent_round_score:105});assert.equal(t.getSent().summary.recent_round_score,105);await t.api.analyze({track_id:'round'},{goal:'practice',recent_round_score:105});assert.equal(calls,1);await t.api.analyze({track_id:'round'},{goal:'practice',recent_round_score:115});assert.equal(calls,2);assert.equal(t.getSent().summary.recent_round_score,115);await t.api.analyze({track_id:'round'},{goal:'practice'});assert.equal(calls,3);assert.equal('recent_round_score' in t.getSent().summary,false);assert.equal(t.extracts(),1);await assert.rejects(t.api.analyze({track_id:'round'},{recent_round_score:0}),/최근 라운드/);assert.equal(calls,3);});
+
+test('changing or clearing the chosen club reruns the approved analysis with the correct club', async () => {
+ const t = setup(), send = t.context.fetch;
+ let calls = 0;
+ t.context.fetch = (...args) => { calls++; return send(...args); };
+ const track = {track_id: 'same-video-club'};
+ await t.api.analyze(track, {swing_club: 'driver'});
+ assert.equal(t.getSent().summary.swing_club, 'driver');
+ await t.api.analyze(track, {swing_club: 'driver'});
+ assert.equal(calls, 1);
+ await t.api.analyze(track, {swing_club: 'iron'});
+ assert.equal(t.getSent().summary.swing_club, 'iron');
+ await t.api.analyze(track, {});
+ assert.equal(t.getSent().summary.swing_club, undefined);
+ assert.equal(calls, 3);
+});
