@@ -1,0 +1,13 @@
+{
+  "version": 109,
+  "source": "a21ca3fbba27ee1f5e686ee235637bf26105b8d6",
+  "build": "d3e74e03499ce1ad2df6",
+  "public_build_matches": true,
+  "api_build_matches": true,
+  "chat_max_output_tokens": 256,
+  "summary_max_output_tokens_unchanged": 1000,
+  "related_tests_passed": 23,
+  "mirror_tests_passed": 23,
+  "live_example_passed": true,
+  "live_model_calls": 1
+}
