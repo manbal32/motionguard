@@ -1,3 +1,13 @@
+# 최신: 독립된 세 역할 종합평가와 기존 기록 자동 갱신
+
+0-CM 우선. legacy 최고점 strength/기존 improvement 복사 fallback 제거. separated-v2의 잘하는 점/부족한 점/개선할 점만 표시. 위 두 점수카드 본문을 제거해 점수·항목·그래프만 두고 같은 설명 반복 차단; 상세 네 항목/연습 보존.
+
+기존 기록도 사진5장 있으면 결과를 열 때 별도 /api/coaching/overall로 승인요약+동일사진만 보내 새 세 역할 수신. 원래점수/타수/분석 본문은 그대로, overall_review로 로컬 저장. 동시 결과/PDF 요청 합침·저장결과 재사용·실패 재시도/사진없음 미호출. PDF 같은 응답 사용. 새 main photo 응답도 valid 세 역할에 v2 revision. 전체성공 분석을 cosmetic 누락으로 버리지 않음.
+
+전체333/333·mirror333/333. 실제5장 별도API HTTP200/약2.02초/1시도. 실제모델응답→legacy자동갱신→결과/PDF 렌더러 DOM실행에서 세 역할/중복미노출/원래분석·타수 불변 확인. 공개 build/API/5자산SHA일치. 단일사례 구조/연결 QA이며 생체역학적 정확도/모든발화 준수 보장 아님. 실기Safari 미검증. 원본영상 미전송·개인미디어/모델문장 미커밋.
+
+Sitesv119/sourcea6b37825e0799976094eef012aa2a9e8368975e7/buildf5d16b7c8ff8c63ffe6d. hosted/public-validation/independent-overall/checks.json 참고.
+
 # 최신: 강점·보완점·개선방안 구조 연결
 
 0-CL 우선. 새 Gemini schema에서 strength/weakness/improvement_plan/priority 분리. 약점과 계획은 같은 사진 근거·부위/동작을 다루고, 추정 원인/순서/영향 구분. 결과/PDF 짙은 카드에 강점→보완할 점→종합 개선방안. generic summary 반복 제거. legacy는 저장된 강점/개선계획을 표시하고 없는 약점을 발명하거나 기록을 재작성하지 않음. 평가문 호환 필드는 기존값 또는 새 강점+보완점 원문 연결. 기존 서비스 보존.

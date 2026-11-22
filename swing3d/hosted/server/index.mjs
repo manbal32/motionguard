@@ -14,7 +14,7 @@ export default {
   if(['/api/courses/discover','/api/courses/select-maps','/api/courses/analyze-map','/api/courses/image'].includes(path))return courseImages(request,env);
   if(path==='/api/courses/predict')return coursePrediction(request,env);
   if(path.startsWith('/api/courses/'))return courses(request,env);
-  if(path==='/api/coaching/visual')return visual(request,env);
+  if(path==='/api/coaching/visual'||path==='/api/coaching/overall')return visual(request,env);
   if(path.startsWith('/api/')){
    if(path==='/api/coaching/status'||path==='/api/coaching/chat'||path==='/api/coaching/summary')return coaching(request,env);
    return Response.json({ok:false,reason:'이 분석은 브라우저에서 처리합니다.'},{status:404});

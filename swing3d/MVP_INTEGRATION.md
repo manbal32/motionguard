@@ -1,3 +1,15 @@
+# 0-CM. 기존 기록의 종합평가를 별도 Gemini 응답으로 갱신
+
+최신 사용자 캡처에서 상단 잘한점/개선점 문장이 종합평가에 그대로 재등장하고 부족한 점이 없었다. 원인은 legacy fallback이 dimensions 최고 strength/기존 improvement를 복사해 종합평가로 표시하던 연결이다. 이 fallback을 제거했다. 세 역할이 명시적으로 분리되고 검증된 separated-v2 응답만 종합평가에 표시한다. 제목은 잘하는 점/부족한 점/개선할 점이다. 상단 두 점수카드에서 본문을 제거하고 항목·점수·그래프만 유지해 동일 설명이 두 번 나오는 것을 막았다. 원래 상세 네 항목/연습 내용은 보존한다.
+
+새 /api/coaching/overall은 기존 사진5장 검증·동의·최근타수 내부참고·Gemini 재시도 경로를 공유하지만 별도 프롬프트와 네 필드 schema만 사용한다. 기존 카드문/점수/타수/원본영상/좌표는 입력으로 보내지 않고 승인 요약과 동일 JPEG5장을 보고 세 역할을 새로 작성한다. 출력상한1200, missing/동일문장3역할은 실패로 처리해 조언을 단점으로 위장하지 않는다. 전체 사진분석은 기존 점수/타수·네항목 schema를 유지하고 분리된 유효 종합평가에 revision을 부여한다. 형식이 누락되어도 전체 성공 점수를 버리지 않고 종합평가만 별도로 받을 수 있다.
+
+기존 결과를 열었을 때 로컬 JPEG5장이 있으면 종합평가만 자동 요청하고 결과를 doc.visual_analysis.overall_review로 별도 저장한다. 원래 analysis/점수/타수/사진/기록 수/프로필은 변경하지 않는다. 같은 리포트의 결과/PDF 동시 요청은 하나로 합치고 저장된 v2 결과는 재사용한다. 실패 시 기존 반복문으로 fallback하지 않고 재시도 상태를 표시한다. 사진이 없으면 모델 호출하지 않는다. browser client-api에 원격 overall pass-through와 로컬 /overall/save 경로를 추가했다. PDF도 같은 별도 결과를 사용하며 mount/open에서 진행 중인 동일 요청을 기다린다. 리포트 패널은 준비 상태를 즉시 표시한다. 원래 시뮬레이션/게임·날씨·숫자·최근타수 내부참고는 보존한다.
+
+전체333/333 및 mirror333/333 통과. 새 검사5개로 별도 schema/1200출력·승인사진/요약만 전달·세 역할 누락/중복 거절·동의/5장 검증·legacy 업그레이드/동시요청 합치기·로컬 저장/복원·실패 재시도/사진없음·기존 데이터 불변을 실행했다. 기존 UI/PDF 검사는 세 라벨/old fallback 미노출에 맞게 보강했다. 공개 build/API·변경5자산 SHA 일치. 실제 업로드 영상의 서로 다른 JPEG5장 별도API HTTP200/약2.02초/1시도, Gemini 세 역할·v2 revision 반환 및 기존점수 미반환 확인. 실제 모델 응답을 legacy 결과에 연결해 실제 결과/PDF 렌더러를 DOM harness에서 실행했고 세 라벨/모든 실제응답 문장·상단/종합평가 old중복문 미노출·기존 analysis/타수 불변을 확인했다. 첫 harness 실행은 테스트 DOM prepend 누락으로 실패했으며 harness 보완 후 통과했다. 생체역학적 정확도/모든 발화 준수 보장은 아니며 실기Safari 시각/터치 미검증. 개인 사진·모델평가문·원본영상·상담원문/사진해시는 커밋하지 않는다. 원본영상 미전송.
+
+Sitesv119/sourcea6b37825e0799976094eef012aa2a9e8368975e7/buildf5d16b7c8ff8c63ffe6d. hosted/public-validation/independent-overall/checks.json 참고.
+
 # 0-CL. 강점·보완점·그 보완점의 개선방안 연결
 
 최신 사용자 요청: 종합평가에 강점과 단점이 분명히 있고, 단점이 개선방향으로 이어져야 한다. 지침만 수정해도 기존 저장기록의 summary fallback이 모호한 관찰 요약을 계속 보여주는 경로가 있었다. 새 Gemini overall_assessment schema는 strength/weakness/improvement_plan/priority_dimension을 별도로 요구한다. weakness는 사진에서 부족한 부위/정렬과 관련 영향을 평가하고, plan은 바로 그 문제를 바꾸는 방향을 작성한다. 국면 이름/실제 순서를 사진만으로 단정하지 않고 추론을 구분하도록 했다. 기존 evaluation API는 strength+weakness를 그대로 연결해 호환하며, 기존 evaluation 필드가 있으면 원문을 보존한다. cosmetic 누락 때문에 기존 성공 분석을 추가 실패/재요청시키는 강제 검증은 추가하지 않았다.

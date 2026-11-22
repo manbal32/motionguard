@@ -1,0 +1,65 @@
+{
+  "source_commit": "a6b37825e0799976094eef012aa2a9e8368975e7",
+  "site_version": 119,
+  "build": "f5d16b7c8ff8c63ffe6d",
+  "public_build_assets": {
+    "/build-info.json": {
+      "status": 200,
+      "matches_local": true
+    },
+    "/api/build": {
+      "status": 200,
+      "matches_local": true
+    },
+    "ai-result.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    },
+    "result-dashboard.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    },
+    "coaching-report.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    },
+    "experience.css": {
+      "status": 200,
+      "sha256_matches_local": true
+    },
+    "client-api.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    }
+  },
+  "status": 200,
+  "ok": true,
+  "model": "gemini-3.5-flash-lite",
+  "attempts": 1,
+  "elapsed_seconds": 2.02,
+  "photo_count": 5,
+  "forwarded_images": 5,
+  "all_three_fields_present": true,
+  "all_three_fields_textually_distinct": true,
+  "revision": "separated-v2",
+  "no_score_or_estimate_replacement": true,
+  "usage": {
+    "promptTokenCount": 6138,
+    "candidatesTokenCount": 128,
+    "totalTokenCount": 6266
+  },
+  "test_count": 333,
+  "test_pass_count": 333,
+  "mirror_test_count": 333,
+  "mirror_test_pass_count": 333,
+  "actual_safari_visual_touch_verified": false,
+  "private_media_and_model_text_excluded": true,
+  "runtime_integration": {
+    "live_model_response_bound_to_three_labeled_result_rows": true,
+    "all_live_model_fields_rendered_in_result_and_pdf": true,
+    "old_strength_advice_not_in_overall": true,
+    "old_prose_not_in_top_score_cards": true,
+    "original_analysis_and_estimates_unchanged": true
+  },
+  "validation_scope": "Live photo-model response run through actual result and PDF renderers in a DOM harness; no Safari browser paint or touch validation"
+}
