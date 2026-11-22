@@ -11,3 +11,5 @@ test('saved report keeps the same simulation after session storage is cleared',(
 test('a reused analysis shows zero current-request tokens while retaining original model usage',()=>{
  const{s}=setup(),d=doc();d.visual_analysis.usage={promptTokenCount:100,candidatesTokenCount:20,totalTokenCount:120};d.visual_analysis.request_usage={promptTokenCount:0,candidatesTokenCount:0,totalTokenCount:0};d.visual_analysis.reused_result=true;const root=s.MotionReport.create(d);assert.match(root.textContent,/이번 요청 0토큰/);assert.match(root.textContent,/입력 0 \/ 출력 0 \/ 총 0 토큰/);assert.equal(d.visual_analysis.usage.totalTokenCount,120);
 });
+
+test('report shows the same recent round self-report without changing the model estimate',()=>{const{s}=setup(),d=doc();d.recent_round_score=105;const before=JSON.stringify(d.visual_analysis.analysis.score_estimate),root=s.MotionReport.create(d);assert.match(root.textContent,/최근 18홀 105타/);assert.equal(JSON.stringify(d.visual_analysis.analysis.score_estimate),before);});

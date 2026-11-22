@@ -1,10 +1,11 @@
+import {readRecentRoundScore} from './round-score.mjs';
 import {geminiFetch,geminiFallback} from './gemini-retry.mjs';
 import {findVideos} from './videos.mjs';
 const visualPrompt=`한국어 모션가드 코치. 승인 상담 요약과 동일 영상에서 추출한 대표사진5장만 근거로 JSON schema에 맞춰 답하세요.
 사진의 sample_id와 실제 자세를 확인하세요. phase_unverified=true이므로 어드레스/탑/임팩트 국면을 자동 이름으로 확정하지 말고 불명확하면 스윙 장면이라 하세요. 마무리 사진을 준비 자세로 부르거나 몸의 회전을 카메라 방향 변경으로 단정하지 마세요. 가림/블러/촬영·추적 문제를 스윙 결함으로 만들지 마세요.
 사진에서 보이는 자세만 관찰하세요. 사용자의 추정은 자기보고로 구분하고, 직접 말하지 않은 원인 가설에는 [코치 제안]을 붙이세요. 임팩트·클럽페이스·실제 구질/비거리·체중 분배/지면반력·통증 원인이나 숫자 각도/좌표를 만들어 측정 사실처럼 말하지 마세요. 근거가 부족하면 withheld/phase_notes에 짧게 적으세요.
 설명은 assessment_score.dimensions의 고정4항목 setup(준비 자세),rotation(몸통 회전),balance(균형과 하체 지지),arms(팔과 클럽 정렬)에 한 번씩만 작성하세요. 각 항목의 id,label,0~100정수 value,관찰 근거 basis,잘한 점 strength,점검/유지 improvement,구체적 연습 drill,sample_id(1~5),confidence를 반환하세요. 점수는 사진 참고평가이며 근거 없는 결함이나 연습 완료율을 만들지 마세요. basis/strength/improvement/drill은 각각 자연스러운 한 문장100자 이내. items는 중복 상세 설명 대신 빈 배열로 반환하세요. summary는 우선 관찰·개선 방향만 1~2문장120자 이내, coaching_context는 고민/가설/연습목표/개선방향을 각각 간결하게 쓰세요. withheld/phase_notes 메모와 추정 가정은 필요한 것만 최대3개씩.
-골프 자세가 보이면 assessment_score.value와 현재/개선 후18홀 score_estimate를 반드시 반환하세요. 일반 파72·보통의 아마추어 퍼팅/숏게임을 가정한 시뮬레이션 참고 범위이며 실제 타수의 확정 예측이 아닙니다. 평균타수 자기보고가 있으면 참고하고, 없으면 사진 추론의 낮은 신뢰도와 퍼팅/숏게임·실전미스를 모른다는 가정을 쓰세요. 고정90타 등 임의 기본값은 금지합니다. improved는 관찰한 개선이 실제 반영됐을 때의 조건부 목표이며 향상을 보장하지 마세요. 4항목·필수점수·두 타수범위는 생략하지 마세요. 긴 도입/중복 설명 없이 자연스러운 한글로 답하세요.`;
+골프 자세가 보이면 assessment_score.value와 현재/개선 후18홀 score_estimate를 반드시 반환하세요. 일반 파72·보통의 아마추어 퍼팅/숏게임을 가정한 시뮬레이션 참고 범위이며 실제 타수의 확정 예측이 아닙니다. recent_round_score가 있으면 사용자가 입력한 최근18홀 기록입니다. 사진 점수보다 실제 기록을 현재 타수의 주된 기준으로 삼고, 단 한 번의 기록이므로 평균이나 검증된 실력으로 단정하지 마세요. 100타가 넘는 기록도 그대로 고려하며 사진 자세가 좋다는 이유로80~90타대로 크게 낮추지 마세요. 최근 기록과 예상 범위 차이가 크면 근거를 설명하세요. 개선 후에도 근거 없이 고정4~6타를 빼지 말고 연습의 불확실성을 반영하세요. 평균타수 자기보고가 있으면 참고하고, 없으면 사진 추론의 낮은 신뢰도와 퍼팅/숏게임·실전미스를 모른다는 가정을 쓰세요. 고정90타 등 임의 기본값은 금지합니다. improved는 관찰한 개선이 실제 반영됐을 때의 조건부 목표이며 향상을 보장하지 마세요. 4항목·필수점수·두 타수범위는 생략하지 마세요. 긴 도입/중복 설명 없이 자연스러운 한글로 답하세요.`;
 const scalar={type:'STRING'},rating={type:'STRING',enum:['낮음','중간','높음']};
 const object=(properties,required=Object.keys(properties))=>({type:'OBJECT',properties,required});
 const array=items=>({type:'ARRAY',items});
@@ -36,11 +37,12 @@ export async function visual(request,env,send=fetch,retryOptions={}){
  if(!env.GEMINI_API_KEY)return vjson({ok:false,reason:'Gemini 비밀 설정이 없습니다.'},503);
  if(!Array.isArray(d.samples)||d.samples.length!==5||d.samples.some((s,i)=>s.id!==i+1||!Number.isInteger(s.frame)||s.frame<0||!Number.isFinite(s.time)||s.time<0||s.time>31||!['address','top','down','impact','finish'].includes(s.phase)||typeof s.image!=='string'||!/^\/9j\/[A-Za-z0-9+/=\r\n]+$/.test(s.image)||s.image.length>800000))return vjson({ok:false,reason:'대표사진 5장과 시간을 확인해 주세요.'},422);
  const summary={};for(const k of ['concern','improvement','hypothesis','goal'])summary[k]=String(d.summary?.[k]??'').slice(0,500);
+ let recentScore;try{recentScore=readRecentRoundScore(d.summary?.recent_round_score);}catch(error){return vjson({ok:false,reason:error.message},422);}if(recentScore!==undefined)summary.recent_round_score=recentScore;
  const parts=[{text:visualPrompt},{text:'승인한 사용자 자기보고: '+JSON.stringify(summary)}];
  for(const s of d.samples)parts.push({text:`sample_id=${s.id} frame=${s.frame} time=${s.time} phase_unverified=true`},{inlineData:{mimeType:'image/jpeg',data:s.image}});
  const requestId=typeof d.request_id==='string'&&/^[a-zA-Z0-9-]{1,64}$/.test(d.request_id)?d.request_id:crypto.randomUUID();
  const hashes=await Promise.all(d.samples.map(async s=>{const bytes=Uint8Array.from(atob(s.image.replace(/\s/g,'')),c=>c.charCodeAt(0));return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(n=>n.toString(16).padStart(2,'0')).join('');}));
- const receipt={request_id:requestId,photo_count:d.samples.length,image_sha256:hashes,samples:d.samples.map(({id,time,frame,phase_unverified})=>({id,time,frame,phase_unverified:phase_unverified===true})),forwarded_images:parts.filter(p=>p.inlineData).length};
+ const receipt={request_id:requestId,photo_count:d.samples.length,image_sha256:hashes,samples:d.samples.map(({id,time,frame,phase_unverified})=>({id,time,frame,phase_unverified:phase_unverified===true})),...(recentScore!==undefined?{recent_round_score:recentScore}:{}),forwarded_images:parts.filter(p=>p.inlineData).length};
  const model=env.GEMINI_MODEL||'gemini-flash-lite-latest';if(!/^[\w.-]+$/.test(model))return vjson({ok:false,reason:'모델 설정 오류'},503);
  const started=Date.now();let attempts=0,modelRoutes=[];let selectedModel=model;try{
   let scoreCompletionAttempts=0,modelVersion=model,analysis,repairReason=null;const usage={};

@@ -20,6 +20,7 @@ window.MotionVisual=(()=>{
   const selectedHashes=await Promise.all(selected.map(async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',Uint8Array.from(atob(s.image),c=>c.charCodeAt(0))))].map(n=>n.toString(16).padStart(2,'0')).join('')));
   cancelled(signal);
   const cleanSummary=Object.fromEntries(['concern','improvement','hypothesis','goal'].map(k=>[k,String(summary?.[k]??'').slice(0,500)]));
+  const recentScore=summary?.recent_round_score;if(recentScore!==undefined&&recentScore!==null){if(!Number.isInteger(recentScore)||recentScore<54||recentScore>200)throw Error('최근 라운드 타수를 확인해 주세요.');cleanSummary.recent_round_score=recentScore;}
   const key=JSON.stringify({revision:'concise-photo-v1',build:window.MotionBuild??'source',track:track.track_id,summary:cleanSummary,hashes:selectedHashes,samples:selected.map(({id,time,frame,phase,phase_unverified})=>({id,time,frame,phase,phase_unverified}))});
   if(!force&&savedAnalysis?.key===key&&Date.now()<savedAnalysis.expires)return reused(savedAnalysis.result,'identical-input',Date.now()-began);
   if(!force&&pendingAnalysis?.key===key&&pendingAnalysis.signal===signal){const result=await pendingAnalysis.promise;cancelled(signal);return reused(result,'shared-request',Date.now()-began);}
