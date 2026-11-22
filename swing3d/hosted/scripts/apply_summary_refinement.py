@@ -1,0 +1,6 @@
+"""A compact review of the original four editable approval fields."""
+from pathlib import Path
+import re
+r=Path(__file__).resolve().parents[1];d=r/'dist'
+p=d/'index.html';s=p.read_text();old='<div class="summary-intro"><span class="summary-eyebrow">나를 위한 코칭 방향</span><h2 id="summary-heading" tabindex="-1">이렇게 이해했어요</h2><p>고민에서 연습 목표까지, 핵심만 정리했어요.</p></div>';assert old in s;s=s.replace(old,'<div class="summary-intro"><span class="summary-eyebrow">상담 요약</span><h2 id="summary-heading" tabindex="-1">이 내용으로 분석할게요</h2></div>');a=s.index('<section id="summary-review"');b=s.index('</section>',a);part=s[a:b];assert part.count('class="summary-direction-hint"')==4;part=re.sub(r'<span class="summary-direction-hint">[^<]*</span>','',part);part=part.replace('<span>지금의 고민</span>','<span>내 고민</span>').replace('<span>바꾸고 싶은 동작</span>','<span>개선 방향</span>').replace('<span>이번 연습의 목표</span>','<span>연습 목표</span>').replace('rows="2" readonly','rows="1" readonly').replace('id="summary-edit">고치기','id="summary-edit">내용 수정');s=s[:a]+part+s[b:];p.write_text(s)
+p=d/'instrument.js';s=p.read_text().replace("byId('summary-origin').textContent='내용을 바로 수정할 수 있어요. 확인 후 분석을 시작해 주세요.';","byId('summary-origin').textContent='내용을 눌러 수정할 수 있어요.';").replace("byId('summary-feedback').textContent='이 내용과 선택한 장면을 함께 분석합니다.';","byId('summary-feedback').textContent='';");p.write_text(s)
