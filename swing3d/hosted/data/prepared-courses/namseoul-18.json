@@ -1,0 +1,1210 @@
+{
+  "revision": 1,
+  "id": "namseoul-18",
+  "name": "남서울CC · 18홀",
+  "clubName": "남서울CC",
+  "groupName": "18홀",
+  "tee": "2018 대회 안내 · 티 기준 미확인",
+  "holes": [
+    {
+      "number": 1,
+      "ref": "1",
+      "name": "18홀",
+      "par": 4,
+      "distance": 343,
+      "distanceSource": "이미지 문자 인식 · 티 기준 미확인",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.542,
+          0.667
+        ],
+        [
+          0.6,
+          0.63
+        ],
+        [
+          0.68,
+          0.58
+        ],
+        [
+          0.75,
+          0.53
+        ],
+        [
+          0.849,
+          0.482
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          197.6524,
+          488.32741
+        ],
+        [
+          195.59966,
+          369.61528
+        ],
+        [
+          186.64222,
+          260.68966
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfMTAw/MDAxNTI1NjYzMDk3MjU0.9v1W8MmlAYCRayokl5S3q9qy1H4h33D9f2gCaOHuH-Ig.Xoj79NQF-32JTk2Q95EUR-jPnWcgYb3olgQWmaib7oYg.PNG.jus1992/1.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfMTAw/MDAxNTI1NjYzMDk3MjU0.9v1W8MmlAYCRayokl5S3q9qy1H4h33D9f2gCaOHuH-Ig.Xoj79NQF-32JTk2Q95EUR-jPnWcgYb3olgQWmaib7oYg.PNG.jus1992/1.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 685,
+        "height": 802,
+        "known_holes": [
+          {
+            "number": 1
+          }
+        ],
+        "display": {
+          "x": -633.0053323919121,
+          "y": -455.6093109389162,
+          "width": 1197.707163755445,
+          "height": 1402.2790442800974,
+          "transform": "rotate(-54.7957802602427 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 2,
+      "par": 4,
+      "distance": 385,
+      "distanceSource": "2018 대회 홀 안내도 제목 White 거리 · 현재 티와 다를 수 있음",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.516566,
+          0.761905
+        ],
+        [
+          0.638554,
+          0.653968
+        ],
+        [
+          0.74247,
+          0.604762
+        ],
+        [
+          0.837349,
+          0.555556
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfMjEx/MDAxNTI1NjYzMDk3MjUy.yteyFbhJE4GCuYl4Rhq6RgAOzH_i0RStc7zpHvvvpgkg.atQ4NlBwsOQhrGscGxFOBaL77eKX8oqNWeEP68TBH-wg.PNG.jus1992/2.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfMjEx/MDAxNTI1NjYzMDk3MjUy.yteyFbhJE4GCuYl4Rhq6RgAOzH_i0RStc7zpHvvvpgkg.atQ4NlBwsOQhrGscGxFOBaL77eKX8oqNWeEP68TBH-wg.PNG.jus1992/2.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 664,
+        "height": 630,
+        "display": {
+          "x": -610.5994416173828,
+          "y": -398.38511055576885,
+          "width": 1197.415556541412,
+          "height": 1136.1021093691106,
+          "transform": "rotate(-58.603102703583986 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "2",
+      "name": "18홀",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          171.42508,
+          386.43302
+        ],
+        [
+          188.53122,
+          251.0982
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 3,
+      "ref": "3",
+      "name": "18홀",
+      "par": 3,
+      "distance": 161,
+      "distanceSource": "이미지 문자 인식 · 티 기준 미확인",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.561,
+          0.733
+        ],
+        [
+          0.69,
+          0.675
+        ],
+        [
+          0.82,
+          0.617
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          199.68274,
+          350.73103
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfMjkx/MDAxNTI1NjYzMDk3MTgz.-mTLMS5bRo5g2R4i6SUONIlIk0VzVWK9k5cx8Z6vBHQg.ykSJt4pfM9Gn_ihjRhyBx5APiUIsCeqH6T5DKeUVGcYg.PNG.jus1992/3.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfMjkx/MDAxNTI1NjYzMDk3MTgz.-mTLMS5bRo5g2R4i6SUONIlIk0VzVWK9k5cx8Z6vBHQg.ykSJt4pfM9Gn_ihjRhyBx5APiUIsCeqH6T5DKeUVGcYg.PNG.jus1992/3.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 613,
+        "height": 594,
+        "known_holes": [
+          {
+            "number": 3
+          }
+        ],
+        "display": {
+          "x": -900.5354288787742,
+          "y": -692.4856570325651,
+          "width": 1593.823937550723,
+          "height": 1544.4231956038,
+          "transform": "rotate(-66.53942311642292 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 4,
+      "par": 5,
+      "distance": 473,
+      "distanceSource": "2018 대회 홀 안내도 제목 White 거리 · 현재 티와 다를 수 있음",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.50495,
+          0.788136
+        ],
+        [
+          0.627063,
+          0.691525
+        ],
+        [
+          0.717822,
+          0.60339
+        ],
+        [
+          0.805281,
+          0.559322
+        ],
+        [
+          0.89934,
+          0.533898
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfMjk2/MDAxNTI1NjYzMDk3MjMx.oRB6khEMXWNhVa6E56HfCIAyqf9RbVu_XZ595efjDV4g.6MdnWnQJ13N2wWSssrPdebrMYnBiZTAgq4l_0Wu3bk8g.PNG.jus1992/4.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfMjk2/MDAxNTI1NjYzMDk3MjMx.oRB6khEMXWNhVa6E56HfCIAyqf9RbVu_XZ595efjDV4g.6MdnWnQJ13N2wWSssrPdebrMYnBiZTAgq4l_0Wu3bk8g.PNG.jus1992/4.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 606,
+        "height": 590,
+        "display": {
+          "x": -478.5742021580388,
+          "y": -271.9601411367321,
+          "width": 966.4302988101301,
+          "height": 940.9139872903907,
+          "transform": "rotate(-57.88696346643149 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "4",
+      "name": "18홀",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          185.74043,
+          426.71922
+        ],
+        [
+          162.12786,
+          308.34335
+        ],
+        [
+          171.93936,
+          214.71025
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 5,
+      "par": 4,
+      "distance": 351,
+      "distanceSource": "2018 대회 홀 안내도 제목 White 거리 · 현재 티와 다를 수 있음",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.49,
+          0.719658
+        ],
+        [
+          0.636667,
+          0.700855
+        ],
+        [
+          0.748333,
+          0.675214
+        ],
+        [
+          0.816667,
+          0.603419
+        ],
+        [
+          0.873333,
+          0.533333
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfMTE4/MDAxNTI1NjYzMDk3MjYy.Uz2zhrJh2gh03xzZxtRtQSoqlaAjB71zKitSHodAttgg.kvPo6Svh3W8vCeIix4Ns9VnJfI2Joxz0SqanLBG05n4g.PNG.jus1992/5.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfMTE4/MDAxNTI1NjYzMDk3MjYy.Uz2zhrJh2gh03xzZxtRtQSoqlaAjB71zKitSHodAttgg.kvPo6Svh3W8vCeIix4Ns9VnJfI2Joxz0SqanLBG05n4g.PNG.jus1992/5.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 600,
+        "height": 585,
+        "display": {
+          "x": -523.1228894805265,
+          "y": -297.9816821002403,
+          "width": 1060.8162341563307,
+          "height": 1034.2958283024225,
+          "transform": "rotate(-64.64307185893553 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "5",
+      "name": "18홀",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          249.05673,
+          426.07422
+        ],
+        [
+          275.82135,
+          307.67206
+        ],
+        [
+          239.76241,
+          210.36498
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 6,
+      "par": 3,
+      "distance": 195,
+      "distanceSource": "2018 안내도 상단 White 195m · 도면 WT153m와 불일치하여 티 미확인",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.497479,
+          0.801394
+        ],
+        [
+          0.630252,
+          0.714286
+        ],
+        [
+          0.741176,
+          0.639373
+        ],
+        [
+          0.857143,
+          0.567944
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfNzMg/MDAxNTI1NjYzMDk3MjQw.P4aFIyYtIFpaQuXr_4jsSrARKGcem1a1kbTT5RHfqlgg.4KggUU3uqQsNjbrovosY_-sN-KQfPcM27mvNfmMFzEog.PNG.jus1992/6.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfNzMg/MDAxNTI1NjYzMDk3MjQw.P4aFIyYtIFpaQuXr_4jsSrARKGcem1a1kbTT5RHfqlgg.4KggUU3uqQsNjbrovosY_-sN-KQfPcM27mvNfmMFzEog.PNG.jus1992/6.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 595,
+        "height": 574,
+        "display": {
+          "x": -518.241195649495,
+          "y": -350.41876595745475,
+          "width": 1060.4304309977176,
+          "height": 1023.0034746095629,
+          "transform": "rotate(-57.94646145164628 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "6",
+      "name": "18홀",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          199.19541,
+          408.37489
+        ],
+        [
+          196.66825,
+          268.00793
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 7,
+      "par": 4,
+      "distance": 357,
+      "distanceSource": "2018 대회 홀 안내도 제목 White 거리 · 현재 티와 다를 수 있음",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.48398,
+          0.767007
+        ],
+        [
+          0.586847,
+          0.717687
+        ],
+        [
+          0.694772,
+          0.670068
+        ],
+        [
+          0.801012,
+          0.603741
+        ],
+        [
+          0.893761,
+          0.540816
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfMjgg/MDAxNTI1NjYzMDk3Mzg5.5gtfqCoMVdZn6qe-OYyuJatM1NVuf6O1Jkk88NxrC8sg.k1e3JU57CBlXsBVwonZNjehm7iTC8BsxjsomDPPM6Qgg.PNG.jus1992/7.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfMjgg/MDAxNTI1NjYzMDk3Mzg5.5gtfqCoMVdZn6qe-OYyuJatM1NVuf6O1Jkk88NxrC8sg.k1e3JU57CBlXsBVwonZNjehm7iTC8BsxjsomDPPM6Qgg.PNG.jus1992/7.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 593,
+        "height": 588,
+        "display": {
+          "x": -463.58894356226165,
+          "y": -274.60170037468447,
+          "width": 963.2999868077695,
+          "height": 955.1777272225439,
+          "transform": "rotate(-61.30696274205587 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "7",
+      "name": "18홀",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          206.25109,
+          465.45824
+        ],
+        [
+          216.26673,
+          352.42249
+        ],
+        [
+          209.82789,
+          232.23115
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 8,
+      "par": 4,
+      "distance": 363,
+      "distanceSource": "2018 대회 홀 안내도 제목 White 거리 · 현재 티와 다를 수 있음",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.5,
+          0.77643
+        ],
+        [
+          0.645695,
+          0.681109
+        ],
+        [
+          0.77649,
+          0.62565
+        ],
+        [
+          0.897351,
+          0.570191
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfMjgw/MDAxNTI1NjYzMDk3NDE0.24IdNBtc7CXgDmSbtuqEOQbdcfClBZXfoUTUtcIQgM0g.W_gL2SaUJ6pWEUV6xUF65v46VRVcqT9SyKgnP4TyyTMg.PNG.jus1992/8.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfMjgw/MDAxNTI1NjYzMDk3NDE0.24IdNBtc7CXgDmSbtuqEOQbdcfClBZXfoUTUtcIQgM0g.W_gL2SaUJ6pWEUV6xUF65v46VRVcqT9SyKgnP4TyyTMg.PNG.jus1992/8.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 604,
+        "height": 577,
+        "display": {
+          "x": -508.8931663550012,
+          "y": -302.6187350313919,
+          "width": 1014.6243375572799,
+          "height": 969.2686138585274,
+          "transform": "rotate(-63.626271852409594 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "8",
+      "name": "18홀",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          182.89266,
+          401.51804
+        ],
+        [
+          193.68506,
+          258.74393
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 9,
+      "par": 5,
+      "distance": 450,
+      "distanceSource": "2018 대회 홀 안내도 제목 White 거리 · 현재 티와 다를 수 있음",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.499168,
+          0.793761
+        ],
+        [
+          0.638935,
+          0.707106
+        ],
+        [
+          0.770383,
+          0.620451
+        ],
+        [
+          0.906822,
+          0.532062
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfODMg/MDAxNTI1NjYzMDk3NDYx.mIKBKfC-TGNE9N2qoX5Aao0A_kMmbovCWiU8h__KetIg.nwd0-syiUKIRUo8UjKtwarwoQvcdE3T1kzUd1GVR5Fsg.PNG.jus1992/9.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfODMg/MDAxNTI1NjYzMDk3NDYx.mIKBKfC-TGNE9N2qoX5Aao0A_kMmbovCWiU8h__KetIg.nwd0-syiUKIRUo8UjKtwarwoQvcdE3T1kzUd1GVR5Fsg.PNG.jus1992/9.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 601,
+        "height": 577,
+        "display": {
+          "x": -460.62583379979037,
+          "y": -248.08128238688732,
+          "width": 939.7304871297667,
+          "height": 902.203812102954,
+          "transform": "rotate(-58.35332110540485 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "9",
+      "name": "18홀",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          202.35814,
+          422.16777
+        ],
+        [
+          200.61454,
+          275.99068
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 10,
+      "ref": "10",
+      "name": "18홀",
+      "par": 4,
+      "distance": 357,
+      "distanceSource": "이미지 문자 인식 · 티 기준 미확인",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.521,
+          0.811
+        ],
+        [
+          0.69,
+          0.69
+        ],
+        [
+          0.851,
+          0.561
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          206.02455,
+          348.93903
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfMTM0/MDAxNTI1NjYzMDk3NTMw.51lriGGRbWi1mrGYMom7ipBGVJffrjBAmX27iyEob5og.rAFZk65VKmY-R0nfd_Yp3V1nFU06hABJLFc3sMurjhEg.PNG.jus1992/10.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfMTM0/MDAxNTI1NjYzMDk3NTMw.51lriGGRbWi1mrGYMom7ipBGVJffrjBAmX27iyEob5og.rAFZk65VKmY-R0nfd_Yp3V1nFU06hABJLFc3sMurjhEg.PNG.jus1992/10.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 589,
+        "height": 567,
+        "known_holes": [
+          {
+            "number": 10
+          }
+        ],
+        "display": {
+          "x": -555.8138208062267,
+          "y": -377.583083866096,
+          "width": 1101.7694180848785,
+          "height": 1060.6167403295858,
+          "transform": "rotate(-53.89750635363347 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 11,
+      "ref": "11",
+      "name": "18홀",
+      "par": 3,
+      "distance": 164,
+      "distanceSource": "이미지 문자 인식 · 티 기준 미확인",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.55,
+          0.778
+        ],
+        [
+          0.7,
+          0.7
+        ],
+        [
+          0.86,
+          0.63
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          192.69389,
+          353.94381
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfOTIg/MDAxNTI1NjYzMDk3NTUw.3MYBJT-GjH0K4cBYw3QdhWaXqBj5h5vy2ukCwUkrBDcg.98SL5p7KsjiJpPyBVMI4DnCCw5gb7jlr_F9_G5VU310g.PNG.jus1992/11.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfOTIg/MDAxNTI1NjYzMDk3NTUw.3MYBJT-GjH0K4cBYw3QdhWaXqBj5h5vy2ukCwUkrBDcg.98SL5p7KsjiJpPyBVMI4DnCCw5gb7jlr_F9_G5VU310g.PNG.jus1992/11.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 602,
+        "height": 572,
+        "known_holes": [
+          {
+            "number": 11
+          }
+        ],
+        "display": {
+          "x": -731.9792519503318,
+          "y": -534.2790250215008,
+          "width": 1321.9563857451512,
+          "height": 1256.0781605419045,
+          "transform": "rotate(-65.59964007753416 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 12,
+      "par": 4,
+      "distance": 320,
+      "distanceSource": "2018 대회 홀 안내도 제목 White 거리 · 현재 티와 다를 수 있음",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.527919,
+          0.852373
+        ],
+        [
+          0.607445,
+          0.769772
+        ],
+        [
+          0.681895,
+          0.685413
+        ],
+        [
+          0.773266,
+          0.630931
+        ],
+        [
+          0.879865,
+          0.588752
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfODMg/MDAxNTI1NjYzMDk3NTg3.nGMGn2aC2ocu6Eo_Tm8GQGjR7lLbaAw7ANCnGXbuZDsg.-pS92G3OgxntCBGO5OM9QPca4_Onq_UR9lLDBCywq14g.PNG.jus1992/12.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfODMg/MDAxNTI1NjYzMDk3NTg3.nGMGn2aC2ocu6Eo_Tm8GQGjR7lLbaAw7ANCnGXbuZDsg.-pS92G3OgxntCBGO5OM9QPca4_Onq_UR9lLDBCywq14g.PNG.jus1992/12.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 591,
+        "height": 569,
+        "display": {
+          "x": -529.9808207781944,
+          "y": -369.452063454582,
+          "width": 1037.06366996385,
+          "height": 998.4589309804242,
+          "transform": "rotate(-54.202544966425634 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "12",
+      "name": "18홀",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          181.34697,
+          459.86591
+        ],
+        [
+          158.19113,
+          347.9748
+        ],
+        [
+          169.49518,
+          239.29933
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 13,
+      "ref": "13",
+      "name": "18홀",
+      "par": 4,
+      "distance": 329,
+      "distanceSource": "이미지 문자 인식 · 티 기준 미확인",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.523,
+          0.784
+        ],
+        [
+          0.707,
+          0.679
+        ],
+        [
+          0.891,
+          0.574
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          200.0,
+          350.0
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfMTkg/MDAxNTI1NjYzMDk3NjEw.Tt35MUyiNBEHXbvyRwRI2uEzMi_DI47Drz8OOvkKsDcg.Wq8-JheqoifeTJ9A8OfHFRcN0eXtPC44nnYtinV3d0Ug.PNG.jus1992/13.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfMTkg/MDAxNTI1NjYzMDk3NjEw.Tt35MUyiNBEHXbvyRwRI2uEzMi_DI47Drz8OOvkKsDcg.Wq8-JheqoifeTJ9A8OfHFRcN0eXtPC44nnYtinV3d0Ug.PNG.jus1992/13.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 601,
+        "height": 577,
+        "known_holes": [
+          {
+            "number": 13
+          }
+        ],
+        "display": {
+          "x": -558.2048141899933,
+          "y": -349.0982890792528,
+          "width": 1072.425479759538,
+          "height": 1029.5998366410204,
+          "transform": "rotate(-61.283248718624016 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 14,
+      "par": 5,
+      "distance": 415,
+      "distanceSource": "2018 대회 홀 안내도 제목 White 거리 · 현재 티와 다를 수 있음",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.543947,
+          0.813913
+        ],
+        [
+          0.666667,
+          0.730435
+        ],
+        [
+          0.746269,
+          0.633043
+        ],
+        [
+          0.829187,
+          0.594783
+        ],
+        [
+          0.912106,
+          0.558261
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfNjYg/MDAxNTI1NjYzMDk3NjUz.DUdmwbb5H-I-S7VH3A8hFwaQu5VPQp4txLg7strxgKYg.2frAbt3loYqHxBjpS89eM7vAb_C1iXvJbdapKpGfP-cg.PNG.jus1992/14.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfNjYg/MDAxNTI1NjYzMDk3NjUz.DUdmwbb5H-I-S7VH3A8hFwaQu5VPQp4txLg7strxgKYg.2frAbt3loYqHxBjpS89eM7vAb_C1iXvJbdapKpGfP-cg.PNG.jus1992/14.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 603,
+        "height": 575,
+        "display": {
+          "x": -541.9516305834735,
+          "y": -316.74248401410466,
+          "width": 1019.127230373446,
+          "height": 971.8045729100023,
+          "transform": "rotate(-56.48898453114028 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "14",
+      "name": "18홀",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          201.40952,
+          425.93292
+        ],
+        [
+          167.28427,
+          306.03911
+        ],
+        [
+          182.93773,
+          215.05374
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 15,
+      "ref": "15",
+      "name": "18홀",
+      "par": 4,
+      "distance": 309,
+      "distanceSource": "이미지 문자 인식 · 티 기준 미확인",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.518,
+          0.774
+        ],
+        [
+          0.765,
+          0.671
+        ],
+        [
+          0.902,
+          0.606
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          204.8244,
+          287.56304
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfMTUw/MDAxNTI1NjYzMDk3NzA1.6zZWs6sDbVejO7On51m_j1e39nAVh1ADLqrWunPJVZsg.9vF1tVFP_Ii6BCcAGIwt-LPIsrBnI2USivlOdXlYp6Ag.PNG.jus1992/15.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfMTUw/MDAxNTI1NjYzMDk3NzA1.6zZWs6sDbVejO7On51m_j1e39nAVh1ADLqrWunPJVZsg.9vF1tVFP_Ii6BCcAGIwt-LPIsrBnI2USivlOdXlYp6Ag.PNG.jus1992/15.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 603,
+        "height": 576,
+        "known_holes": [
+          {
+            "number": 15
+          }
+        ],
+        "display": {
+          "x": -567.6894196344864,
+          "y": -362.6584984456364,
+          "width": 1081.2527037105442,
+          "height": 1032.8384035444003,
+          "transform": "rotate(-67.31944039297507 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 16,
+      "par": 5,
+      "distance": 456,
+      "distanceSource": "2018 대회 홀 안내도 White 거리 · 현재 티와 다를 수 있음",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.47117,
+          0.813913
+        ],
+        [
+          0.617792,
+          0.726957
+        ],
+        [
+          0.744646,
+          0.66087
+        ],
+        [
+          0.850082,
+          0.612174
+        ],
+        [
+          0.919275,
+          0.566957
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfMjgw/MDAxNTI1NjYzMDk3NzQ3.18RRhuyLNJ_0ck_DRA-1qGZBpraiJ7efb81KLPkQWmUg.u_tKRskzEVuFevM94FrnEgmvK_W4V0ntrkVOwxokTT0g.PNG.jus1992/16.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfMjgw/MDAxNTI1NjYzMDk3NzQ3.18RRhuyLNJ_0ck_DRA-1qGZBpraiJ7efb81KLPkQWmUg.u_tKRskzEVuFevM94FrnEgmvK_W4V0ntrkVOwxokTT0g.PNG.jus1992/16.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 607,
+        "height": 575,
+        "display": {
+          "x": -418.8993172378522,
+          "y": -232.23476973303968,
+          "width": 890.2176170044154,
+          "height": 843.286869485237,
+          "transform": "rotate(-62.4328192580011 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "16",
+      "name": "18홀",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          195.40193,
+          425.35749
+        ],
+        [
+          198.26037,
+          299.4593
+        ],
+        [
+          205.29556,
+          197.2502
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 17,
+      "ref": "17",
+      "name": "18홀",
+      "par": 3,
+      "distance": 186,
+      "distanceSource": "이미지 문자 인식 · 티 기준 미확인",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.571,
+          0.738
+        ],
+        [
+          0.849,
+          0.559
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfOTUg/MDAxNTI1NjYzMDk3NzUy.QK4jdXtEcEkBHnHPEpTtUTlGfS58btz_k_7BNtjS-1Eg.JiABs4KUJA3OQAQcb_LuHB08gRGhTf-P-w6QEiELPgAg.PNG.jus1992/17.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfOTUg/MDAxNTI1NjYzMDk3NzUy.QK4jdXtEcEkBHnHPEpTtUTlGfS58btz_k_7BNtjS-1Eg.JiABs4KUJA3OQAQcb_LuHB08gRGhTf-P-w6QEiELPgAg.PNG.jus1992/17.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 596,
+        "height": 582,
+        "known_holes": [
+          {
+            "number": 17
+          }
+        ],
+        "display": {
+          "x": -772.9402340285312,
+          "y": -517.7897573227301,
+          "width": 1370.3383577866637,
+          "height": 1338.1492017312723,
+          "transform": "rotate(-57.839957780063145 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 18,
+      "par": 4,
+      "distance": 332,
+      "distanceSource": "안내도 WT 332m · 상단 White 382m와 불일치하여 티 미확인",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.505902,
+          0.8
+        ],
+        [
+          0.632378,
+          0.722807
+        ],
+        [
+          0.74199,
+          0.65614
+        ],
+        [
+          0.84317,
+          0.603509
+        ],
+        [
+          0.900506,
+          0.55614
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAxODA1MDdfMTI1/MDAxNTI1NjYzMDk3ODQ5.vxtZNdDdQZoQ5cWxV-yxVgTnXC-Mf9KmX5IxUhHG5uMg.K7Boa_Ue2GXuo148fwjY3J5ftLlpRwTVs0MvWrMf9RMg.PNG.jus1992/18.PNG",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAxODA1MDdfMTI1/MDAxNTI1NjYzMDk3ODQ5.vxtZNdDdQZoQ5cWxV-yxVgTnXC-Mf9KmX5IxUhHG5uMg.K7Boa_Ue2GXuo148fwjY3J5ftLlpRwTVs0MvWrMf9RMg.PNG.jus1992/18.PNG",
+        "source_page": "https://m.blog.naver.com/jus1992/221269904345",
+        "title": "2018 제37회 GS칼텍스 매경오픈 (남서울 cc) 코스",
+        "width": 593,
+        "height": 570,
+        "display": {
+          "x": -489.45582908163465,
+          "y": -289.0278822236203,
+          "width": 980.4492424412185,
+          "height": 942.4217001542911,
+          "transform": "rotate(-59.28894652782232 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "18",
+      "name": "18홀",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          200.7839,
+          431.23447
+        ],
+        [
+          201.65229,
+          306.75056
+        ],
+        [
+          209.67125,
+          196.12993
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    }
+  ],
+  "geometrySource": "prepared-guide",
+  "source": "공개 홀 안내도 · 경로 후보 대조 · 2026-11-22",
+  "sourceUrl": "https://m.blog.naver.com/jus1992/221269904345",
+  "preparedAt": "2026-11-22",
+  "notice": "홀 안내도 기반의 가상 재생입니다. 원문 작성 시점·티·사용 그린에 따라 현재 코스와 차이가 있을 수 있습니다."
+}

@@ -1,0 +1,751 @@
+{
+  "revision": 1,
+  "id": "korea-creek",
+  "name": "코리아CC · 크리크",
+  "clubName": "코리아CC",
+  "groupName": "크리크",
+  "tee": "거리 미표시 · 홀별 재생 가정",
+  "holes": [
+    {
+      "number": 1,
+      "par": 5,
+      "distance": 480,
+      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
+      "distanceAssumed": true,
+      "sourceRoute": [
+        [
+          0.820408,
+          0.858434
+        ],
+        [
+          0.665306,
+          0.740964
+        ],
+        [
+          0.493878,
+          0.689759
+        ],
+        [
+          0.371429,
+          0.635542
+        ],
+        [
+          0.273469,
+          0.575301
+        ],
+        [
+          0.218367,
+          0.481928
+        ],
+        [
+          0.14898,
+          0.454819
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyMzAzMTJfMTQ5/MDAxNjc4NTYwNjQ0NTUz.bk8LAFFkZpJ0r6QtmbHG196pv-7KLK71J2NNRpLkYYkg.t7GmQjI9ixd4V8Xr-n59mhgVYxEIk4usM6_3WpaId4Ag.JPEG.sesp486/1.jpg",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyMzAzMTJfMTQ5/MDAxNjc4NTYwNjQ0NTUz.bk8LAFFkZpJ0r6QtmbHG196pv-7KLK71J2NNRpLkYYkg.t7GmQjI9ixd4V8Xr-n59mhgVYxEIk4usM6_3WpaId4Ag.JPEG.sesp486/1.jpg",
+        "source_page": "https://m.blog.naver.com/sesp486/223041916683",
+        "title": "[경기 용인 골프장] 코리아cc 크리크 코스 공략 (Creek Course)",
+        "width": 490,
+        "height": 332,
+        "display": {
+          "x": -100.8513440612748,
+          "y": 73.8502070119257,
+          "width": 620.7036688328611,
+          "height": 420.5584041887957,
+          "transform": "rotate(67.83914233872413 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "1",
+      "name": "크리크",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          209.43879,
+          467.20419
+        ],
+        [
+          189.24548,
+          360.53551
+        ],
+        [
+          181.69298,
+          281.54466
+        ],
+        [
+          182.2205,
+          215.6757
+        ],
+        [
+          205.68718,
+          169.18773
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 2,
+      "par": 4,
+      "distance": 330,
+      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
+      "distanceAssumed": true,
+      "sourceRoute": [
+        [
+          0.811359,
+          0.789318
+        ],
+        [
+          0.653144,
+          0.655786
+        ],
+        [
+          0.513185,
+          0.5727
+        ],
+        [
+          0.361055,
+          0.554896
+        ],
+        [
+          0.294118,
+          0.486647
+        ],
+        [
+          0.194726,
+          0.445104
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyMzAzMTJfMTYw/MDAxNjc4NTYwNjU4NzY3.BZPkpjvLmUMVJ76ELgqOx0xAacBBenERuhUk3cUh4-Ug.Lziy1GiWRMGoml6fpZw4h3oT8E_5GPFQ2qWzC0KQk6gg.JPEG.sesp486/2.jpg",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyMzAzMTJfMTYw/MDAxNjc4NTYwNjU4NzY3.BZPkpjvLmUMVJ76ELgqOx0xAacBBenERuhUk3cUh4-Ug.Lziy1GiWRMGoml6fpZw4h3oT8E_5GPFQ2qWzC0KQk6gg.JPEG.sesp486/2.jpg",
+        "source_page": "https://m.blog.naver.com/sesp486/223041916683",
+        "title": "[경기 용인 골프장] 코리아cc 크리크 코스 공략 (Creek Course)",
+        "width": 493,
+        "height": 337,
+        "display": {
+          "x": -142.98364432897665,
+          "y": 62.3360952269656,
+          "width": 681.8184235506475,
+          "height": 466.07060595652786,
+          "transform": "rotate(69.11418345771543 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "2",
+      "name": "크리크",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          219.68826,
+          452.02688
+        ],
+        [
+          221.84752,
+          349.06513
+        ],
+        [
+          192.62153,
+          249.19731
+        ],
+        [
+          206.06975,
+          195.21717
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 3,
+      "par": 4,
+      "distance": 330,
+      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
+      "distanceAssumed": true,
+      "sourceRoute": [
+        [
+          0.828221,
+          0.861862
+        ],
+        [
+          0.687117,
+          0.717718
+        ],
+        [
+          0.556237,
+          0.651652
+        ],
+        [
+          0.472393,
+          0.624625
+        ],
+        [
+          0.355828,
+          0.624625
+        ],
+        [
+          0.321063,
+          0.522523
+        ],
+        [
+          0.200409,
+          0.435435
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyMzAzMTJfNzgg/MDAxNjc4NTYwNjc5NDUy.rlFsquy8LaF_M6bFG8B00hAMXQq44aaNCptCTwYzmLog.zIc4F4bR_hwmXy5X6thrnqd6oEmiRPD7In7KwcVdaPEg.JPEG.sesp486/3.jpg",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyMzAzMTJfNzgg/MDAxNjc4NTYwNjc5NDUy.rlFsquy8LaF_M6bFG8B00hAMXQq44aaNCptCTwYzmLog.zIc4F4bR_hwmXy5X6thrnqd6oEmiRPD7In7KwcVdaPEg.JPEG.sesp486/3.jpg",
+        "source_page": "https://m.blog.naver.com/sesp486/223041916683",
+        "title": "[경기 용인 골프장] 코리아cc 크리크 코스 공략 (Creek Course)",
+        "width": 489,
+        "height": 333,
+        "display": {
+          "x": -134.5897980287093,
+          "y": 62.638688849461914,
+          "width": 650.5542284955899,
+          "height": 443.0154562147883,
+          "transform": "rotate(65.1775123614829 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "3",
+      "name": "크리크",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          219.42171,
+          464.87683
+        ],
+        [
+          210.24157,
+          375.3115
+        ],
+        [
+          198.21029,
+          320.77917
+        ],
+        [
+          166.37544,
+          251.95321
+        ],
+        [
+          197.93468,
+          212.43708
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 4,
+      "par": 3,
+      "distance": 150,
+      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
+      "distanceAssumed": true,
+      "sourceRoute": [
+        [
+          0.803279,
+          0.835366
+        ],
+        [
+          0.243852,
+          0.530488
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyMzAzMTJfNyAg/MDAxNjc4NTYwNjk0ODM3.s5ri5W6IA81IEYMmLnWQkGvG37p3u9fI082juhMPFxIg.X0HkOm7OrtSe_AVZDiusUURU5QwKXnEgtFC0CFUCLu8g.JPEG.sesp486/4.jpg",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyMzAzMTJfNyAg/MDAxNjc4NTYwNjk0ODM3.s5ri5W6IA81IEYMmLnWQkGvG37p3u9fI082juhMPFxIg.X0HkOm7OrtSe_AVZDiusUURU5QwKXnEgtFC0CFUCLu8g.JPEG.sesp486/4.jpg",
+        "source_page": "https://m.blog.naver.com/sesp486/223041916683",
+        "title": "[경기 용인 골프장] 코리아cc 크리크 코스 공략 (Creek Course)",
+        "width": 488,
+        "height": 328,
+        "display": {
+          "x": -195.45764184939725,
+          "y": 3.297274359330629,
+          "width": 755.3164634594855,
+          "height": 507.6717213416213,
+          "transform": "rotate(69.8822274225687 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "4",
+      "name": "크리크",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 5,
+      "par": 4,
+      "distance": 330,
+      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
+      "distanceAssumed": true,
+      "sourceRoute": [
+        [
+          0.847561,
+          0.864706
+        ],
+        [
+          0.743902,
+          0.741176
+        ],
+        [
+          0.705285,
+          0.6
+        ],
+        [
+          0.579268,
+          0.529412
+        ],
+        [
+          0.449187,
+          0.470588
+        ],
+        [
+          0.343496,
+          0.45
+        ],
+        [
+          0.21748,
+          0.511765
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyMzAzMTJfNzUg/MDAxNjc4NTYwNzA0MjEy.imbTZONqIclcfPHCJy3VwwE37kbODM_lSVUGWicxi4sg.jo62_rj3CAIYDJnj0ZUSr7AjqHJ0hSlQITL0PiexPJUg.JPEG.sesp486/5.jpg",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyMzAzMTJfNzUg/MDAxNjc4NTYwNzA0MjEy.imbTZONqIclcfPHCJy3VwwE37kbODM_lSVUGWicxi4sg.jo62_rj3CAIYDJnj0ZUSr7AjqHJ0hSlQITL0PiexPJUg.JPEG.sesp486/5.jpg",
+        "source_page": "https://m.blog.naver.com/sesp486/223041916683",
+        "title": "[경기 용인 골프장] 코리아cc 크리크 코스 공략 (Creek Course)",
+        "width": 492,
+        "height": 340,
+        "display": {
+          "x": -154.6769925568965,
+          "y": 47.44164538172623,
+          "width": 666.0344391566081,
+          "height": 460.26770185619256,
+          "transform": "rotate(68.83874061872358 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "5",
+      "name": "크리크",
+      "route": [
+        [
+          186.74427,
+          580.13125
+        ],
+        [
+          214.84398,
+          495.22132
+        ],
+        [
+          266.15623,
+          447.77849
+        ],
+        [
+          266.15595,
+          357.77802
+        ],
+        [
+          260.12907,
+          267.20795
+        ],
+        [
+          243.55432,
+          198.14012
+        ],
+        [
+          186.74427,
+          130.13125
+        ]
+      ]
+    },
+    {
+      "number": 6,
+      "par": 3,
+      "distance": 150,
+      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
+      "distanceAssumed": true,
+      "sourceRoute": [
+        [
+          0.720165,
+          0.862385
+        ],
+        [
+          0.617284,
+          0.718654
+        ],
+        [
+          0.520576,
+          0.605505
+        ],
+        [
+          0.31893,
+          0.535168
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyMzAzMTJfMTU2/MDAxNjc4NTYwNzE2MDg5.iKheBeCAh-IkFB0MjEVdfJo2b8THfySHd7VYHpWArxsg.w62swNd1RCb4ZEV8Y4vzNmsE_CURe2juk4ktHlZ-CpYg.JPEG.sesp486/6.jpg",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyMzAzMTJfMTU2/MDAxNjc4NTYwNzE2MDg5.iKheBeCAh-IkFB0MjEVdfJo2b8THfySHd7VYHpWArxsg.w62swNd1RCb4ZEV8Y4vzNmsE_CURe2juk4ktHlZ-CpYg.JPEG.sesp486/6.jpg",
+        "source_page": "https://m.blog.naver.com/sesp486/223041916683",
+        "title": "[경기 용인 골프장] 코리아cc 크리크 코스 공략 (Creek Course)",
+        "width": 486,
+        "height": 327,
+        "display": {
+          "x": -310.84036802546984,
+          "y": -112.28491736075551,
+          "width": 983.2409318213827,
+          "height": 661.5633430156216,
+          "transform": "rotate(61.24566832692784 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "6",
+      "name": "크리크",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          234.70001,
+          440.57464
+        ],
+        [
+          254.58266,
+          321.20306
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 7,
+      "par": 5,
+      "distance": 480,
+      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
+      "distanceAssumed": true,
+      "sourceRoute": [
+        [
+          0.831276,
+          0.856269
+        ],
+        [
+          0.759259,
+          0.700306
+        ],
+        [
+          0.695473,
+          0.64526
+        ],
+        [
+          0.584362,
+          0.602446
+        ],
+        [
+          0.481481,
+          0.599388
+        ],
+        [
+          0.397119,
+          0.529052
+        ],
+        [
+          0.316872,
+          0.525994
+        ],
+        [
+          0.271605,
+          0.461774
+        ],
+        [
+          0.193416,
+          0.437309
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyMzAzMTJfNDMg/MDAxNjc4NTYwNzI1NzI4.4ot8WLCYZkLS-PfspVF2chYhLuMaHXrw2YykN-uChVEg.EEUuIo4ZJ7nGNplJqKfavfw9Yqkfd0moH3bE-LFjj4cg.JPEG.sesp486/7.jpg",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyMzAzMTJfNDMg/MDAxNjc4NTYwNzI1NzI4.4ot8WLCYZkLS-PfspVF2chYhLuMaHXrw2YykN-uChVEg.EEUuIo4ZJ7nGNplJqKfavfw9Yqkfd0moH3bE-LFjj4cg.JPEG.sesp486/7.jpg",
+        "source_page": "https://m.blog.naver.com/sesp486/223041916683",
+        "title": "[경기 용인 골프장] 코리아cc 크리크 코스 공략 (Creek Course)",
+        "width": 486,
+        "height": 327,
+        "display": {
+          "x": -130.60605331030115,
+          "y": 69.18418690891554,
+          "width": 645.2788805032169,
+          "height": 434.16912330154713,
+          "transform": "rotate(66.15767340884679 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "7",
+      "name": "크리크",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          243.15109,
+          505.12317
+        ],
+        [
+          248.37319,
+          457.81534
+        ],
+        [
+          236.39371,
+          384.72247
+        ],
+        [
+          210.77309,
+          323.46423
+        ],
+        [
+          216.70017,
+          261.3288
+        ],
+        [
+          196.9833,
+          213.42941
+        ],
+        [
+          210.67897,
+          175.44167
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 8,
+      "par": 4,
+      "distance": 330,
+      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
+      "distanceAssumed": true,
+      "sourceRoute": [
+        [
+          0.834711,
+          0.823171
+        ],
+        [
+          0.683884,
+          0.719512
+        ],
+        [
+          0.561983,
+          0.643293
+        ],
+        [
+          0.427686,
+          0.634146
+        ],
+        [
+          0.367769,
+          0.579268
+        ],
+        [
+          0.262397,
+          0.542683
+        ],
+        [
+          0.173554,
+          0.54878
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyMzAzMTJfOTkg/MDAxNjc4NTYwNzM2MzYw.uT3FSmA6L8lQtLOr2FFxtVxeMNfyi8G9jYTwNwIBVBQg.RdnorajHedlC83vVVUmed-iVuXyA6jnwLXnyVtDn0zog.JPEG.sesp486/8.jpg",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyMzAzMTJfOTkg/MDAxNjc4NTYwNzM2MzYw.uT3FSmA6L8lQtLOr2FFxtVxeMNfyi8G9jYTwNwIBVBQg.RdnorajHedlC83vVVUmed-iVuXyA6jnwLXnyVtDn0zog.JPEG.sesp486/8.jpg",
+        "source_page": "https://m.blog.naver.com/sesp486/223041916683",
+        "title": "[경기 용인 골프장] 코리아cc 크리크 코스 공략 (Creek Course)",
+        "width": 484,
+        "height": 328,
+        "display": {
+          "x": -130.3097245839055,
+          "y": 46.76492875581903,
+          "width": 655.2041865658443,
+          "height": 444.022671887597,
+          "transform": "rotate(74.2913204617378 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "8",
+      "name": "크리크",
+      "route": [
+        [
+          198.69695,
+          575.36648
+        ],
+        [
+          216.24901,
+          467.77332
+        ],
+        [
+          227.20344,
+          381.72351
+        ],
+        [
+          207.28973,
+          295.91836
+        ],
+        [
+          220.11779,
+          251.52944
+        ],
+        [
+          217.06327,
+          180.66971
+        ],
+        [
+          198.69695,
+          125.36648
+        ]
+      ]
+    },
+    {
+      "number": 9,
+      "par": 4,
+      "distance": 330,
+      "distanceSource": "거리 미표시 · 재생용 기본 거리 가정",
+      "distanceAssumed": true,
+      "sourceRoute": [
+        [
+          0.835671,
+          0.781341
+        ],
+        [
+          0.717435,
+          0.714286
+        ],
+        [
+          0.617234,
+          0.658892
+        ],
+        [
+          0.511022,
+          0.655977
+        ],
+        [
+          0.378758,
+          0.594752
+        ],
+        [
+          0.300601,
+          0.548105
+        ],
+        [
+          0.172345,
+          0.556851
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyMzAzMTJfMzAw/MDAxNjc4NTYwNzQ1MTY0.iKXTw7Xa4CBWsYWr4tHkG1SBM91p8nStQaH6_wCN7JUg.J8hI9GEg8DpJWzbBm4FkSoGsWV1wsBDWUCH0Ko59Ywog.JPEG.sesp486/9.jpg",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyMzAzMTJfMzAw/MDAxNjc4NTYwNzQ1MTY0.iKXTw7Xa4CBWsYWr4tHkG1SBM91p8nStQaH6_wCN7JUg.J8hI9GEg8DpJWzbBm4FkSoGsWV1wsBDWUCH0Ko59Ywog.JPEG.sesp486/9.jpg",
+        "source_page": "https://m.blog.naver.com/sesp486/223041916683",
+        "title": "[경기 용인 골프장] 코리아cc 크리크 코스 공략 (Creek Course)",
+        "width": 499,
+        "height": 343,
+        "display": {
+          "x": -133.02641647972382,
+          "y": 48.09136497274142,
+          "width": 660.7562111707033,
+          "height": 454.1871351333692,
+          "transform": "rotate(76.90426403255752 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "9",
+      "name": "크리크",
+      "route": [
+        [
+          198.06549,
+          575.45002
+        ],
+        [
+          210.02744,
+          492.45609
+        ],
+        [
+          219.53093,
+          422.269
+        ],
+        [
+          204.9191,
+          353.61397
+        ],
+        [
+          212.20182,
+          262.19197
+        ],
+        [
+          221.13614,
+          207.09192
+        ],
+        [
+          198.06549,
+          125.45002
+        ]
+      ]
+    }
+  ],
+  "geometrySource": "prepared-guide",
+  "source": "공개 홀 안내도 · 경로 후보 대조 · 2026-11-22",
+  "sourceUrl": "https://m.blog.naver.com/sesp486/223041916683",
+  "preparedAt": "2026-11-22",
+  "notice": "홀 안내도 기반의 가상 재생입니다. 원문 작성 시점·티·사용 그린에 따라 현재 코스와 차이가 있을 수 있습니다."
+}

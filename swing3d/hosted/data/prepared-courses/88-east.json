@@ -1,0 +1,1255 @@
+{
+  "revision": 1,
+  "id": "88-east",
+  "name": "88CC · 동코스",
+  "clubName": "88CC",
+  "groupName": "동코스",
+  "tee": "REGULAR · 공개 안내도",
+  "holes": [
+    {
+      "number": 1,
+      "par": 4,
+      "distance": 360,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.719697,
+          0.844961
+        ],
+        [
+          0.628788,
+          0.677003
+        ],
+        [
+          0.450758,
+          0.514212
+        ],
+        [
+          0.162879,
+          0.395349
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMjQz/MDAxNzE1NjcxOTU5MzA2.Xen0g1mB9FXW6qrgyZSaWd4YlFEso2j-CRZ6bxI1azgg.-DHZEz5jRU1zMI1PVXu5exkl-7rWCYwYe9tRDk3zfakg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_1%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMjQz/MDAxNzE1NjcxOTU5MzA2.Xen0g1mB9FXW6qrgyZSaWd4YlFEso2j-CRZ6bxI1azgg.-DHZEz5jRU1zMI1PVXu5exkl-7rWCYwYe9tRDk3zfakg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_1%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -30.15368572421889,
+          "y": -124.1361884047144,
+          "width": 521.5498398420507,
+          "height": 764.5446515866425,
+          "transform": "rotate(40.19206213744205 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "1",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          246.65199,
+          446.30997
+        ],
+        [
+          256.0452,
+          291.31413
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 2,
+      "par": 4,
+      "distance": 302,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.219697,
+          0.816537
+        ],
+        [
+          0.378788,
+          0.689922
+        ],
+        [
+          0.530303,
+          0.560724
+        ],
+        [
+          0.625,
+          0.436693
+        ],
+        [
+          0.700758,
+          0.343669
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMTYz/MDAxNzE1NjcxOTY3NjY5.XXobH6nB8F5g-vllA2UXxlpUSeZ6dR5MRY_hEIu4HaUg.uJsvsEESIujHZiyyFKRdf7ayY84Vg9vI3UPoEJH5VHAg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_2%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMTYz/MDAxNzE1NjcxOTY3NjY5.XXobH6nB8F5g-vllA2UXxlpUSeZ6dR5MRY_hEIu4HaUg.uJsvsEESIujHZiyyFKRdf7ayY84Vg9vI3UPoEJH5VHAg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_2%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -45.4535952376028,
+          "y": -103.53309301075313,
+          "width": 533.3310052910849,
+          "height": 781.8147691198858,
+          "transform": "rotate(-34.76025966667364 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "2",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          213.26833,
+          445.30004
+        ],
+        [
+          222.06583,
+          316.24471
+        ],
+        [
+          208.27139,
+          207.78508
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 3,
+      "par": 5,
+      "distance": 459,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.878788,
+          0.904393
+        ],
+        [
+          0.746212,
+          0.723514
+        ],
+        [
+          0.606061,
+          0.583979
+        ],
+        [
+          0.409091,
+          0.503876
+        ],
+        [
+          0.162879,
+          0.439276
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMjYw/MDAxNzE1NjcxOTcwODA5.XE9vcnczs7_eEYTrAg53QV383P-yjCY5GQ62rRrHRa4g.y-8adkvXz2WKFAgWFqjch-eAjBewX9gwBErfOxljvuUg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_3%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMjYw/MDAxNzE1NjcxOTcwODA5.XE9vcnczs7_eEYTrAg53QV383P-yjCY5GQ62rRrHRa4g.y-8adkvXz2WKFAgWFqjch-eAjBewX9gwBErfOxljvuUg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_3%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -37.06888239367473,
+          "y": -98.27547782104438,
+          "width": 455.17210854078075,
+          "height": 667.24093183819,
+          "transform": "rotate(46.3971330423971 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "3",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          245.77884,
+          448.06754
+        ],
+        [
+          269.20344,
+          337.66343
+        ],
+        [
+          246.07587,
+          235.87999
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 4,
+      "par": 3,
+      "distance": 162,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.238636,
+          0.808786
+        ],
+        [
+          0.655303,
+          0.390181
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfNjgg/MDAxNzE1NjcxOTc0MDg0.Zy6B705i5u2BoWxKk1g_hLpEg4-6Iv-6lbvezPYi8VUg.cIvsN2-3GYq6YQVdC8uT4j0pd4PYqHfNmrI0ZW1iy5Ag.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_4%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfNjgg/MDAxNzE1NjcxOTc0MDg0.Zy6B705i5u2BoWxKk1g_hLpEg4-6Iv-6lbvezPYi8VUg.cIvsN2-3GYq6YQVdC8uT4j0pd4PYqHfNmrI0ZW1iy5Ag.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_4%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -71.17226233725728,
+          "y": -183.152742672969,
+          "width": 606.6907525843649,
+          "height": 889.3534895838984,
+          "transform": "rotate(-34.17698788620514 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "4",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 5,
+      "par": 4,
+      "distance": 384,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.852273,
+          0.855297
+        ],
+        [
+          0.776515,
+          0.702842
+        ],
+        [
+          0.568182,
+          0.599483
+        ],
+        [
+          0.378788,
+          0.49354
+        ],
+        [
+          0.162879,
+          0.465116
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMjE4/MDAxNzE1NjcxOTc3NTAy.TuDRkCC-1ROviELtN3Bi86MNs6QPJ_uwaShcwRYfnYEg.7bbo2g3hsaQ5nx4HqJ95mKdfNZ65_wtdk6l59Dha_KYg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_5%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMjE4/MDAxNzE1NjcxOTc3NTAy.TuDRkCC-1ROviELtN3Bi86MNs6QPJ_uwaShcwRYfnYEg.7bbo2g3hsaQ5nx4HqJ95mKdfNZ65_wtdk6l59Dha_KYg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_5%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -54.98488991720296,
+          "y": -136.18348292447206,
+          "width": 502.3580506509429,
+          "height": 736.4112333405868,
+          "transform": "rotate(50.318506409082964 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "5",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          262.10278,
+          474.02433
+        ],
+        [
+          253.85513,
+          344.87839
+        ],
+        [
+          253.14692,
+          221.83957
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 6,
+      "par": 3,
+      "distance": 143,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.159091,
+          0.829457
+        ],
+        [
+          0.647727,
+          0.436693
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMTMw/MDAxNzE1NjcxOTgwNDIy.oPxc08886GI5-QXXlmYXrpYdYHQDUQZw7lf0t3zU848g.eSaai7Zmz1YuHx9cdk-RsoxNWCO63Cwcw8MaN_L1Mzwg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_6%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMTMw/MDAxNzE1NjcxOTgwNDIy.oPxc08886GI5-QXXlmYXrpYdYHQDUQZw7lf0t3zU848g.eSaai7Zmz1YuHx9cdk-RsoxNWCO63Cwcw8MaN_L1Mzwg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_6%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -40.392802093921716,
+          "y": -203.01648634015544,
+          "width": 595.9034183519003,
+          "height": 873.5402382658538,
+          "transform": "rotate(-40.32078154424202 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "6",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 7,
+      "par": 4,
+      "distance": 324,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.825758,
+          0.888889
+        ],
+        [
+          0.594697,
+          0.821705
+        ],
+        [
+          0.386364,
+          0.77261
+        ],
+        [
+          0.193182,
+          0.69509
+        ],
+        [
+          0.151515,
+          0.475452
+        ],
+        [
+          0.121212,
+          0.431525
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfNTQg/MDAxNzE1NjcxOTg0MDc1.0tFPUv-DmvHtQEh11po9KLUWrwat17q_qbuUPCYcq6Eg.bHF7Cetw_VctHl6UwyC3AVjBC_T2WrMTkmkH_uy5lJQg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_7%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfNTQg/MDAxNzE1NjcxOTg0MDc1.0tFPUv-DmvHtQEh11po9KLUWrwat17q_qbuUPCYcq6Eg.bHF7Cetw_VctHl6UwyC3AVjBC_T2WrMTkmkH_uy5lJQg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_7%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -19.077397928447823,
+          "y": -97.79424910707866,
+          "width": 462.6913163636606,
+          "height": 678.2634069421842,
+          "transform": "rotate(46.42030903643558 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "7",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          159.3108,
+          466.13952
+        ],
+        [
+          116.98304,
+          373.35491
+        ],
+        [
+          93.45435,
+          272.35796
+        ],
+        [
+          188.0822,
+          155.69592
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 8,
+      "par": 5,
+      "distance": 409,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.223485,
+          0.883721
+        ],
+        [
+          0.412879,
+          0.793282
+        ],
+        [
+          0.590909,
+          0.658915
+        ],
+        [
+          0.715909,
+          0.516796
+        ],
+        [
+          0.727273,
+          0.369509
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMjgg/MDAxNzE1NjcxOTg3Mzk3.skCa4ttkBwrf91m_wdMRGVbR43HXMQZqo0Hwc44yJgog.lWBcOh-MfIsfcjkb991XP0igyVj8y3aVo1gBxeD-ORIg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_8%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMjgg/MDAxNzE1NjcxOTg3Mzk3.skCa4ttkBwrf91m_wdMRGVbR43HXMQZqo0Hwc44yJgog.lWBcOh-MfIsfcjkb991XP0igyVj8y3aVo1gBxeD-ORIg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_8%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -35.94833857629024,
+          "y": -105.91591835219629,
+          "width": 496.3373194362608,
+          "height": 727.5853887190642,
+          "transform": "rotate(-33.75645941383874 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "8",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          241.59115,
+          468.05743
+        ],
+        [
+          260.73308,
+          337.6761
+        ],
+        [
+          254.85765,
+          217.23094
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 9,
+      "par": 4,
+      "distance": 348,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.162879,
+          0.860465
+        ],
+        [
+          0.234848,
+          0.700258
+        ],
+        [
+          0.356061,
+          0.591731
+        ],
+        [
+          0.518939,
+          0.478036
+        ],
+        [
+          0.681818,
+          0.369509
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMjA2/MDAxNzE1NjcxOTkwNDM3.e8OBuKkHybngrXIfAHEn6mqAUWytQkTgBnMKzAukWRMg.5rUzWMKXqWpgpt6fsGzf1fuXzyTvMCW-Qx0MPY_7VkUg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_9%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMjA2/MDAxNzE1NjcxOTkwNDM3.e8OBuKkHybngrXIfAHEn6mqAUWytQkTgBnMKzAukWRMg.5rUzWMKXqWpgpt6fsGzf1fuXzyTvMCW-Qx0MPY_7VkUg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_9%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -14.202250324348938,
+          "y": -107.22087092414176,
+          "width": 507.1694354883443,
+          "height": 743.4642861135956,
+          "transform": "rotate(-35.79357113219288 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "9",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          159.94421,
+          457.03993
+        ],
+        [
+          162.6183,
+          355.6382
+        ],
+        [
+          180.18535,
+          238.76098
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 10,
+      "par": 5,
+      "distance": 444,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.787879,
+          0.863049
+        ],
+        [
+          0.753788,
+          0.73385
+        ],
+        [
+          0.666667,
+          0.630491
+        ],
+        [
+          0.492424,
+          0.521964
+        ],
+        [
+          0.32197,
+          0.457364
+        ],
+        [
+          0.223485,
+          0.390181
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMjUg/MDAxNzE1NjcxOTk0NDcy.ZN-5hXojZNbFVAbVeVNuSqTekjuUEFWQFW988WBlwsgg.fxnK8beliavVNesvY7TI0_eXYj0TOcLwktIWCuMhWbog.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_10%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMjUg/MDAxNzE1NjcxOTk0NDcy.ZN-5hXojZNbFVAbVeVNuSqTekjuUEFWQFW988WBlwsgg.fxnK8beliavVNesvY7TI0_eXYj0TOcLwktIWCuMhWbog.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_10%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -54.568948066871144,
+          "y": -112.41909350520228,
+          "width": 503.41706461149727,
+          "height": 737.963651532763,
+          "transform": "rotate(39.15276044804668 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "10",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          246.89084,
+          490.22799
+        ],
+        [
+          261.03973,
+          403.3876
+        ],
+        [
+          243.58571,
+          285.89778
+        ],
+        [
+          207.14337,
+          194.75021
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 11,
+      "par": 4,
+      "distance": 360,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.833333,
+          0.852713
+        ],
+        [
+          0.625,
+          0.744186
+        ],
+        [
+          0.450758,
+          0.640827
+        ],
+        [
+          0.268939,
+          0.542636
+        ],
+        [
+          0.136364,
+          0.488372
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMTg2/MDAxNzE1NjcxOTk3MzA5.0D7cwEYxaKDpLRx5zORQQZnZntJ1LB0M6frmMlCW5uYg.BZ2gJpxJF6V75JFyhwTgM01V3no0xFFPsY8bpMXyZKQg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_11%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMTg2/MDAxNzE1NjcxOTk3MzA5.0D7cwEYxaKDpLRx5zORQQZnZntJ1LB0M6frmMlCW5uYg.BZ2gJpxJF6V75JFyhwTgM01V3no0xFFPsY8bpMXyZKQg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_11%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -48.47694545853534,
+          "y": -153.74806473795343,
+          "width": 512.483683993114,
+          "height": 751.2544913080877,
+          "transform": "rotate(52.53687600021625 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "11",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          199.77387,
+          440.66249
+        ],
+        [
+          207.09284,
+          322.55409
+        ],
+        [
+          208.96822,
+          203.72503
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 12,
+      "par": 3,
+      "distance": 125,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.204545,
+          0.868217
+        ],
+        [
+          0.594697,
+          0.431525
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMTI2/MDAxNzE1NjcyMDAwMzMz.m-xXuCI8jeQnlALVjnc3tyLqFUxuR9C6blWPe4bi7Gcg.hueVzuCIvQyCztzMjlwFDGyHMAJBXyV-b4gNpU6WCKwg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_12%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMTI2/MDAxNzE1NjcyMDAwMzMz.m-xXuCI8jeQnlALVjnc3tyLqFUxuR9C6blWPe4bi7Gcg.hueVzuCIvQyCztzMjlwFDGyHMAJBXyV-b4gNpU6WCKwg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_12%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -39.876762195261676,
+          "y": -221.83939512440872,
+          "width": 600.2606524563565,
+          "height": 879.9275473507954,
+          "transform": "rotate(-31.36100911971678 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "12",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 13,
+      "par": 4,
+      "distance": 327,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.82197,
+          0.863049
+        ],
+        [
+          0.643939,
+          0.775194
+        ],
+        [
+          0.484848,
+          0.658915
+        ],
+        [
+          0.291667,
+          0.607235
+        ],
+        [
+          0.106061,
+          0.563307
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMjQ0/MDAxNzE1NjcyMDAzMTk4.PJSKuQv9LoWgJRwLJUSP7WHonya40E_YHP3lvm_BF7Ag.ISFjvFdQv6w7dIOnEU9L4Hrf63AR6WztC1h2WiI_Kbsg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_13%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMjQ0/MDAxNzE1NjcyMDAzMTk4.PJSKuQv9LoWgJRwLJUSP7WHonya40E_YHP3lvm_BF7Ag.ISFjvFdQv6w7dIOnEU9L4Hrf63AR6WztC1h2WiI_Kbsg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_13%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -48.580922402364706,
+          "y": -210.06738545818814,
+          "width": 535.7168508430531,
+          "height": 785.312201804021,
+          "transform": "rotate(58.46016606759378 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "13",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          208.91223,
+          457.62484
+        ],
+        [
+          242.15627,
+          337.22099
+        ],
+        [
+          222.61099,
+          227.78898
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 14,
+      "par": 4,
+      "distance": 369,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.106061,
+          0.829457
+        ],
+        [
+          0.261364,
+          0.718346
+        ],
+        [
+          0.416667,
+          0.651163
+        ],
+        [
+          0.583333,
+          0.550388
+        ],
+        [
+          0.723485,
+          0.465116
+        ],
+        [
+          0.795455,
+          0.436693
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMTAg/MDAxNzE1NjcyMDA2MjY0.8LJmCKJMLNC-7s3l1DOI2wM1KzH9obzfPq6mxZCnhwwg.6xb0hnu9Yx22xlCgpBzDOGPm58t0EDPIdb90NAndk_Eg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_14%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfMTAg/MDAxNzE1NjcyMDA2MjY0.8LJmCKJMLNC-7s3l1DOI2wM1KzH9obzfPq6mxZCnhwwg.6xb0hnu9Yx22xlCgpBzDOGPm58t0EDPIdb90NAndk_Eg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_14%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -25.831195252760722,
+          "y": -114.94618830868211,
+          "width": 501.0031885241321,
+          "height": 734.4251286319663,
+          "transform": "rotate(-50.13261848957352 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "14",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          187.24293,
+          462.97217
+        ],
+        [
+          199.24778,
+          371.62458
+        ],
+        [
+          195.96627,
+          260.09322
+        ],
+        [
+          192.90873,
+          166.05585
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 15,
+      "par": 4,
+      "distance": 332,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.795455,
+          0.850129
+        ],
+        [
+          0.799242,
+          0.74677
+        ],
+        [
+          0.685606,
+          0.633075
+        ],
+        [
+          0.496212,
+          0.560724
+        ],
+        [
+          0.287879,
+          0.516796
+        ],
+        [
+          0.121212,
+          0.452196
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfNzEg/MDAxNzE1NjcyMDA5MDcy.Cv0AOc2Wraq1KcXLyB0csqBCRd7DLud82ZBiWoGdg_og.x8oXCp_o3b2qIg_BdH-gRAFa4YoZpUZnY0I7XQ98WXAg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_15%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfNzEg/MDAxNzE1NjcyMDA5MDcy.Cv0AOc2Wraq1KcXLyB0csqBCRd7DLud82ZBiWoGdg_og.x8oXCp_o3b2qIg_BdH-gRAFa4YoZpUZnY0I7XQ98WXAg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_15%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -32.291519129979235,
+          "y": -131.78988787515055,
+          "width": 504.7324888152569,
+          "height": 739.8919438314562,
+          "transform": "rotate(49.134682512276534 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "15",
+      "name": "동코스",
+      "route": [
+        [
+          199.37469,
+          574.27724
+        ],
+        [
+          258.45911,
+          525.68678
+        ],
+        [
+          284.54944,
+          427.27188
+        ],
+        [
+          262.48785,
+          319.95444
+        ],
+        [
+          218.26799,
+          219.16745
+        ],
+        [
+          199.37469,
+          124.27724
+        ]
+      ]
+    },
+    {
+      "number": 16,
+      "par": 5,
+      "distance": 491,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.106061,
+          0.813953
+        ],
+        [
+          0.253788,
+          0.715762
+        ],
+        [
+          0.409091,
+          0.638243
+        ],
+        [
+          0.568182,
+          0.555556
+        ],
+        [
+          0.666667,
+          0.478036
+        ],
+        [
+          0.69697,
+          0.322997
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfNDUg/MDAxNzE1NjcyMDEyMTY5.qWz7g2ipQPREFdGYHnZe2gRDjBTg8jCoJzSa4hvGIEcg.FJqdM4aWZ-2JnHReD4jvp9PGyUJu2NvnfnvGThicL1Yg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_16%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfNDUg/MDAxNzE1NjcyMDEyMTY5.qWz7g2ipQPREFdGYHnZe2gRDjBTg8jCoJzSa4hvGIEcg.FJqdM4aWZ-2JnHReD4jvp9PGyUJu2NvnfnvGThicL1Yg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_16%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": 5.969070193519798,
+          "y": -52.705033520281575,
+          "width": 483.2464246249029,
+          "height": 708.39532700696,
+          "transform": "rotate(-39.387796588651305 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "16",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          211.03481,
+          475.94002
+        ],
+        [
+          234.1917,
+          385.8747
+        ],
+        [
+          256.44022,
+          291.81832
+        ],
+        [
+          258.37593,
+          219.17579
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 17,
+      "par": 3,
+      "distance": 149,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.666667,
+          0.870801
+        ],
+        [
+          0.170455,
+          0.496124
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfNTYg/MDAxNzE1NjcyMDE1MDA2.0xr4XhTcnk7VsIHIILnJByFHNQjP-hY1Xm9cD1WC41sg.Ik8J3U3u9odAP9vyHf3qHErjNp5K5UAu04skQjzPUXQg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_17%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfNTYg/MDAxNzE1NjcyMDE1MDA2.0xr4XhTcnk7VsIHIILnJByFHNQjP-hY1Xm9cD1WC41sg.Ik8J3U3u9odAP9vyHf3qHErjNp5K5UAu04skQjzPUXQg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_17%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -54.46213445062796,
+          "y": -259.0965433065513,
+          "width": 607.945160802435,
+          "height": 891.1923379944785,
+          "transform": "rotate(42.09617436942164 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "17",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 18,
+      "par": 4,
+      "distance": 345,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.219697,
+          0.865633
+        ],
+        [
+          0.268939,
+          0.775194
+        ],
+        [
+          0.318182,
+          0.625323
+        ],
+        [
+          0.481061,
+          0.485788
+        ],
+        [
+          0.640152,
+          0.408269
+        ],
+        [
+          0.784091,
+          0.335917
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDA1MTRfNzkg/MDAxNzE1NjcyMDE5ODY0.mFFSVKJnpleUo4onGpxvvL7p9m5HUVmYIme3PTSN0Wgg.9hxB4dWicq9neHu2B8K_x6HmwVJladFOU_BE9TYXd2gg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_18%EB%B2%88_%ED%99%80.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDA1MTRfNzkg/MDAxNzE1NjcyMDE5ODY0.mFFSVKJnpleUo4onGpxvvL7p9m5HUVmYIme3PTSN0Wgg.9hxB4dWicq9neHu2B8K_x6HmwVJladFOU_BE9TYXd2gg.PNG/88CC_%EB%8F%99_%EC%BD%94%EC%8A%A4_18%EB%B2%88_%ED%99%80.png",
+        "source_page": "https://m.blog.naver.com/danbi2027/223448163223",
+        "title": "88CC 골프 코스 공략 · 동코스",
+        "width": 264,
+        "height": 387,
+        "display": {
+          "x": -35.2734188096162,
+          "y": -62.83808016845347,
+          "width": 468.7711325690608,
+          "height": 687.1758647887368,
+          "transform": "rotate(-36.01074215662088 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "18",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          182.13337,
+          511.15699
+        ],
+        [
+          140.25564,
+          414.27775
+        ],
+        [
+          145.6437,
+          291.82492
+        ],
+        [
+          174.65083,
+          204.88839
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    }
+  ],
+  "geometrySource": "prepared-guide",
+  "source": "공개 홀 안내도 · 경로 후보 대조 · 2026-11-22",
+  "sourceUrl": "https://m.blog.naver.com/danbi2027/223448163223",
+  "preparedAt": "2026-11-22",
+  "notice": "홀 안내도 기반의 가상 재생입니다. 원문 작성 시점·티·사용 그린에 따라 현재 코스와 차이가 있을 수 있습니다."
+}

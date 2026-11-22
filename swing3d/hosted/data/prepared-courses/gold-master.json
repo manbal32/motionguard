@@ -1,0 +1,1295 @@
+{
+  "revision": 1,
+  "id": "gold-master",
+  "name": "골드CC · 마스터",
+  "clubName": "골드CC",
+  "groupName": "마스터",
+  "tee": "REGULAR · 공개 안내도",
+  "holes": [
+    {
+      "number": 1,
+      "ref": "1",
+      "name": "마스터",
+      "par": 4,
+      "distance": 366,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.786,
+          0.591
+        ],
+        [
+          0.614,
+          0.511
+        ],
+        [
+          0.457,
+          0.368
+        ],
+        [
+          0.217,
+          0.342
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          203.08321,
+          437.65825
+        ],
+        [
+          251.50059,
+          292.86433
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfODYg/MDAxNzMwNjM3NzM0OTAy._7SFT9LoG8psL-7bY2oaaO_BBsJ8A0eb3d1_6PCUFS8g.HXJotnNN49dhN2njlIuERzS4gdZNFDpty5B9e-2g3fUg.PNG/SE-5806a99b-33ee-4f3d-ae77-f23b9b9e94bb.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfODYg/MDAxNzMwNjM3NzM0OTAy._7SFT9LoG8psL-7bY2oaaO_BBsJ8A0eb3d1_6PCUFS8g.HXJotnNN49dhN2njlIuERzS4gdZNFDpty5B9e-2g3fUg.PNG/SE-5806a99b-33ee-4f3d-ae77-f23b9b9e94bb.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 682,
+        "height": 664,
+        "known_holes": [
+          {
+            "number": 1
+          }
+        ],
+        "display": {
+          "x": -164.87939012882612,
+          "y": 19.543918482836887,
+          "width": 727.5760521013481,
+          "height": 708.3731650957407,
+          "transform": "rotate(66.9230847188253 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 2,
+      "ref": "2",
+      "name": "마스터",
+      "par": 3,
+      "distance": 101,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.8,
+          0.34
+        ],
+        [
+          0.57,
+          0.39
+        ],
+        [
+          0.34,
+          0.45
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          204.65077,
+          351.11862
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfMjc3/MDAxNzMwNjM3NzM2NDIw.4SlboOSZ5JbuPNHkAzaq33Wcwf09fLI0P4ZL2U77SXYg.ynp_CPWQr45bN-LFXxlupNO2oLotomfINmLpIPb-XEAg.PNG/SE-d797622b-6c89-44b0-8e59-95d190ab2e5a.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfMjc3/MDAxNzMwNjM3NzM2NDIw.4SlboOSZ5JbuPNHkAzaq33Wcwf09fLI0P4ZL2U77SXYg.ynp_CPWQr45bN-LFXxlupNO2oLotomfINmLpIPb-XEAg.PNG/SE-d797622b-6c89-44b0-8e59-95d190ab2e5a.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 686,
+        "height": 690,
+        "known_holes": [
+          {
+            "number": 2
+          }
+        ],
+        "display": {
+          "x": -342.14698516440785,
+          "y": -27.889010297579034,
+          "width": 951.1350616919435,
+          "height": 956.6810387280482,
+          "transform": "rotate(-256.475839929055 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 3,
+      "ref": "3",
+      "name": "마스터",
+      "par": 4,
+      "distance": 279,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.79,
+          0.59
+        ],
+        [
+          0.52,
+          0.49
+        ],
+        [
+          0.23,
+          0.32
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          180.41519,
+          367.40803
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfNzAg/MDAxNzMwNjM3NzM3Nzky.hd0TPzpzjOMic6XlfqoUFgYJuqDbNEWaL8NRtQ89N0Ig.Ymqdzs-YVFOh3rZydyHqO66Hc70MH4rZNP3c0tCHWI0g.PNG/SE-1a7110f0-91bf-4cf6-878e-68b5c7d4b4fe.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfNzAg/MDAxNzMwNjM3NzM3Nzky.hd0TPzpzjOMic6XlfqoUFgYJuqDbNEWaL8NRtQ89N0Ig.Ymqdzs-YVFOh3rZydyHqO66Hc70MH4rZNP3c0tCHWI0g.PNG/SE-1a7110f0-91bf-4cf6-878e-68b5c7d4b4fe.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 671,
+        "height": 666,
+        "known_holes": [
+          {
+            "number": 3
+          }
+        ],
+        "display": {
+          "x": -169.67230296658403,
+          "y": 22.651886362280607,
+          "width": 724.847652875655,
+          "height": 719.4464035993833,
+          "transform": "rotate(64.4265477563682 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 4,
+      "ref": "4",
+      "name": "마스터",
+      "par": 5,
+      "distance": 442,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.805,
+          0.591
+        ],
+        [
+          0.625,
+          0.54
+        ],
+        [
+          0.39,
+          0.375
+        ],
+        [
+          0.21,
+          0.305
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          178.50471,
+          448.95355
+        ],
+        [
+          209.99757,
+          256.44247
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfNjAg/MDAxNzMwNjM3NzM4ODM4.LnajFXRZ1ejERu_c95Q5FaPMJ72o3dNuAM7kXJIs3wkg.HHm68owt4gEvjbR1eQ-ZpCjDv13-zdvQ6ig4SzWh9Z8g.PNG/SE-aadf83de-888c-4ba9-957a-89cee6ab1602.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfNjAg/MDAxNzMwNjM3NzM4ODM4.LnajFXRZ1ejERu_c95Q5FaPMJ72o3dNuAM7kXJIs3wkg.HHm68owt4gEvjbR1eQ-ZpCjDv13-zdvQ6ig4SzWh9Z8g.PNG/SE-aadf83de-888c-4ba9-957a-89cee6ab1602.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 677,
+        "height": 661,
+        "known_holes": [
+          {
+            "number": 4
+          }
+        ],
+        "display": {
+          "x": -147.46133391509392,
+          "y": 50.52453990843719,
+          "width": 684.6528747095447,
+          "height": 668.4720091329528,
+          "transform": "rotate(64.85876116131526 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 5,
+      "ref": "5",
+      "name": "마스터",
+      "par": 4,
+      "distance": 379,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.82,
+          0.55
+        ],
+        [
+          0.65,
+          0.45
+        ],
+        [
+          0.45,
+          0.38
+        ],
+        [
+          0.25,
+          0.3
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          217.19591,
+          433.00995
+        ],
+        [
+          205.21807,
+          280.53405
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfMTQw/MDAxNzMwNjM3NzQwMTY4.RfK68onN6tbcgMDhiHB7MxOJ_QDwsckedUDQlk3aVMIg.aP6jQnKbEwOiSrDx9igkSRxAVBx1EDEUtUtuOw6MDeUg.PNG/SE-d1b108f2-e452-4862-963f-8c8c8e90a5e6.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfMTQw/MDAxNzMwNjM3NzQwMTY4.RfK68onN6tbcgMDhiHB7MxOJ_QDwsckedUDQlk3aVMIg.aP6jQnKbEwOiSrDx9igkSRxAVBx1EDEUtUtuOw6MDeUg.PNG/SE-d1b108f2-e452-4862-963f-8c8c8e90a5e6.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 667,
+        "height": 688,
+        "known_holes": [
+          {
+            "number": 5
+          }
+        ],
+        "display": {
+          "x": -184.81968517692547,
+          "y": 34.67744834386639,
+          "width": 719.2891311718233,
+          "height": 741.9354156614909,
+          "transform": "rotate(65.65774841965809 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 6,
+      "ref": "6",
+      "name": "마스터",
+      "par": 4,
+      "distance": 368,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.79,
+          0.55
+        ],
+        [
+          0.65,
+          0.48
+        ],
+        [
+          0.5,
+          0.43
+        ],
+        [
+          0.41,
+          0.45
+        ],
+        [
+          0.32,
+          0.36
+        ],
+        [
+          0.23,
+          0.3
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          205.10404,
+          460.16716
+        ],
+        [
+          193.55919,
+          344.90811
+        ],
+        [
+          152.60536,
+          291.30495
+        ],
+        [
+          186.51076,
+          203.48679
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfODIg/MDAxNzMwNjM3NzQxMjY5.OVZvTpPPUz5slyMF-YRu6h3OCRiWmOVVeug_jxaYNSkg.eJlUvMbCzzGl2_TQF743MXjA9HKtpXux8tgKga67bzQg.PNG/SE-e3895d78-a9d2-4355-9aeb-3a99ad5c1357.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfODIg/MDAxNzMwNjM3NzQxMjY5.OVZvTpPPUz5slyMF-YRu6h3OCRiWmOVVeug_jxaYNSkg.eJlUvMbCzzGl2_TQF743MXjA9HKtpXux8tgKga67bzQg.PNG/SE-e3895d78-a9d2-4355-9aeb-3a99ad5c1357.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 672,
+        "height": 688,
+        "known_holes": [
+          {
+            "number": 6
+          }
+        ],
+        "display": {
+          "x": -172.7341125461623,
+          "y": 31.99272143879017,
+          "width": 730.8512010709064,
+          "height": 748.2524201440232,
+          "transform": "rotate(65.43685872819222 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 7,
+      "ref": "7",
+      "name": "마스터",
+      "par": 3,
+      "distance": 143,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.735,
+          0.597
+        ],
+        [
+          0.5,
+          0.45
+        ],
+        [
+          0.301,
+          0.345
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          208.12442,
+          326.68228
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfMTE0/MDAxNzMwNjM3NzQyNDA2.E8PDCJ7A8vixvGHzgidZNxv0MMfA6YP7vC5UciCVf-gg.JvizfiJ0--4058NZZA74Iyu3jGRAn-oZSDXfrn7KXnEg.PNG/SE-1f52143b-e8a1-4b1e-92fb-9b5d17f99d89.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfMTE0/MDAxNzMwNjM3NzQyNDA2.E8PDCJ7A8vixvGHzgidZNxv0MMfA6YP7vC5UciCVf-gg.JvizfiJ0--4058NZZA74Iyu3jGRAn-oZSDXfrn7KXnEg.PNG/SE-1f52143b-e8a1-4b1e-92fb-9b5d17f99d89.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 671,
+        "height": 662,
+        "known_holes": [
+          {
+            "number": 7
+          }
+        ],
+        "display": {
+          "x": -266.043538556742,
+          "y": -68.07395004594451,
+          "width": 899.6979508817415,
+          "height": 887.6304671888419,
+          "transform": "rotate(60.19345649021851 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 8,
+      "ref": "8",
+      "name": "마스터",
+      "par": 4,
+      "distance": 300,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.784,
+          0.565
+        ],
+        [
+          0.62,
+          0.51
+        ],
+        [
+          0.47,
+          0.435
+        ],
+        [
+          0.33,
+          0.39
+        ],
+        [
+          0.233,
+          0.35
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          193.65386,
+          443.52336
+        ],
+        [
+          205.27671,
+          316.51034
+        ],
+        [
+          198.4823,
+          204.80831
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfMTI3/MDAxNzMwNjM3NzQzNjc0.aFzJxymQmst3XReQmfWJP8kR3MSYCXvwlS0sHn8QzHwg.yCJ0nIXly1e0FN87P87BLFxZX1mec3dh3KfKb-Qs0CYg.PNG/SE-8cbab29f-5907-438c-96d1-d4927c865ad9.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfMTI3/MDAxNzMwNjM3NzQzNjc0.aFzJxymQmst3XReQmfWJP8kR3MSYCXvwlS0sHn8QzHwg.yCJ0nIXly1e0FN87P87BLFxZX1mec3dh3KfKb-Qs0CYg.PNG/SE-8cbab29f-5907-438c-96d1-d4927c865ad9.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 678,
+        "height": 674,
+        "known_holes": [
+          {
+            "number": 8
+          }
+        ],
+        "display": {
+          "x": -187.18208642875732,
+          "y": 3.705495483159666,
+          "width": 761.4200323082739,
+          "height": 756.9278787253343,
+          "transform": "rotate(68.79884773302773 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 9,
+      "par": 5,
+      "distance": 436,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.797337,
+          0.611111
+        ],
+        [
+          0.621302,
+          0.558559
+        ],
+        [
+          0.45858,
+          0.527027
+        ],
+        [
+          0.35503,
+          0.453453
+        ],
+        [
+          0.288462,
+          0.366366
+        ],
+        [
+          0.218935,
+          0.306306
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfMjcy/MDAxNzMwNjM3NzQ0ODcx.PTm6P3lI6HDH0T2KFp6CUF9qJi9U4iZEbjO-BuRa_8gg.2YHjnqLkMtoRU4nFe6JKA3CTyPqizeVdlmfvzewRMR0g.PNG/SE-60480cc2-be3a-4bda-b07d-52ca0e5e5b50.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfMjcy/MDAxNzMwNjM3NzQ0ODcx.PTm6P3lI6HDH0T2KFp6CUF9qJi9U4iZEbjO-BuRa_8gg.2YHjnqLkMtoRU4nFe6JKA3CTyPqizeVdlmfvzewRMR0g.PNG/SE-60480cc2-be3a-4bda-b07d-52ca0e5e5b50.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 676,
+        "height": 666,
+        "display": {
+          "x": -150.86314520957598,
+          "y": 37.95149326738664,
+          "width": 690.4906269376229,
+          "height": 680.2762685509716,
+          "transform": "rotate(62.562461833229825 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "9",
+      "name": "마스터",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          175.72029,
+          450.64937
+        ],
+        [
+          142.9854,
+          341.04612
+        ],
+        [
+          154.46003,
+          254.52622
+        ],
+        [
+          185.85958,
+          186.43385
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 10,
+      "ref": "10",
+      "name": "마스터",
+      "par": 3,
+      "distance": 156,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.715,
+          0.565
+        ],
+        [
+          0.5,
+          0.45
+        ],
+        [
+          0.29,
+          0.36
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          209.51682,
+          342.89991
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfMjMx/MDAxNzMwNjM3NzQ2MDQx.BDv7nho3kuFw01Sb-7QSuTz6AmAAdt2W9dT2lthGvtYg.xxlRVtKpaZ47Mw3bsDdR-0wvebVB_RzCPX69K7DybVog.PNG/SE-79ff6ca5-019c-4c2a-a299-5d076534e9fa.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfMjMx/MDAxNzMwNjM3NzQ2MDQx.BDv7nho3kuFw01Sb-7QSuTz6AmAAdt2W9dT2lthGvtYg.xxlRVtKpaZ47Mw3bsDdR-0wvebVB_RzCPX69K7DybVog.PNG/SE-79ff6ca5-019c-4c2a-a299-5d076534e9fa.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 668,
+        "height": 648,
+        "known_holes": [
+          {
+            "number": 10
+          }
+        ],
+        "display": {
+          "x": -281.91264346247704,
+          "y": -80.27145483869378,
+          "width": 959.0301362437353,
+          "height": 930.3166591106894,
+          "transform": "rotate(64.9245781323459 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 11,
+      "ref": "11",
+      "name": "마스터",
+      "par": 5,
+      "distance": 476,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.805,
+          0.585
+        ],
+        [
+          0.65,
+          0.49
+        ],
+        [
+          0.45,
+          0.43
+        ],
+        [
+          0.21,
+          0.35
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          222.1488,
+          448.99953
+        ],
+        [
+          209.69699,
+          302.67144
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfNDAg/MDAxNzMwNjM3NzQ3NDMw.l1hDwG0Q7lqITismlm8z5H-DJlr_W5tliX8fnjWZBdwg.E47Ic2fTolpRsY4RHT6lV35OzqpyuiboxBAges_zyUUg.PNG/SE-5caf5f38-894f-4775-8eff-80768cc2a66c.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfNDAg/MDAxNzMwNjM3NzQ3NDMw.l1hDwG0Q7lqITismlm8z5H-DJlr_W5tliX8fnjWZBdwg.E47Ic2fTolpRsY4RHT6lV35OzqpyuiboxBAges_zyUUg.PNG/SE-5caf5f38-894f-4775-8eff-80768cc2a66c.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 680,
+        "height": 682,
+        "known_holes": [
+          {
+            "number": 11
+          }
+        ],
+        "display": {
+          "x": -156.8466837189311,
+          "y": 20.31233728332245,
+          "width": 703.1461748156279,
+          "height": 705.2142518003797,
+          "transform": "rotate(68.39050965607187 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 12,
+      "ref": "12",
+      "name": "마스터",
+      "par": 4,
+      "distance": 344,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.783,
+          0.606
+        ],
+        [
+          0.525,
+          0.43
+        ],
+        [
+          0.356,
+          0.362
+        ],
+        [
+          0.21,
+          0.322
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          230.34146,
+          357.34385
+        ],
+        [
+          220.40368,
+          229.54687
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfMTk2/MDAxNzMwNjM3NzQ4NTI0.UoDtvHE3MwfXUYt7vE2e_xU-_N4VjeNOCYj2cYogpTkg.PAiALVxc42Z5MbUn4zWr4R3JQoS3Y_gZk_oIeif26g8g.PNG/SE-0f9e4e78-468e-4a87-b200-2d8b55b8c5b7.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfMTk2/MDAxNzMwNjM3NzQ4NTI0.UoDtvHE3MwfXUYt7vE2e_xU-_N4VjeNOCYj2cYogpTkg.PAiALVxc42Z5MbUn4zWr4R3JQoS3Y_gZk_oIeif26g8g.PNG/SE-0f9e4e78-468e-4a87-b200-2d8b55b8c5b7.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 674,
+        "height": 674,
+        "known_holes": [
+          {
+            "number": 12
+          }
+        ],
+        "display": {
+          "x": -149.36393986128041,
+          "y": 23.504797390465,
+          "width": 703.6534538998599,
+          "height": 703.6534538998599,
+          "transform": "rotate(63.635282899929855 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 13,
+      "ref": "13",
+      "name": "마스터",
+      "par": 5,
+      "distance": 423,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.86,
+          0.47
+        ],
+        [
+          0.65,
+          0.49
+        ],
+        [
+          0.45,
+          0.45
+        ],
+        [
+          0.3,
+          0.37
+        ],
+        [
+          0.23,
+          0.32
+        ]
+      ],
+      "route": [
+        [
+          206.91099,
+          573.31308
+        ],
+        [
+          158.53406,
+          435.12149
+        ],
+        [
+          153.26855,
+          293.54962
+        ],
+        [
+          183.87436,
+          178.93614
+        ],
+        [
+          206.91099,
+          123.31308
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfMTUw/MDAxNzMwNjM3NzQ5NTc1.lif_rbF_3AGo0i9nMjp0ah3ucQ6WY3ZTo38b2EOdz3sg.ewvQ57g7EnbgTK2So6zmFeapZ_dhlkzLG0GhHiJRHRYg.PNG/SE-8c248818-41eb-43f5-ac11-6f18e0b18199.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfMTUw/MDAxNzMwNjM3NzQ5NTc1.lif_rbF_3AGo0i9nMjp0ah3ucQ6WY3ZTo38b2EOdz3sg.ewvQ57g7EnbgTK2So6zmFeapZ_dhlkzLG0GhHiJRHRYg.PNG/SE-8c248818-41eb-43f5-ac11-6f18e0b18199.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 675,
+        "height": 692,
+        "known_holes": [
+          {
+            "number": 13
+          }
+        ],
+        "display": {
+          "x": -178.18250489199687,
+          "y": 61.88738342906953,
+          "width": 693.9128530128384,
+          "height": 711.3891767183468,
+          "transform": "rotate(76.28280386835023 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 14,
+      "ref": "14",
+      "name": "마스터",
+      "par": 3,
+      "distance": 164,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.745,
+          0.544
+        ],
+        [
+          0.614,
+          0.492
+        ],
+        [
+          0.475,
+          0.435
+        ],
+        [
+          0.308,
+          0.383
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          203.25211,
+          438.96677
+        ],
+        [
+          208.29059,
+          294.07145
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfMjg1/MDAxNzMwNjM3NzUwNjQ2.BVbZcJoW1ORMgFuMPfqiaFGLo_P9LF0W8d3F4vWtbjsg.ow7hjIiAM_ybS5J8TfaXoMj3kOrVD2ZC71EDzzTrL5sg.PNG/SE-c26b8b0f-2838-4ddf-8540-187c105d3421.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfMjg1/MDAxNzMwNjM3NzUwNjQ2.BVbZcJoW1ORMgFuMPfqiaFGLo_P9LF0W8d3F4vWtbjsg.ow7hjIiAM_ybS5J8TfaXoMj3kOrVD2ZC71EDzzTrL5sg.PNG/SE-c26b8b0f-2838-4ddf-8540-187c105d3421.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 677,
+        "height": 642,
+        "known_holes": [
+          {
+            "number": 14
+          }
+        ],
+        "display": {
+          "x": -311.82437445204266,
+          "y": -77.28602286376275,
+          "width": 972.1260673353138,
+          "height": 921.8684419930154,
+          "transform": "rotate(70.74190405597749 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 15,
+      "ref": "15",
+      "name": "마스터",
+      "par": 4,
+      "distance": 365,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.79,
+          0.565
+        ],
+        [
+          0.71,
+          0.515
+        ],
+        [
+          0.61,
+          0.455
+        ],
+        [
+          0.51,
+          0.415
+        ],
+        [
+          0.43,
+          0.365
+        ],
+        [
+          0.35,
+          0.325
+        ],
+        [
+          0.235,
+          0.29
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          206.72602,
+          506.81739
+        ],
+        [
+          213.51053,
+          422.38971
+        ],
+        [
+          207.31089,
+          344.36673
+        ],
+        [
+          214.03691,
+          276.18412
+        ],
+        [
+          214.27086,
+          211.20385
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfNDIg/MDAxNzMwNjM3NzUxODEz.hiYvu83LsXiQwrLTY--RqP814gwWzlDP5nNBkwI1Zeog.q6KasUuZeAMfwqVtZR8U_w61eRl7r5hVu0Ojnrgti6Qg.PNG/SE-a2341612-6e5b-4b7a-a91b-fc371f7b24f4.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfNDIg/MDAxNzMwNjM3NzUxODEz.hiYvu83LsXiQwrLTY--RqP814gwWzlDP5nNBkwI1Zeog.q6KasUuZeAMfwqVtZR8U_w61eRl7r5hVu0Ojnrgti6Qg.PNG/SE-a2341612-6e5b-4b7a-a91b-fc371f7b24f4.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 668,
+        "height": 665,
+        "known_holes": [
+          {
+            "number": 15
+          }
+        ],
+        "display": {
+          "x": -172.66853432180164,
+          "y": 40.53598378557268,
+          "width": 727.1581157498568,
+          "height": 723.8924355893037,
+          "transform": "rotate(63.7442489970997 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 16,
+      "ref": "16",
+      "name": "마스터",
+      "par": 3,
+      "distance": 154,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.731,
+          0.577
+        ],
+        [
+          0.5,
+          0.46
+        ],
+        [
+          0.268,
+          0.344
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          200.57257,
+          350.20621
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfNzUg/MDAxNzMwNjM3NzUzMjE5._O81W93Y-qRcDxzornpM9t90lLiFKGDicN2pdYYTcjMg.7AysCKlVmA77JMjQqCBvD0cY3VGVaHxV7_nzhk1TpSYg.PNG/SE-f8c6dbf0-0166-4029-ab5c-adcbd75498dd.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfNzUg/MDAxNzMwNjM3NzUzMjE5._O81W93Y-qRcDxzornpM9t90lLiFKGDicN2pdYYTcjMg.7AysCKlVmA77JMjQqCBvD0cY3VGVaHxV7_nzhk1TpSYg.PNG/SE-f8c6dbf0-0166-4029-ab5c-adcbd75498dd.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 687,
+        "height": 667,
+        "known_holes": [
+          {
+            "number": 16
+          }
+        ],
+        "display": {
+          "x": -236.19482916609184,
+          "y": -40.43051336712898,
+          "width": 873.2629212534371,
+          "height": 847.8404199069032,
+          "transform": "rotate(63.960356341093906 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 17,
+      "ref": "17",
+      "name": "마스터",
+      "par": 4,
+      "distance": 300,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.823,
+          0.565
+        ],
+        [
+          0.57,
+          0.435
+        ],
+        [
+          0.233,
+          0.287
+        ]
+      ],
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          206.87177,
+          378.69001
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfMjIw/MDAxNzMwNjM3NzU0NDAx.fUS1OPrIzN-K7j87Y17xnjEpXnruzEC5qkPPjYCw-dYg.ZJrrTJXRrbNE0qLcon-LmPaA0gwOWxpqQ9gPgdVYJ_Qg.PNG/SE-7721ffad-2569-4e10-95bb-4079563c1fbf.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfMjIw/MDAxNzMwNjM3NzU0NDAx.fUS1OPrIzN-K7j87Y17xnjEpXnruzEC5qkPPjYCw-dYg.ZJrrTJXRrbNE0qLcon-LmPaA0gwOWxpqQ9gPgdVYJ_Qg.PNG/SE-7721ffad-2569-4e10-95bb-4079563c1fbf.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 672,
+        "height": 694,
+        "known_holes": [
+          {
+            "number": 17
+          }
+        ],
+        "display": {
+          "x": -162.1147311431959,
+          "y": 48.27446458418166,
+          "width": 685.8233544378711,
+          "height": 708.275904731968,
+          "transform": "rotate(64.0518809903592 200 350)"
+        }
+      },
+      "confidence": "높음",
+      "unverified": false,
+      "geometryMethod": "ai-extracted-guide",
+      "holeLabelSource": "visible-image-label"
+    },
+    {
+      "number": 18,
+      "par": 5,
+      "distance": 521,
+      "distanceSource": "홀 안내도 REGULAR 거리 · 원문 대조",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.806259,
+          0.577406
+        ],
+        [
+          0.640835,
+          0.523013
+        ],
+        [
+          0.4769,
+          0.503487
+        ],
+        [
+          0.357675,
+          0.472803
+        ],
+        [
+          0.292101,
+          0.428173
+        ],
+        [
+          0.28763,
+          0.345886
+        ],
+        [
+          0.263785,
+          0.291492
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNDExMDNfMjA4/MDAxNzMwNjM3NzMzNTI0.H1Tgop2b7ok909EISGSADRLKIHxvJOiP92Yjx-q7Uisg.592eNjlUn_rt2lBpUXobzC3YsjgIsFKTB6-g32VxjiAg.PNG/SE-20ff01ed-0b35-45da-9216-70db4ec4d157.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNDExMDNfMjA4/MDAxNzMwNjM3NzMzNTI0.H1Tgop2b7ok909EISGSADRLKIHxvJOiP92Yjx-q7Uisg.592eNjlUn_rt2lBpUXobzC3YsjgIsFKTB6-g32VxjiAg.PNG/SE-20ff01ed-0b35-45da-9216-70db4ec4d157.png",
+        "source_page": "https://m.blog.naver.com/2hyeono/223646883161",
+        "title": "용인 기흥 골드CC 라운딩, 마스터 코스 IN → OUT",
+        "width": 671,
+        "height": 717,
+        "display": {
+          "x": -186.70751033483663,
+          "y": 14.458374877979907,
+          "width": 722.7880542012042,
+          "height": 772.3383529989022,
+          "transform": "rotate(60.612325347527204 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "visible-image-label",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "18",
+      "name": "마스터",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          177.93072,
+          450.2045
+        ],
+        [
+          132.92571,
+          339.56131
+        ],
+        [
+          111.28742,
+          252.84667
+        ],
+        [
+          118.06329,
+          194.6348
+        ],
+        [
+          171.85281,
+          160.63236
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    }
+  ],
+  "geometrySource": "prepared-guide",
+  "source": "공개 홀 안내도 · 경로 후보 대조 · 2026-11-22",
+  "sourceUrl": "https://m.blog.naver.com/2hyeono/223646883161",
+  "preparedAt": "2026-11-22",
+  "notice": "홀 안내도 기반의 가상 재생입니다. 원문 작성 시점·티·사용 그린에 따라 현재 코스와 차이가 있을 수 있습니다."
+}

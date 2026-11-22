@@ -1,0 +1,591 @@
+{
+  "revision": 1,
+  "id": "giheung-east",
+  "name": "기흥CC · 동코스",
+  "clubName": "기흥CC",
+  "groupName": "동코스",
+  "tee": "화이트티 · 공개 안내 글",
+  "holes": [
+    {
+      "number": 1,
+      "par": 4,
+      "distance": 313,
+      "distanceSource": "공개 안내 글의 동코스 화이트티 거리",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.80038,
+          0.858824
+        ],
+        [
+          0.570342,
+          0.603361
+        ],
+        [
+          0.351711,
+          0.4
+        ],
+        [
+          0.163498,
+          0.193277
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNTA0MDdfNDMg/MDAxNzQ0MDE0ODEwNjkx.6VdH-6CDFTKcfufgVfdmvS2iAmGmoW6cVuwb3IQ60sMg.Vn8cY_0XTTZWgbrK0vzsxd8a43p5CbB707R-UPvFdmIg.PNG/image.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNTA0MDdfNDMg/MDAxNzQ0MDE0ODEwNjkx.6VdH-6CDFTKcfufgVfdmvS2iAmGmoW6cVuwb3IQ60sMg.Vn8cY_0XTTZWgbrK0vzsxd8a43p5CbB707R-UPvFdmIg.PNG/image.png",
+        "source_page": "https://m.blog.naver.com/kgasolin80/223825177960",
+        "title": "골프초보 경기도 화성시 기흥cc 동코스 공략",
+        "width": 526,
+        "height": 595,
+        "display": {
+          "x": -19.92815726223401,
+          "y": 78.4514910341677,
+          "width": 456.3402365490945,
+          "height": 516.2023588340518,
+          "transform": "rotate(40.229832840907505 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "source-section-heading",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "1",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          205.02468,
+          406.52305
+        ],
+        [
+          196.65313,
+          261.94146
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 2,
+      "par": 5,
+      "distance": 423,
+      "distanceSource": "공개 안내 글의 동코스 화이트티 거리",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.814672,
+          0.87541
+        ],
+        [
+          0.625483,
+          0.663934
+        ],
+        [
+          0.471042,
+          0.521311
+        ],
+        [
+          0.283784,
+          0.365574
+        ],
+        [
+          0.164093,
+          0.214754
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNTA0MDdfMjYz/MDAxNzQ0MDE0ODcxODc2.m2LEG83cTrewyUISnOjrwdjL1iwBvLhjUYoR_zSD2a0g.g9i7zl3ZKj91MLc4KL16fuUabEhM3-5y5kxXk-dQZqog.PNG/image.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNTA0MDdfMjYz/MDAxNzQ0MDE0ODcxODc2.m2LEG83cTrewyUISnOjrwdjL1iwBvLhjUYoR_zSD2a0g.g9i7zl3ZKj91MLc4KL16fuUabEhM3-5y5kxXk-dQZqog.PNG/image.png",
+        "source_page": "https://m.blog.naver.com/kgasolin80/223825177960",
+        "title": "골프초보 경기도 화성시 기흥cc 동코스 공략",
+        "width": 518,
+        "height": 610,
+        "display": {
+          "x": -17.146791692213498,
+          "y": 65.18235057114737,
+          "width": 443.7158903152718,
+          "height": 522.5225735372892,
+          "transform": "rotate(39.90330381488759 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "source-section-heading",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "2",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          206.48824,
+          436.38063
+        ],
+        [
+          201.72505,
+          335.25113
+        ],
+        [
+          190.18714,
+          219.52393
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 3,
+      "par": 4,
+      "distance": 338,
+      "distanceSource": "공개 안내 글의 동코스 화이트티 거리",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.689189,
+          0.80102
+        ],
+        [
+          0.598456,
+          0.578231
+        ],
+        [
+          0.521236,
+          0.408163
+        ],
+        [
+          0.30888,
+          0.282313
+        ],
+        [
+          0.140927,
+          0.253401
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNTA0MDdfMjkx/MDAxNzQ0MDE0OTE5ODE0.fnHQK_VEetsd9SGSZJvIRX0MgUo9ti-LZMRv3qWCAJ4g.azND2G2d2e7Jr7_PRcNpCpmlLO0QOYXeyPm0iYGgyAEg.PNG/image.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNTA0MDdfMjkx/MDAxNzQ0MDE0OTE5ODE0.fnHQK_VEetsd9SGSZJvIRX0MgUo9ti-LZMRv3qWCAJ4g.azND2G2d2e7Jr7_PRcNpCpmlLO0QOYXeyPm0iYGgyAEg.PNG/image.png",
+        "source_page": "https://m.blog.naver.com/kgasolin80/223825177960",
+        "title": "골프초보 경기도 화성시 기흥cc 동코스 공략",
+        "width": 518,
+        "height": 588,
+        "display": {
+          "x": -25.34165636376713,
+          "y": 25.089077909428454,
+          "width": 542.9160656191835,
+          "height": 616.2831015136678,
+          "transform": "rotate(41.41186737422439 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "source-section-heading",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "3",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          253.87615,
+          439.4436
+        ],
+        [
+          291.76265,
+          333.10745
+        ],
+        [
+          256.59992,
+          198.6785
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 4,
+      "par": 3,
+      "distance": 138,
+      "distanceSource": "공개 안내 글의 동코스 화이트티 거리",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.741107,
+          0.824027
+        ],
+        [
+          0.300395,
+          0.270728
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNTA0MDdfMjEw/MDAxNzQ0MDE0OTY3NDE5.dKzxwadJRAtWZ8p59feMNbFWk41VUCG7F2uXU_w5bR0g.Wj1b1l70tKDkIFEAnUQ9rtIE0E-Fxsxc1EHzeUblpYUg.PNG/image.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNTA0MDdfMjEw/MDAxNzQ0MDE0OTY3NDE5.dKzxwadJRAtWZ8p59feMNbFWk41VUCG7F2uXU_w5bR0g.Wj1b1l70tKDkIFEAnUQ9rtIE0E-Fxsxc1EHzeUblpYUg.PNG/image.png",
+        "source_page": "https://m.blog.naver.com/kgasolin80/223825177960",
+        "title": "골프초보 경기도 화성시 기흥cc 동코스 공략",
+        "width": 506,
+        "height": 591,
+        "display": {
+          "x": -99.58285136716717,
+          "y": -17.799168568219557,
+          "width": 575.2900164707647,
+          "height": 671.9296437435216,
+          "transform": "rotate(34.29236978925112 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "source-section-heading",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "4",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 5,
+      "par": 4,
+      "distance": 343,
+      "distanceSource": "공개 안내 글의 동코스 화이트티 거리",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.831094,
+          0.915702
+        ],
+        [
+          0.614203,
+          0.67438
+        ],
+        [
+          0.403071,
+          0.46281
+        ],
+        [
+          0.207294,
+          0.236364
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNTA0MDdfMTE4/MDAxNzQ0MDE1MDkyMDEx.PuIXOYmk8VfSkP9o7t4MQdLCZAiHjBkD4w5KZX73BfYg.kMn6cZCrcBPVb9XbRaTAsc0gK_AsS1xsTcxVtgIUby8g.PNG/image.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNTA0MDdfMTE4/MDAxNzQ0MDE1MDkyMDEx.PuIXOYmk8VfSkP9o7t4MQdLCZAiHjBkD4w5KZX73BfYg.kMn6cZCrcBPVb9XbRaTAsc0gK_AsS1xsTcxVtgIUby8g.PNG/image.png",
+        "source_page": "https://m.blog.naver.com/kgasolin80/223825177960",
+        "title": "골프초보 경기도 화성시 기흥cc 동코스 공략",
+        "width": 521,
+        "height": 605,
+        "display": {
+          "x": -32.31260573510451,
+          "y": 50.699028393823255,
+          "width": 447.4485562912986,
+          "height": 519.5899741962297,
+          "transform": "rotate(38.33535231542851 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "source-section-heading",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "5",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          201.65035,
+          416.45102
+        ],
+        [
+          195.73342,
+          271.62618
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 6,
+      "par": 4,
+      "distance": 301,
+      "distanceSource": "공개 안내 글의 동코스 화이트티 거리",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.794872,
+          0.824793
+        ],
+        [
+          0.595661,
+          0.591736
+        ],
+        [
+          0.424063,
+          0.404959
+        ],
+        [
+          0.177515,
+          0.185124
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNTA0MDdfMTkg/MDAxNzQ0MDE1MTQ3ODY2.gI3Q-2tU6SSAYwmImaxW0-5ghFKO9NuAKarNNgo8LDAg.xuq-5aEezXBULX6MImOVNZssrcIoNC9RH3CGautML44g.PNG/image.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNTA0MDdfMTkg/MDAxNzQ0MDE1MTQ3ODY2.gI3Q-2tU6SSAYwmImaxW0-5ghFKO9NuAKarNNgo8LDAg.xuq-5aEezXBULX6MImOVNZssrcIoNC9RH3CGautML44g.PNG/image.png",
+        "source_page": "https://m.blog.naver.com/kgasolin80/223825177960",
+        "title": "골프초보 경기도 화성시 기흥cc 동코스 공략",
+        "width": 507,
+        "height": 605,
+        "display": {
+          "x": -22.860695463115434,
+          "y": 73.79760793790251,
+          "width": 458.37859918554125,
+          "height": 546.9803796987228,
+          "transform": "rotate(38.96544915720275 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "source-section-heading",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "6",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          209.16551,
+          418.45994
+        ],
+        [
+          212.25341,
+          289.56185
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 7,
+      "par": 3,
+      "distance": 133,
+      "distanceSource": "공개 안내 글의 동코스 화이트티 거리",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.778656,
+          0.817276
+        ],
+        [
+          0.245059,
+          0.240864
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNTA0MDdfMjI2/MDAxNzQ0MDE1MjA1NTU2.9xcelTJUXz1HhzUrstXhmHGsPmqj7ob1d8FWW0eUAbAg.1BaGlZ0q80TCtDPDHR9P0WQfniloBQacvrf8Z9zKi9Mg.PNG/image.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNTA0MDdfMjI2/MDAxNzQ0MDE1MjA1NTU2.9xcelTJUXz1HhzUrstXhmHGsPmqj7ob1d8FWW0eUAbAg.1BaGlZ0q80TCtDPDHR9P0WQfniloBQacvrf8Z9zKi9Mg.PNG/image.png",
+        "source_page": "https://m.blog.naver.com/kgasolin80/223825177960",
+        "title": "골프초보 경기도 화성시 기흥cc 동코스 공략",
+        "width": 506,
+        "height": 602,
+        "display": {
+          "x": -65.08551432927334,
+          "y": 24.016186663529083,
+          "width": 517.8892842818037,
+          "height": 616.1449587700511,
+          "transform": "rotate(37.886419603284864 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "source-section-heading",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "7",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 8,
+      "par": 4,
+      "distance": 316,
+      "distanceSource": "공개 안내 글의 동코스 화이트티 거리",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.803059,
+          0.861157
+        ],
+        [
+          0.657744,
+          0.654545
+        ],
+        [
+          0.543021,
+          0.497521
+        ],
+        [
+          0.321224,
+          0.312397
+        ],
+        [
+          0.172084,
+          0.18843
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNTA0MDdfNTEg/MDAxNzQ0MDE1MjY0Mzk4.PeebMjOyAk7dJrNANn6m_GVhufyJJAenyTyJLf_nuOEg.e5MvCr_ktUnEYKaWe-Jt0fIqjbY9ivxFuz9GC6bn7I0g.PNG/image.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNTA0MDdfNTEg/MDAxNzQ0MDE1MjY0Mzk4.PeebMjOyAk7dJrNANn6m_GVhufyJJAenyTyJLf_nuOEg.e5MvCr_ktUnEYKaWe-Jt0fIqjbY9ivxFuz9GC6bn7I0g.PNG/image.png",
+        "source_page": "https://m.blog.naver.com/kgasolin80/223825177960",
+        "title": "골프초보 경기도 화성시 기흥cc 동코스 공략",
+        "width": 523,
+        "height": 605,
+        "display": {
+          "x": -18.99930006429915,
+          "y": 77.32423011701388,
+          "width": 449.16345615832586,
+          "height": 519.5867896286561,
+          "transform": "rotate(39.03551789166978 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "source-section-heading",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "8",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          216.91206,
+          450.50575
+        ],
+        [
+          228.27036,
+          354.67882
+        ],
+        [
+          211.46693,
+          217.22142
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    },
+    {
+      "number": 9,
+      "par": 5,
+      "distance": 458,
+      "distanceSource": "공개 안내 글의 동코스 화이트티 거리",
+      "distanceAssumed": false,
+      "sourceRoute": [
+        [
+          0.794286,
+          0.831615
+        ],
+        [
+          0.60381,
+          0.728522
+        ],
+        [
+          0.455238,
+          0.584192
+        ],
+        [
+          0.31619,
+          0.379725
+        ],
+        [
+          0.20381,
+          0.176976
+        ]
+      ],
+      "mapImage": {
+        "image_url": "https://blogfiles.naver.net/MjAyNTA0MDdfMjcy/MDAxNzQ0MDE1MzE0NDAy.zWrPtdANJGzmATlyUdX75MILCknI3q6X2fy6ZGh96nMg.0YYalk-Gkpf8vmGJce70sq2lovJ_cGe7_s-T2uwVXIIg.PNG/image.png",
+        "thumbnail_url": "https://blogfiles.naver.net/MjAyNTA0MDdfMjcy/MDAxNzQ0MDE1MzE0NDAy.zWrPtdANJGzmATlyUdX75MILCknI3q6X2fy6ZGh96nMg.0YYalk-Gkpf8vmGJce70sq2lovJ_cGe7_s-T2uwVXIIg.PNG/image.png",
+        "source_page": "https://m.blog.naver.com/kgasolin80/223825177960",
+        "title": "골프초보 경기도 화성시 기흥cc 동코스 공략",
+        "width": 525,
+        "height": 582,
+        "display": {
+          "x": -40.03286043432345,
+          "y": 81.10844962389501,
+          "width": 480.98150966304536,
+          "height": 533.2023592836046,
+          "transform": "rotate(39.1334653260669 200 350)"
+        }
+      },
+      "geometryMethod": "manually-traced-guide",
+      "holeLabelSource": "source-section-heading",
+      "confidence": "중간",
+      "unverified": true,
+      "ref": "9",
+      "name": "동코스",
+      "route": [
+        [
+          200.0,
+          575.0
+        ],
+        [
+          163.62873,
+          474.54027
+        ],
+        [
+          156.76834,
+          369.74563
+        ],
+        [
+          173.6985,
+          242.96985
+        ],
+        [
+          200.0,
+          125.0
+        ]
+      ]
+    }
+  ],
+  "geometrySource": "prepared-guide",
+  "source": "공개 홀 안내도 · 경로 후보 대조 · 2026-11-22",
+  "sourceUrl": "https://m.blog.naver.com/kgasolin80/223825177960",
+  "preparedAt": "2026-11-22",
+  "notice": "홀 안내도 기반의 가상 재생입니다. 원문 작성 시점·티·사용 그린에 따라 현재 코스와 차이가 있을 수 있습니다."
+}

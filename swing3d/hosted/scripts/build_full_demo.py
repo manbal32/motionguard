@@ -49,6 +49,12 @@ for source in map_sources:
   entry.update(preview_crop={'x':155,'y':28,'width':760,'height':685},preview_label='레이크 · 밸리 · 파인힐 · 체리힐 전체 배치도')
  map_previews.append(entry)
 (DIST/'map-preview-sources.json').write_text(json.dumps(map_previews,ensure_ascii=False))
+# Prepared guide snapshots are shared by the result picker and the standalone map tester.
+for name in ['prepared-courses.js','prepared-courses.css','prepared-tester.js','prepared-tester.html']:
+ shutil.copy2(ROOT/'overrides'/name,DIST/('courses.html' if name=='prepared-tester.html' else name))
+shutil.copy2(ROOT/'data/prepared-courses.json',DIST/'prepared-courses.json')
+shutil.copytree(ROOT/'data/prepared-courses',DIST/'prepared-courses')
+p=DIST/'index.html';text=p.read_text().replace('<script src="./simulation-entry.js">','<script src="./prepared-courses.js"></script><script src="./simulation-entry.js">');text=text.replace('</head>','<link rel="stylesheet" href="./prepared-courses.css"></head>');p.write_text(text)
 subprocess.run(['python',str(ROOT/'scripts/seal_assets.py')],check=True)
 # App shell only at install. Heavy model/3D/tour assets are cached as used.
 assets=sorted('./'+str(f.relative_to(DIST)) for f in DIST.iterdir() if f.is_file() and f.suffix in ('.html','.js','.css') and f.name!='sw.js')

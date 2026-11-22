@@ -1,5 +1,9 @@
 window.MotionMapWorkflow={async run(name,entry,options={}){
  const $=id=>document.getElementById(id),status=options.status??$('course-search-status'),usage=[],post=async(path,data)=>{const r=await fetch('./api/courses/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const d=await r.json();if(!r.ok||!d.ok)throw Error(d.reason??'지도 요청 실패');if(d.usage)usage.push(d.usage);return d;};
+ if(window.MotionPreparedCourses){
+  const prepared=await window.MotionPreparedCourses.find(name,options.group??$('map-group')?.value);
+  if(prepared){const course=await window.MotionPreparedCourses.load(prepared.selected.id);if(options.onCourse){await options.onCourse(course);return course;}const id=new URLSearchParams(location.search).get('report')??'demo';sessionStorage.setItem('motionguard:selected-course:'+id,JSON.stringify(course));sessionStorage.removeItem('motionguard:course-result:'+id);location.reload();return course;}
+ }
  status.textContent=name+' · 네이버에서 코스 지도 이미지를 찾는 중입니다.';
  const response=await fetch('./api/courses/discover?'+new URLSearchParams({q:name}));const found=await response.json();if(!response.ok||!found.ok)throw Error(found.reason??'지도 검색 실패');if(!found.candidates.length)throw Error('검색에서 사용할 지도 이미지를 찾지 못했습니다.');
  const cached=found.candidates.findIndex(c=>c.verified_map_source);let selected;
