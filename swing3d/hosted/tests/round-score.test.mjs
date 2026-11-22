@@ -5,6 +5,51 @@ test('upload record restores, edits and clears without retaining an old approved
 
 test('approved record is saved in the browser report and survives reopening without consulting current upload input',async()=>{const saved=new Map(),db={transaction(store){const transaction={objectStore(){return {get:key=>run(saved.get(store+':'+key)),put:(value,key)=>{saved.set(store+':'+key,value);return run(value);},delete:key=>{saved.delete(store+':'+key);return run(undefined);}};}};function run(value){const request={result:value};queueMicrotask(()=>{request.onsuccess();transaction.oncomplete();});return request;}return transaction;}};const s={MotionStaticMode:'browser',navigator:{},document:{currentScript:{src:'https://example.test/client-api.js'},addEventListener(){}},location:{href:'https://example.test/'},indexedDB:{open(){const request={result:db};queueMicrotask(()=>request.onsuccess());return request;}},URL,Response,crypto:webcrypto,fetch:async()=>Response.json({}),MotionTrack:{csv:()=>({frames:[],fps:30}),build:()=>({meta:{usable:false}}),score:()=>({items:[]})},MotionLocalCoach:{analyze:(_track,summary)=>({conversation_summary:summary,score:{total:null,measured_count:0,items:[]}}),conditions:()=>({})},MotionVisual:{analyze:async(_track,summary)=>({mode:'gemini-images',input_receipt:{recent_round_score:summary.recent_round_score},analysis:{assessment_score:{dimensions:[]}}})}};s.window=s;vm.runInNewContext(fs.readFileSync('dist/client/client-api.js','utf8'),s);const track=await(await s.fetch('./api/track',{method:'POST',body:new Blob(['fixture'])})).json(),response=await s.fetch('./api/coaching/analyze',{method:'POST',body:JSON.stringify({approved:true,profile_id:'a'.repeat(8)+'-'+ 'b'.repeat(4)+'-'+ 'c'.repeat(4)+'-'+ 'd'.repeat(4)+'-'+ 'e'.repeat(12),track_id:track.track_id,conversation_summary:{concern:'fixture',recent_round_score:105}})});assert.equal(response.status,200);const report=await response.json(),reopened=await(await s.fetch('./api/coaching/report/'+report.report_id)).json();assert.equal(reopened.recent_round_score,105);assert.equal(reopened.conversation_summary.recent_round_score,105);assert.equal(reopened.visual_analysis.input_receipt.recent_round_score,105);});
 
-function disclosureFixture(savedScore=null){const nodes={},saved=new Map(savedScore===null?[]:[['motionguard:recent-round-score',String(savedScore)]]),field={value:'',events:{},setCustomValidity(v){this.error=v;},reportValidity(){this.reported=true;},addEventListener(k,fn){this.events[k]=fn;},blur(){this.blurred=true;this.events.blur?.();}},card={open:true,events:{},addEventListener(k,fn){this.events[k]=fn;}},label={textContent:''},media={open:false},message={value:'',events:{},addEventListener(k,fn){this.events[k]=fn;}};Object.assign(nodes,{'recent-round-score':field,'recent-round-card':card,'recent-round-summary-value':label,'coach-message':message,'uploaded-media':media});const s={document:{readyState:'complete',getElementById:id=>nodes[id]??null},sessionStorage:{getItem:k=>saved.get(k)??null,setItem:(k,v)=>saved.set(k,v),removeItem:k=>saved.delete(k)}};s.window=s;vm.runInNewContext(fs.readFileSync('overrides/round-score.js','utf8'),s);return{s,field,card,label,message,media};}
-test('a committed score folds to its value, and writing a first message folds an unfilled optional record',()=>{const t=disclosureFixture();assert.equal(t.card.open,true);t.field.value='105';t.field.events.input();assert.equal(t.card.open,true);t.field.events.change();assert.equal(t.card.open,false);assert.equal(t.label.textContent,'105타');assert.equal(t.s.MotionRoundScore.payload().recent_round_score,105);t.card.open=true;t.card.events.toggle();assert.equal(t.label.textContent,'선택');t.field.value='';t.field.events.input();t.message.value='백스윙이 어려워요';t.message.events.input();assert.equal(t.card.open,false);assert.equal(t.label.textContent,'미입력');assert.equal(t.s.MotionRoundScore.read(),undefined);});
-test('invalid scores stay editable and restored or Enter-confirmed scores fold without changing their values',()=>{const t=disclosureFixture(115);assert.equal(t.card.open,false);assert.equal(t.label.textContent,'115타');t.card.open=true;t.field.value='0';t.field.events.change();assert.equal(t.card.open,true);t.card.open=false;assert.throws(()=>t.s.MotionRoundScore.read());assert.equal(t.card.open,true);assert.equal(t.field.reported,true);assert.equal(t.media.open,true);t.field.value='112';let prevented=false;t.field.events.keydown({key:'Enter',isComposing:true,preventDefault(){prevented=true;}});assert.equal(t.card.open,true);t.field.events.keydown({key:'Enter',isComposing:false,preventDefault(){prevented=true;}});assert.equal(prevented,true);assert.equal(t.card.open,false);assert.equal(t.field.value,'112');assert.equal(t.field.blurred,true);});
+function roundField(savedScore) {
+  const storage = new Map([['motionguard:recent-round-score', String(savedScore)]]);
+  const media = {open: false};
+  const field = {
+    value: '', validity: {badInput: false}, events: {},
+    setCustomValidity(message) { this.error = message; },
+    reportValidity() { this.reported = true; },
+    closest(selector) { return selector === '#uploaded-media' ? media : null; },
+    addEventListener(name, handler) { this.events[name] = handler; },
+    blur() { this.blurred = true; },
+  };
+  const ctx = {
+    document: {readyState: 'complete', getElementById: id => id === 'recent-round-score' ? field : null},
+    sessionStorage: {getItem: k => storage.get(k), setItem: (k, v) => storage.set(k, v), removeItem: k => storage.delete(k)},
+  };
+  ctx.window = ctx;
+  vm.runInNewContext(fs.readFileSync('overrides/round-score.js', 'utf8'), ctx);
+  return {api: ctx.MotionRoundScore, field, media};
+}
+
+test('restored round record stays editable and Enter accepts without changing its value', () => {
+  const {api, field} = roundField(115);
+  assert.equal(field.value, '115');
+  let prevented = false;
+  field.events.keydown({key: 'Enter', isComposing: true, preventDefault() { prevented = true; }});
+  assert.equal(prevented, false);
+  field.value = '112';
+  field.events.input();
+  field.events.keydown({key: 'Enter', isComposing: false, preventDefault() { prevented = true; }});
+  assert.equal(prevented, true);
+  assert.equal(field.blurred, true);
+  assert.equal(api.payload().recent_round_score, 112);
+});
+
+test('invalid round record reveals its field and is not treated as an omitted score', () => {
+  const {api, field, media} = roundField(115);
+  field.value = '0';
+  assert.throws(() => api.read());
+  assert.equal(media.open, true);
+  assert.equal(field.reported, true);
+  field.value = '';
+  field.validity.badInput = true;
+  assert.throws(() => api.read());
+  field.validity.badInput = false;
+  field.events.input();
+  assert.equal(api.read(), undefined);
+  assert.equal(field.error, '');
+});
