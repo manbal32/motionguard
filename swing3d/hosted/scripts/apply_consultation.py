@@ -27,12 +27,47 @@ p.write_text(s)
 p=d/'instrument.js';s=p.read_text().replace('const chatTimeout=setTimeout(()=>controller.abort(),35000);','const chatTimeout=setTimeout(()=>controller.abort(),80000);').replace('const summaryTimeout=setTimeout(()=>controller.abort(),35000);','const summaryTimeout=setTimeout(()=>controller.abort(),80000);')
 s=s.replace('{messages}), ...data, allow_external:', '{messages,client_timeout_ms:80000}), ...data, allow_external:')
 s=s.replace('    return readResponse(response);\n  }\n\n  function chatLine', "    if(!response.ok){let error;try{error=await response.json();}catch{}throw Error((error?.reason||'코치 연결을 확인해 주세요.')+(error?.request_id?' (확인번호 '+error.request_id.slice(0,8)+')':''));}\n    return readResponse(response);\n  }\n\n  function chatLine")
-s=s.replace('    coachStatus.textContent = "답변을 기다리는 중입니다.";', '    const pendingLine=chatLine("모션가드 코치","답변을 준비하고 있어요…");pendingLine.className="coach-pending";byId("coach-retry").hidden=true;\n    coachStatus.textContent = "";')
+s=s.replace('    coachStatus.textContent = "답변을 기다리는 중입니다.";','''    const userTurn = messages.reduce((count, turn) => count + (turn.role === "user" ? 1 : 0), 0);
+    const analysisReminder = userTurn % 5 === 0;
+    let pendingLine;
+    if (!analysisReminder) {
+      pendingLine = chatLine("모션가드 코치", "답변을 준비하고 있어요…");
+      pendingLine.className = "coach-pending";
+    }
+    byId("coach-retry").hidden = true;
+    coachStatus.textContent = "";''')
 s=s.replace(' + " 입력한 메시지를 다시 보낼 수 있습니다.";', ';\n      byId("coach-retry").hidden=false;')
-s=s.replace('      clearTimeout(chatTimeout);','      pendingLine.remove();clearTimeout(chatTimeout);')
+s=s.replace('      clearTimeout(chatTimeout);','      pendingLine?.remove();clearTimeout(chatTimeout);')
 s=s.replace('  function node(tag, text, className) {','  byId("coach-retry").onclick=()=>{if(message.value.trim())coachForm.requestSubmit();};\n  function node(tag, text, className) {')
 p.write_text(s)
 p=d/'index.html';p.write_text(p.read_text().replace('<p id="coach-status" role="status"></p>','<p id="coach-status" role="status"></p><button id="coach-retry" type="button" hidden>다시 보내기</button>'))
 # The controls are optional when a previously cached page loads the new script.
 p=d/'instrument.js';s=p.read_text().replace('byId("coach-retry").hidden=true;', 'if(byId("coach-retry"))byId("coach-retry").hidden=true;').replace('byId("coach-retry").hidden=false;', 'if(byId("coach-retry"))byId("coach-retry").hidden=false;').replace('  byId("coach-retry").onclick=()=>{if(message.value.trim())coachForm.requestSubmit();};', '  if(byId("coach-retry"))byId("coach-retry").onclick=()=>{if(message.value.trim())return coachForm.requestSubmit();};')
 a=s.index('  coachForm.addEventListener("submit"');b=s.index('  function node(',a);part=s[a:b].replace('if (controller.signal.aborted) return;', 'if (controller.signal.aborted) throw Error("답변 연결 시간이 초과됐습니다.");');s=s[:a]+part+s[b:];p.write_text(s)
+
+# Guide the user every five messages and keep requests bounded for longer conversations.
+p=d/'instrument.js';s=p.read_text()
+cap='''    if (messages.length >= 20) {
+      coachStatus.textContent = "상담 10턴을 기록했습니다. 분석하기를 눌러 주세요.";
+      return;
+    }
+'''
+assert cap in s
+s=s.replace(cap,'',1)
+s=s.replace('      const reply = await coachPost("chat", {}, controller.signal);','''      const reply = analysisReminder
+        ? {text: selected
+            ? "분석할 준비가 됐어요. ‘분석하기’를 눌러 주세요."
+            : "스윙 영상을 올린 뒤 ‘분석하기’를 눌러 주세요."}
+        : await coachPost("chat", {}, controller.signal);''',1)
+s=s.replace('      chatLine("모션가드 코치", reply.text);','''      const responseLine = chatLine("모션가드 코치", reply.text);
+      if (analysisReminder) responseLine.className = "coach-analysis-reminder";''',1)
+transport='  async function coachPost(path, data, signal) {'
+assert transport in s
+s=s.replace(transport,transport+'''
+    // Keep the original concern and the most recent turns when trimming requests.
+    const limit = path === "chat" ? 9 : 20;
+    const history = messages.length > limit
+      ? [...messages.slice(0, 2), ...messages.slice(-(limit - 2))]
+      : messages;''',1)
+s=s.replace('{messages,client_timeout_ms:80000}', '{messages:history,client_timeout_ms:80000}',1)
+p.write_text(s)

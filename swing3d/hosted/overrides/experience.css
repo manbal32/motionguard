@@ -133,3 +133,9 @@ body.viewing-report{display:block;height:auto;overflow:auto;background:#eef3ef}b
   font-size: 15px;
   word-break: keep-all;
 }
+
+#coach-log li.coach-analysis-reminder {
+  background: #e4f4e9;
+  color: #174d35;
+  word-break: keep-all;
+}

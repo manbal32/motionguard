@@ -21,3 +21,54 @@ test('accepted first message folds the optional score even when it was left blan
 test('invalid optional score opens correction before any chat turn is added or sent',async()=>{const{context:c}=setup({text:'must not send'});c.MotionRoundScore={read(){throw Error('타수를 확인해 주세요');},collapse(){throw Error('must stay open');}};vm.runInContext(code.slice(code.indexOf('  coachForm.addEventListener("submit"'),code.indexOf('  function node(')),c);c.message.value='스윙 고민';await c.submit({preventDefault(){}});assert.equal(c.called,0);assert.equal(c.messages.length,0);assert.equal(c.message.value,'스윙 고민');assert.match(c.coachStatus.textContent,/타수를 확인/);});
 
 test('editing the proposed practice goal changes its origin badge without rewriting the goal',()=>{let edited;const goal={name:'goal',value:'내가 원하는 백스윙 만들기',style:{},scrollHeight:64,addEventListener(name,fn){if(name==='input')edited=fn;}},badge={textContent:'코치 제안'},s={summaryPanel:{querySelectorAll:()=>[goal]},byId:id=>id==='summary-goal-origin'?badge:null,addEventListener(){}};vm.createContext(s);vm.runInContext(code.slice(code.indexOf('  const summaryFields ='),code.indexOf('  const approve =')),s);edited();assert.equal(badge.textContent,'직접 수정');assert.equal(goal.value,'내가 원하는 백스윙 만들기');assert.equal(goal.style.height,'64px');});
+
+test('every fifth user message gets a local analysis reminder and the conversation can continue past ten turns', async () => {
+  const {context, els} = setup({text: '답변', mode: 'gemini'});
+  const visible = [];
+  context.chatLine = (label, text) => {
+    const line = {label, text, remove() { this.removed = true; }};
+    visible.push(line);
+    return line;
+  };
+  vm.runInContext(code.slice(code.indexOf('  coachForm.addEventListener("submit"'), code.indexOf('  function node(')), context);
+  for (let turn = 1; turn <= 16; turn++) {
+    context.message.value = '스윙 고민 ' + turn;
+    await context.submit({preventDefault() {}});
+    assert.equal(context.called, turn - Math.floor(turn / 5));
+    assert.equal(context.messages.length, turn * 2);
+    assert.equal(context.message.value, '');
+    assert.equal(els.start.disabled, false);
+    if (turn % 5 === 0) {
+      assert.match(visible.at(-1).text, /‘분석하기’를 눌러 주세요/);
+      assert.equal(visible.at(-1).className, 'coach-analysis-reminder');
+    }
+  }
+  assert.equal(visible.filter(line => line.className === 'coach-analysis-reminder').length, 3);
+  assert.equal(context.analysisSummary, undefined);
+});
+
+test('chat and summary requests retain the opening concern and recent turns within their request limits', async () => {
+  const {context} = setup(null);
+  context.messages = Array.from({length: 30}, (_, i) => ({
+    role: i % 2 ? 'assistant' : 'user',
+    text: '말풍선 ' + i,
+  }));
+  const sent = [];
+  context.fetch = async (url, options) => {
+    sent.push({url, ...JSON.parse(options.body)});
+    return {ok: true};
+  };
+  context.readResponse = async () => ({});
+  vm.runInContext(code.slice(code.indexOf('  async function coachPost('), code.indexOf('  function chatLine(')), context);
+  await context.coachPost('summary', {});
+  context.messages.push({role: 'user', text: '방금 추가한 내용'});
+  await context.coachPost('chat', {});
+  for (const [index, length] of [20, 9].entries()) {
+    assert.equal(sent[index].messages.length, length);
+    assert.equal(sent[index].messages[0].text, '말풍선 0');
+    sent[index].messages.forEach((turn, i) => assert.equal(turn.role, i % 2 ? 'assistant' : 'user'));
+  }
+  assert.equal(sent[0].messages.at(-1).text, '말풍선 29');
+  assert.equal(sent[1].messages.at(-1).text, '방금 추가한 내용');
+  assert.equal(context.messages.length, 31);
+});
