@@ -1,0 +1,95 @@
+/* Shared play viewport: retain all controls while folding secondary information. */
+.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;font-size:18px}.panel-heading button{min-height:44px;font:inherit;font-size:16px}
+.game-menu{position:relative}.game-menu>summary{min-height:44px;display:flex;align-items:center;justify-content:center;padding:8px 12px;list-style:none;cursor:pointer;border:1px solid #cdded2;border-radius:12px;background:#fff;font-size:16px;font-weight:650}.game-menu>summary::-webkit-details-marker{display:none}.panel-backdrop{position:fixed;inset:0;width:100%;height:100%;border:0;border-radius:0;background:#143b2866;z-index:40}.game-menu[open]>summary,.weather-panel[open]>summary{position:relative;z-index:42}.game-menu-body,.weather-panel[open]>.weather-body{position:fixed;z-index:42;top:76px;right:12px;width:min(420px,calc(100% - 24px));max-height:calc(100dvh - 100px);overflow:auto;overscroll-behavior:contain;padding:18px;background:#f8fbf8;border:1px solid #c9ddcf;border-radius:20px;box-shadow:0 16px 52px #143b2833}.game-menu-body .minor-actions{display:grid;grid-template-columns:1fr;gap:8px;margin:14px 0}.game-menu-body .minor-actions button{font-size:16px;min-height:44px}.game-menu-body .game-map-legend{padding:12px 0;min-height:44px}.game-menu-body .save-status,.weather-reference{font-size:14px}.game-menu-body .club-guide{font-size:16px}.game-menu-body .club-guide summary{font-size:16px}.game-menu-body .distance-preset-label{margin:12px 0}.weather-panel[open]>.weather-body{left:12px;right:auto}.aim-control,.power-control{min-width:0}
+body[data-game-screen=play]{height:var(--game-viewport-height,100dvh);overflow:hidden;overscroll-behavior:none}
+body[data-game-screen=play] .game-test-notice{display:none}
+body[data-game-screen=play] .game-app{height:100%;width:100%;max-width:1280px;padding:calc(6px + env(safe-area-inset-top)) 10px calc(6px + env(safe-area-inset-bottom));display:grid;grid-template-columns:minmax(0,1fr) auto auto;grid-template-rows:52px auto 4px minmax(0,1fr);grid-template-areas:'round score menu' 'weather weather weather' 'progress progress progress' 'play play play';gap:6px;min-height:0}
+body[data-game-screen=play] .game-header,body[data-game-screen=play] .play-screen{display:contents}
+body[data-game-screen=play] .game-brand,body[data-game-screen=play] .club-name{display:none}
+body[data-game-screen=play] #open-score{grid-area:score;min-height:44px;margin:0;font-size:14px;padding:8px 10px}
+body[data-game-screen=play] .game-menu{grid-area:menu;align-self:center}
+body[data-game-screen=play] .round-top{grid-area:round;margin:0;gap:8px;min-width:0;align-items:center}
+body[data-game-screen=play] .round-top>div:first-child{min-width:0}
+body[data-game-screen=play] .round-top .eyebrow{font-size:14px;line-height:1.2;overflow-wrap:anywhere}
+body[data-game-screen=play] .round-top h1{font-size:16px;line-height:1.25;margin:2px 0 0;overflow-wrap:anywhere}
+body[data-game-screen=play] .total-badge{flex-shrink:0;gap:0}
+body[data-game-screen=play] .total-badge>span{font-size:14px;line-height:1.2}
+body[data-game-screen=play] .total-badge strong{font-size:22px;line-height:1.2}
+body[data-game-screen=play] .weather-panel{grid-area:weather;margin:0;min-width:0}
+body[data-game-screen=play] .weather-panel>summary{min-height:44px;display:grid;grid-template-columns:20px minmax(0,1fr) auto auto;gap:6px;padding:4px 10px;font-size:14px;line-height:1.25}
+body[data-game-screen=play] #weather-summary{overflow-wrap:anywhere}
+body[data-game-screen=play] #weather-wind{font-size:14px;margin:0}
+body[data-game-screen=play] .round-progress{grid-area:progress;margin:0;height:4px}
+body[data-game-screen=play] .play-layout{grid-area:play;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 300px;grid-template-rows:minmax(0,1fr);gap:8px;align-items:stretch}
+body[data-game-screen=play] .board-wrap{height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;border-radius:16px}
+body[data-game-screen=play] .board-meta{position:static;display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 8px;padding:4px 8px;min-height:34px;align-items:center;background:#f6faf2}
+body[data-game-screen=play] .lie-label,body[data-game-screen=play] .remaining-label{padding:0;box-shadow:none;background:none;font-size:14px;line-height:1.3}
+body[data-game-screen=play] .remaining-label{justify-self:end}
+body[data-game-screen=play] .remaining-label strong{font-size:20px}
+body[data-game-screen=play] .board-meta .putting-help{grid-column:1/-1;margin:0;padding:2px 0;background:none;font-size:14px;line-height:1.3}
+body[data-game-screen=play] .game-map{height:100%;min-height:0;max-height:none;width:100%}
+body[data-game-screen=play] .play-status{position:static;min-height:30px;padding:5px 8px;font-size:14px;line-height:1.3;overflow-wrap:anywhere;background:#f6faf2}
+body[data-game-screen=play] .shot-panel{align-self:start;max-height:100%;overflow:auto;margin:0;padding:8px;border-radius:16px;display:grid;grid-template-columns:minmax(0,1fr) 78px 62px;grid-template-rows:52px 44px 44px;grid-template-areas:'club carry hit' 'aim aim aim' 'power power power';gap:4px 6px}
+body[data-game-screen=play] .club-row{display:contents}
+body[data-game-screen=play] .club-row>label,body[data-game-screen=play] .club-picker-label{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}
+body[data-game-screen=play] .club-picker-button{grid-area:club;min-height:44px;gap:0;padding:5px 8px}
+body[data-game-screen=play] .club-picker-button>span:first-child{font-size:16px;line-height:1.3;overflow-wrap:anywhere}
+body[data-game-screen=play] .club-picker-button small{font-size:14px;line-height:1.2}
+body[data-game-screen=play] .carry-preview{grid-area:carry;align-self:center;min-width:0;margin:0}
+body[data-game-screen=play] .carry-preview span{font-size:14px;line-height:1.2;white-space:normal}
+body[data-game-screen=play] .carry-preview strong{font-size:20px;line-height:1.3}
+body[data-game-screen=play] .hit-shot{grid-area:hit;margin:0;min-height:48px;height:52px;font-size:18px;padding:6px}
+body[data-game-screen=play] .aim-control,body[data-game-screen=play] .power-control{display:grid;grid-template-columns:86px minmax(0,1fr);gap:8px;align-items:center;min-height:44px}
+body[data-game-screen=play] .aim-control{grid-area:aim}
+body[data-game-screen=play] .power-control{grid-area:power}
+body[data-game-screen=play] .slider-label{margin:0;display:grid;gap:1px;font-size:14px;line-height:1.2}
+body[data-game-screen=play] .slider-label strong{font-size:16px}
+body[data-game-screen=play] input[type=range]{height:44px;min-height:44px;margin:0}
+body[data-game-screen=play] .slider-row>span{display:none}
+body[data-game-screen=play] .hole-finish{position:fixed;inset:0;z-index:50}
+body[data-game-screen=play] .finish-card{max-height:calc(100dvh - 32px);overflow:auto}
+@media(max-width:760px){body[data-game-screen=play] .play-layout{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}body[data-game-screen=play] .shot-panel{align-self:stretch}body[data-game-screen=play] .game-app{padding-left:8px;padding-right:8px}}
+@media(max-height:520px) and (orientation:portrait){body[data-game-screen=play] .game-app{grid-template-rows:44px auto 4px minmax(0,1fr);gap:4px}body[data-game-screen=play] .shot-panel{grid-template-rows:48px 62px;grid-template-areas:'club carry hit' 'aim power power'}body[data-game-screen=play] .hit-shot{height:48px}body[data-game-screen=play] .aim-control,body[data-game-screen=play] .power-control{display:flex;flex-direction:column;gap:0;align-items:stretch}body[data-game-screen=play] .slider-label{display:flex;justify-content:space-between;min-height:18px}body[data-game-screen=play] .slider-row{flex:1}}
+@media(max-height:520px) and (orientation:landscape){body[data-game-screen=play] .game-app{grid-template-rows:44px auto 4px minmax(0,1fr);gap:4px}body[data-game-screen=play] .play-layout{grid-template-columns:minmax(0,1fr) 260px;grid-template-rows:minmax(0,1fr)}body[data-game-screen=play] .shot-panel{grid-template-columns:minmax(0,1fr) 78px;grid-template-rows:52px 44px 44px 48px;grid-template-areas:'club carry' 'aim aim' 'power power' 'hit hit'}body[data-game-screen=play] .hit-shot{height:48px}}
+.score-overlay,.club-overlay{z-index:70}
+/* The service iframe gets a fixed viewport, not a scrollHeight feedback loop. */
+body.round-screen-open{overflow:hidden}
+.simulation-round.embedded-simulation{position:fixed;inset:0;z-index:100;height:100dvh;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;display:grid;grid-template-rows:auto minmax(0,1fr);background:#f0f5f1}
+.simulation-round-toolbar{display:flex;align-items:center;gap:8px;min-height:48px;padding:4px 8px;background:#fff;border-bottom:1px solid #d9e5dd}
+.simulation-round-toolbar h2{font-size:16px;margin:0;flex:1;min-width:0;overflow-wrap:anywhere}
+.simulation-round-toolbar>button,.simulation-round-actions button{font:inherit;font-size:16px;min-height:44px;padding:8px 10px;border-radius:10px}
+.simulation-round-actions{display:flex;gap:6px;margin:0!important}
+.simulation-round-frame{height:100%!important;min-height:0!important;width:100%;border:0;border-radius:0!important;display:block}
+.simulation-round-status{position:absolute;top:56px;left:12px;right:12px;z-index:1;padding:12px;background:#fff;border-radius:12px;font-size:16px}
+@media(max-width:760px){.simulation-round-toolbar h2{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}.simulation-round-actions{margin-left:auto!important}}
+.simulation-round.embedded-simulation{grid-template-columns:auto minmax(0,1fr);grid-template-areas:'back toolbar' 'frame frame'}.simulation-round-toolbar{grid-area:toolbar}.simulation-round.embedded-simulation>button:first-child{grid-area:back;align-self:center;font-size:16px;min-height:44px;margin:4px 0 4px 8px;padding:8px 10px}.simulation-round-frame{grid-area:frame}
+.playback-more>summary,.playback-weather>summary{min-height:44px;display:flex;align-items:center;cursor:pointer;list-style:none;font-size:16px}.playback-more>summary::-webkit-details-marker,.playback-weather>summary::-webkit-details-marker{display:none}.playback-more>summary{padding:8px 12px;border:1px solid #bad2c2;border-radius:10px;background:#fff;color:#20543a;font-weight:650}.playback-more-body,.playback-weather-body{position:fixed;right:12px;top:72px;z-index:122;width:min(560px,calc(100% - 24px));max-height:calc(100dvh - 96px);overflow:auto;overscroll-behavior:contain;padding:18px;background:#f9fcf9;border:1px solid #c8ddce;border-radius:20px;box-shadow:0 18px 55px #173c2c33;font-size:16px}.playback-more[open]>summary,.playback-weather[open]>summary{position:relative;z-index:123}.playback-more-body>button:first-child,.playback-weather-body>button:first-child{display:block;margin-left:auto;min-height:44px;font:inherit;padding:8px 12px}.playback-backdrop{position:fixed;inset:0;width:100%;height:100%;border:0;border-radius:0;background:#123f2c66;z-index:121}.playback-weather-body{left:12px;right:auto}.playback-modes{display:flex;gap:6px}.playback-modes button{flex:1}.playback-more-body>button{min-height:44px;font:inherit;font-size:16px;margin:8px 4px;padding:8px 12px}.playback-weather-current{margin:0}.playback-wind-effect{font-size:14px}
+@media(max-width:760px),(max-height:520px) and (orientation:landscape){
+ body.playback-screen-open{overflow:hidden}
+ .embedded-simulation.direct-play{position:fixed;inset:0;z-index:100;height:var(--playback-height,100dvh);width:100%;margin:0!important;padding:calc(6px + env(safe-area-inset-top)) 8px calc(6px + env(safe-area-inset-bottom))!important;border:0!important;border-radius:0!important;background:#f2f7f2;display:grid;grid-template-columns:minmax(0,1fr) auto auto;grid-template-rows:44px auto auto 30px minmax(60px,1fr) auto auto auto;grid-template-areas:'back score more' 'title title title' 'weather weather weather' 'totals totals totals' 'map map map' 'status status status' 'shot shot shot' 'controls controls controls';gap:4px 6px;overflow:hidden;box-sizing:border-box}
+ .direct-play>.playback-back{grid-area:back;justify-self:start;min-height:44px;font-size:16px;padding:8px 10px}
+ .direct-play>.playback-open-score{grid-area:score;min-height:44px;font-size:16px;padding:8px 10px}
+ .direct-play>.playback-more{grid-area:more;align-self:center;min-width:0}
+ .direct-play>.direct-hole-title{grid-area:title;font-size:16px;line-height:1.3;margin:0;overflow-wrap:anywhere}
+ .direct-play>.playback-weather{grid-area:weather;margin:0;padding:0;border-radius:12px;min-width:0}
+ .direct-play>.playback-weather>summary{min-height:44px;padding:5px 10px}
+ .direct-play .playback-weather-current{font-size:14px;line-height:1.3;overflow-wrap:anywhere}
+ .direct-play>.playback-score-bar{grid-area:totals;display:flex;gap:8px;align-items:center;justify-content:space-between;margin:0;padding:0 6px}
+ .direct-play>.playback-score-bar>div{display:flex;align-items:center;justify-content:space-between;gap:6px;flex:1;min-width:0;margin:0;padding:0;border:0;background:none}
+ .direct-play>.playback-score-bar span{font-size:14px;line-height:1.2;overflow-wrap:anywhere}
+ .direct-play>.playback-score-bar strong{font-size:22px;line-height:1.2}
+ .direct-play>.direct-map{grid-area:map;display:block;width:100%;height:100%;max-height:none;max-width:none;min-height:0;margin:0;border-radius:14px;box-shadow:none}
+ .direct-play>.direct-status{grid-area:status;font-size:14px;line-height:1.3;margin:0;padding:4px 8px;min-height:26px;border-radius:8px}
+ .direct-play>.playback-shot-info{grid-area:shot;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:0}
+ .direct-play>.playback-shot-info>div{padding:5px 7px;border-radius:10px;min-width:0}
+ .direct-play>.playback-shot-info span{font-size:14px;line-height:1.2}
+ .direct-play>.playback-shot-info strong{font-size:16px;line-height:1.25;margin-top:3px}
+ .direct-play>.playback-shot-info .playback-wind-effect{display:none}
+ .direct-play>.direct-controls{grid-area:controls;display:grid;grid-template-columns:minmax(0,1fr) 76px 76px;gap:4px;margin:0}
+ .direct-play>.direct-controls>select,.direct-play>.direct-controls>button,.direct-play .playback-modes button{min-width:0;min-height:44px;font:inherit;font-size:16px;padding:6px;border-radius:10px}
+ .direct-play .playback-modes{grid-column:1/-1;gap:4px}
+ .direct-play>.playback-completion{position:fixed;z-index:130;left:12px;right:12px;top:50%;transform:translateY(-50%);max-height:calc(100dvh - 32px);overflow:auto;margin:0;box-shadow:0 20px 70px #123e2b55}
+}
+@media(max-width:760px) and (max-height:520px){.embedded-simulation.direct-play{grid-template-rows:44px auto auto 28px minmax(50px,1fr) auto auto auto;gap:2px 4px}.direct-play .playback-weather>summary{min-height:44px}.direct-play>.direct-controls{grid-template-columns:minmax(0,1fr) 76px 76px}.direct-play .playback-modes button{min-height:44px}.direct-play>.playback-shot-info>div{padding:3px 6px}}
+@media(max-height:520px) and (orientation:landscape){.embedded-simulation.direct-play{grid-template-columns:minmax(0,1fr) 100px 100px 64px;grid-template-rows:44px auto auto minmax(0,1fr) auto;grid-template-areas:'back back score more' 'map title title title' 'map weather weather weather' 'map shot shot shot' 'map controls controls controls'}.direct-play>.playback-score-bar,.direct-play>.direct-status{display:none}.direct-play>.playback-shot-info{grid-template-columns:repeat(3,minmax(0,1fr));align-self:end}.direct-play>.direct-controls{grid-template-columns:minmax(0,1fr) 76px 76px}.direct-play .playback-weather>summary{min-height:44px}}
+@media(max-height:460px) and (orientation:portrait){body[data-game-screen=play] .game-app{overflow-y:auto}body[data-game-screen=play] .play-layout{min-height:300px}.embedded-simulation.direct-play{overflow-y:auto;grid-template-rows:44px auto auto 30px minmax(100px,1fr) auto auto auto}}

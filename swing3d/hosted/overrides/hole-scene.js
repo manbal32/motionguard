@@ -16,7 +16,8 @@ window.MotionHoleScene=(()=>{
   const tee=scene.tee;add('rect',{'data-terrain':'tee',x:tee[0]-12*unit,y:tee[1]-7*unit,width:24*unit,height:14*unit,rx:4*unit,fill:'#5a9d58',stroke:'#d4e8bd','stroke-width':2*unit},terrain);for(const dx of[-8,8])add('circle',{cx:tee[0]+dx*unit,cy:tee[1]+3*unit,r:1.8*unit,fill:'#f8faf2'},terrain);
   return {viewBox:scene.viewBox,terrain};
  }
- function labelGreen(svg,point){const box=String(svg.getAttribute?.('viewBox')??'0 0 400 640').split(/[\s,]+/).map(Number),unit=box.length===4&&box[2]>0?box[2]/400:1,e=document.createElementNS(ns,'text');for(const[k,v]of Object.entries({'data-map-label':'green',x:point[0]+12*unit,y:point[1]+19*unit,fill:'#174b34',stroke:'#ffffff','stroke-width':3*unit,'paint-order':'stroke','font-size':18*unit,'font-weight':700,'font-family':'sans-serif'}))e.setAttribute(k,v);e.textContent='그린';svg.append(e);return e;}
+ function labelGreen(svg,point){const e=document.createElementNS(ns,'text');e.setAttribute('data-map-label','green');e.textContent='그린';e._reflow=()=>{const box=String(svg.getAttribute?.('viewBox')??'0 0 400 640').split(/[\s,]+/).map(Number),unit=box.length===4&&box[2]>0?box[2]/400:1,rect=svg.getBoundingClientRect?.(),pixels=rect?.width>0&&rect?.height>0?Math.min(rect.width/box[2],rect.height/box[3]):1/unit;for(const[k,v]of Object.entries({x:point[0]+7/pixels,y:point[1]+15/pixels,fill:'#174b34',stroke:'#ffffff','stroke-width':2/pixels,'paint-order':'stroke','font-size':14/pixels,'font-weight':700,'font-family':'sans-serif'}))e.setAttribute(k,v);};svg.append(e);e._reflow();return e;}
+ function refreshLabels(svg){for(const e of svg.querySelectorAll?.('[data-map-label="green"]')??[])e._reflow?.();}
  function originalURL(h){const m=h?.mapImage;if(m?.asset&&/^\.\/(?:rivera-game\/(?:valley|lake|pine|cherry)-0[1-9]\.png|prepared-course-images\/giheung-(?:south|west|north)-0[1-9]\.jpg)$/.test(m.asset))return m.asset;return m?.image_url?'./api/courses/image?'+new URLSearchParams({url:m.image_url}):h?.image;}
- return {valid,draw,labelGreen,originalURL};
+ return {valid,draw,labelGreen,refreshLabels,originalURL};
 })();

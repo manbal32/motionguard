@@ -30,8 +30,8 @@ for name in ['rivera-game.html','rivera-game.css','rivera-game.js','rivera-game-
  shutil.copy2(ROOT/'overrides'/name,DIST/('game.html' if name.endswith('.html') else name))
 # Unlisted tester entry; the service exposes play only from the final simulation.
 game=(DIST/'game.html').read_text()
-(DIST/'play.html').write_text(game.replace('<body>','<body data-quick-play="true"><aside class="game-test-notice">게임 기능 테스트 · 서비스에서는 분석 후 시뮬레이션에서 플레이합니다.</aside>'))
-(DIST/'round.html').write_text(game.replace('<body>','<body data-embedded-round="true">').replace('<a class="game-brand" href="./game.html">MotionGuard <span>PLAY</span></a>','<span class="game-brand">MotionGuard <span>PLAY</span></span>'))
+(DIST/'play.html').write_text(game.replace('<body data-game-screen="setup">','<body data-game-screen="setup" data-quick-play="true"><aside class="game-test-notice">게임 기능 테스트 · 서비스에서는 분석 후 시뮬레이션에서 플레이합니다.</aside>'))
+(DIST/'round.html').write_text(game.replace('<body data-game-screen="setup">','<body data-game-screen="setup" data-embedded-round="true">').replace('<a class="game-brand" href="./game.html">MotionGuard <span>PLAY</span></a>','<span class="game-brand">MotionGuard <span>PLAY</span></span>'))
 shutil.copy2(ROOT/'overrides/simulation-round.js',DIST/'simulation-round.js')
 shutil.copy2(ROOT/'overrides/service-access.js',DIST/'service-access.js')
 p=DIST/'index.html';text=p.read_text();marker='  <nav class="stepper"';assert marker in text;text=text.replace(marker,'  <section id="returning-service" class="returning-service" hidden></section>\n'+marker,1);text=text.replace('<script src="./simulation-entry.js">','<script src="./simulation-round.js"></script><script src="./service-access.js"></script><script src="./simulation-entry.js">');p.write_text(text)
@@ -50,12 +50,12 @@ for source in map_sources:
  map_previews.append(entry)
 (DIST/'map-preview-sources.json').write_text(json.dumps(map_previews,ensure_ascii=False))
 # Prepared guide snapshots are shared by the result picker and the standalone map tester.
-for name in ['course-wind.js','course-golfer.js','hole-scene.js','course-prediction.js','prepared-courses.js','prepared-courses.css','prepared-tester.js','prepared-tester.html']:
+for name in ['play-viewport.css','course-wind.js','course-golfer.js','hole-scene.js','course-prediction.js','prepared-courses.js','prepared-courses.css','prepared-tester.js','prepared-tester.html']:
  shutil.copy2(ROOT/'overrides'/name,DIST/('courses.html' if name=='prepared-tester.html' else name))
 shutil.copy2(ROOT/'data/prepared-courses.json',DIST/'prepared-courses.json')
 shutil.copytree(ROOT/'data/prepared-courses',DIST/'prepared-courses')
 shutil.copytree(ROOT/'assets/prepared-course-images',DIST/'prepared-course-images')
-p=DIST/'index.html';text=p.read_text().replace('<script src="./embedded-simulation.js">','<script src="./rivera-game-engine.js"></script><script src="./course-wind.js"></script><script src="./hole-scene.js"></script><script src="./embedded-simulation.js">').replace('<script src="./simulation-entry.js">','<script src="./prepared-courses.js"></script><script src="./course-prediction.js"></script><script src="./simulation-entry.js">');text=text.replace('</head>','<link rel="stylesheet" href="./prepared-courses.css"></head>');p.write_text(text)
+p=DIST/'index.html';text=p.read_text().replace('<script src="./embedded-simulation.js">','<script src="./rivera-game-engine.js"></script><script src="./course-wind.js"></script><script src="./hole-scene.js"></script><script src="./embedded-simulation.js">').replace('<script src="./simulation-entry.js">','<script src="./prepared-courses.js"></script><script src="./course-prediction.js"></script><script src="./simulation-entry.js">');text=text.replace('</head>','<link rel="stylesheet" href="./prepared-courses.css"><link rel="stylesheet" href="./play-viewport.css"></head>');p.write_text(text)
 subprocess.run(['python',str(ROOT/'scripts/seal_assets.py')],check=True)
 # App shell only at install. Heavy model/3D/tour assets are cached as used.
 assets=sorted('./'+str(f.relative_to(DIST)) for f in DIST.iterdir() if f.is_file() and f.suffix in ('.html','.js','.css') and f.name!='sw.js')

@@ -33,3 +33,5 @@ test('main service, map-only tester and direct game all load the same sealed gol
  for(const file of ['index.html','courses.html','game.html','play.html','round.html']){const html=fs.readFileSync('dist/client/'+file,'utf8');assert.match(html,/course-golfer\.js\?v=/,file);}
  assert.equal(fs.readFileSync('dist/client/course-golfer.js','utf8'),fs.readFileSync('overrides/course-golfer.js','utf8'));
 });
+
+test('short map panels retain a readable golfer without consuming the whole map height',()=>{const box=[0,0,400,640],t=setup(box,{width:340,height:120});t.actor.pose([200,560],'swing',.45);const [x,y,scale]=t.transform(),pixels=scale*65*Math.min(340/400,120/640);assert.ok(pixels>=36&&pixels<56);assert.ok(y-90*scale>=box[1]);assert.ok(y+8*scale<=box[1]+box[3]);});

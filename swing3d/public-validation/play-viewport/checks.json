@@ -1,0 +1,18 @@
+{
+  "tests": 289,
+  "passed": 289,
+  "failed": 0,
+  "sourceBuild": "afc45a446be3c7d99acb",
+  "siteVersion": 91,
+  "sourceCommit": "571f830b0c95997ad5af9dcd76a74d6f1408cf6e",
+  "publicAssetsMatched": 167,
+  "verification": [
+    "Node state/control execution",
+    "existing actual Gemini synthetic forecast replay, no new model request",
+    "public HTTP asset and HTML checks"
+  ],
+  "limitations": [
+    "No physical iPhone/Safari paint or touch verification",
+    "Layout PNG is a static design example, not a browser screenshot"
+  ]
+}

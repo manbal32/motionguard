@@ -12,7 +12,7 @@ window.MotionGolfer = (() => {
     const width = rect?.width > 0 ? rect.width : Number(svg.getAttribute?.('width')) || 340;
     const height = rect?.height > 0 ? rect.height : Number(svg.getAttribute?.('height')) || width * box[3] / box[2];
     // SVG meet fitting can letterbox a tall course inside a shorter mobile panel.
-    return { box, pixelsPerUnit: Math.min(width / box[2], height / box[3]) };
+    return { box, height, pixelsPerUnit: Math.min(width / box[2], height / box[3]) };
   }
 
   function mount(svg) {
@@ -47,8 +47,9 @@ window.MotionGolfer = (() => {
       root.dataset.phase = phase;
       root.dataset.x = point[0];
       root.dataset.y = point[1];
-      const { box: [x, y, width, height], pixelsPerUnit } = viewport(svg);
-      const scale = 56 / (65 * pixelsPerUnit), padding = 4 / pixelsPerUnit;
+      const { box: [x, y, width, height], pixelsPerUnit, height: pixelHeight } = viewport(svg);
+      const bodyPixels = Math.max(36, Math.min(56, pixelHeight * .36));
+      const scale = bodyPixels / (65 * pixelsPerUnit), padding = 4 / pixelsPerUnit;
       // Keep the full backswing inside the map without changing the real ball or shot coordinates.
       const displayX = clamp(point[0] - 32 * scale, x + 52 * scale + padding, x + width - 58 * scale - padding);
       const displayY = clamp(point[1] - 4 * scale, y + 90 * scale + padding, y + height - 8 * scale - padding);
