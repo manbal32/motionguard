@@ -1,0 +1,17 @@
+{
+  "tests": 271,
+  "passed": 271,
+  "newCases": [
+    "CSS-independent colors and original silhouette",
+    "readable and unclipped at189tee/green locations",
+    "putting camera and viewport resize",
+    "swing putting walking",
+    "same module on all entrypoints"
+  ],
+  "visualEvidence": "shared SVG rendered to three static PNGs; not browser screenshots",
+  "actualMobileBrowserVerified": false,
+  "additionalGeminiRequests": 0,
+  "sourceCommit": "8f9ae25d9fbc0b5f7cc5e794d9205af1258ea50b",
+  "siteVersion": 86,
+  "build": "5294cc8a16ad8bbb8444"
+}

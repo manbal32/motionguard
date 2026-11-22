@@ -50,7 +50,7 @@ for source in map_sources:
  map_previews.append(entry)
 (DIST/'map-preview-sources.json').write_text(json.dumps(map_previews,ensure_ascii=False))
 # Prepared guide snapshots are shared by the result picker and the standalone map tester.
-for name in ['hole-scene.js','course-prediction.js','prepared-courses.js','prepared-courses.css','prepared-tester.js','prepared-tester.html']:
+for name in ['course-golfer.js','hole-scene.js','course-prediction.js','prepared-courses.js','prepared-courses.css','prepared-tester.js','prepared-tester.html']:
  shutil.copy2(ROOT/'overrides'/name,DIST/('courses.html' if name=='prepared-tester.html' else name))
 shutil.copy2(ROOT/'data/prepared-courses.json',DIST/'prepared-courses.json')
 shutil.copytree(ROOT/'data/prepared-courses',DIST/'prepared-courses')

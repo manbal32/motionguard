@@ -1,3 +1,7 @@
+# 최신: 원래 작은 골퍼 표시 복원
+
+0-BN 및 GOLFER_VISIBILITY_RESULTS.md 우선. 기존 모자/얼굴/녹색상의 실루엣과 스윙·퍼팅·공 따라 걷기를 필수 유지. 자체 색상·약56px 표시·SVG 맞춤 비율/퍼팅 확대·회전 대응·클리핑 방지. 실제 공/물리/점수/지도 유지. web/course-golfer.js와 hosted/overrides/course-golfer.js 동일. Node271/271, Sitesv86/source8f9ae25d9fbc0b5f7cc5e794d9205af1258ea50b/build5294cc8a16ad8bbb8444. 정적 SVG 그림 검토이며 실제 Safari/iPhone 시각·터치 미검증. 추가 Gemini 호출 없음.
+
 # 최신: 동일한 홀 지도 포맷·18홀 조합·시뮬레이션 결과 표시
 
 0-BM 및 HOLE_SCENE_RESULTS.md 우선.6곳189홀 전체 같은 로컬SVG영역렌더러/5:8비율/색상·잔디·그린·벙커·물표현.27홀을포함해서로다른9홀두개→18홀유지.이번홀/총예상값·스코어표바로가기·전반후반총합종료카드·명시적예측재요청.기존Geminiv2/분석/PDF/게임/날씨경계유지.코리아레이크3·챌린지2공식그림중복은sourceAmbiguity로기록해펼침표시,임의대체없음.
