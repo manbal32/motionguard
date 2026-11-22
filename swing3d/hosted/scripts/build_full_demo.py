@@ -26,7 +26,7 @@ subprocess.run(['python',str(ROOT/'scripts/apply_replay.py')],check=True)
 shutil.copy2(ROOT/'overrides/runtime-health.js',DIST/'runtime-health.js')
 for name in ['map-only.html','map-only.js']:
  shutil.copy2(ROOT/'overrides'/name,DIST/('map.html' if name.endswith('.html') else name))
-for name in ['rivera-game.html','rivera-game.css','rivera-game.js','rivera-game-engine.js','rivera-game-sound.js']:
+for name in ['rivera-game.html','rivera-game.css','rivera-game.js','rivera-game-engine.js','rivera-game-sound.js','course-game.js']:
  shutil.copy2(ROOT/'overrides'/name,DIST/('game.html' if name.endswith('.html') else name))
 # Unlisted tester entry; the service exposes play only from the final simulation.
 game=(DIST/'game.html').read_text()
@@ -50,12 +50,12 @@ for source in map_sources:
  map_previews.append(entry)
 (DIST/'map-preview-sources.json').write_text(json.dumps(map_previews,ensure_ascii=False))
 # Prepared guide snapshots are shared by the result picker and the standalone map tester.
-for name in ['prepared-courses.js','prepared-courses.css','prepared-tester.js','prepared-tester.html']:
+for name in ['course-prediction.js','prepared-courses.js','prepared-courses.css','prepared-tester.js','prepared-tester.html']:
  shutil.copy2(ROOT/'overrides'/name,DIST/('courses.html' if name=='prepared-tester.html' else name))
 shutil.copy2(ROOT/'data/prepared-courses.json',DIST/'prepared-courses.json')
 shutil.copytree(ROOT/'data/prepared-courses',DIST/'prepared-courses')
 shutil.copytree(ROOT/'assets/prepared-course-images',DIST/'prepared-course-images')
-p=DIST/'index.html';text=p.read_text().replace('<script src="./simulation-entry.js">','<script src="./prepared-courses.js"></script><script src="./simulation-entry.js">');text=text.replace('</head>','<link rel="stylesheet" href="./prepared-courses.css"></head>');p.write_text(text)
+p=DIST/'index.html';text=p.read_text().replace('<script src="./simulation-entry.js">','<script src="./prepared-courses.js"></script><script src="./course-prediction.js"></script><script src="./simulation-entry.js">');text=text.replace('</head>','<link rel="stylesheet" href="./prepared-courses.css"></head>');p.write_text(text)
 subprocess.run(['python',str(ROOT/'scripts/seal_assets.py')],check=True)
 # App shell only at install. Heavy model/3D/tour assets are cached as used.
 assets=sorted('./'+str(f.relative_to(DIST)) for f in DIST.iterdir() if f.is_file() and f.suffix in ('.html','.js','.css') and f.name!='sw.js')

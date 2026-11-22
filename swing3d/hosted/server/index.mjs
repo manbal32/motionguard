@@ -3,6 +3,7 @@ import {courses} from './courses.mjs';
 import {visual} from './visual.mjs';
 import {videos} from './videos.mjs';
 import {courseImages} from './course-images.mjs';
+import {coursePrediction} from './course-prediction.mjs';
 import {gameWeather} from './game-weather.mjs';
 export default {
  async fetch(request,env){
@@ -11,6 +12,7 @@ export default {
   if(path==='/api/game/weather')return gameWeather(request,env);
   if(path==='/api/coaching/videos')return videos(request,env);
   if(['/api/courses/discover','/api/courses/select-maps','/api/courses/analyze-map','/api/courses/image'].includes(path))return courseImages(request,env);
+  if(path==='/api/courses/predict')return coursePrediction(request,env);
   if(path.startsWith('/api/courses/'))return courses(request,env);
   if(path==='/api/coaching/visual')return visual(request,env);
   if(path.startsWith('/api/')){
