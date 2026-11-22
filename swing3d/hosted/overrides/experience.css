@@ -85,47 +85,6 @@ body.viewing-report{display:block;height:auto;overflow:auto;background:#eef3ef}b
 #upload #preview-guide[hidden],
 #upload:not([data-ready="true"]) #choose-video { display: none; }
 #upload:not([data-ready="true"]) #uploaded-media #drop { margin-top: 0; }
-/* Keep the note in normal flow across the full card, including Safari's details content box. */
-#upload .recent-round-card {
-  --round-score-width: 88px;
-  --round-score-top: 8px;
-  --round-score-edge: 12px;
-  position: relative;
-  padding: var(--round-score-top) var(--round-score-edge);
-}
-#upload .recent-round-card[open] > .recent-round-heading {
-  box-sizing: border-box;
-  padding-block: 0;
-  padding-inline-end: calc(var(--round-score-width) + 8px);
-  white-space: normal;
-  word-break: keep-all;
-}
-#upload .recent-round-card[open] > .recent-round-input {
-  position: absolute;
-  inset-block-start: var(--round-score-top);
-  inset-inline-end: var(--round-score-edge);
-  inline-size: var(--round-score-width);
-}
-#upload #recent-round-hint {
-  margin: 6px 0 4px;
-  color: #45634f;
-  font-size: 14px;
-  line-height: 1.45;
-  word-break: keep-all;
-  overflow-wrap: anywhere;
-}
-#upload .recent-round-card:not([open]) > #recent-round-hint { display: none; }
-
-
-@media (max-width: 360px) {
-  #upload .recent-round-card {
-    --round-score-width: 74px;
-    --round-score-top: 6px;
-    --round-score-edge: 10px;
-  }
-  #upload .recent-round-card > .recent-round-heading { gap: 4px; }
-}
-
 #coach-log li.coach-welcome {
   align-self: flex-start;
   background: #e4f4e9;
