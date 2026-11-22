@@ -1,0 +1,14 @@
+{
+  "tests": 293,
+  "passed": 293,
+  "failed": 0,
+  "mirrorPassed": 293,
+  "unchangedShotComparisons": 9072,
+  "publicAssetsMatched": 168,
+  "sourceCommit": "b4f3eb09d85593594aa20b991452b4b59c8913f5",
+  "siteVersion": 93,
+  "build": "31ffa1e34d984c67acbb",
+  "newModelRequests": 0,
+  "physicalSafariInteractionVerified": false,
+  "staticDiagramIsBrowserScreenshot": false
+}

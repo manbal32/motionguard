@@ -1,0 +1,49 @@
+{
+  "conditions": "game-only example; driver220m; power100%;20C;west4.6m/s;Korea Creek1 guide",
+  "info": {
+    "offset": 2.6288227639948993,
+    "side": "오른쪽",
+    "note": "조준선보다 오른쪽 2.6m",
+    "wind": "오른쪽 옆바람",
+    "compensated": false
+  },
+  "shot": {
+    "start": {
+      "x": 0,
+      "y": 0
+    },
+    "end": {
+      "x": 2.6288227639948993,
+      "y": 206.8021751301521
+    },
+    "control": {
+      "x": 0.3210254587662883,
+      "y": 103.40108756507605
+    },
+    "carry": 206.8021751301521,
+    "putt": false,
+    "holed": false,
+    "puttAssisted": false,
+    "club": "드라이버",
+    "aimEnd": {
+      "x": 0,
+      "y": 205.59405329720272
+    },
+    "weather": {
+      "mode": "live",
+      "temperature": 20,
+      "windSpeed": 4.6,
+      "windFrom": 270,
+      "gust": 4.6,
+      "precipitation": 0,
+      "weatherTime": "2026-11-22T05:00:00Z",
+      "revision": 1,
+      "reference": "guide-north"
+    },
+    "wind": {
+      "along": -4.092598495112863,
+      "cross": 2.1001517939901206
+    },
+    "remaining": 313.20885717413614
+  }
+}

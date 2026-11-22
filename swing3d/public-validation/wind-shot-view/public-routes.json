@@ -1,0 +1,32 @@
+[
+  {
+    "route": "/",
+    "status": 200,
+    "sharedComparisonScript": true,
+    "uniqueIds": true
+  },
+  {
+    "route": "/game",
+    "status": 200,
+    "sharedComparisonScript": true,
+    "uniqueIds": true
+  },
+  {
+    "route": "/play",
+    "status": 200,
+    "sharedComparisonScript": true,
+    "uniqueIds": true
+  },
+  {
+    "route": "/round",
+    "status": 200,
+    "sharedComparisonScript": true,
+    "uniqueIds": true
+  },
+  {
+    "route": "/courses",
+    "status": 200,
+    "sharedComparisonScript": true,
+    "uniqueIds": true
+  }
+]
