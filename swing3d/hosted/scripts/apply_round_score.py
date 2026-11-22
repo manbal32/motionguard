@@ -2,7 +2,11 @@
 from pathlib import Path
 import shutil
 r=Path(__file__).resolve().parents[1];d=r/'dist'
-p=d/'index.html';s=p.read_text();card='<details class="recent-round-card" id="recent-round-card" open><summary class="recent-round-heading"><span class="recent-round-label" id="recent-round-title">최근 라운드 타수</span><span class="recent-round-optional" id="recent-round-summary-value">선택</span></summary><div class="recent-round-input"><input id="recent-round-score" type="number" inputmode="numeric" min="54" max="200" step="1" placeholder="입력" aria-label="최근 18홀 라운드 타수 (선택)"><span aria-hidden="true">타</span></div></details>'
+p=d/'index.html';s=p.read_text();card='''<details class="recent-round-card" id="recent-round-card" open>
+  <summary class="recent-round-heading"><span class="recent-round-label" id="recent-round-title">18홀 라운드 타수</span><span class="recent-round-optional" id="recent-round-summary-value">선택</span></summary>
+  <div class="recent-round-input"><input id="recent-round-score" type="number" inputmode="numeric" min="54" max="200" step="1" placeholder="입력" aria-label="18홀 라운드 타수 (선택)" aria-describedby="recent-round-hint"><span aria-hidden="true">타</span></div>
+  <p id="recent-round-hint">영상과 같은 시기의 타수만 입력해 주세요.</p>
+</details>'''
 assert '<div id="coach-panel">' in s;s=s.replace('<div id="coach-panel">',card+'<div id="coach-panel">',1);s=s.replace('<script src="./instrument.js"','<script src="./round-score.js"></script><script src="./chat-layout.js"></script><script src="./instrument.js"');p.write_text(s);shutil.copy2(r/'overrides/round-score.js',d/'round-score.js');shutil.copy2(r/'overrides/chat-layout.js',d/'chat-layout.js')
 p=d/'demo-start.js';s=p.read_text();old='card.after(agreement);';assert old in s;s=s.replace(old,old+"const roundCard=document.getElementById('recent-round-card');if(roundCard)agreement.after(roundCard);");p.write_text(s)
 p=d/'instrument.js';s=p.read_text();s=s.replace('...data, allow_external: consent.checked','...data, ...window.MotionRoundScore?.payload?.(), allow_external: consent.checked');s=s.replace('    lastApprovedSummary={...approvedSummary};',"    try{approvedSummary=window.MotionRoundScore?.attach(approvedSummary)??approvedSummary;}catch(error){coachStatus.textContent=error.message;return;}\n    lastApprovedSummary={...approvedSummary};");p.write_text(s)

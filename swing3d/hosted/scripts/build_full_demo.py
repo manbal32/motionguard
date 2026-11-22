@@ -58,6 +58,18 @@ shutil.copytree(ROOT/'assets/prepared-course-images',DIST/'prepared-course-image
 p=DIST/'index.html';text=p.read_text().replace('<script src="./embedded-simulation.js">','<script src="./rivera-game-engine.js"></script><script src="./course-wind.js"></script><script src="./hole-scene.js"></script><script src="./shot-wind-view.js"></script><script src="./embedded-simulation.js">').replace('<script src="./simulation-entry.js">','<script src="./prepared-courses.js"></script><script src="./course-prediction.js"></script><script src="./simulation-entry.js">');text=text.replace('</head>','<link rel="stylesheet" href="./prepared-courses.css"><link rel="stylesheet" href="./play-viewport.css"></head>');p.write_text(text)
 subprocess.run(['python',str(ROOT/'scripts/apply_round_score.py')],check=True)
 subprocess.run(['python',str(ROOT/'scripts/apply_summary_refinement.py')],check=True)
+for filename in ['index.html', 'instrument.js']:
+ p=DIST/filename
+ s=p.read_text().replace('어디가 고민이세요? 한 줄로 적어 주셔도 됩니다.', '무엇이 고민이세요?')
+ p.write_text(s)
+p=DIST/'instrument.js';s=p.read_text();marker='  const drop = byId("drop");';assert marker in s
+p.write_text(s.replace(marker,marker+'''
+  // The existing button remains the keyboard entry point for the file picker.
+  drop.addEventListener("click", event => {
+    if (!event.target.closest("button, input, a, label")) byId("choose-video").click();
+  });
+  byId("preview-guide").addEventListener("click", () => byId("choose-video").click());
+''',1))
 # Keep the new model review remote; persist only its result into the existing local report.
 p=DIST/'client-api.js';s=p.read_text().replace("if(route==='api/coaching/visual'||", "if(route==='api/coaching/overall'||route==='api/coaching/visual'||")
 s=s.replace("   if(route==='api/coaching/videos/save')", "   if(route==='api/coaching/overall/save'){const doc=await access('reports',data.report_id),r=data.review,o=r?.overall_assessment;if(!doc?.visual_analysis||r?.mode!=='gemini-overall'||o?.revision!=='separated-v2'||!['strength','weakness','improvement_plan'].every(k=>typeof o[k]==='string'&&o[k].trim()&&o[k].length<=1500))return reply({ok:false,reason:'종합평가 저장 내용을 확인해 주세요.'},422);doc.visual_analysis.overall_review=r;await access('reports',data.report_id,doc);return reply({ok:true});}\n   if(route==='api/coaching/videos/save')")
