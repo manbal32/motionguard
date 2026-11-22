@@ -1,0 +1,76 @@
+{
+  "source_commit": "50d121c63ac1b062a3b524cb93598a834f37cc47",
+  "site_version": 118,
+  "build": "265b07e0eae3af4b35d6",
+  "public_build": {
+    "/build-info.json": {
+      "status": 200,
+      "build": "265b07e0eae3af4b35d6",
+      "matches_local": true
+    },
+    "/api/build": {
+      "status": 200,
+      "build": "265b07e0eae3af4b35d6",
+      "matches_local": true
+    },
+    "ai-result.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    },
+    "result-dashboard.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    },
+    "coaching-report.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    },
+    "experience.css": {
+      "status": 200,
+      "sha256_matches_local": true
+    }
+  },
+  "status": 200,
+  "ok": true,
+  "model": "gemini-3.5-flash-lite",
+  "attempts": 1,
+  "elapsed_seconds": 12.24,
+  "photo_count": 5,
+  "forwarded_images": 5,
+  "unique_uploaded_photos": 5,
+  "overall_present": true,
+  "strength_present": true,
+  "weakness_present": true,
+  "improvement_plan_present": true,
+  "overall_source": "gemini",
+  "dimensions_count": 4,
+  "score_estimate_present": true,
+  "usage": {
+    "promptTokenCount": 7469,
+    "candidatesTokenCount": 1315,
+    "totalTokenCount": 8784
+  },
+  "test_count": 38,
+  "test_pass_count": 38,
+  "actual_safari_visual_touch_verified": false,
+  "private_media_and_response_excluded": true,
+  "initial_full_suite": {
+    "tests": 328,
+    "passed": 328
+  },
+  "initial_full_mirror_suite": {
+    "tests": 328,
+    "passed": 328
+  },
+  "final_related_mirror_suite": {
+    "tests": 38,
+    "passed": 38
+  },
+  "manual_response_review": {
+    "three_explicit_components_present": true,
+    "weakness_and_plan_same_target_in_this_example": true,
+    "explicit_phase_name_in_overall": false,
+    "biomechanical_accuracy_verified": false
+  },
+  "legacy_behavior": "Stored strength and improvement advice shown; absent weakness is not invented; original saved analysis is unchanged"
+}
