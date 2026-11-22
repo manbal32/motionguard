@@ -1,0 +1,36 @@
+{
+  "source_commit": "694e7e3436d999436d70e042795bfa9f1eaf6eaa",
+  "site_version": 123,
+  "build": "45b8f75e2c4f96b87d51",
+  "public_build_assets": {
+    "/build-info.json": {
+      "status": 200,
+      "matches_local": true
+    },
+    "/api/build": {
+      "status": 200,
+      "matches_local": true
+    },
+    "course-wind.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    },
+    "embedded-simulation.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    }
+  },
+  "related_tests": 18,
+  "passed": 18,
+  "mirror_related_tests": 18,
+  "mirror_passed": 18,
+  "southeast_wind_from_135_arrow": "↖",
+  "arrow_represents": "wind travel direction toward northwest",
+  "eight_compass_directions_and_calm_checked": true,
+  "weather_and_shot_physics_unchanged": true,
+  "ob_hazard_physics_or_notes_changed": false,
+  "new_weather_requests": 0,
+  "new_model_requests": 0,
+  "actual_safari_visual_touch_verified": false,
+  "validation_scope": "Shared weather label conversion, existing wind physics and simulation DOM tests; public build/assets checked, no browser paint verification"
+}
