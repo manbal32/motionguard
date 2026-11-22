@@ -90,7 +90,11 @@ s=s[:start]+'''  for (const area of [byId("preview-slot"), byId("drop")]) {
     area.addEventListener("drop", event => {
       event.preventDefault();
       delete area.dataset.dragging;
-      select(event.dataTransfer.files[0]);
+      const files = event.dataTransfer.files;
+      if (!files.length) return;
+      const input = byId("video");
+      input.files = files;
+      input.dispatchEvent(new Event("change"));
     });
   }
 '''+s[end:]
