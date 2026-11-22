@@ -1,0 +1,21 @@
+{
+  "version": 114,
+  "source": "d8bde5e90d8ed0a452b41d9f4dcf0f588ae37739",
+  "build": "ad312cd753320c8a61e7",
+  "public_build_matches": true,
+  "api_build_matches": true,
+  "assets": {
+    "ai-result.js": true,
+    "result-dashboard.js": true,
+    "coaching-report.js": true,
+    "experience.css": true
+  },
+  "overall_and_plan_sections_present": true,
+  "practice_goal_not_used_as_evaluation": true,
+  "old_lowest_score_coach_title_removed": true,
+  "full_tests_passed": 327,
+  "mirror_tests_passed": 327,
+  "new_live_model_requests": 0,
+  "new_visual_schema_and_pipeline_verified_with_injected_response": true,
+  "physical_safari_visual_touch_verified": false
+}

@@ -13,3 +13,5 @@ test('a reused analysis shows zero current-request tokens while retaining origin
 });
 
 test('report keeps recent round as internal reference without printing it or changing the estimate',()=>{const{s}=setup(),d=doc();d.recent_round_score=105;const before=JSON.stringify(d.visual_analysis.analysis.score_estimate),root=s.MotionReport.create(d);assert.doesNotMatch(root.textContent,/최근 18홀 105타|함께 참고한 기록/);assert.equal(d.recent_round_score,105);assert.equal(JSON.stringify(d.visual_analysis.analysis.score_estimate),before);});
+
+test('PDF report carries the same overall evaluation and integrated plan as the result without replacing the practice goal',()=>{const{s}=setup(),d=doc();d.visual_analysis.analysis.overall_assessment={evaluation:'MODEL_REPORT_EVALUATION',improvement_plan:'MODEL_REPORT_PLAN',priority_dimension:'arms'};const before=JSON.stringify(d),root=s.MotionReport.create(d);assert.match(root.textContent,/종합평가/);assert.match(root.textContent,/종합 개선방안/);assert.match(root.textContent,/MODEL_REPORT_EVALUATION/);assert.match(root.textContent,/MODEL_REPORT_PLAN/);assert.match(root.textContent,/회전연습/);assert.equal(JSON.stringify(d),before);});
