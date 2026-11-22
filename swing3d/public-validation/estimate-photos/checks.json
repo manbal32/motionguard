@@ -1,0 +1,12 @@
+{
+  "tests": 17,
+  "passed": 17,
+  "mirrorPassed": 17,
+  "changedPublicAssetsMatched": 3,
+  "siteVersion": 97,
+  "sourceCommit": "30ae2aa6353a15babffbc6c726d5ff48ac44d368",
+  "build": "ffbf11d00a9e9ea437b5",
+  "newModelRequests": 0,
+  "privateImagesInEvidence": false,
+  "realDeviceVerified": false
+}

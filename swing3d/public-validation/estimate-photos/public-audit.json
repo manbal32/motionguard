@@ -1,0 +1,22 @@
+{
+  "build": "ffbf11d00a9e9ea437b5",
+  "serverBuild": "ffbf11d00a9e9ea437b5",
+  "changedAssets": [
+    {
+      "path": "ai-result.js",
+      "status": 200,
+      "shaMatches": true
+    },
+    {
+      "path": "experience.css",
+      "status": 200,
+      "shaMatches": true
+    },
+    {
+      "path": "result-dashboard.js",
+      "status": 200,
+      "shaMatches": true
+    }
+  ],
+  "rootUsesCurrentBuild": true
+}
