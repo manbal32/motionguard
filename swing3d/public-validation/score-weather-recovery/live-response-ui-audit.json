@@ -1,0 +1,17 @@
+{
+  "fixture": "non-personal synthetic analysis; real Gemini output with trusted selected-club weather",
+  "weatherClub": "creek",
+  "weatherTime": "2026-11-22T07:00:00.000Z",
+  "windSpeed": 2,
+  "weatherApplied": true,
+  "model": "gemini-3.5-flash-lite",
+  "scoreOnlyRows": 18,
+  "scoreOnlyAnimationFrames": 0,
+  "scoreRecoveryAfterWeatherFailure": true,
+  "extraModelRequests": 0,
+  "current": 90,
+  "improved": 84,
+  "bothRoundsComplete": true,
+  "noNumbersChanged": true,
+  "verification": "Node DOM/animation execution, not Safari or physical-device interaction"
+}

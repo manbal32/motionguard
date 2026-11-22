@@ -1,0 +1,34 @@
+{
+  "test": "Real public backup HTTP data through injected server fallback; no Gemini call",
+  "status": 200,
+  "providers": [
+    "api.met.no",
+    "api.open-meteo.com"
+  ],
+  "weather": {
+    "revision": 1,
+    "mode": "live",
+    "reference": "guide-north",
+    "temperature": 3.3,
+    "windSpeed": 1.3,
+    "windFrom": 266,
+    "gust": 5.4,
+    "gustAvailable": true,
+    "precipitation": 0,
+    "precipitationAvailable": true,
+    "precipitationPeriod": "current-interval",
+    "code": 0,
+    "weatherTime": "2026-11-22T07:00:00.000Z",
+    "retrievedAt": "2026-11-22T07:11:52.508Z",
+    "source": "Open-Meteo",
+    "sourceUrl": "https://open-meteo.com/",
+    "dataKind": "current-forecast",
+    "basis": "현재 시간대 모델 예보 · 홀 안내도 원본 위쪽을 북쪽으로 가정",
+    "point": {
+      "latitude": 37.220252,
+      "longitude": 127.1544459
+    },
+    "clubId": "creek",
+    "clubName": "코리아CC"
+  }
+}
