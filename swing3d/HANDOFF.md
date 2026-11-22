@@ -1,3 +1,11 @@
+# 최신: 타수 접기·대화와 입력창 겹침 제거
+
+0-CD 우선. 타수 입력완료/복원 때 값으로 접고, 비워둔 채 대화를 쓰거나 보내도 ‘입력 안 함’으로 접는다. native details로 재수정. 잘못된 값은 열어서 전송 전 수정. 기존 데이터/Gemini 연결 유지.
+
+상담 sticky 입력창을 일반 흐름으로 변경해 답변을 덮지 않게 하고, 입력창 자동 높이/가시 viewport·답변 길이에 따른 스크롤 추가. 새 답변·실패초안/재시도·동의/승인·기존 서비스 유지.323/323 및mirror323/323·공개4자산/build/API일치. DOM/좌표주입검사이며 실기Safari 화면/키보드/터치는 미검증. 새 모델 요청 없음.
+
+Sitesv105/source886cac541e2d48a9af187df7a9bcd94b4d005ff5/build689f03c12eb32e83d8fe. hosted/public-validation/chat-continuity/checks.json 참고.
+
 # 최신: 최근 타수 한 줄 입력
 
 0-CC 우선. 제목/선택 옆에 입력칸을 붙이고 아래 설명과 아이콘 제거. 기존 기록 입력/Gemini 전달 기능 유지. 관련 검사23/23·공개build/CSS/설명제거 확인. 실기Safari 미검증. Sitesv104/sourceeb90e35e2184ae3e30254030e8ca4a9113660fd4/build406bc6e351b6aa4656c2.
