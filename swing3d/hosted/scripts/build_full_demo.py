@@ -60,7 +60,7 @@ subprocess.run(['python',str(ROOT/'scripts/apply_round_score.py')],check=True)
 subprocess.run(['python',str(ROOT/'scripts/apply_summary_refinement.py')],check=True)
 for filename in ['index.html', 'instrument.js']:
  p=DIST/filename
- s=p.read_text().replace('어디가 고민이세요? 한 줄로 적어 주셔도 됩니다.', '무엇이 고민이세요?')
+ s=p.read_text().replace('어디가 고민이세요? 한 줄로 적어 주셔도 됩니다.', '모션가드 코치가 대화를 기다리고 있어요.')
  p.write_text(s)
 p=DIST/'index.html';s=p.read_text()
 guide='<div id="preview-guide" class="capture-illustration" role="img" aria-label="전신이 보이도록 촬영해 주세요.">전신이 보이도록 촬영해 주세요.</div>'
