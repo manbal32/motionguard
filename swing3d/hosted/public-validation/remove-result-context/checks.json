@@ -1,0 +1,30 @@
+{
+  "source_commit": "25215658197339955828003bd1a72227fc7f04df",
+  "site_version": 121,
+  "build": "353f9bb898f042055781",
+  "public_build_assets": {
+    "/build-info.json": {
+      "status": 200,
+      "matches_local": true
+    },
+    "/api/build": {
+      "status": 200,
+      "matches_local": true
+    },
+    "ai-result.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    }
+  },
+  "related_tests": 12,
+  "passed": 12,
+  "mirror_related_tests": 12,
+  "mirror_passed": 12,
+  "result_context_disclosure_absent": true,
+  "print_context_and_report_content_preserved": true,
+  "five_photos_scores_and_data_preserved": true,
+  "new_model_requests": 0,
+  "private_media_uploaded": false,
+  "actual_safari_visual_touch_verified": false,
+  "validation_scope": "Existing result/print/PDF DOM execution tests and data preservation; browser paint and touch not verified"
+}
