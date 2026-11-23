@@ -49,6 +49,11 @@ test('all six default rounds finish 18 holes and retain actual source hole label
 });
 test('failed round loading and unlisted restored maps keep the existing course usable',async()=>{
  const t=runtime(),host=new E(),status={},selected={id:'image:custom',name:'사용자 지도',holes:[{}]};const button=new E('button');t.s.MotionSimulationEntry.mount(host,new E(),{course_scenario:{course:selected}},button);await new Promise(resolve=>setImmediate(resolve));assert.equal(button.disabled,false);assert.equal(host.find(e=>e.tagName==='STRONG').textContent,'사용자 지도');
+ const club=host.find(e=>e.getAttribute('aria-label')==='준비된 골프장 선택');
+ assert.equal(club.value,'search-result');
+ assert.equal(club.find(e=>e.value==='search-result').textContent,'사용자 지도');
+ assert.equal(host.find(e=>e.getAttribute('aria-label')==='전반 9홀 선택').disabled,true);
+ assert.equal(host.find(e=>e.getAttribute('aria-label')==='후반 9홀 선택').disabled,true);
  const picked=[],picker=await t.s.MotionPreparedCourses.mount(new E(),{selected:await t.s.MotionPreparedCourses.loadRound('88'),status,onSelect:c=>picked.push(c.id)});const last=picked.at(-1);t.s.fetch=async()=>new Response('',{status:503});picker.clubSelect.value='gold';await picker.clubSelect.onchange();assert.equal(picked.at(-1),last);assert.match(status.textContent,/유지/);
 });
 test('every source image and its route use the same affine transform',()=>{

@@ -44,6 +44,37 @@ test('changing the chosen course while prediction is pending never opens a stale
  assert.equal(t.calls.filter(c=>c.url.includes('/predict')).length,0);
  let release;const real=t.s.fetch;t.s.fetch=async(url,init)=>url.includes('/predict')?new Promise(resolve=>release=()=>real(url,init).then(resolve)):real(url,init);const older=entry.find(e=>e.textContent==='스코어만 보기').onclick();while(!release)await new Promise(r=>setImmediate(r));const picker=entry.find(e=>e.getAttribute('aria-label')==='준비된 골프장 선택');picker.value='gold';await picker.onchange();release();await older;assert.equal(root.querySelector('.forecast-score-view'),null);assert.match(entry.find(e=>e.tagName==='STRONG').textContent,/골드CC/);assert.equal(go.disabled,false);
 });
+test('search and manual selection update the same golf club, both nines and result requests', async () => {
+ const t=client(), host=new El(), root=new El(), play=new El('button');
+ vm.runInContext(fs.readFileSync('dist/client/course-map-workflow.js','utf8'),t.s);
+ const entry=t.s.MotionSimulationEntry.mount(host,root,t.doc,play);
+ await new Promise(resolve=>setImmediate(resolve));
+ const find=label=>entry.find(element=>element.getAttribute('aria-label')===label);
+ const club=find('준비된 골프장 선택'), front=find('전반 9홀 선택'), back=find('후반 9홀 선택');
+ const search=find('검색할 골프장 이름'), form=entry.find(element=>element.tagName==='FORM');
+ const title=entry.find(element=>element.tagName==='STRONG');
+ assert.equal(club.value,'rivera');
+
+ search.value='코리아';
+ await form.onsubmit({preventDefault(){}});
+ assert.equal(search.value,'코리아CC');
+ assert.equal(club.value,'creek');
+ assert.deepEqual([front.value,back.value],['korea-lake','korea-challenge']);
+ assert.match(title.textContent,/코리아CC · 레이크 \+ 챌린지/);
+ await entry.find(element=>element.textContent==='스코어만 보기').onclick();
+ assert.equal(t.doc.course_scenario.course.clubId,'creek');
+
+ club.value='rivera';
+ await club.onchange();
+ assert.equal(search.value,'리베라CC');
+ assert.deepEqual([front.value,back.value],['rivera-valley','rivera-lake']);
+ assert.match(title.textContent,/리베라CC · 밸리 \+ 레이크/);
+ await play.onclick();
+ assert.equal(t.doc.course_scenario.course.clubId,'rivera');
+ assert.deepEqual(t.calls.filter(call=>call.url.endsWith('/predict'))
+  .map(call=>JSON.parse(call.init.body).course.clubId),['creek','rivera']);
+});
+
 test('all additional clubs expose complete mapped nines to the same direct game engine',async()=>{
  const t=client();for(const club of index.clubs.slice(1)){const result=await t.s.MotionGameCourses.load('?club='+club.id);assert.equal(t.s.MotionGameCourses.valid(result.data),true);assert.equal(result.data.courses.reduce((n,c)=>n+c.holes.length,0),club.totalHoles);const E={module:{exports:{}},structuredClone};vm.runInNewContext(fs.readFileSync('overrides/rivera-game-engine.js','utf8'),E);const engine=E.module.exports,state=engine.create(result.data,result.front,result.back,1);assert.equal(engine.holes(result.data,state).length,18);for(let i=0;i<18;i++){engine.concede(state,engine.holes(result.data,state)[i]);engine.next(result.data,state);}assert.equal(state.phase,'finished');assert.equal(state.completed.length,18);assert.equal(engine.restore(result.data,state).phase,'finished');}await assert.rejects(t.s.MotionGameCourses.load('?club=unknown'));
 });

@@ -11,16 +11,122 @@ window.MotionPreparedCourses=(()=>{
   return {revision:1,id:'round-'+club.id+'-'+front+'-'+back,clubId:club.id,clubName:club.name,name:club.name+' · '+nines.map(n=>n.label).join(' + '),roundSelection:{front,back},holes,tee:groups.map(g=>g.tee).filter((v,i,a)=>a.indexOf(v)===i).join(' / '),geometrySource:'prepared-guide',sourceUrl:groups[0].sourceUrl,notice:'선택한 두 9홀을 연결한 18홀 가상 라운드입니다.'};
  }
  async function loadDefault(club){const pair=initialNines(club,club.selected);return loadRound(club.id,...pair);}
- async function mount(host,{selected,onSelect,status,onBusy=()=>{}}){
-  const make=(tag,text)=>{const e=document.createElement(tag);if(text)e.textContent=text;return e;},box=make('div'),clubLabel=make('label','골프장'),clubSelect=make('select'),frontLabel=make('label','전반 9홀'),backLabel=make('label','후반 9홀'),frontSelect=make('select'),backSelect=make('select');box.className='prepared-course-picker';clubLabel.className='prepared-club-label';clubSelect.setAttribute('aria-label','준비된 골프장 선택');frontSelect.setAttribute('aria-label','전반 9홀 선택');backSelect.setAttribute('aria-label','후반 9홀 선택');clubLabel.append(clubSelect);frontLabel.append(frontSelect);backLabel.append(backSelect);box.append(clubLabel,frontLabel,backLabel);host.append(box);let generation=0;const clubs=await list();
-  for(const c of clubs){const o=make('option',c.name+' · 전체 '+c.totalHoles+'홀');o.value=c.id;clubSelect.append(o);}
-  const initial=clubs.find(c=>c.id===selected?.clubId||c.groups.some(g=>g.id===selected?.id))??clubs[0];clubSelect.value=initial.id;
-  function fill(club,pair){for(const select of [frontSelect,backSelect]){select.replaceChildren();for(const n of club.nines){const o=make('option',n.label);o.value=n.id;select.append(o);}}[frontSelect.value,backSelect.value]=pair;}
-  fill(initial,initialNines(initial,selected));
-  async function choose(){const ticket=++generation,id=clubSelect.value,front=frontSelect.value,back=backSelect.value;onBusy(true);status.textContent='선택한 18홀 지도를 불러오고 있습니다.';try{const c=await loadRound(id,front,back);if(ticket!==generation)return;await onSelect(c);status.textContent=c.name+' · 18홀 준비 완료';}catch(e){if(ticket===generation)status.textContent=e.message+' 현재 선택한 라운드는 유지됩니다.';}finally{if(ticket===generation)onBusy(false);}}
-  clubSelect.onchange=()=>{const c=clubs.find(c=>c.id===clubSelect.value);fill(c,c.defaultRound);return choose();};frontSelect.onchange=()=>{if(frontSelect.value===backSelect.value)backSelect.value=clubs.find(c=>c.id===clubSelect.value).nines.find(n=>n.id!==frontSelect.value).id;return choose();};backSelect.onchange=()=>{if(backSelect.value===frontSelect.value)frontSelect.value=clubs.find(c=>c.id===clubSelect.value).nines.find(n=>n.id!==backSelect.value).id;return choose();};
-  const known=selected?.roundSelection||clubs.some(c=>c.groups.some(g=>g.id===selected?.id));if(!selected||known)await choose();else onBusy(false);
-  return {box,clubSelect,frontSelect,backSelect,choose};
+ async function mount(host, {selected, onSelect, status, onBusy = () => {}}) {
+  const make = (tag, text) => {
+   const element = document.createElement(tag);
+   if (text) element.textContent = text;
+   return element;
+  };
+  const box = make('div');
+  box.className = 'prepared-course-picker';
+  const clubLabel = make('label', '골프장'), clubSelect = make('select');
+  const frontLabel = make('label', '전반 9홀'), frontSelect = make('select');
+  const backLabel = make('label', '후반 9홀'), backSelect = make('select');
+  clubLabel.className = 'prepared-club-label';
+  clubSelect.setAttribute('aria-label', '준비된 골프장 선택');
+  frontSelect.setAttribute('aria-label', '전반 9홀 선택');
+  backSelect.setAttribute('aria-label', '후반 9홀 선택');
+  clubLabel.append(clubSelect);
+  frontLabel.append(frontSelect);
+  backLabel.append(backSelect);
+  box.append(clubLabel, frontLabel, backLabel);
+  host.append(box);
+
+  const clubs = await list();
+  let generation = 0, activeCourse = selected, locked = false;
+  for (const club of clubs) {
+   const option = make('option', club.name + ' · 전체 ' + club.totalHoles + '홀');
+   option.value = club.id;
+   clubSelect.append(option);
+  }
+  const customOption = make('option');
+  customOption.value = 'search-result';
+  customOption.hidden = true;
+  customOption.disabled = true;
+  clubSelect.append(customOption);
+
+  const clubFor = course => clubs.find(club =>
+   club.id === course?.clubId || club.groups.some(group => group.id === course?.id));
+  function setLocked(value) {
+   locked = value;
+   clubSelect.disabled = locked;
+   frontSelect.disabled = backSelect.disabled = locked || frontLabel.hidden;
+  }
+  function fill(club, pair) {
+   clubSelect.value = club.id;
+   customOption.hidden = true;
+   frontLabel.hidden = backLabel.hidden = false;
+   for (const select of [frontSelect, backSelect]) {
+    select.replaceChildren();
+    for (const nine of club.nines) {
+     const option = make('option', nine.label);
+     option.value = nine.id;
+     select.append(option);
+    }
+   }
+   [frontSelect.value, backSelect.value] = pair;
+   setLocked(locked);
+  }
+  function show(course) {
+   const club = clubFor(course);
+   if (club) {
+    fill(club, initialNines(club, course));
+    return;
+   }
+   customOption.textContent = course.clubName ?? course.name;
+   customOption.hidden = false;
+   clubSelect.value = customOption.value;
+   frontLabel.hidden = backLabel.hidden = true;
+   setLocked(locked);
+  }
+  function setSelected(course) {
+   generation++;
+   activeCourse = course;
+   show(course);
+   onBusy(false);
+  }
+  async function choose() {
+   const club = clubs.find(item => item.id === clubSelect.value);
+   if (!club || locked) return;
+   const ticket = ++generation, front = frontSelect.value, back = backSelect.value;
+   onBusy(true);
+   status.textContent = '선택한 18홀 지도를 불러오고 있습니다.';
+   try {
+    const course = await loadRound(club.id, front, back);
+    if (ticket !== generation) return;
+    await onSelect(course);
+    if (ticket !== generation) return;
+    activeCourse = course;
+    status.textContent = course.name + ' · 18홀 준비 완료';
+   } catch (error) {
+    if (ticket === generation) {
+     if (activeCourse) show(activeCourse);
+     status.textContent = error.message + ' 현재 선택한 라운드는 유지됩니다.';
+    }
+   } finally {
+    if (ticket === generation) onBusy(false);
+   }
+  }
+  clubSelect.onchange = () => {
+   const club = clubs.find(item => item.id === clubSelect.value);
+   if (!club || locked) return;
+   fill(club, club.defaultRound);
+   return choose();
+  };
+  function changeNine(changed, other) {
+   const club = clubs.find(item => item.id === clubSelect.value);
+   if (!club || locked) return;
+   if (changed.value === other.value) other.value = club.nines.find(nine => nine.id !== changed.value).id;
+   return choose();
+  }
+  frontSelect.onchange = () => changeNine(frontSelect, backSelect);
+  backSelect.onchange = () => changeNine(backSelect, frontSelect);
+
+  if (selected) show(selected);
+  else fill(clubs[0], clubs[0].defaultRound);
+  if (!selected || clubFor(selected)) await choose();
+  else onBusy(false);
+  return {box, clubSelect, frontSelect, backSelect, choose, setSelected, setLocked};
  }
  return {list,find,load,loadRound,loadDefault,mount};
 })();
