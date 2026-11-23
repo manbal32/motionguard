@@ -1,6 +1,4 @@
 window.MotionRoundScore = (() => {
-  const key = 'motionguard:recent-round-score';
-
   function normalize(value) {
     if (value === undefined || value === null || value === '') return undefined;
     const number = typeof value === 'string' && /^\d+$/.test(value.trim()) ? Number(value) : value;
@@ -37,22 +35,18 @@ window.MotionRoundScore = (() => {
     return {...clean, ...payload()};
   }
 
+  function reset() {
+    const field = document.getElementById('recent-round-score');
+    if (!field) return;
+    field.value = '';
+    field.setCustomValidity('');
+  }
+
   function ready() {
     const field = document.getElementById('recent-round-score');
     if (!field) return;
-    try {
-      const saved = normalize(sessionStorage.getItem(key));
-      if (saved !== undefined) field.value = String(saved);
-    } catch {}
-    field.addEventListener('input', () => {
-      field.setCustomValidity('');
-      if (field.validity?.badInput) return;
-      try {
-        const score = normalize(field.value);
-        if (score === undefined) sessionStorage.removeItem(key);
-        else sessionStorage.setItem(key, String(score));
-      } catch {}
-    });
+    reset();
+    field.addEventListener('input', () => field.setCustomValidity(''));
     field.addEventListener('keydown', event => {
       if (event.key !== 'Enter' || event.isComposing) return;
       event.preventDefault();
@@ -65,5 +59,5 @@ window.MotionRoundScore = (() => {
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready);
   else ready();
-  return {normalize, read, payload, attach};
+  return {normalize, read, payload, attach, reset};
 })();
