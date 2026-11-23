@@ -1,0 +1,75 @@
+{
+  "fixture": "synthetic200m planned shot; arcade model, not measured golf ball physics",
+  "rows": [
+    {
+      "name": "Calm",
+      "speed": 0,
+      "from": 0,
+      "end": {
+        "x": 0,
+        "y": 200
+      },
+      "carry": 200,
+      "control": {
+        "x": 0,
+        "y": 100
+      }
+    },
+    {
+      "name": "Headwind",
+      "speed": 6,
+      "from": 0,
+      "end": {
+        "x": 0,
+        "y": 180.8
+      },
+      "carry": 180.8,
+      "control": {
+        "x": 0,
+        "y": 90.4
+      }
+    },
+    {
+      "name": "Tailwind",
+      "speed": 6,
+      "from": 180,
+      "end": {
+        "x": -1.2819225879074757e-15,
+        "y": 212
+      },
+      "carry": 212,
+      "control": {
+        "x": 1.2819225879074753e-16,
+        "y": 106
+      }
+    },
+    {
+      "name": "From west",
+      "speed": 6,
+      "from": 270,
+      "end": {
+        "x": 10.467692307692309,
+        "y": 200
+      },
+      "carry": 200.2737441160187,
+      "control": {
+        "x": -1.0467692307692307,
+        "y": 100
+      }
+    },
+    {
+      "name": "From east",
+      "speed": 6,
+      "from": 90,
+      "end": {
+        "x": -10.467692307692309,
+        "y": 200
+      },
+      "carry": 200.2737441160187,
+      "control": {
+        "x": 1.0467692307692307,
+        "y": 100
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "version": 105,
+  "source": "886cac541e2d48a9af187df7a9bcd94b4d005ff5",
+  "build": "689f03c12eb32e83d8fe",
+  "public_build_matches": true,
+  "api_build_matches": true,
+  "native_score_disclosure_present": true,
+  "single_score_input": true,
+  "chat_helper_loaded_before_instrument": true,
+  "assets": {
+    "round-score.js": true,
+    "chat-layout.js": true,
+    "experience.css": true,
+    "instrument.js": true
+  },
+  "tests_passed": 323,
+  "mirror_tests_passed": 323,
+  "new_live_model_requests": 0,
+  "physical_safari_visual_touch_verified": false
+}

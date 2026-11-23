@@ -1,0 +1,22 @@
+[
+  {
+    "path": "/courses?course=giheung-east&hole=3",
+    "status": 200,
+    "gameControls": null
+  },
+  {
+    "path": "/play?club=rivera",
+    "status": 200,
+    "gameControls": true
+  },
+  {
+    "path": "/play?club=creek",
+    "status": 200,
+    "gameControls": true
+  },
+  {
+    "path": "/play?club=giheung",
+    "status": 200,
+    "gameControls": true
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "http_status": 200,
+  "reply": "어떤 클럽의 비거리가 얼마나 줄었나요?",
+  "reply_characters": 21,
+  "usage": {
+    "promptTokenCount": 197,
+    "candidatesTokenCount": 13,
+    "totalTokenCount": 210
+  },
+  "model": "gemini-3.5-flash-lite",
+  "attempts": 1,
+  "elapsed_seconds": 0.99,
+  "error_code": null,
+  "reason": null,
+  "non_personal_prompt": true,
+  "live_model_called": true
+}

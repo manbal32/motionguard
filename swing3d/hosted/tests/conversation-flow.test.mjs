@@ -1,0 +1,74 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import vm from 'node:vm';import {readFileSync} from 'node:fs';
+const code=readFileSync(new URL('../dist/client/instrument.js',import.meta.url),'utf8');
+function setup(reply){const els={};const el=()=>({disabled:false,hidden:true,textContent:'',value:'',checked:true,focus(){this.focused=true;},setAttribute(){},removeAttribute(){},querySelector(){return null;}});for(const k of ['coach-send','start','coach-log','coach-examples','summary-feedback','summary-retry','summary-origin','summary-heading','choose-video','analysis-retry','analysis-back','coach-retry','summary-goal-origin'])els[k]=el();const context={selected:{},request:null,chatRequest:null,composing:false,message:el(),consent:el(),coachStatus:el(),summaryPanel:el(),summaryFields:[{name:'concern',value:''}],approve:el(),messages:[],byId:k=>els[k],step:v=>context.page=v,report(){},fitFields(){},analyze:async(summary)=>{context.analysisSummary=summary;},AbortController,setTimeout,clearTimeout,coachPost:async()=>{context.called++;return reply;},called:0,desktopKeyboard:{matches:false},document:{activeElement:null,body:{}},chatLine:()=>({remove(){}}),coachForm:{addEventListener:(name,fn)=>{context.submit=fn;},setAttribute(){},removeAttribute(){}}};context.window=context;vm.createContext(context);return{context,els};}
+test('summary review restores editable concern before explicitly approved analysis',async()=>{const {context:c,els}=setup(null);c.messages=[{role:'user',text:'슬라이스'}];let finish;c.coachPost=()=>new Promise(r=>finish=r);vm.runInContext(code.slice(code.indexOf('  async function reviewSummary()'),code.indexOf('  byId("summary-retry").onclick')),c);const pending=c.reviewSummary();assert.equal(c.page,'busy');finish({summary:{concern:'슬라이스',goal:'방향 개선'}});await pending;assert.equal(c.page,2);assert.equal(c.summaryPanel.hidden,false);assert.equal(c.summaryFields[0].value,'슬라이스');assert.equal(c.summaryFields[0].readOnly,false);assert.equal(c.analysisSummary,undefined);assert.equal(c.approve.disabled,false);assert.equal(els['summary-goal-origin'].textContent,'코치 제안');});
+test('summary failure remains on visible progress with retry instead of returning to old screen',async()=>{const {context:c,els}=setup(null);c.messages=[{role:'user',text:'슬라이스'}];c.coachPost=async()=>{throw Error('연결 실패');};vm.runInContext(code.slice(code.indexOf('  async function reviewSummary()'),code.indexOf('  byId("summary-retry").onclick')),c);await c.reviewSummary();assert.equal(c.page,'busy');assert.equal(els['analysis-retry'].hidden,false);assert.equal(els['analysis-back'].hidden,false);});
+test('stalled local work rejects on abort so progress can exit',async()=>{const c={};vm.createContext(c);vm.runInContext(code.slice(code.indexOf('  function analysisWait('),code.indexOf('  async function analyze(')),c);const a=new AbortController();const p=c.analysisWait(new Promise(()=>{}),a.signal);a.abort();await assert.rejects(p,/초과/);});
+test('mobile send retains multi-turn history and rejects missing consent before request',async()=>{const {context:c}=setup({text:'언제 더 심한가요?',mode:'gemini'});vm.runInContext(code.slice(code.indexOf('  coachForm.addEventListener("submit"'),code.indexOf('  function node(')),c);c.message.value='오른쪽으로 가요';c.consent.checked=false;await c.submit({preventDefault(){}});assert.equal(c.called,0);assert.equal(c.consent.focused,true);c.consent.checked=true;await c.submit({preventDefault(){}});assert.equal(c.messages.length,2);c.message.value='세게 칠 때요';await c.submit({preventDefault(){}});assert.equal(c.messages.length,4);assert.equal(c.messages[2].text,'세게 칠 때요');});
+
+test('file alone cannot start analysis before a user message is sent',async()=>{const {context:c}=setup(null);vm.runInContext(code.slice(code.indexOf('  async function reviewSummary()'),code.indexOf('  byId("summary-retry").onclick')),c);await c.reviewSummary();assert.equal(c.called,0);assert.equal(c.message.focused,true);assert.match(c.coachStatus.textContent,/먼저 고민/);});
+
+test('analysis retry uses the last approved summary and does not re-request a dialogue summary',()=>{let summaryCalls=0,approved;const c={lastApprovedSummary:{concern:'승인 고민',goal:'승인 목표'},analyze:d=>approved=d,reviewSummary:()=>summaryCalls++};vm.runInNewContext('const retry='+code.match(/byId\("analysis-retry"\)\.onclick=(.*?);byId\("analysis-back"\)/)[1]+';retry();',c);assert.equal(summaryCalls,0);assert.equal(approved.goal,'승인 목표');});
+
+test('failed chat preserves the draft, removes pending bubbles and lets the retry button resend once',async()=>{const {context:c,els}=setup(null);const lines=[];c.chatLine=()=>{const line={remove(){this.removed=true;}};lines.push(line);return line;};c.coachForm.requestSubmit=()=>c.submit({preventDefault(){}});c.coachPost=async()=>{throw Error('응답 지연 (확인번호 test1234)');};vm.runInContext(code.slice(code.indexOf('  coachForm.addEventListener("submit"'),code.indexOf('  function node(')),c);c.message.value='회전이 답답해요';await c.submit({preventDefault(){}});assert.equal(c.message.value,'회전이 답답해요');assert.equal(c.messages.length,0);assert.equal(els['coach-retry'].hidden,false);assert.equal(lines[1].removed,true);assert.match(c.coachStatus.textContent,/test1234/);assert.equal(c.coachStatus.textContent.includes('입력한 메시지를 다시 보낼'),false);c.coachPost=async()=>({mode:'gemini',text:'천천히 몸통을 돌려 볼까요?'});await els['coach-retry'].onclick();assert.equal(c.messages.length,2);assert.equal(c.messages[0].text,'회전이 답답해요');assert.equal(c.message.value,'');assert.equal(els['coach-retry'].hidden,true);});
+test('a late reply after cancellation cannot leave an unmatched user turn in dialogue history',async()=>{const {context:c,els}=setup(null);c.coachPost=async()=>{c.chatRequest.abort();return{mode:'gemini',text:'늦은 답변'};};vm.runInContext(code.slice(code.indexOf('  coachForm.addEventListener("submit"'),code.indexOf('  function node(')),c);c.message.value='내 스윙 고민';await c.submit({preventDefault(){}});assert.equal(c.messages.length,0);assert.equal(c.message.value,'내 스윙 고민');assert.equal(els['coach-retry'].hidden,false);});
+
+test('mobile chat sends a long question as entered rather than shortening the user message',async()=>{
+ const{context:c}=setup({text:'핵심을 확인했어요. 먼저 백스윙부터 살펴볼까요?',mode:'gemini'});vm.runInContext(code.slice(code.indexOf('  coachForm.addEventListener("submit"'),code.indexOf('  function node(')),c);const question='백스윙과 임팩트에서 느끼는 차이를 자세히 설명합니다. '.repeat(40)+'마지막 질문도 확인해 주세요.';c.message.value=question;await c.submit({preventDefault(){}});assert.equal(c.messages[0].text,question);assert.equal(c.messages.length,2);const html=readFileSync(new URL('../dist/client/index.html',import.meta.url),'utf8');assert.match(html,/id="coach-message" maxlength="6000"/);
+});
+
+test('accepted first message validates the optional score and keeps the field available',async()=>{for(const score of [undefined,105]){const{context:c}=setup({text:'답변',mode:'gemini'});let folds=0,reads=0;c.MotionRoundScore={read(){reads++;return score;},collapse(){folds++;}};vm.runInContext(code.slice(code.indexOf('  coachForm.addEventListener("submit"'),code.indexOf('  function node(')),c);c.message.value='스윙 고민';await c.submit({preventDefault(){}});assert.equal(reads,1);assert.equal(folds,0);assert.equal(c.messages.length,2);}});
+test('invalid optional score opens correction before any chat turn is added or sent',async()=>{const{context:c}=setup({text:'must not send'});c.MotionRoundScore={read(){throw Error('타수를 확인해 주세요');},collapse(){throw Error('must stay open');}};vm.runInContext(code.slice(code.indexOf('  coachForm.addEventListener("submit"'),code.indexOf('  function node(')),c);c.message.value='스윙 고민';await c.submit({preventDefault(){}});assert.equal(c.called,0);assert.equal(c.messages.length,0);assert.equal(c.message.value,'스윙 고민');assert.match(c.coachStatus.textContent,/타수를 확인/);});
+
+test('editing the proposed practice goal changes its origin badge without rewriting the goal',()=>{let edited;const goal={name:'goal',value:'내가 원하는 백스윙 만들기',style:{},scrollHeight:64,addEventListener(name,fn){if(name==='input')edited=fn;}},badge={textContent:'코치 제안'},s={summaryPanel:{querySelectorAll:()=>[goal]},byId:id=>id==='summary-goal-origin'?badge:null,addEventListener(){}};vm.createContext(s);vm.runInContext(code.slice(code.indexOf('  const summaryFields ='),code.indexOf('  const approve =')),s);edited();assert.equal(badge.textContent,'직접 수정');assert.equal(goal.value,'내가 원하는 백스윙 만들기');assert.equal(goal.style.height,'64px');});
+
+test('every fifth user message gets a local analysis reminder and the conversation can continue past ten turns', async () => {
+  const {context, els} = setup({text: '답변', mode: 'gemini'});
+  const visible = [];
+  context.chatLine = (label, text) => {
+    const line = {label, text, remove() { this.removed = true; }};
+    visible.push(line);
+    return line;
+  };
+  vm.runInContext(code.slice(code.indexOf('  coachForm.addEventListener("submit"'), code.indexOf('  function node(')), context);
+  for (let turn = 1; turn <= 16; turn++) {
+    context.message.value = '스윙 고민 ' + turn;
+    await context.submit({preventDefault() {}});
+    assert.equal(context.called, turn - Math.floor(turn / 5));
+    assert.equal(context.messages.length, turn * 2);
+    assert.equal(context.message.value, '');
+    assert.equal(els.start.disabled, false);
+    if (turn % 5 === 0) {
+      assert.match(visible.at(-1).text, /‘분석하기’를 눌러 주세요/);
+      assert.equal(visible.at(-1).className, 'coach-analysis-reminder');
+    }
+  }
+  assert.equal(visible.filter(line => line.className === 'coach-analysis-reminder').length, 3);
+  assert.equal(context.analysisSummary, undefined);
+});
+
+test('chat and summary requests retain the opening concern and recent turns within their request limits', async () => {
+  const {context} = setup(null);
+  context.messages = Array.from({length: 30}, (_, i) => ({
+    role: i % 2 ? 'assistant' : 'user',
+    text: '말풍선 ' + i,
+  }));
+  const sent = [];
+  context.fetch = async (url, options) => {
+    sent.push({url, ...JSON.parse(options.body)});
+    return {ok: true};
+  };
+  context.readResponse = async () => ({});
+  vm.runInContext(code.slice(code.indexOf('  async function coachPost('), code.indexOf('  function chatLine(')), context);
+  await context.coachPost('summary', {});
+  context.messages.push({role: 'user', text: '방금 추가한 내용'});
+  await context.coachPost('chat', {});
+  for (const [index, length] of [20, 9].entries()) {
+    assert.equal(sent[index].messages.length, length);
+    assert.equal(sent[index].messages[0].text, '말풍선 0');
+    sent[index].messages.forEach((turn, i) => assert.equal(turn.role, i % 2 ? 'assistant' : 'user'));
+  }
+  assert.equal(sent[0].messages.at(-1).text, '말풍선 29');
+  assert.equal(sent[1].messages.at(-1).text, '방금 추가한 내용');
+  assert.equal(context.messages.length, 31);
+});

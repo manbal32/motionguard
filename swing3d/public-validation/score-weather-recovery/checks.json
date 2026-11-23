@@ -1,0 +1,15 @@
+{
+  "tests": 300,
+  "passed": 300,
+  "mirrorPassed": 300,
+  "publicAssetsMatched": 168,
+  "siteVersion": 94,
+  "sourceCommit": "d92e60bc38f227d94326fded1dfc1d7e8df39fbd",
+  "build": "3a234d99704e0d5ff0b5",
+  "puttingRulesChanged": false,
+  "realGeminiFixture": "non-personal synthetic analysis; no user photo/video",
+  "weatherOutageScoreRecovery": true,
+  "extraModelRequestsForRecovery": 0,
+  "physicalSafariInteractionVerified": false,
+  "backupProductionOutageForced": false
+}

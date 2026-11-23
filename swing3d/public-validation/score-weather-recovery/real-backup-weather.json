@@ -1,0 +1,8 @@
+{
+  "test": "Primary failure forced only in local injected send; real backup HTTP fetch",
+  "status": 503,
+  "providers": [
+    "api.met.no",
+    "api.open-meteo.com"
+  ]
+}

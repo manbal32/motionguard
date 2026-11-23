@@ -1,0 +1,28 @@
+{
+  "status": "official-duplicate-confirmed-physical-geometry-ambiguous",
+  "checked_on": "2026-11-22",
+  "finding": "Official site and two public secondary sources attach the same terrain diagram to distinct Lake3 and Challenge2 sections. Separate hole identities are verified, but correct distinct physical geometry is unresolved.",
+  "official_pages": [
+    {
+      "groupId": "korea-lake",
+      "number": 3,
+      "source_page": "https://www.gakorea.com/korea/course/lakeCouse.asp",
+      "image_url": "https://www.gakorea.com/korea/images/course/la_03.jpg",
+      "par": 3,
+      "white_m": 150,
+      "description": "2단 그린이며 그린 중앙을 공략하고 좌측 벙커를 조심해야 한다."
+    },
+    {
+      "groupId": "korea-challenge",
+      "number": 2,
+      "source_page": "https://www.gakorea.com/korea/course/challCouse.asp",
+      "image_url": "https://www.gakorea.com/korea/images/course/ch_02.jpg",
+      "par": 3,
+      "white_m": 135,
+      "description": "그린 좌측에서 우측으로 경사가 심해 정확한 티샷을 요구하는 홀이다."
+    }
+  ],
+  "independent_evidence": "glassjane public guide contains full labeled screenshots: 3 hole LAKE COURSE PAR3 HDCP6 White150m and 2 hole CHALLENGE COURSE PAR3 HDCP6 White135m. Both visibly contain same water/tee/green/bunker drawing. This supports upstream official diagram reuse; does not resolve real ground truth. kaypen also repeats same diagram under both labels.",
+  "recommendation": "Keep source attribution and flag map_geometry_ambiguous for both. Do not claim two independently verified hole shapes. No replacement selected; do not substitute another hole or invent geometry.",
+  "replacement_image": null
+}

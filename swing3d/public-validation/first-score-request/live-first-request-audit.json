@@ -1,0 +1,21 @@
+{
+  "fixture": "non-personal synthetic analysis; real Gemini output with trusted selected-club weather",
+  "weatherClub": "rivera",
+  "weatherTime": "2026-11-22T07:00:00.000Z",
+  "windSpeed": 1.7,
+  "weatherApplied": true,
+  "model": "gemini-3.5-flash-lite",
+  "httpStatus": 200,
+  "elapsedSeconds": 7.185,
+  "firstRequestWithEmptyCache": true,
+  "browserWeatherRequests": 0,
+  "predictionRequests": 1,
+  "weatherState": "applied",
+  "scoreOnlyRows": 18,
+  "scoreOnlyAnimationFrames": 0,
+  "current": 90,
+  "improved": 85,
+  "bothRoundsComplete": true,
+  "noNumbersChanged": true,
+  "verification": "Node DOM/animation execution, not Safari or physical-device interaction"
+}

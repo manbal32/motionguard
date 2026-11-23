@@ -1,0 +1,15 @@
+{
+  "site_version": 98,
+  "build": "8041f9f3313026ff9d6c",
+  "public_build_matches": true,
+  "api_build_matches": true,
+  "assets": {
+    "ai-result.js": true,
+    "experience.css": true
+  },
+  "duplicated_title_removed": true,
+  "photo_strip_retained": true,
+  "context_tiles_retained": true,
+  "html_build_matches": true,
+  "physical_safari_visual_touch_verified": false
+}

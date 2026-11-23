@@ -1,0 +1,190 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+import crypto from 'node:crypto';
+const data=JSON.parse(fs.readFileSync('data/rivera-game.json','utf8'));
+function engine(){const s={module:{exports:{}},structuredClone};vm.runInNewContext(fs.readFileSync('overrides/rivera-game-engine.js','utf8'),s);return s.module.exports;}
+test('four real nine-hole sets have distinct images and twelve different ordered 18-hole combinations',()=>{
+ const E=engine(),hashes=new Set();assert.equal(data.courses.length,4);
+ for(const a of data.courses){assert.equal(a.holes.length,9);assert.equal(a.holes.reduce((n,h)=>n+h.par,0),36);for(const h of a.holes){const p='assets/'+h.image.slice(2),image=fs.readFileSync(p);assert.equal(image.readUInt32BE(16),537);assert.equal(image.readUInt32BE(20),797);hashes.add(crypto.createHash('sha256').update(image).digest('hex'));assert.ok(h.route.every(p=>p.every(Number.isFinite)));}for(const b of data.courses)if(a.id!==b.id){const round=E.create(data,a.id,b.id,42),all=E.holes(data,round);assert.equal(all.length,18);assert.equal(all[0].courseId,a.id);assert.equal(all[9].courseId,b.id);assert.notEqual(all[0].image,all[9].image);assert.equal(all.reduce((n,h)=>n+h.par,0),72);}}
+ assert.equal(hashes.size,36);assert.throws(()=>E.create(data,'valley','valley'),/서로 다른/);assert.throws(()=>E.create(data,'valley','master'),/서로 다른/);
+});
+test('player power and direction change actual landing, and a second click cannot double count a flight',()=>{
+ const E=engine(),s=E.create(data,'valley','lake',12),h=E.holes(data,s)[0],low=structuredClone(s),right=structuredClone(s),left=structuredClone(s);low.power=30;right.aim=25;left.aim=-25;
+ const shot=E.hit(s,h),short=E.hit(low,h),r=E.hit(right,h),l=E.hit(left,h);assert.ok(shot.carry>short.carry*2);assert.ok(r.end.x>0);assert.ok(l.end.x<0);assert.equal(s.shots.length,0);assert.throws(()=>E.hit(s,h));E.complete(s,h);assert.equal(s.shots.length,1);assert.equal(E.total(s),1);assert.ok(E.distance(s.ball,{x:0,y:0})>100);assert.ok(E.undo(s));assert.equal(E.total(s),0);assert.deepEqual({...s.ball},{x:0,y:0});
+});
+test('green play requires a user putt and only a completed hole can advance to a new course',()=>{
+ const E=engine(),s=E.create(data),h=E.holes(data,s)[0];assert.throws(()=>E.next(data,s));s.ball={x:0,y:h.distance-5};s.club='putter';s.power=25;const shot=E.hit(s,h);assert.equal(shot.putt,true);assert.equal(shot.holed,true);E.complete(s,h);assert.equal(s.phase,'holed');assert.equal(E.total(s),1);E.next(data,s);assert.equal(s.holeIndex,1);assert.equal(s.completed.length,1);assert.equal(E.total(s),1);
+});
+test('all twelve pairings can be played from tee through putting to an exact 18-hole scorecard',()=>{
+ const E=engine();for(const front of data.courses)for(const back of data.courses)if(front.id!==back.id){const s=E.create(data,front.id,back.id,197);let played=0;while(s.phase!=='finished'){const h=E.holes(data,s)[s.holeIndex];while(s.phase==='ready'){const remaining=E.distance(s.ball,E.cup(h));s.club=E.recommend(h,s.ball);const club=E.clubs.find(c=>c.id===s.club);s.power=Math.max(1,Math.min(100,Math.round(remaining/club.range*100)));s.aim=0;E.hit(s,h);E.complete(s,h);played++;assert.ok(played<200);}E.next(data,s);}assert.equal(s.completed.length,18);assert.ok(s.completed.every(h=>!h.conceded));assert.equal(E.total(s),s.completed.reduce((n,h)=>n+h.strokes,0));assert.equal(s.completed[8].courseId,front.id);assert.equal(s.completed[9].courseId,back.id);assert.ok(E.restore(data,JSON.stringify(s)));}
+});
+test('stroke limit, undo and storage restore preserve counts without phantom strokes',()=>{
+ const E=engine(),s=E.create(data),h=E.holes(data,s)[0];for(let i=0;i<12;i++){s.club='putter';s.power=1;E.hit(s,h);E.complete(s,h);}assert.equal(s.phase,'holed');assert.equal(E.strokeCount(s),12);E.undo(s);assert.equal(s.shots.length,11);assert.equal(s.phase,'ready');E.hit(s,h);const restored=E.restore(data,JSON.stringify(s));assert.equal(restored.phase,'ready');assert.equal(restored.shots.length,11);assert.equal(restored.pending,undefined);E.complete(s,h);assert.equal(E.strokeCount(s),12);assert.equal(E.restore(data,{...s,holeIndex:5}),null);assert.equal(E.restore(data,{...s,ball:{x:NaN,y:1}}),null);
+});
+
+async function ui(storage=new Map(),weather={mode:'live',temperature:20,windSpeed:0,windFrom:0,gust:0,precipitation:0,code:0,weatherTime:'2026-11-21T02:30:00Z'},quickPlay=false,AudioContext,search='',viewport={},prepared=false){
+ const nodes=new Map(),queue=[],calls=[],events=new Map();let document,clock=Date.now();
+ class El{constructor(tag='div'){this.tagName=tag;this.children=[];this.attributes={};this.events=new Map();this.dataset={};this.style={};this.hidden=false;this._text='';this.value='';this.id='';this.classList={add(){},remove(){}};}set textContent(v){this._text=String(v);this.children=[];}get textContent(){return this._text+this.children.map(x=>x.textContent??'').join('');}append(...values){this.children.push(...values);}replaceChildren(...values){this._text='';this.children=[...values];}setAttribute(k,v){this.attributes[k]=String(v);if(k==='id'){this.id=v;nodes.set(v,this);}}getAttribute(k){return this.attributes[k];}addEventListener(name,fn){this.events.set(name,fn);}remove(){this.removed=true;}focus(){document.activeElement=this;}}
+ const html=fs.readFileSync('overrides/rivera-game.html','utf8');for(const m of html.matchAll(/<([\w-]+)\b[^>]*\bid="([^"]+)"[^>]*>/g)){const e=new El(m[1]);e.id=m[2];e.hidden=/\bhidden\b/.test(m[0]);nodes.set(m[2],e);}
+ document={getElementById:id=>{assert.ok(nodes.has(id),'Missing '+id);return nodes.get(id);},createElement:t=>new El(t),createElementNS:(_,t)=>new El(t),createTextNode:text=>({textContent:text}),body:new El('body'),hidden:false,addEventListener:(name,fn)=>events.set(name,fn)};
+ document.body.dataset.quickPlay=String(quickPlay);document.body.dataset.gameScreen='setup';document.body.style.setProperty=(k,v)=>document.body.style[k]=v;
+ const s={document,URLSearchParams,location:{search},Date:class extends Date{static now(){return clock;}},URL,AbortController,structuredClone,setTimeout,clearTimeout,localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)},fetch:async u=>{calls.push(u);if(prepared&&(u==='./prepared-courses.json'||u.startsWith('./prepared-courses/')))return Response.json(JSON.parse(fs.readFileSync('data/'+u.replace(/^\.\//,''),'utf8')));if(u.startsWith('./api/game/weather')){const id=new URL(u,'https://test.example').searchParams.get('club')||'rivera';return Response.json(weather?{ok:true,clubId:id,weather:{...weather,clubId:id}}:{ok:false,reason:'unavailable'},{status:weather?200:503});}assert.equal(u,'./rivera-game.json');return Response.json(data);},requestAnimationFrame:f=>{queue.push(f);return queue.length;},cancelAnimationFrame(){},scrollTo(){},addEventListener(){},matchMedia:()=>({matches:false})};s.window=s;s.innerHeight=viewport.height??720;s.parent=viewport.parentHeight?{innerHeight:viewport.parentHeight}:s;if(AudioContext)s.AudioContext=AudioContext;
+ vm.createContext(s);for(const f of[...(prepared?['dist/client/prepared-courses.js','dist/client/course-game.js']:[]),'overrides/rivera-game-engine.js','dist/client/shot-wind-view.js','dist/client/course-golfer.js','dist/client/hole-scene.js','overrides/rivera-game-sound.js','overrides/rivera-game.js'])vm.runInContext(fs.readFileSync(f,'utf8'),s);await new Promise(resolve=>setImmediate(resolve));return{nodes,queue,storage,calls,events,body:document.body,active:()=>document.activeElement,engine:s.MotionRiveraGame,advance:ms=>clock+=ms};
+}
+test('actual UI start and shot buttons animate a ball, save one stroke and allow undo without any analysis request',async()=>{
+ const t=await ui(),get=id=>t.nodes.get(id);get('start-game').onclick();assert.equal(get('play-screen').hidden,false);const ball=get('player-ball'),before=ball.getAttribute('cy');get('hit-shot').onclick();get('hit-shot').onclick();assert.equal(get('hit-shot').disabled,true);let moved=false;for(let i=0;i<90&&t.queue.length;i++){t.queue.shift()(i*50);if(ball.getAttribute('cy')!==before)moved=true;}assert.equal(moved,true);assert.equal(get('hit-shot').disabled,false);assert.match(get('total-strokes').textContent,/1/);get('undo-shot').onclick();assert.match(get('total-strokes').textContent,/0/);assert.equal(t.calls.length,2);assert.ok(t.calls.every(u=>u==='./rivera-game.json'||u==='./api/game/weather'));
+});
+test('UI pairs different courses, switches after nine holes, finishes eighteen and resumes the saved result',async()=>{
+ const t=await ui(),get=id=>t.nodes.get(id);get('front-courses').children.find(b=>b.dataset.course==='pine').onclick();get('back-courses').children.find(b=>b.dataset.course==='cherry').onclick();get('start-game').onclick();for(let i=0;i<18;i++){get('concede-hole').onclick();assert.equal(get('hole-finish').hidden,false);get('next-hole').onclick();if(i===8)assert.match(get('leg-label').textContent,/체리힐/);}assert.equal(get('result-screen').hidden,false);assert.equal(get('final-total').textContent,'162타');get('result-score').onclick();assert.equal(get('score-overlay').hidden,false);assert.equal(get('score-content').children.filter(c=>c.tagName==='table').length,2);get('close-score').onclick();const again=await ui(t.storage);assert.equal(again.nodes.get('resume-game').hidden,false);again.nodes.get('resume-game').onclick();assert.equal(again.nodes.get('result-screen').hidden,false);assert.equal(again.nodes.get('final-total').textContent,'162타');
+});
+
+const liveWind=(speed,from,extra={})=>({mode:'live',temperature:20,windSpeed:speed,windFrom:from,gust:speed,precipitation:0,weatherTime:'2026-11-21T02:30:00Z',...extra});
+test('meteorological head/tail/crosswind changes landing in the correct screen-relative direction',()=>{
+ const E=engine(),hole={distance:400,route:[[100,600],[100,100]]};function shot(w){const s=E.create(data,'valley','lake',25);E.setWeather(s,w);return E.hit(s,hole);}
+ const calm=shot(E.neutralWeather()),head=shot(liveWind(6,0)),tail=shot(liveWind(6,180)),east=shot(liveWind(6,270)),west=shot(liveWind(6,90));assert.ok(head.carry<calm.carry);assert.ok(tail.carry>calm.carry);assert.ok(east.end.x>calm.end.x+3);assert.ok(west.end.x<calm.end.x-3);const s=E.create(data);E.setWeather(s,liveWind(6,0));assert.ok(E.conditions(s,{...hole,route:[[100,100],[100,600]]}).along>0);
+});
+test('temperature and rain change range while wind alone never pushes a putt',()=>{
+ const E=engine(),h=E.holes(data,E.create(data))[0];function distance(w,club='driver'){const s=E.create(data);s.club=club;E.setWeather(s,w);return E.predict(s,h);}
+ assert.ok(distance(liveWind(0,0,{temperature:30}))>distance(liveWind(0,0,{temperature:0})));assert.ok(distance(liveWind(0,0,{precipitation:2}))<distance(E.neutralWeather()));assert.equal(distance(liveWind(15,90),'putter'),distance(E.neutralWeather(),'putter'));assert.ok(distance(liveWind(0,0,{precipitation:2}),'putter')<distance(E.neutralWeather(),'putter'));
+});
+test('a shot freezes its weather and old saves restore as explicit baseline conditions',()=>{
+ const E=engine(),s=E.create(data),h=E.holes(data,s)[0];E.setWeather(s,liveWind(3,0));E.hit(s,h);assert.throws(()=>E.setWeather(s,liveWind(10,90)));E.complete(s,h);E.setWeather(s,liveWind(10,90));assert.equal(s.shots[0].weather.windSpeed,3);assert.equal(s.weather.windSpeed,10);assert.equal(E.restore(data,JSON.stringify(s)).weather.windSpeed,10);delete s.weather;assert.equal(E.restore(data,s).weather.mode,'baseline');s.weather=liveWind(NaN,0);assert.equal(E.restore(data,s),null);
+});
+test('weather outage leaves the game playable with a clearly labeled baseline',async()=>{
+ const t=await ui(new Map(),null),get=id=>t.nodes.get(id);assert.equal(get('start-game').disabled,false);assert.match(get('weather-status').textContent,/조회가 지연/);assert.match(get('weather-summary').textContent,/날씨 정보 대기/);get('start-game').onclick();assert.equal(get('play-screen').hidden,false);
+});
+test('live weather arriving during flight applies after landing without changing that shot snapshot',async()=>{
+ const w=liveWind(3,0),t=await ui(new Map(),w),get=id=>t.nodes.get(id);get('start-game').onclick();get('hit-shot').onclick();w.windSpeed=8;w.gust=8;t.advance(11*60000);t.events.get('visibilitychange')();await new Promise(resolve=>setImmediate(resolve));for(let i=0;i<90&&t.queue.length;i++)t.queue.shift()(i*50);const saved=JSON.parse(t.storage.get('motionguard:rivera-game:v1'));assert.equal(saved.shots[0].weather.windSpeed,3);assert.equal(saved.weather.windSpeed,8);
+});
+
+test('weather is automatic with no comparison controls and a resumed round gets the latest conditions',async()=>{
+ const t=await ui(new Map(),liveWind(3,315));assert.equal(t.nodes.has('weather-enabled'),false);assert.equal(t.nodes.has('weather-refresh'),false);t.nodes.get('start-game').onclick();assert.equal(JSON.parse(t.storage.get('motionguard:rivera-game:v1')).weather.windSpeed,3);const resumed=await ui(t.storage,liveWind(7,180));resumed.nodes.get('resume-game').onclick();assert.equal(JSON.parse(resumed.storage.get('motionguard:rivera-game:v1')).weather.windSpeed,7);assert.match(resumed.nodes.get('weather-status').textContent,/자동 반영/);
+});
+test('an 18-hole UI playthrough uses live wind, actual shot/putt buttons and no hole concessions',async()=>{
+ for(const preset of ['male','female']){const t=await ui(new Map(),liveWind(3.3,307.4,{temperature:-.3})),get=id=>t.nodes.get(id),E=t.engine,key='motionguard:rivera-game:v1';let tick=0,played=0;get('preset-'+preset).onclick();get('start-game').onclick();
+ for(let index=0;index<18;index++){
+  while(get('hole-finish').hidden){
+   const s=JSON.parse(t.storage.get(key)),h=E.holes(data,s)[s.holeIndex],remaining=E.distance(s.ball,E.cup(h)),club=E.recommend(h,s.ball,s),scratch={...s,club,aim:0,power:100};scratch.power=Math.max(1,Math.min(100,Math.round(remaining/E.predict(scratch,h)*100)));const effect=E.conditions(scratch,h),aim=club==='putter'?0:Math.round(-Math.atan2(Math.sign(effect.cross)*Math.hypot(effect.driftX,effect.driftY),effect.carry)*180/Math.PI);
+   get('club-choice').value=club;get('club-choice').onchange();get('aim').value=aim;get('aim').oninput();get('power').value=scratch.power;get('power').oninput();get('hit-shot').onclick();for(let frame=0;frame<90&&t.queue.length;frame++)t.queue.shift()(tick+=50);played++;assert.ok(played<180);assert.ok(!JSON.parse(t.storage.get(key)).concededStrokes,'Must finish by playing into the cup');
+  }
+  get('next-hole').onclick();if(index===8)assert.match(get('leg-label').textContent,/레이크/);
+ }
+ const saved=JSON.parse(t.storage.get(key));assert.equal(saved.completed.length,18);assert.ok(saved.completed.every(h=>!h.conceded));assert.equal(saved.phase,'finished');assert.equal(E.total(saved),played);assert.equal(get('final-total').textContent,played+'타');assert.ok(t.calls.every(u=>u==='./rivera-game.json'||u==='./api/game/weather'));;}
+});
+
+test('automatic retries respect increasing backoff even when the player repeatedly returns',async()=>{
+ const t=await ui(new Map(),null),weatherCalls=()=>t.calls.filter(u=>u==='./api/game/weather').length,back=async()=>{t.events.get('visibilitychange')();await new Promise(resolve=>setImmediate(resolve));};assert.equal(weatherCalls(),1);t.advance(60000);await back();assert.equal(weatherCalls(),2);t.advance(60000);await back();assert.equal(weatherCalls(),2);t.advance(60000);await back();assert.equal(weatherCalls(),3);
+});
+
+test('tester entry offers distance selection without analysis and resumes the same shot count',async()=>{
+ const t=await ui(new Map(),null,true),get=id=>t.nodes.get(id);
+ assert.equal(get('setup-screen').hidden,false);get('preset-female').onclick();get('start-game').onclick();assert.equal(get('play-screen').hidden,false);assert.match(get('hole-title').textContent,/1번홀/);
+ get('hit-shot').onclick();for(let i=0;i<90&&t.queue.length;i++)t.queue.shift()(i*50);
+ const before=JSON.parse(t.storage.get('motionguard:rivera-game:v1'));assert.equal(before.shots.length,1);
+ const resumed=await ui(t.storage,null,true),after=JSON.parse(resumed.storage.get('motionguard:rivera-game:v1'));
+ assert.equal(resumed.nodes.get('play-screen').hidden,false);assert.equal(after.shots.length,1);assert.deepEqual(after.ball,before.ball);assert.equal(after.seed,before.seed);
+ assert.ok(resumed.calls.every(u=>u==='./rivera-game.json'||u==='./api/game/weather'));
+ resumed.nodes.get('choose-courses').onclick();assert.equal(resumed.nodes.get('setup-screen').hidden,false);
+});
+test('quick entry ignores corrupt saves while the full game keeps its course picker',async()=>{
+ const t=await ui(new Map([['motionguard:rivera-game:v1','{broken']]),null,true);
+ assert.equal(t.nodes.get('setup-screen').hidden,false);t.nodes.get('start-game').onclick();assert.equal(t.nodes.get('play-screen').hidden,false);assert.equal(JSON.parse(t.storage.get('motionguard:rivera-game:v1')).shots.length,0);
+ const full=await ui(t.storage,null);assert.equal(full.nodes.get('setup-screen').hidden,false);assert.equal(full.nodes.get('play-screen').hidden,true);assert.equal(full.nodes.get('resume-game').hidden,false);
+});
+
+test('aligned green putts tolerate short and excessive power in dry, wet and windy conditions',()=>{
+ const E=engine(),h=E.holes(data,E.create(data))[0];
+ for(const remaining of [1,5,10,14])for(const aim of [-8,0,8])for(const power of [50,85,100])for(const wet of [false,true]){
+  const s=E.create(data);s.ball={x:0,y:h.distance-remaining};s.club='putter';s.aim=aim;s.power=power;
+  if(wet)E.setWeather(s,liveWind(12,90,{precipitation:10}));
+  const preview=E.aimPoint(s,h),shot=E.hit(s,h);assert.equal(shot.holed,true);assert.equal(shot.puttAssisted,true);assert.equal(shot.carry,remaining);assert.deepEqual({...preview},{...shot.end});assert.equal(shot.remaining,0);
+  E.complete(s,h);assert.equal(s.phase,'holed');assert.equal(E.total(s),1);assert.ok(E.restore(data,JSON.stringify(s)));assert.equal(E.undo(s),true);assert.equal(E.total(s),0);assert.equal(s.phase,'ready');
+ }
+});
+test('putting help does not hole badly aimed, barely tapped or off-green shots',()=>{
+ const E=engine(),h=E.holes(data,E.create(data))[0];
+ for(const [remaining,aim,power]of [[10,20,50],[10,-20,50],[10,0,5],[30,0,100]]){
+  const s=E.create(data);s.ball={x:0,y:h.distance-remaining};s.club='putter';s.aim=aim;s.power=power;const shot=E.hit(s,h);assert.equal(shot.holed,false);assert.equal(shot.puttAssisted,false);E.complete(s,h);assert.equal(s.phase,'ready');
+ }
+});
+test('the club guide uses the same range values as the playable engine',async()=>{
+ const t=await ui(),guide=t.nodes.get('club-distances');assert.equal(guide.children.length,t.engine.clubs.length*2);
+ for(const[i,club]of t.engine.clubs.entries()){assert.equal(guide.children[i*2].textContent,club.label);assert.equal(guide.children[i*2+1].textContent,club.range+'m');}
+});
+
+test('distance presets drive prediction, actual shots, recommendations, guide and saved rounds',async()=>{
+ const E=engine();
+ for(const [preset,driver,iron7]of [['male',220,145],['female',180,130]]){
+  const t=await ui(),get=id=>t.nodes.get(id);get('preset-'+preset).onclick();get('start-game').onclick();const saved=JSON.parse(t.storage.get('motionguard:rivera-game:v1')),h=E.holes(data,saved)[0];
+  assert.equal(saved.distancePreset,preset);assert.equal(saved.power,100);assert.equal(E.predict(saved,h),driver);saved.club='iron7';assert.equal(E.predict(saved,h),iron7);
+  const shot=E.hit(saved,h);assert.ok(shot.carry>=iron7*.97&&shot.carry<=iron7*1.03);E.complete(saved,h);assert.equal(saved.power,100);assert.equal(E.restore(data,saved).distancePreset,preset);
+  for(const [i,club]of E.clubsFor(preset).entries())assert.equal(get('club-distances').children[i*2+1].textContent,club.range+'m');
+  get('power').value=40;get('power').oninput();get('hit-shot').onclick();for(let i=0;i<90&&t.queue.length;i++)t.queue.shift()(i*50);assert.equal(get('power').value,100);
+ }
+ const old=E.create(data);delete old.distancePreset;old.power=73;const migrated=E.restore(data,old);assert.equal(migrated.distancePreset,'male');assert.equal(migrated.power,73);assert.equal(E.restore(data,{...old,distancePreset:'unknown'}),null);
+});
+test('all new shots and holes start at full power while each played shot keeps the chosen power',()=>{
+ const E=engine(),s=E.create(data,'valley','lake',5,'female'),h=E.holes(data,s)[0];assert.equal(s.power,100);s.power=40;const shot=E.hit(s,h);assert.ok(shot.carry<80);E.complete(s,h);assert.equal(s.power,100);E.concede(s,h);E.next(data,s);assert.equal(s.power,100);assert.equal(s.distancePreset,'female');
+});
+test('hole-in display names the result and the next hole clears the celebration',async()=>{
+ const E=engine();for(const [strokes,label,tag]of [[2,'이글!','EAGLE'],[3,'버디!','BIRDIE'],[4,'파!','PAR'],[5,'보기','BOGEY'],[6,'더블 보기','DOUBLE BOGEY']]){
+  const state=E.create(data),h=E.holes(data,state)[0];assert.equal(h.par,4);state.club='putter';state.ball={x:0,y:h.distance-5};for(let i=1;i<strokes;i++)state.shots.push({start:{x:0,y:0},end:{...state.ball}});
+  const t=await ui(new Map([['motionguard:rivera-game:v1',JSON.stringify(state)]]),null,true),get=id=>t.nodes.get(id);get('hit-shot').onclick();for(let i=0;i<90&&t.queue.length;i++)t.queue.shift()(i*50);
+  assert.equal(get('finish-title').textContent,label);assert.equal(get('finish-result-tag').textContent,tag);assert.equal(get('hole-finish').hidden,false);get('next-hole').onclick();assert.equal(get('hole-finish').hidden,true);
+ }
+ assert.equal(E.holeResult(1,3).tag,'HOLE IN ONE');assert.equal(E.holeResult(2,5).tag,'ALBATROSS');assert.equal(E.holeResult(9,4,true).kind,'conceded');
+});
+
+test('a played hole-in rings once; rendering a saved finish and muting do not ring again',async()=>{
+ const E=engine(),state=E.create(data),h=E.holes(data,state)[0],notes=[];
+ class Audio{constructor(){this.state='running';this.currentTime=0;this.destination={};}resume(){return Promise.resolve();}suspend(){this.state='suspended';return Promise.resolve();}createOscillator(){return{frequency:{setValueAtTime:hz=>notes.push(hz)},connect(){},disconnect(){},start(){},stop(){}};}createGain(){return{gain:{setValueAtTime(){},linearRampToValueAtTime(){},exponentialRampToValueAtTime(){}},connect(){},disconnect(){}};}}
+ state.ball={x:0,y:h.distance-5};state.club='putter';const t=await ui(new Map([['motionguard:rivera-game:v1',JSON.stringify(state)]]),null,true,Audio),get=id=>t.nodes.get(id);assert.equal(notes.length,0);
+ get('hit-shot').onclick();for(let i=0;i<90&&t.queue.length;i++)t.queue.shift()(i*50);assert.equal(notes.length,3);assert.equal(get('hole-finish').hidden,false);
+ await ui(t.storage,null,true,Audio);assert.equal(notes.length,3);get('toggle-sound').onclick();get('undo-shot').onclick();get('hit-shot').onclick();for(let i=0;i<90&&t.queue.length;i++)t.queue.shift()(5000+i*50);assert.equal(notes.length,3);assert.equal(get('toggle-sound').attributes['aria-pressed'],'false');
+});
+
+test('returning score shortcut opens the saved scorecard without replaying the round',async()=>{
+ const t=await ui();t.nodes.get('start-game').onclick();t.nodes.get('concede-hole').onclick();t.nodes.get('next-hole').onclick();const count=JSON.parse(t.storage.get('motionguard:rivera-game:v1')).completed.length;
+ const score=await ui(t.storage,null,false,undefined,'?score=1');assert.equal(score.nodes.get('score-overlay').hidden,false);assert.equal(JSON.parse(score.storage.get('motionguard:rivera-game:v1')).completed.length,count);assert.match(score.nodes.get('score-content').textContent,/합계/);
+ const empty=await ui(new Map(),null,false,undefined,'?score=1');assert.equal(empty.nodes.get('setup-screen').hidden,false);assert.match(empty.nodes.get('setup-status').textContent,/아직 저장된 게임 스코어가 없습니다/);
+});
+
+test('all 17 grouped clubs have usable fixed ranges for both presets and legacy saved ids survive',()=>{
+ const E=engine(),legacy=['driver','wood','utility','iron5','iron7','iron9','pw','sw','putter'];
+ for(const preset of ['male','female']){const clubs=E.clubsFor(preset);assert.equal(clubs.length,17);assert.equal(new Set(clubs.map(c=>c.id)).size,17);assert.equal(E.clubGroups.length,6);
+  for(const club of clubs){assert.ok(Number.isFinite(club.range)&&club.range>0);assert.ok(E.clubGroups.some(g=>g.id===club.group));const s=E.create(data,'valley','lake',123,preset),h=E.holes(data,s)[0];s.club=club.id;assert.equal(E.predict(s,h),club.range);assert.equal(E.restore(data,s).club,club.id);const shot=E.hit(s,h);assert.ok(shot.carry>=club.range*.97&&shot.carry<=club.range*1.03);assert.equal(shot.club,club.label);}
+  for(const id of legacy){const old=E.create(data,'valley','lake',5,preset);old.club=id;assert.equal(E.restore(data,JSON.stringify(old)).club,id);}
+ }
+});
+test('club sheet offers every club, closes on selection, and updates baseline and adjusted distance',async()=>{
+ for(const preset of ['male','female']){const t=await ui(),get=id=>t.nodes.get(id);get('preset-'+preset).onclick();get('start-game').onclick();
+  for(const club of t.engine.clubsFor(preset)){get('open-clubs').onclick();assert.equal(get('club-overlay').hidden,false);assert.equal(get('play-screen').inert,true);assert.equal(get('open-clubs').getAttribute('aria-expanded'),'true');assert.equal(get('club-list').children.length,6);const buttons=get('club-list').children.flatMap(group=>group.children[1].children);assert.equal(buttons.length,17);const button=buttons.find(b=>b.dataset.club===club.id);assert.match(button.textContent,new RegExp(club.range+'m'));button.onclick();assert.equal(get('club-overlay').hidden,true);assert.equal(get('play-screen').inert,false);assert.equal(get('open-clubs').getAttribute('aria-expanded'),'false');assert.equal(get('selected-club-name').textContent,club.label);assert.equal(get('selected-club-range').textContent,'기준 '+club.range+'m');assert.equal(get('carry-distance').textContent,club.range+'m');assert.equal(JSON.parse(t.storage.get('motionguard:rivera-game:v1')).club,club.id);}
+ }
+});
+test('club picker traps keyboard focus, supports Escape and backdrop dismissal, and cannot open mid-flight',async()=>{
+ const t=await ui(),get=id=>t.nodes.get(id);get('start-game').onclick();get('open-clubs').onclick();const overlay=get('club-overlay'),keydown=overlay.events.get('keydown');get('close-clubs').focus();keydown({key:'Tab',shiftKey:true,preventDefault(){}});const buttons=get('club-list').children.flatMap(group=>group.children[1].children);assert.equal(t.active(),buttons.at(-1));keydown({key:'Escape',preventDefault(){}});assert.equal(overlay.hidden,true);assert.equal(t.active(),get('open-clubs'));
+ get('open-clubs').onclick();overlay.events.get('click')({target:overlay});assert.equal(overlay.hidden,true);get('hit-shot').onclick();assert.equal(get('open-clubs').disabled,true);get('open-clubs').onclick();assert.equal(overlay.hidden,true);
+});
+
+test('club sheet fits the outer mobile viewport when the game is embedded in a tall result frame',async()=>{
+ const t=await ui(new Map(),null,false,undefined,'',{height:1100,parentHeight:600});t.nodes.get('start-game').onclick();t.nodes.get('open-clubs').onclick();assert.equal(t.nodes.get('club-sheet').style.maxHeight,'568px');
+});
+
+test('every prepared club actually starts in the game UI with its own map, independent score save, and its selected-club weather without Rivera substitution',async()=>{
+ const clubs=JSON.parse(fs.readFileSync('data/prepared-courses.json','utf8')).clubs;for(const c of clubs.slice(1)){const t=await ui(new Map(),null,false,undefined,'?club='+c.id,{},true),get=id=>t.nodes.get(id);assert.equal(get('start-game').disabled,false,c.name);assert.equal(get('game-club-name').textContent,c.name);assert.equal(get('game-club').children.length,6);assert.ok(t.calls.includes('./api/game/weather?club='+c.id));assert.ok(!t.calls.includes('./api/game/weather'));assert.match(get('weather-summary').textContent,/날씨 정보 대기/);get('start-game').onclick();assert.equal(get('play-screen').hidden,false);const scene=get('game-map').children.find(e=>e.getAttribute('data-hole-scene')==='guide-scene-v1');assert.ok(scene);assert.equal(get('game-map').children.find(e=>e.tagName==='image'),undefined);get('concede-hole').onclick();get('next-hole').onclick();const saved=JSON.parse(t.storage.get('motionguard:course-game:v1:'+c.id));assert.equal(saved.completed.length,1);assert.equal(saved.dataRevision,'prepared-game-v1-'+c.id);assert.ok(!t.storage.has('motionguard:rivera-game:v1'));}
+});
+
+test('the full game exposes club distances, weather and a read-only 18-hole scoreboard before starting',async()=>{const t=await ui(),get=id=>t.nodes.get(id);assert.equal(get('open-score').hidden,false);assert.equal(get('open-score').disabled,false);assert.equal(get('setup-club-distances').children.length,34);assert.equal(get('setup-club-distances').children[1].textContent,'220m');assert.match(get('weather-summary').textContent,/°C/);get('open-score').onclick();assert.equal(get('score-overlay').hidden,false);assert.equal(get('score-title').textContent,'18홀 스코어보드 · 시작 전');assert.equal(get('score-content').children.filter(e=>e.tagName==='table').length,2);assert.equal(t.storage.size,0);get('close-score').onclick();get('preset-female').onclick();assert.equal(get('setup-club-distances').children[1].textContent,'180m');get('start-game').onclick();assert.equal(get('selected-club-range').textContent,'기준 180m');assert.ok(get('game-map').children.find(e=>e.getAttribute('data-map-label')==='green'));assert.equal(get('open-score').hidden,false);get('choose-courses').onclick();assert.equal(get('open-score').hidden,false);});
+
+test('all five destination clubs receive their own live wind and keep it in the game save',async()=>{const clubs=JSON.parse(fs.readFileSync('data/prepared-courses.json','utf8')).clubs;for(const c of clubs.slice(1)){const t=await ui(new Map(),liveWind(5,270),false,undefined,'?club='+c.id,{},true),get=id=>t.nodes.get(id);get('start-game').onclick();assert.match(get('weather-summary').textContent,new RegExp(c.name));assert.match(get('weather-wind').textContent,/5.0m/);const save=JSON.parse(t.storage.get('motionguard:course-game:v1:'+c.id));assert.equal(save.weather.clubId,c.id);assert.equal(save.weather.windSpeed,5);assert.ok(get('game-map').children.find(e=>e.getAttribute('id')==='course-golfer'));}});
+
+test('viewport play keeps controls and weather available while secondary panels close without losing the round',async()=>{const t=await ui(new Map(),liveWind(4,270),false,undefined,'',{height:640}),get=id=>t.nodes.get(id);assert.equal(t.body.dataset.gameScreen,'setup');get('start-game').onclick();assert.equal(t.body.dataset.gameScreen,'play');assert.equal(t.body.style['--game-viewport-height'],'640px');get('game-menu').open=true;get('close-game-menu').onclick();assert.equal(get('game-menu').open,false);get('weather-panel').open=true;get('close-weather').onclick();assert.equal(get('weather-panel').open,false);assert.equal(get('hit-shot').disabled,false);get('game-menu').open=true;get('weather-panel').open=true;t.events.get('keydown')({key:'Escape'});assert.equal(get('game-menu').open,false);assert.equal(get('weather-panel').open,false);get('choose-courses').onclick();assert.equal(t.body.dataset.gameScreen,'setup');get('resume-game').onclick();assert.equal(t.body.dataset.gameScreen,'play');get('open-score').onclick();assert.equal(get('score-overlay').hidden,false);});
+
+test('crosswind UI preserves the shot aim through flight, shows the real landing difference and clears it for the next aim',async()=>{const t=await ui(new Map(),liveWind(4.6,270)),get=id=>t.nodes.get(id);get('start-game').onclick();const originalAim=get('game-map').children.find(e=>e.tagName==='path'&&e.getAttribute('stroke')==='#f5d883').getAttribute('d');get('hit-shot').onclick();const svg=get('game-map'),comparison=()=>svg.children.find(e=>e.getAttribute('class')==='shot-wind-comparison'&&!e.removed),inFlight=comparison();assert.ok(inFlight);assert.equal(inFlight.dataset.phase,'flight');const aim=inFlight.children.find(e=>e.getAttribute('data-wind-part')==='aim').getAttribute('d');assert.equal(aim,originalAim);for(let i=0;i<90&&t.queue.length;i++)t.queue.shift()(i*50);const saved=JSON.parse(t.storage.get('motionguard:rivera-game:v1')),shot=saved.shots[0],landed=comparison();assert.equal(saved.shots.length,1);assert.equal(landed.dataset.phase,'landed');assert.equal(landed.children.find(e=>e.getAttribute('data-wind-part')==='aim').getAttribute('d'),aim);assert.match(get('play-status').textContent,/조준선보다/);assert.ok(shot.end.x>shot.aimEnd.x);const marker=landed.children.find(e=>e.getAttribute('data-wind-part')==='landing').children[1],expected=t.engine.project(shot.end,t.engine.holes(data,saved)[0]);assert.equal(Number(marker.getAttribute('cx')),expected[0]);assert.equal(Number(marker.getAttribute('cy')),expected[1]);get('aim').value=-5;get('aim').oninput();assert.equal(landed.removed,true);assert.equal(comparison(),undefined);});
+
+test('par-three tee clubs use the selected preset iron or wedge distance, while par-four and par-five tees retain driver',()=>{const E=engine();for(const preset of ['male','female']){const custom=structuredClone(data);custom.courses[0].holes[0].par=3;custom.courses[0].holes[0].distance=E.clubsFor(preset).find(c=>c.id==='iron7').range;const s=E.create(custom,'valley','lake',1,preset),h=E.holes(custom,s)[0];assert.equal(s.club,'iron7');assert.equal(s.power,100);assert.equal(s.clubRecommendationRevision,2);assert.equal(E.recommend({...h,distance:400},s.ball,s),'iron4');assert.equal(E.recommend({...h,par:4},s.ball,s),'driver');assert.equal(E.recommend({...h,par:5},s.ball,s),'driver');}});
+test('after any completed shot a distant ball selects a fairway club rather than driver, with iron wedge and putter matched to remaining range',()=>{const E=engine();for(const preset of ['male','female']){const custom=structuredClone(data);custom.courses[0].holes[0].distance=650;custom.courses[0].holes[1].par=3;custom.courses[0].holes[1].distance=E.clubsFor(preset).find(c=>c.id==='iron7').range;const s=E.create(custom,'valley','lake',8,preset),h=E.holes(custom,s)[0];s.power=10;E.hit(s,h);E.complete(s,h);assert.ok(E.distance(s.ball,E.cup(h))>400);assert.equal(s.club,'wood3');assert.equal(s.power,100);for(const [id,remaining]of [['iron7',E.clubsFor(preset).find(c=>c.id==='iron7').range],['sw',E.clubsFor(preset).find(c=>c.id==='sw').range],['putter',10]])assert.equal(E.recommend(h,{x:0,y:h.distance-remaining},s),id);assert.equal(E.undo(s,h),true);assert.equal(s.club,'driver');E.concede(s,h);E.next(custom,s);assert.equal(s.club,'iron7');assert.equal(s.shots.length,0);assert.equal(s.holeIndex,1);}});
+test('old automatic driver selections migrate once on restore while new manual choices and score records are preserved',()=>{const E=engine(),s=E.create(data),h=E.holes(data,s)[0];s.power=10;E.hit(s,h);E.complete(s,h);s.club='driver';const manual=E.restore(data,s);assert.equal(manual.club,'driver');const old=structuredClone(s);delete old.clubRecommendationRevision;const before=JSON.stringify({shots:old.shots,completed:old.completed,ball:old.ball}),restored=E.restore(data,old);assert.notEqual(restored.club,'driver');assert.equal(restored.clubRecommendationRevision,2);assert.equal(JSON.stringify({shots:restored.shots,completed:restored.completed,ball:restored.ball}),before);const custom=structuredClone(data);custom.courses[0].holes[0].par=3;custom.courses[0].holes[0].distance=145;const tee=E.create(custom);tee.club='driver';delete tee.clubRecommendationRevision;assert.equal(E.restore(custom,tee).club,'iron7');});
+test('actual game controls show a par-three iron on entry, use a fairway club after the first long-hole shot and preserve manual selection',async()=>{const E=engine(),s=E.create(data);let h=E.holes(data,s)[0];s.power=10;E.hit(s,h);E.complete(s,h);s.club='driver';delete s.clubRecommendationRevision;const t=await ui(new Map([['motionguard:rivera-game:v1',JSON.stringify(s)]]),null,true),get=id=>t.nodes.get(id);assert.notEqual(get('club-choice').value,'driver');assert.equal(get('selected-club-name').textContent,E.clubsFor(s).find(c=>c.id===get('club-choice').value).label);get('club-choice').value='iron7';get('club-choice').onchange();assert.equal(get('selected-club-name').textContent,'7번 아이언');get('hit-shot').onclick();for(let i=0;i<100&&t.queue.length;i++)t.queue.shift()(i*50);const saved=JSON.parse(t.storage.get('motionguard:rivera-game:v1'));assert.notEqual(saved.club,'driver');assert.equal(saved.shots.length,2);const short=E.create(data);let next=E.holes(data,short)[short.holeIndex];while(next.par!==3){E.concede(short,next);E.next(data,short);next=E.holes(data,short)[short.holeIndex];}const u=await ui(new Map([['motionguard:rivera-game:v1',JSON.stringify(short)]]),null,true);assert.notEqual(u.nodes.get('club-choice').value,'driver');assert.equal(E.clubsFor(short).find(c=>c.id===u.nodes.get('club-choice').value).group,'iron');assert.equal(u.nodes.get('club-choice').value,short.club);});

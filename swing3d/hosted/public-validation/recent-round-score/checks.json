@@ -1,0 +1,28 @@
+{
+  "version": 103,
+  "source": "7158ff9731e9f6f028a710209fd2f6f1c2131e26",
+  "build": "b84f7e7888333ef08abf",
+  "public_build_matches": true,
+  "api_build_matches": true,
+  "html_build_matches": true,
+  "input_present_once": true,
+  "input_optional": true,
+  "helper_before_instrument": true,
+  "assets": {
+    "ai-result.js": true,
+    "coaching-report.js": true,
+    "experience.css": true,
+    "visual-analysis.js": true,
+    "course-prediction.js": true,
+    "round-score.js": true,
+    "instrument.js": true,
+    "client-api.js": true,
+    "demo-start.js": true
+  },
+  "invalid_record_rejected_before_model": true,
+  "tests_passed": 315,
+  "mirror_tests_passed": 315,
+  "outbound_gemini_payload_verified_with_injected_responses": true,
+  "live_model_prediction_accuracy_tested": false,
+  "physical_safari_visual_touch_verified": false
+}

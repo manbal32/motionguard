@@ -1,0 +1,2270 @@
+[
+  {
+    "group": "88-east",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 376
+  },
+  {
+    "group": "88-east",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 1,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 307
+  },
+  {
+    "group": "88-east",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 1,
+      "bunker": 2
+    },
+    "points": 308
+  },
+  {
+    "group": "88-east",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 1,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 272
+  },
+  {
+    "group": "88-east",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 1,
+      "bunker": 1
+    },
+    "points": 298
+  },
+  {
+    "group": "88-east",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 1,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 361
+  },
+  {
+    "group": "88-east",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 342
+  },
+  {
+    "group": "88-east",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 4
+    },
+    "points": 411
+  },
+  {
+    "group": "88-east",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 1,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 287
+  },
+  {
+    "group": "88-east",
+    "number": 10,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 366
+  },
+  {
+    "group": "88-east",
+    "number": 11,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 363
+  },
+  {
+    "group": "88-east",
+    "number": 12,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 326
+  },
+  {
+    "group": "88-east",
+    "number": 13,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 1,
+      "water": 1,
+      "bunker": 3
+    },
+    "points": 376
+  },
+  {
+    "group": "88-east",
+    "number": 14,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 1,
+      "bunker": 1
+    },
+    "points": 428
+  },
+  {
+    "group": "88-east",
+    "number": 15,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 1,
+      "water": 2,
+      "bunker": 1
+    },
+    "points": 397
+  },
+  {
+    "group": "88-east",
+    "number": 16,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 274
+  },
+  {
+    "group": "88-east",
+    "number": 17,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 2,
+      "bunker": 5
+    },
+    "points": 367
+  },
+  {
+    "group": "88-east",
+    "number": 18,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 1,
+      "bunker": 2
+    },
+    "points": 461
+  },
+  {
+    "group": "88-west",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 293
+  },
+  {
+    "group": "88-west",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 308
+  },
+  {
+    "group": "88-west",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 1,
+      "bunker": 3
+    },
+    "points": 336
+  },
+  {
+    "group": "88-west",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 282
+  },
+  {
+    "group": "88-west",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 4
+    },
+    "points": 309
+  },
+  {
+    "group": "88-west",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 293
+  },
+  {
+    "group": "88-west",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 394
+  },
+  {
+    "group": "88-west",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 211
+  },
+  {
+    "group": "88-west",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 273
+  },
+  {
+    "group": "88-west",
+    "number": 10,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 244
+  },
+  {
+    "group": "88-west",
+    "number": 11,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 224
+  },
+  {
+    "group": "88-west",
+    "number": 12,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 320
+  },
+  {
+    "group": "88-west",
+    "number": 13,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 1,
+      "water": 0,
+      "bunker": 5
+    },
+    "points": 272
+  },
+  {
+    "group": "88-west",
+    "number": 14,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 293
+  },
+  {
+    "group": "88-west",
+    "number": 15,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 1,
+      "bunker": 2
+    },
+    "points": 280
+  },
+  {
+    "group": "88-west",
+    "number": 16,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 1,
+      "bunker": 3
+    },
+    "points": 362
+  },
+  {
+    "group": "88-west",
+    "number": 17,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 1,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 190
+  },
+  {
+    "group": "88-west",
+    "number": 18,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 205
+  },
+  {
+    "group": "giheung-east",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 5
+    },
+    "points": 372
+  },
+  {
+    "group": "giheung-east",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 7
+    },
+    "points": 377
+  },
+  {
+    "group": "giheung-east",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 310
+  },
+  {
+    "group": "giheung-east",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 1,
+      "water": 0,
+      "bunker": 6
+    },
+    "points": 255
+  },
+  {
+    "group": "giheung-east",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 4
+    },
+    "points": 354
+  },
+  {
+    "group": "giheung-east",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 4
+    },
+    "points": 306
+  },
+  {
+    "group": "giheung-east",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 1,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 253
+  },
+  {
+    "group": "giheung-east",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 4
+    },
+    "points": 359
+  },
+  {
+    "group": "giheung-east",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 4
+    },
+    "points": 376
+  },
+  {
+    "group": "giheung-north",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 5,
+      "green": 2,
+      "water": 1,
+      "bunker": 6
+    },
+    "points": 369
+  },
+  {
+    "group": "giheung-north",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 4
+    },
+    "points": 302
+  },
+  {
+    "group": "giheung-north",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 239
+  },
+  {
+    "group": "giheung-north",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 1,
+      "bunker": 4
+    },
+    "points": 345
+  },
+  {
+    "group": "giheung-north",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 1,
+      "bunker": 4
+    },
+    "points": 375
+  },
+  {
+    "group": "giheung-north",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 1,
+      "bunker": 3
+    },
+    "points": 280
+  },
+  {
+    "group": "giheung-north",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 255
+  },
+  {
+    "group": "giheung-north",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 4
+    },
+    "points": 255
+  },
+  {
+    "group": "giheung-north",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 271
+  },
+  {
+    "group": "giheung-south",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 341
+  },
+  {
+    "group": "giheung-south",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 2,
+      "bunker": 3
+    },
+    "points": 311
+  },
+  {
+    "group": "giheung-south",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 6,
+      "green": 1,
+      "water": 2,
+      "bunker": 6
+    },
+    "points": 362
+  },
+  {
+    "group": "giheung-south",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 252
+  },
+  {
+    "group": "giheung-south",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 294
+  },
+  {
+    "group": "giheung-south",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 2,
+      "bunker": 3
+    },
+    "points": 328
+  },
+  {
+    "group": "giheung-south",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 1,
+      "bunker": 2
+    },
+    "points": 313
+  },
+  {
+    "group": "giheung-south",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 1,
+      "water": 1,
+      "bunker": 2
+    },
+    "points": 252
+  },
+  {
+    "group": "giheung-south",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 0,
+      "bunker": 5
+    },
+    "points": 350
+  },
+  {
+    "group": "giheung-west",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 322
+  },
+  {
+    "group": "giheung-west",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 201
+  },
+  {
+    "group": "giheung-west",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 6
+    },
+    "points": 397
+  },
+  {
+    "group": "giheung-west",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 254
+  },
+  {
+    "group": "giheung-west",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 2,
+      "bunker": 4
+    },
+    "points": 373
+  },
+  {
+    "group": "giheung-west",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 350
+  },
+  {
+    "group": "giheung-west",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 4
+    },
+    "points": 310
+  },
+  {
+    "group": "giheung-west",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 1,
+      "bunker": 2
+    },
+    "points": 235
+  },
+  {
+    "group": "giheung-west",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 347
+  },
+  {
+    "group": "gold-champion",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 7,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 566
+  },
+  {
+    "group": "gold-champion",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 8,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 565
+  },
+  {
+    "group": "gold-champion",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 582
+  },
+  {
+    "group": "gold-champion",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 5,
+      "green": 1,
+      "water": 1,
+      "bunker": 0
+    },
+    "points": 565
+  },
+  {
+    "group": "gold-champion",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 5,
+      "green": 2,
+      "water": 1,
+      "bunker": 1
+    },
+    "points": 668
+  },
+  {
+    "group": "gold-champion",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 5,
+      "green": 2,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 547
+  },
+  {
+    "group": "gold-champion",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 1,
+      "water": 3,
+      "bunker": 3
+    },
+    "points": 353
+  },
+  {
+    "group": "gold-champion",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 5,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 591
+  },
+  {
+    "group": "gold-champion",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 5,
+      "green": 2,
+      "water": 0,
+      "bunker": 4
+    },
+    "points": 543
+  },
+  {
+    "group": "gold-champion",
+    "number": 10,
+    "features": {
+      "rough": 1,
+      "fairway": 5,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 404
+  },
+  {
+    "group": "gold-champion",
+    "number": 11,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 499
+  },
+  {
+    "group": "gold-champion",
+    "number": 12,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 4
+    },
+    "points": 432
+  },
+  {
+    "group": "gold-champion",
+    "number": 13,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 470
+  },
+  {
+    "group": "gold-champion",
+    "number": 14,
+    "features": {
+      "rough": 1,
+      "fairway": 6,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 523
+  },
+  {
+    "group": "gold-champion",
+    "number": 15,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 0,
+      "bunker": 4
+    },
+    "points": 407
+  },
+  {
+    "group": "gold-champion",
+    "number": 16,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 1,
+      "bunker": 2
+    },
+    "points": 476
+  },
+  {
+    "group": "gold-champion",
+    "number": 17,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 1,
+      "bunker": 1
+    },
+    "points": 506
+  },
+  {
+    "group": "gold-champion",
+    "number": 18,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 4
+    },
+    "points": 551
+  },
+  {
+    "group": "gold-master",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 550
+  },
+  {
+    "group": "gold-master",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 1,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 465
+  },
+  {
+    "group": "gold-master",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 566
+  },
+  {
+    "group": "gold-master",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 8,
+      "green": 1,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 707
+  },
+  {
+    "group": "gold-master",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 8,
+      "green": 2,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 681
+  },
+  {
+    "group": "gold-master",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 8,
+      "green": 2,
+      "water": 1,
+      "bunker": 0
+    },
+    "points": 586
+  },
+  {
+    "group": "gold-master",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 1,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 419
+  },
+  {
+    "group": "gold-master",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 7,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 547
+  },
+  {
+    "group": "gold-master",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 8,
+      "green": 2,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 603
+  },
+  {
+    "group": "gold-master",
+    "number": 10,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 1,
+      "bunker": 1
+    },
+    "points": 576
+  },
+  {
+    "group": "gold-master",
+    "number": 11,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 557
+  },
+  {
+    "group": "gold-master",
+    "number": 12,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 540
+  },
+  {
+    "group": "gold-master",
+    "number": 13,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 637
+  },
+  {
+    "group": "gold-master",
+    "number": 14,
+    "features": {
+      "rough": 1,
+      "fairway": 6,
+      "green": 1,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 537
+  },
+  {
+    "group": "gold-master",
+    "number": 15,
+    "features": {
+      "rough": 1,
+      "fairway": 5,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 627
+  },
+  {
+    "group": "gold-master",
+    "number": 16,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 556
+  },
+  {
+    "group": "gold-master",
+    "number": 17,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 653
+  },
+  {
+    "group": "gold-master",
+    "number": 18,
+    "features": {
+      "rough": 1,
+      "fairway": 6,
+      "green": 2,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 562
+  },
+  {
+    "group": "korea-challenge",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 693
+  },
+  {
+    "group": "korea-challenge",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 8,
+      "green": 2,
+      "water": 1,
+      "bunker": 2
+    },
+    "points": 605
+  },
+  {
+    "group": "korea-challenge",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 7,
+      "green": 2,
+      "water": 1,
+      "bunker": 2
+    },
+    "points": 769
+  },
+  {
+    "group": "korea-challenge",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 8,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 774
+  },
+  {
+    "group": "korea-challenge",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 6,
+      "green": 2,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 646
+  },
+  {
+    "group": "korea-challenge",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 8,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 626
+  },
+  {
+    "group": "korea-challenge",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 6,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 707
+  },
+  {
+    "group": "korea-challenge",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 5,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 602
+  },
+  {
+    "group": "korea-challenge",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 685
+  },
+  {
+    "group": "korea-creek",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 8,
+      "green": 2,
+      "water": 1,
+      "bunker": 0
+    },
+    "points": 521
+  },
+  {
+    "group": "korea-creek",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 5,
+      "green": 2,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 583
+  },
+  {
+    "group": "korea-creek",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 7,
+      "green": 2,
+      "water": 1,
+      "bunker": 2
+    },
+    "points": 631
+  },
+  {
+    "group": "korea-creek",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 1,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 511
+  },
+  {
+    "group": "korea-creek",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 6,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 522
+  },
+  {
+    "group": "korea-creek",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 5,
+      "green": 1,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 481
+  },
+  {
+    "group": "korea-creek",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 549
+  },
+  {
+    "group": "korea-creek",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 519
+  },
+  {
+    "group": "korea-creek",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 498
+  },
+  {
+    "group": "korea-lake",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 725
+  },
+  {
+    "group": "korea-lake",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 674
+  },
+  {
+    "group": "korea-lake",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 8,
+      "green": 1,
+      "water": 1,
+      "bunker": 2
+    },
+    "points": 581
+  },
+  {
+    "group": "korea-lake",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 9,
+      "green": 2,
+      "water": 2,
+      "bunker": 0
+    },
+    "points": 755
+  },
+  {
+    "group": "korea-lake",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 5,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 699
+  },
+  {
+    "group": "korea-lake",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 6,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 683
+  },
+  {
+    "group": "korea-lake",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 632
+  },
+  {
+    "group": "korea-lake",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 17,
+      "green": 1,
+      "water": 1,
+      "bunker": 0
+    },
+    "points": 816
+  },
+  {
+    "group": "korea-lake",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 685
+  },
+  {
+    "group": "namseoul-18",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 8,
+      "green": 1,
+      "water": 1,
+      "bunker": 1
+    },
+    "points": 397
+  },
+  {
+    "group": "namseoul-18",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 6,
+      "green": 1,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 375
+  },
+  {
+    "group": "namseoul-18",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 1,
+      "water": 0,
+      "bunker": 5
+    },
+    "points": 453
+  },
+  {
+    "group": "namseoul-18",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 9,
+      "green": 1,
+      "water": 1,
+      "bunker": 1
+    },
+    "points": 544
+  },
+  {
+    "group": "namseoul-18",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 8,
+      "green": 1,
+      "water": 2,
+      "bunker": 1
+    },
+    "points": 462
+  },
+  {
+    "group": "namseoul-18",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 15,
+      "green": 1,
+      "water": 2,
+      "bunker": 4
+    },
+    "points": 622
+  },
+  {
+    "group": "namseoul-18",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 7,
+      "green": 1,
+      "water": 3,
+      "bunker": 1
+    },
+    "points": 540
+  },
+  {
+    "group": "namseoul-18",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 7,
+      "green": 1,
+      "water": 2,
+      "bunker": 2
+    },
+    "points": 507
+  },
+  {
+    "group": "namseoul-18",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 1,
+      "water": 0,
+      "bunker": 1
+    },
+    "points": 403
+  },
+  {
+    "group": "namseoul-18",
+    "number": 10,
+    "features": {
+      "rough": 1,
+      "fairway": 9,
+      "green": 1,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 463
+  },
+  {
+    "group": "namseoul-18",
+    "number": 11,
+    "features": {
+      "rough": 1,
+      "fairway": 8,
+      "green": 1,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 540
+  },
+  {
+    "group": "namseoul-18",
+    "number": 12,
+    "features": {
+      "rough": 1,
+      "fairway": 8,
+      "green": 1,
+      "water": 4,
+      "bunker": 0
+    },
+    "points": 616
+  },
+  {
+    "group": "namseoul-18",
+    "number": 13,
+    "features": {
+      "rough": 1,
+      "fairway": 5,
+      "green": 1,
+      "water": 1,
+      "bunker": 0
+    },
+    "points": 517
+  },
+  {
+    "group": "namseoul-18",
+    "number": 14,
+    "features": {
+      "rough": 1,
+      "fairway": 8,
+      "green": 1,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 445
+  },
+  {
+    "group": "namseoul-18",
+    "number": 15,
+    "features": {
+      "rough": 1,
+      "fairway": 20,
+      "green": 1,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 560
+  },
+  {
+    "group": "namseoul-18",
+    "number": 16,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 1,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 409
+  },
+  {
+    "group": "namseoul-18",
+    "number": 17,
+    "features": {
+      "rough": 1,
+      "fairway": 7,
+      "green": 1,
+      "water": 2,
+      "bunker": 1
+    },
+    "points": 501
+  },
+  {
+    "group": "namseoul-18",
+    "number": 18,
+    "features": {
+      "rough": 1,
+      "fairway": 6,
+      "green": 1,
+      "water": 1,
+      "bunker": 0
+    },
+    "points": 487
+  },
+  {
+    "group": "rivera-cherry",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 4
+    },
+    "points": 255
+  },
+  {
+    "group": "rivera-cherry",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 3,
+      "bunker": 3
+    },
+    "points": 314
+  },
+  {
+    "group": "rivera-cherry",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 1,
+      "water": 2,
+      "bunker": 1
+    },
+    "points": 249
+  },
+  {
+    "group": "rivera-cherry",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 3,
+      "bunker": 1
+    },
+    "points": 324
+  },
+  {
+    "group": "rivera-cherry",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 2,
+      "bunker": 3
+    },
+    "points": 289
+  },
+  {
+    "group": "rivera-cherry",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 1,
+      "water": 2,
+      "bunker": 2
+    },
+    "points": 296
+  },
+  {
+    "group": "rivera-cherry",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 2,
+      "bunker": 1
+    },
+    "points": 267
+  },
+  {
+    "group": "rivera-cherry",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 1,
+      "water": 4,
+      "bunker": 1
+    },
+    "points": 292
+  },
+  {
+    "group": "rivera-cherry",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 1,
+      "bunker": 4
+    },
+    "points": 278
+  },
+  {
+    "group": "rivera-lake",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 5
+    },
+    "points": 277
+  },
+  {
+    "group": "rivera-lake",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 1,
+      "water": 4,
+      "bunker": 2
+    },
+    "points": 274
+  },
+  {
+    "group": "rivera-lake",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 258
+  },
+  {
+    "group": "rivera-lake",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 9,
+      "bunker": 1
+    },
+    "points": 405
+  },
+  {
+    "group": "rivera-lake",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 2,
+      "bunker": 3
+    },
+    "points": 313
+  },
+  {
+    "group": "rivera-lake",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 2,
+      "water": 2,
+      "bunker": 2
+    },
+    "points": 310
+  },
+  {
+    "group": "rivera-lake",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 236
+  },
+  {
+    "group": "rivera-lake",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 4,
+      "green": 2,
+      "water": 2,
+      "bunker": 3
+    },
+    "points": 383
+  },
+  {
+    "group": "rivera-lake",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 1,
+      "bunker": 1
+    },
+    "points": 264
+  },
+  {
+    "group": "rivera-pine",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 8,
+      "bunker": 6
+    },
+    "points": 493
+  },
+  {
+    "group": "rivera-pine",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 269
+  },
+  {
+    "group": "rivera-pine",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 1,
+      "water": 0,
+      "bunker": 0
+    },
+    "points": 161
+  },
+  {
+    "group": "rivera-pine",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 3,
+      "green": 1,
+      "water": 6,
+      "bunker": 6
+    },
+    "points": 491
+  },
+  {
+    "group": "rivera-pine",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 3
+    },
+    "points": 212
+  },
+  {
+    "group": "rivera-pine",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 1,
+      "water": 5,
+      "bunker": 5
+    },
+    "points": 288
+  },
+  {
+    "group": "rivera-pine",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 4,
+      "bunker": 2
+    },
+    "points": 299
+  },
+  {
+    "group": "rivera-pine",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 235
+  },
+  {
+    "group": "rivera-pine",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 4,
+      "bunker": 2
+    },
+    "points": 338
+  },
+  {
+    "group": "rivera-valley",
+    "number": 1,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 2,
+      "bunker": 3
+    },
+    "points": 267
+  },
+  {
+    "group": "rivera-valley",
+    "number": 2,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 4,
+      "bunker": 2
+    },
+    "points": 299
+  },
+  {
+    "group": "rivera-valley",
+    "number": 3,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 1,
+      "water": 3,
+      "bunker": 1
+    },
+    "points": 280
+  },
+  {
+    "group": "rivera-valley",
+    "number": 4,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 1,
+      "water": 3,
+      "bunker": 2
+    },
+    "points": 325
+  },
+  {
+    "group": "rivera-valley",
+    "number": 5,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 2,
+      "bunker": 1
+    },
+    "points": 249
+  },
+  {
+    "group": "rivera-valley",
+    "number": 6,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 1,
+      "water": 8,
+      "bunker": 2
+    },
+    "points": 409
+  },
+  {
+    "group": "rivera-valley",
+    "number": 7,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 0,
+      "bunker": 2
+    },
+    "points": 242
+  },
+  {
+    "group": "rivera-valley",
+    "number": 8,
+    "features": {
+      "rough": 1,
+      "fairway": 1,
+      "green": 2,
+      "water": 2,
+      "bunker": 3
+    },
+    "points": 275
+  },
+  {
+    "group": "rivera-valley",
+    "number": 9,
+    "features": {
+      "rough": 1,
+      "fairway": 2,
+      "green": 2,
+      "water": 4,
+      "bunker": 3
+    },
+    "points": 286
+  }
+]

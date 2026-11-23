@@ -1,0 +1,14 @@
+{
+  "unchangedShotComparisons": 9072,
+  "preparedHoles": 189,
+  "windDirections": 8,
+  "distancePresets": 2,
+  "clubs": [
+    "driver",
+    "iron7",
+    "putter"
+  ],
+  "comparison": "Every pre-existing shot field is identical to the previous committed engine; new aimEnd metadata excluded",
+  "newNetworkRequests": 0,
+  "previousSourceCommit": "571f830b0c95997ad5af9dcd76a74d6f1408cf6e"
+}

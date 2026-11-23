@@ -1,0 +1,54 @@
+{
+  "source_commit": "bb72476854a123dca73997119e275d6e7ad7efe2",
+  "site_version": 117,
+  "build": "ce4770947cf363f97cae",
+  "public_build": {
+    "/build-info.json": {
+      "status": 200,
+      "build": "ce4770947cf363f97cae",
+      "matches_local": true
+    },
+    "/api/build": {
+      "status": 200,
+      "build": "ce4770947cf363f97cae",
+      "matches_local": true
+    },
+    "ai-result.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    },
+    "result-dashboard.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    },
+    "coaching-report.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    },
+    "experience.css": {
+      "status": 200,
+      "sha256_matches_local": true
+    }
+  },
+  "status": 502,
+  "ok": false,
+  "model": null,
+  "attempts": 1,
+  "elapsed_seconds": 5.26,
+  "photo_count": null,
+  "forwarded_images": null,
+  "unique_uploaded_photos": 5,
+  "overall_present": false,
+  "strength_present": false,
+  "weakness_present": false,
+  "improvement_plan_present": false,
+  "overall_source": null,
+  "dimensions_count": 0,
+  "score_estimate_present": false,
+  "usage": null,
+  "test_count": 328,
+  "test_pass_count": 328,
+  "actual_safari_visual_touch_verified": false,
+  "private_media_and_response_excluded": true,
+  "reason": "First v117 live QA request received upstream Gemini HTTP 500; next request and final v118 request succeeded"
+}

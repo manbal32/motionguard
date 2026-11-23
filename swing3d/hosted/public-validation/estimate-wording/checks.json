@@ -1,0 +1,10 @@
+{
+  "version": 101,
+  "build": "bcd3b7852ee085df13cc",
+  "public_build_matches": true,
+  "asset_matches": true,
+  "new_copy_present": true,
+  "old_copy_absent": true,
+  "related_tests_passed": 18,
+  "physical_browser_verified": false
+}

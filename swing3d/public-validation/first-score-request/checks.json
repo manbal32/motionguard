@@ -1,0 +1,21 @@
+{
+  "tests": 304,
+  "passed": 304,
+  "mirrorPassed": 304,
+  "publicAssetsMatched": 168,
+  "sourceCommit": "ea5db7c3b8a3ecf735376022e218d3876bff0bcb",
+  "siteVersion": 95,
+  "build": "7a15ad1fcd1557fc38bd",
+  "firstRequestTest": {
+    "existingScoreCache": false,
+    "browserWeatherEndpoint": "intentionally blocked",
+    "realGeminiResponse": true,
+    "httpStatus": 200,
+    "scoreRows": 18,
+    "browserWeatherRequests": 0,
+    "predictionRequests": 1
+  },
+  "forcedServerWeatherFailureCoverage": "all six prepared clubs with dependency-injected unavailable weather and mocked Gemini responses",
+  "physicalSafariInteractionVerified": false,
+  "privatePhotosOrVideoSent": false
+}

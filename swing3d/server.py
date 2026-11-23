@@ -12,6 +12,9 @@ from uuid import uuid4
 
 import coach
 import swing_track
+import scoring
+import customer_report
+import profiles
 from findings_contract import validate_findings
 
 ROOT = Path(__file__).resolve().parent
@@ -52,11 +55,28 @@ class Handler(SimpleHTTPRequestHandler):
                          headers={"Cache-Control": "no-store"})
             return
         if match := re.fullmatch(r"/api/coaching/report/([a-f0-9]{32})", path):
-            file = self.tracks / "coaching" / (match[1] + ".json")
+            file = self.tracks / "reports" / (match[1] + ".json")
+            if not file.is_file():
+                file = self.tracks / "coaching" / (match[1] + ".json")
             if file.is_file():
-                self.respond(json.loads(file.read_text(encoding="utf-8")), headers={"Cache-Control": "no-store"})
+                document=json.loads(file.read_text(encoding="utf-8"))
+                if document.get('customer_report',{}).get('version')!=2:
+                    source=self.tracks/(document.get('track_id','')+'.json')
+                    if source.is_file():
+                        track=json.loads(source.read_text());document['score']=scoring.compute(track)
+                        document['customer_report']=customer_report.build(document,track)
+                        document['strokes']=profiles.strokes(document['score'],document['customer_report']['improvements'])
+                self.respond(document, headers={"Cache-Control": "no-store"})
             else:
                 self.failure("상담 리포트를 찾을 수 없습니다.", 404)
+            return
+        if match := re.fullmatch(r"/api/profile/([a-f0-9-]{36})", path):
+            try:
+                profile = profiles.load(self.tracks, match[1])
+            except ValueError as error:
+                self.failure(str(error), 422); return
+            if profile is None: self.failure("기록이 없습니다.",404)
+            else: self.respond(profile,headers={"Cache-Control":"no-store"})
             return
         if finding:
             file = self.findings / (finding[1] + ".json")
@@ -102,6 +122,15 @@ class Handler(SimpleHTTPRequestHandler):
             self.failure("트랙을 찾을 수 없습니다.", 404)
         else:
             super().do_GET()
+
+    def do_DELETE(self):
+        match = re.fullmatch(r"/api/profile/([a-f0-9-]{36})", urlsplit(self.path).path)
+        if not match:
+            self.failure("기록이 없습니다.",404); return
+        try:
+            with self.cache_lock: profiles.delete(self.tracks,match[1])
+            self.respond({"ok":True})
+        except ValueError as error: self.failure(str(error),422)
 
     def do_POST(self):
         path = urlsplit(self.path).path
@@ -151,6 +180,7 @@ class Handler(SimpleHTTPRequestHandler):
             data = json.loads(self.rfile.read(size))
             if not isinstance(data, dict) or type(data.get("allow_external")) is not bool:
                 raise ValueError("상담 요청 형식이 올바르지 않습니다.")
+            if path.endswith("/analyze") and "profile_id" in data: profiles.identity(data["profile_id"])
             provider = self.coaching_provider() if data["allow_external"] else coach.Gemini()
             if not data["allow_external"]:
                 provider.key = ""
@@ -172,11 +202,15 @@ class Handler(SimpleHTTPRequestHandler):
                 self.failure("분석할 영상 트랙이 없습니다.", 404)
                 return
             track = json.loads(file.read_text(encoding="utf-8"))
-            if not track.get("evidence"):
+            if not (track.get("evidence") or track.get("pose_landmarks")):
                 raise ValueError("영상으로 계측한 트랙이 필요합니다.")
             result = coach.analyze(track, summary, provider)
             report_id = uuid4().hex
-            result.update(report_id=report_id, track_id=track_id)
+            result.update(report_id=report_id, track_id=track_id, score=track.get("score",scoring.compute(track)))
+            result["customer_report"]=customer_report.build(result,track)
+            result["strokes"]=profiles.strokes(result["score"],result["customer_report"]["improvements"])
+            with self.cache_lock:
+                profiles.save(self.tracks,result,track,data.get("profile_id"))
             reports = self.tracks / "coaching"
             reports.mkdir(parents=True, exist_ok=True)
             (reports / (report_id + ".json")).write_text(json.dumps(result, ensure_ascii=False), encoding="utf-8")
@@ -240,25 +274,29 @@ class Handler(SimpleHTTPRequestHandler):
         key = hashlib.sha256(b"video-evidence-6\0" + f"{swing_track.SCHEMA}:{swing_track.TRACK_REVISION}".encode()
                              + b"\0" + payload).hexdigest()
         target = self.tracks / (key + ".json")
-        if target.exists() and all((self.tracks / f"{key}.{phase}.jpg").is_file()
-                                   for phase in coach.PHASES):
-            return json.loads(target.read_text(encoding="utf-8"))
+        if target.exists():
+            cached=json.loads(target.read_text(encoding='utf-8'))
+            expected=cached['meta'].get('main_phase_frames',cached['meta'].get('phase_frames',{}))
+            if cached['meta'].get('usable') is False or all((self.tracks/f'{key}.{p}.jpg').is_file() for p in expected):return cached
         with TemporaryDirectory() as temp:
             source = Path(temp) / "upload.mp4"
             source.write_bytes(payload)
-            frames, fps, timeline = video_pose.extract(str(source), evidence=True, progress=progress)
+            try:
+                frames, fps, timeline = video_pose.extract(str(source), evidence=True, progress=progress)
+            except video_pose.ExtractionError:
+                return {'track_id':key,'meta':{'usable':False,'unusable_reason':'tracking_failed','guidance':swing_track.GUIDANCE['tracking_failed']}}
             progress("국면 검출", 88)
             result = swing_track.build_track(frames, fps)
             if result['meta'].get('usable') is False:
-                raise video_pose.ExtractionError(result['meta']['unusable_reason'])
-            phases = result["meta"]["phase_frames"]
+                result['track_id']=key
+                self.store(target,result)
+                return result
+            phases = result["meta"].get("main_phase_frames", result["meta"]["phase_frames"])
             progress("국면 스틸컷 준비", 95)
             crops, overlay_crop = video_pose.person_crops(timeline, phases)
             images = video_pose.phase_jpegs(source, phases, crops)
+        result["score"] = scoring.compute(result)
         result["track_id"] = key
-        sample = ROOT / "samples/golf_swing.mp4"
-        if sample.is_file() and payload == sample.read_bytes():
-            result["findings_id"] = "sample"
         result["evidence"] = {
             "id": key, "fps": fps, "landmark_names": video_pose.LANDMARK_NAMES, "frames": timeline,
             "phase_frames": phases, "still_crops": crops, "overlay_crop": overlay_crop, "has_finish_still": True,
@@ -304,7 +342,9 @@ class Handler(SimpleHTTPRequestHandler):
             raise ValueError("유효하지 않은 프레임 속도입니다.")
         result = swing_track.build_track(frames, fps)
         if result['meta'].get('usable') is False:
-            raise ValueError(result['meta']['unusable_reason'])
+            result['track_id']=key
+            self.store(target,result)
+            return result
         from video_pose import LANDMARK_NAMES
         start, end = result["meta"]["source_frames"]
         result["pose_landmarks"] = [
@@ -312,10 +352,8 @@ class Handler(SimpleHTTPRequestHandler):
              for name in LANDMARK_NAMES]
             for frame in frames[start:end + 1]
         ]
+        result["score"] = scoring.compute(result)
         result["track_id"] = key
-        sample = ROOT / "samples/golf1_export.csv"
-        if sample.is_file() and payload == sample.read_bytes():
-            result["findings_id"] = "golf1"
         encoded = json.dumps(result, ensure_ascii=False, allow_nan=False)
         self.tracks.mkdir(parents=True, exist_ok=True)
         with NamedTemporaryFile(dir=self.tracks, delete=False) as temp:

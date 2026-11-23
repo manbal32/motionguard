@@ -1,0 +1,16 @@
+{
+  "site_version": 100,
+  "build": "dee156d46c9b64165529",
+  "public_build_matches": true,
+  "api_build_matches": true,
+  "assets": {
+    "ai-result.js": true,
+    "experience.css": true
+  },
+  "footnote_marker_present": true,
+  "photo_captions_removed": true,
+  "viewer_navigation_present": true,
+  "duplicate_explanation_absent": true,
+  "html_build_matches": true,
+  "physical_safari_visual_touch_verified": false
+}

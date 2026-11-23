@@ -1,0 +1,36 @@
+[
+  {
+    "route": "/game",
+    "status": 200,
+    "viewportStylesheet": true,
+    "modeFlag": true,
+    "duplicateIds": [],
+    "coreControls": true,
+    "penaltyNotices": 2
+  },
+  {
+    "route": "/play",
+    "status": 200,
+    "viewportStylesheet": true,
+    "modeFlag": true,
+    "duplicateIds": [],
+    "coreControls": true,
+    "penaltyNotices": 2
+  },
+  {
+    "route": "/round",
+    "status": 200,
+    "viewportStylesheet": true,
+    "modeFlag": true,
+    "duplicateIds": [],
+    "coreControls": true,
+    "penaltyNotices": 2
+  },
+  {
+    "route": "/",
+    "status": 200,
+    "viewportStylesheet": true,
+    "modeFlag": true,
+    "duplicateIds": []
+  }
+]

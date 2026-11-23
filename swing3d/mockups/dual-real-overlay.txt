@@ -1,0 +1,1 @@
+{"drawn":true,"changed":302,"saved":true,"mismatch":null,"low":false,"cleared":true,"size":[640,360],"frame":90,"sourceUsable":false,"classificationNotOverridden":true,"bodyPoints":22}

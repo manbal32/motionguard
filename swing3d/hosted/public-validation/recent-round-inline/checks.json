@@ -1,0 +1,11 @@
+{
+  "version": 104,
+  "build": "406bc6e351b6aa4656c2",
+  "public_build_matches": true,
+  "css_matches": true,
+  "single_input": true,
+  "no_helper_copy": true,
+  "optional": true,
+  "related_tests_passed": 23,
+  "physical_safari_visual_touch_verified": false
+}

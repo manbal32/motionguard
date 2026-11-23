@@ -1,0 +1,18 @@
+{
+  "fixture": "non-personal synthetic analysis, no photos or original video",
+  "httpStatus": 200,
+  "ok": true,
+  "elapsedSeconds": 8.62,
+  "course": "코리아CC 챌린지 + 레이크",
+  "holes": 18,
+  "current": 90,
+  "improved": 84,
+  "weatherSource": "MET Norway",
+  "weatherTime": "2026-11-22T07:00:00.000Z",
+  "windSpeed": 2,
+  "attempts": 1,
+  "repairs": 0,
+  "tokens": 3973,
+  "errorCode": null,
+  "reason": null
+}

@@ -1,0 +1,55 @@
+{
+  "source_commit": "be8568cc5f4943298a2516306eee6737cc00a7e7",
+  "site_version": 122,
+  "build": "aac7befa3dee964318a1",
+  "public_build_assets": {
+    "/build-info.json": {
+      "status": 200,
+      "matches_local": true
+    },
+    "/api/build": {
+      "status": 200,
+      "matches_local": true
+    },
+    "ai-result.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    },
+    "result-dashboard.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    },
+    "coaching-report.js": {
+      "status": 200,
+      "sha256_matches_local": true
+    },
+    "experience.css": {
+      "status": 200,
+      "sha256_matches_local": true
+    }
+  },
+  "runtime": {
+    "live_model_response_bound_to_three_labeled_result_rows": true,
+    "all_live_model_fields_rendered_in_result_and_pdf": true,
+    "old_strength_advice_not_in_overall": true,
+    "old_prose_not_in_score_assessment_card": true,
+    "old_top_insight_cards_removed": true,
+    "score_and_assessment_same_card": true,
+    "assessment_metrics_practice_order": true,
+    "report_assessment_metrics_practice_order": true,
+    "old_selection_notice_removed": true,
+    "five_photos_in_assessment_correct_original_ids": true,
+    "no_photos_in_lower_estimate_section": true,
+    "lower_photo_note_and_footnote_removed": true,
+    "report_gallery_inside_assessment": true,
+    "original_analysis_and_estimates_unchanged": true
+  },
+  "related_tests": 20,
+  "passed": 20,
+  "mirror_related_tests": 20,
+  "mirror_passed": 20,
+  "new_model_requests": 0,
+  "private_media_uploaded": false,
+  "actual_safari_visual_touch_verified": false,
+  "validation_scope": "Existing render/viewer/PDF tests and cached real-model response through DOM harness; no browser paint or touch verification"
+}

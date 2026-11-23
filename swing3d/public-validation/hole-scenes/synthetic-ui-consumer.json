@@ -1,0 +1,11 @@
+{
+  "fixture": "non-personal synthetic analysis; real Gemini output",
+  "model": "gemini-2.5-flash",
+  "scoreOnlyRows": 18,
+  "scoreOnlyAnimationFrames": 0,
+  "current": 96,
+  "improved": 90,
+  "bothRoundsComplete": true,
+  "noNumbersChanged": true,
+  "verification": "Node DOM/animation execution, not Safari or physical-device interaction"
+}

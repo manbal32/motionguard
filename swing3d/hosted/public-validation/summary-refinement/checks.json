@@ -1,0 +1,19 @@
+{
+  "version": 107,
+  "source": "9b935c6ea7f3709864011dc27544c529900793e1",
+  "build": "177f8b856ca56172ba4d",
+  "public_build_matches": true,
+  "api_build_matches": true,
+  "four_complete_review_fields": true,
+  "duplicate_hints_removed": true,
+  "compact_title_present": true,
+  "approval_controls_kept": true,
+  "assets": {
+    "experience.css": true,
+    "instrument.js": true
+  },
+  "tests_passed": 28,
+  "mirror_tests_passed": 28,
+  "new_live_model_requests": 0,
+  "physical_safari_visual_touch_verified": false
+}
